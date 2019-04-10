@@ -5,16 +5,16 @@ http://ai.berkeley.edu/project_overview.html
 
 ### FAQ
 
-**Q:** What version of Python does this project support?
+**Q:** What version of Python does this project support?  
 **A:** Python >= 3.5.
 The original version of this project was written for Python 2, but it has since been updated.
 
-**Q:** Why are there no packages? Seems disorganized...
+**Q:** Why are there no packages? Seems disorganized...  
 **A:** You are right, this project is not designed with modern Python package-oriented design principles.
 This project is meant for students who may be seeing Python for the first time,
 and therefore has been simplified.
 
-**Q:** What's with these `_student` files?
+**Q:** What's with these `_student` files?  
 **A:** The `_student` files are the files that students will edit to complete assignments.
 When an assignment is graded, any other pacman files (without the `_student` suffix) that a student submits will
 be overwritten.
