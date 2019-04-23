@@ -402,13 +402,17 @@ def nSample(distribution, values, n):
 
 def sample(distribution, values = None):
   if type(distribution) == Counter:
-    items = list(distribution.items())
+    items = sorted(list(distribution.items()))
     distribution = [i[1] for i in items]
     values = [i[0] for i in items]
+
   if sum(distribution) != 1:
     distribution = normalize(distribution)
+
   choice = random.random()
-  i, total= 0, distribution[0]
+  i = 0
+  total = distribution[0]
+
   while choice > total:
     i += 1
     total += distribution[i]
@@ -416,7 +420,7 @@ def sample(distribution, values = None):
   return values[i]
 
 def sampleFromCounter(ctr):
-  items = list(ctr.items())
+  items = sorted(list(ctr.items()))
   return sample([v for k,v in items], [k for k,v in items])
 
 def getProbability(value, distribution, values):
