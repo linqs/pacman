@@ -70,7 +70,7 @@ class Directions:
         STOP: STOP,
     }
 
-    RIGHT = dict([(y, x) for x, y in list(LEFT.items())])
+    RIGHT = dict([(y, x) for x, y in sorted(list(LEFT.items()))])
 
     REVERSE = {
         NORTH: SOUTH,
@@ -309,7 +309,7 @@ class Actions:
                                  Directions.WEST: (-1, 0),
                                  Directions.STOP: (0, 0)}
 
-    _directionsAsList = list(_directions.items())
+    _directionsAsList = sorted(list(_directions.items()))
 
     TOLERANCE = .001
 
