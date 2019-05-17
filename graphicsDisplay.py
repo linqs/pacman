@@ -149,6 +149,7 @@ class PacmanGraphics:
     self.gridSize = DEFAULT_GRID_SIZE * zoom
     self.capture = capture
     self.frameTime = frameTime
+    self.frame = 0
 
   def initialize(self, state, isBlue = False):
     self.isBlue = isBlue
@@ -219,6 +220,8 @@ class PacmanGraphics:
     refresh()
 
   def update(self, newState):
+    self.frame += 1
+
     agentIndex = newState._agentMoved
     agentState = newState.agentStates[agentIndex]
 

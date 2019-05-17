@@ -364,12 +364,11 @@ def move_by(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     d_o_e(d_w)
 
 def writePostscript(filename):
-  "Writes the current canvas to a postscript file."
-  psfile = file(filename, 'w')
-  psfile.write(_canvas.postscript(pageanchor='sw',
-                   y='0.c',
-                   x='0.c'))
-  psfile.close()
+  """
+  Write the current canvas to a postscript file.
+  """
+
+  _canvas.postscript(file = filename, x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
 
 ghost_shape = [
     (0, - 0.5),
