@@ -142,7 +142,8 @@ class InfoPane(object):
 
 
 class PacmanGraphics:
-  def __init__(self, zoom=1.0, frameTime=0.0, capture=False, gif = None):
+  def __init__(self, zoom=1.0, frameTime=0.0, capture=False,
+        gif = None, gif_skip_frames = 0, gif_fps = 10):
     self.have_window = 0
     self.currentGhostImages = {}
     self.pacmanImage = None
@@ -152,6 +153,8 @@ class PacmanGraphics:
     self.frameTime = frameTime
 
     self.gif_path = gif
+    self.gif_skip_frames = gif_skip_frames
+    self.gif_fps = gif_fps
     self.frame = 0
     self.frame_images = []
 
@@ -168,15 +171,18 @@ class PacmanGraphics:
     self.previousState = state
 
     # Get the first frame.
-    self.save_frame()
+    self.save_frame(force_save = True)
 
-  def save_frame(self):
+  def save_frame(self, force_save = False):
     """
     Save the current frame as an image.
     If we are not going to save the game as a gif, no image will be saved.
     """
 
     if (not self.gif_path):
+        return
+
+    if (self.gif_skip_frames != 0 and self.frame % self.gif_skip_frames != 0):
         return
 
     self.frame_images.append(getPostscript())
@@ -189,7 +195,7 @@ class PacmanGraphics:
     import imageio
 
     images = [imageio.imread(io.BytesIO(image.encode())) for image in self.frame_images]
-    imageio.mimwrite(self.gif_path, images, fps = 10, subrectangles = True)
+    imageio.mimwrite(self.gif_path, images, fps = self.gif_fps, subrectangles = True)
 
   def startGraphics(self, state):
     self.layout = state.layout
@@ -430,10 +436,11 @@ class PacmanGraphics:
 
   def finish(self):
     # Get the last frame.
-    self.save_frame()
-    self.write_gif()
+    self.save_frame(force_save = True)
 
     end_graphics()
+
+    self.write_gif()
 
   def to_screen(self, point):
     ( x, y ) = point

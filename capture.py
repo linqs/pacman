@@ -609,6 +609,9 @@ def readCommand( argv ):
     parser.add_option('--replay', default=None, help='Replays a recorded game file.')
     parser.add_option('-x', '--numTraining', dest='numTraining', type='int', help=default('How many episodes are training (suppresses output)'), default=0)
     parser.add_option('-c', '--catchExceptions', action='store_true', default=False, help='Catch exceptions and enforce time limits')
+    parser.add_option('--gif', dest='gif', help=default('Save the game as a gif to the specified path'))
+    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0, help=default('Skip this number of frames between frames of the gif.'))
+    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10, help=default('FPS of the gif.'))
 
     options, otherjunk = parser.parse_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
@@ -629,7 +632,8 @@ def readCommand( argv ):
         import captureGraphicsDisplay
         # Hack for agents writing to the display
         captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True)
+        args['display'] = captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True,
+                gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
         import __main__
         __main__.__dict__['_display'] = args['display']
 

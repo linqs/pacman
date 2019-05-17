@@ -548,6 +548,10 @@ def readCommand(argv):
                     help=default('Maximum length of time an agent can spend computing in a single game'), default=30)
   parser.add_option('--gif', dest='gif',
                     help=default('Save the game as a gif to the specified path'))
+  parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
+                    help=default('Skip this number of frames between frames of the gif.'))
+  parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10,
+                    help=default('FPS of the gif.'))
 
   options, otherjunk = parser.parse_args(argv)
   if len(otherjunk) != 0:
@@ -593,7 +597,8 @@ def readCommand(argv):
     args['display'] = textDisplay.PacmanGraphics()
   else:
     import graphicsDisplay
-    args['display'] = graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime, gif = options.gif)
+    args['display'] = graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime,
+        gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
 
   args['numGames'] = options.numGames
   args['record'] = options.record
