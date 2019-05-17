@@ -368,7 +368,14 @@ def writePostscript(filename):
   Write the current canvas to a postscript file.
   """
 
-  _canvas.postscript(file = filename, x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
+  _canvas.postscript(file = filename, colormode = 'color', x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
+
+def getPostscript():
+  """
+  Get the current canvas as a string that represents the contents of a postscript file.
+  """
+
+  return _canvas.postscript(colormode = 'color', x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
 
 ghost_shape = [
     (0, - 0.5),

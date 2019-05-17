@@ -1,3 +1,4 @@
+import io
 import math
 import time
 
@@ -141,7 +142,7 @@ class InfoPane(object):
 
 
 class PacmanGraphics:
-  def __init__(self, zoom=1.0, frameTime=0.0, capture=False):
+  def __init__(self, zoom=1.0, frameTime=0.0, capture=False, gif = None):
     self.have_window = 0
     self.currentGhostImages = {}
     self.pacmanImage = None
@@ -149,7 +150,10 @@ class PacmanGraphics:
     self.gridSize = DEFAULT_GRID_SIZE * zoom
     self.capture = capture
     self.frameTime = frameTime
+
+    self.gif_path = gif
     self.frame = 0
+    self.frame_images = []
 
   def initialize(self, state, isBlue = False):
     self.isBlue = isBlue
@@ -162,6 +166,30 @@ class PacmanGraphics:
 
     # Information
     self.previousState = state
+
+    # Get the first frame.
+    self.save_frame()
+
+  def save_frame(self):
+    """
+    Save the current frame as an image.
+    If we are not going to save the game as a gif, no image will be saved.
+    """
+
+    if (not self.gif_path):
+        return
+
+    self.frame_images.append(getPostscript())
+
+  def write_gif(self):
+    if (not self.gif_path):
+        return
+
+    # Delay the dependency unless someone actually needs it.
+    import imageio
+
+    images = [imageio.imread(io.BytesIO(image.encode())) for image in self.frame_images]
+    imageio.mimwrite(self.gif_path, images, fps = 10, subrectangles = True)
 
   def startGraphics(self, state):
     self.layout = state.layout
@@ -240,6 +268,8 @@ class PacmanGraphics:
     self.infoPane.updateScore(newState.score)
     if 'ghostDistances' in dir(newState):
       self.infoPane.updateGhostDistances(newState.ghostDistances)
+
+    self.save_frame()
 
   def make_window(self, width, height):
     grid_width = (width-1) * self.gridSize
@@ -399,6 +429,10 @@ class PacmanGraphics:
     return agentState.configuration.getDirection()
 
   def finish(self):
+    # Get the last frame.
+    self.save_frame()
+    self.write_gif()
+
     end_graphics()
 
   def to_screen(self, point):

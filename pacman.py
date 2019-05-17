@@ -546,6 +546,8 @@ def readCommand(argv):
                     help='Turns on exception handling and timeouts during games', default=False)
   parser.add_option('--timeout', dest='timeout', type='int',
                     help=default('Maximum length of time an agent can spend computing in a single game'), default=30)
+  parser.add_option('--gif', dest='gif',
+                    help=default('Save the game as a gif to the specified path'))
 
   options, otherjunk = parser.parse_args(argv)
   if len(otherjunk) != 0:
@@ -591,7 +593,7 @@ def readCommand(argv):
     args['display'] = textDisplay.PacmanGraphics()
   else:
     import graphicsDisplay
-    args['display'] = graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime)
+    args['display'] = graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime, gif = options.gif)
 
   args['numGames'] = options.numGames
   args['record'] = options.record
