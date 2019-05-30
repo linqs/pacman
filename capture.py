@@ -648,7 +648,11 @@ def readCommand( argv ):
     if options.replay != None:
         print('Replaying recorded game %s.' % options.replay)
         import pickle
-        recorded = pickle.load(open(options.replay))
+
+        recorded = None
+        with open(options.replay, 'rb') as file:
+            recorded = pickle.load(file)
+
         recorded['display'] = args['display']
         replayGame(**recorded)
         sys.exit(0)
