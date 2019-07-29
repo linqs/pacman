@@ -1,3 +1,9 @@
+import glob
+import os
+
+import pacai.util
+
+# TODO(eriq): Rename to BaseAgent
 class Agent(object):
     """
     An agent is something in the pacman world that does something (takes some action).
@@ -38,3 +44,35 @@ class Agent(object):
         """
 
         pass
+
+    def loadAgent(class_name, args):
+        """
+        Create an agent of the given class with the given args.
+        """
+
+        # Load all the agents from this package.
+        # Note that we are explicitly doing this now so that others are not
+        # required to pre-load all the possible agents.
+        # We don't need the module in scope, we just need the import to run.
+        paths = []
+        paths += glob.glob(os.path.join(os.path.dirname(__file__), "*.py"))
+        paths += glob.glob(os.path.join(os.path.dirname(__file__), '..', 'student', "*.py"))
+
+        for path in paths:
+            if (os.path.basename(path) in ['__init__.py', os.path.basename(__file__)]):
+                continue
+
+            # TEST
+            if (os.path.basename(path) not in ['keyboardAgents.py', 'ghostAgents.py']):
+                continue
+
+            # Ignore the rest of the path and extension.
+            module_name = os.path.basename(path)[:-3]
+            __import__("pacai.agents.%s" % (module_name))
+
+        # Now that the agent classes have been loaded, just look for subclasses.
+        for subclass in pacai.util.getAllDescendents(Agent):
+            if (subclass.__name__ == class_name):
+                return subclass(**args)
+
+        raise LookupError("Could not find an agent with the name: " + class_name)

@@ -32,12 +32,7 @@ import sys
 import time
 import types
 
-import pacai
-import pacai.layout
-
-# Load all the default agents.
-from pacai.agents import *
-
+from pacai.agents.agent import Agent
 from pacai.game import Actions
 from pacai.game import Directions
 from pacai.game import Game
@@ -574,14 +569,16 @@ def readCommand(argv):
 
   # Choose a Pacman agent
   noKeyboard = options.gameToReplay == None and (options.textGraphics or options.quietGraphics)
-  pacmanType = loadAgent(options.pacman, noKeyboard)
+  if (noKeyboard and options.pacman == 'KeyboardAgent'):
+    raise Exception("Keyboard agents require graphics.")
+
   agentOpts = parseAgentArgs(options.agentArgs)
   if options.numTraining > 0:
     args['numTraining'] = options.numTraining
     if 'numTraining' not in agentOpts:
       agentOpts['numTraining'] = options.numTraining
-  pacman = pacmanType(**agentOpts)  # Instantiate Pacman with agentArgs
-  args['pacman'] = pacman
+
+  args['pacman'] = Agent.loadAgent(options.pacman, agentOpts)
 
   # Don't display training games
   if 'numTrain' in agentOpts:
@@ -589,13 +586,12 @@ def readCommand(argv):
     options.numIgnore = int(agentOpts['numTrain'])
 
   # Choose a ghost agent
-  ghostType = loadAgent(options.ghost, noKeyboard)
-  args['ghosts'] = [ghostType(i + 1) for i in range(options.numGhosts)]
+  args['ghosts'] = [Agent.loadAgent(options.ghost, {'index': (i + 1)}) for i in range(options.numGhosts)]
 
   # Choose a display format
   if options.quietGraphics:
-      import pacai.textDisplay
-      args['display'] = pacai.textDisplay.NullGraphics()
+    import pacai.textDisplay
+    args['display'] = pacai.textDisplay.NullGraphics()
   elif options.textGraphics:
     import pacai.textDisplay
     pacai.textDisplay.SLEEP_TIME = options.frameTime
@@ -624,13 +620,6 @@ def readCommand(argv):
     sys.exit(0)
 
   return args
-
-def loadAgent(pacman, nographics):
-  for subclass in pacai.util.getAllDescendents(pacai.agents.agent.Agent):
-    if (subclass.__name__ == pacman):
-      return subclass
-
-  raise Exception('Could not locate the agent "' + pacman + '". Make sure the module has been imported.')
 
 def replayGame(layout, actions, display):
     import ghostAgents
