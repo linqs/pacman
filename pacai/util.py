@@ -507,6 +507,7 @@ def lookup(name):
   Get a method or class from any imported module from its name.
   """
 
+  # TODO(eriq): We made this change when switching up the packages, but this needs to be removed.
   for module_name in sys.modules:
     try:
       module = __import__(module_name)
@@ -567,3 +568,12 @@ def fetchModuleAttribute(name, modules):
             return getattr(module, name)
 
     raise AttributeError("Could not locate attribute '%s' in modules: %s." % (name, modules))
+
+def getAllDescendents(classObject):
+    descendents = set()
+
+    for childClass in classObject.__subclasses__():
+        descendents.add(childClass)
+        descendents |= getAllDescendents(childClass)
+
+    return descendents

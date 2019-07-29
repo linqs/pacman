@@ -32,14 +32,19 @@ import sys
 import time
 import types
 
-import layout
-import util
-from game import Actions
-from game import Directions
-from game import Game
-from game import GameStateData
-from util import nearestPoint
-from util import manhattanDistance
+import pacai
+import pacai.layout
+
+# Load all the default agents.
+from pacai.agents import *
+
+from pacai.game import Actions
+from pacai.game import Directions
+from pacai.game import Game
+from pacai.game import GameStateData
+from pacai.layout import getLayout
+from pacai.util import nearestPoint
+from pacai.util import manhattanDistance
 
 FIXED_SEED = 140188
 
@@ -563,7 +568,7 @@ def readCommand(argv):
     random.seed(FIXED_SEED)
 
   # Choose a layout
-  args['layout'] = layout.getLayout(options.layout)
+  args['layout'] = getLayout(options.layout)
   if args['layout'] == None:
     raise Exception("The layout " + options.layout + " cannot be found")
 
@@ -589,15 +594,15 @@ def readCommand(argv):
 
   # Choose a display format
   if options.quietGraphics:
-      import textDisplay
-      args['display'] = textDisplay.NullGraphics()
+      import pacai.textDisplay
+      args['display'] = pacai.textDisplay.NullGraphics()
   elif options.textGraphics:
-    import textDisplay
-    textDisplay.SLEEP_TIME = options.frameTime
-    args['display'] = textDisplay.PacmanGraphics()
+    import pacai.textDisplay
+    pacai.textDisplay.SLEEP_TIME = options.frameTime
+    args['display'] = pacai.textDisplay.PacmanGraphics()
   else:
-    import graphicsDisplay
-    args['display'] = graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime,
+    import pacai.graphicsDisplay
+    args['display'] = pacai.graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime,
         gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
 
   args['numGames'] = options.numGames
@@ -621,42 +626,11 @@ def readCommand(argv):
   return args
 
 def loadAgent(pacman, nographics):
-  # First search already imported modules.
-  for module_name in sys.modules:
-    if ('agents' in module_name.lower()):
-      try:
-        module = __import__(module_name)
-      except ImportError:
-        continue
+  for subclass in pacai.util.getAllDescendents(pacai.agents.agent.Agent):
+    if (subclass.__name__ == pacman):
+      return subclass
 
-      if (pacman in dir(module)):
-        return getattr(module, pacman)
-
-  # Looks through all pythonPath Directories for the right module,
-  pythonPathStr = os.path.expandvars("$PYTHONPATH")
-  if pythonPathStr.find(';') == -1:
-    pythonPathDirs = pythonPathStr.split(':')
-  else:
-    pythonPathDirs = pythonPathStr.split(';')
-  pythonPathDirs.append('.')
-
-  for moduleDir in pythonPathDirs:
-    if not os.path.isdir(moduleDir):
-      continue
-
-    moduleNames = [dirent for dirent in os.listdir(moduleDir) if 'agents' in dirent.lower()]
-    for modulename in moduleNames:
-      try:
-        module = __import__(modulename[:-3])
-      except ImportError:
-        continue
-
-      if pacman in dir(module):
-        if nographics and modulename == 'keyboardAgents.py':
-          raise Exception('Using the keyboard requires graphics (not text display)')
-        return getattr(module, pacman)
-
-  raise Exception('The agent ' + pacman + ' is not specified in any *Agents.py.')
+  raise Exception('Could not locate the agent "' + pacman + '". Make sure the module has been imported.')
 
 def replayGame(layout, actions, display):
     import ghostAgents
@@ -689,8 +663,8 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
     beQuiet = i < numTraining
     if beQuiet:
         # Suppress output and graphics
-        import textDisplay
-        gameDisplay = textDisplay.NullGraphics()
+        import pacai.textDisplay
+        gameDisplay = pacai.textDisplay.NullGraphics()
         rules.quiet = True
     else:
         gameDisplay = display

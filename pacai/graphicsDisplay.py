@@ -2,8 +2,8 @@ import io
 import math
 import time
 
-from graphicsUtils import *
-from game import Directions
+from pacai.graphicsUtils import *
+from pacai.game import Directions
 
 #########################
 # GRAPHICS DISPLAY CODE #

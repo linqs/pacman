@@ -2,8 +2,8 @@ import os
 import random
 from functools import reduce
 
-from game import Grid
-from util import manhattanDistance
+from pacai.game import Grid
+from pacai.util import manhattanDistance
 
 VISIBILITY_MATRIX_CACHE = {}
 
@@ -14,7 +14,7 @@ class Layout(object):
   """
   A Layout manages the static information about the game board.
   """
-  
+
   def __init__(self, layoutText):
     self.width = len(layoutText[0])
     self.height= len(layoutText)
@@ -26,10 +26,10 @@ class Layout(object):
     self.processLayoutText(layoutText)
     self.layoutText = layoutText
     # self.initializeVisibilityMatrix()
-    
+
   def getNumGhosts(self):
     return self.numGhosts
-    
+
   def initializeVisibilityMatrix(self):
     global VISIBILITY_MATRIX_CACHE
     if reduce(str.__add__, self.layoutText) not in VISIBILITY_MATRIX_CACHE:
@@ -46,15 +46,15 @@ class Layout(object):
               while (nextx + nexty) != int(nextx) + int(nexty) or not self.walls[int(nextx)][int(nexty)] :
                 vis[x][y][direction].add((nextx, nexty))
                 nextx, nexty = x + dx, y + dy
-      self.visibility = vis      
+      self.visibility = vis
       VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layoutText)] = vis
     else:
       self.visibility = VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layoutText)]
-      
+
   def isWall(self, pos):
     x, col = pos
     return self.walls[x][col]
-  
+
   def getRandomLegalPosition(self):
     x = random.choice(list(range(self.width)))
     y = random.choice(list(range(self.height)))
@@ -71,24 +71,24 @@ class Layout(object):
     poses = [(1,1), (1, self.height - 2), (self.width - 2, 1), (self.width - 2, self.height - 2)]
     dist, pos = max([(manhattanDistance(p, pacPos), p) for p in poses])
     return pos
-  
+
   def isVisibleFrom(self, ghostPos, pacPos, pacDirection):
     row, col = [int(x) for x in pacPos]
     return ghostPos in self.visibility[row][col][pacDirection]
-  
+
   def __str__(self):
     return "\n".join(self.layoutText)
-    
+
   def deepCopy(self):
     return Layout(self.layoutText[:])
-    
+
   def processLayoutText(self, layoutText):
     """
     Coordinates are flipped from the input format to the (x,y) convention here
-    
-    The shape of the maze.  Each character  
-    represents a different type of object.   
-     % - Wall                               
+
+    The shape of the maze.  Each character
+    represents a different type of object.
+     % - Wall
      . - Food
      o - Capsule
      G - Ghost
@@ -96,28 +96,28 @@ class Layout(object):
     Other characters are ignored.
     """
     maxY = self.height - 1
-    for y in range(self.height):       
+    for y in range(self.height):
       for x in range(self.width):
-        layoutChar = layoutText[maxY - y][x]  
+        layoutChar = layoutText[maxY - y][x]
         self.processLayoutChar(x, y, layoutChar)
     self.agentPositions.sort()
     self.agentPositions = [ ( i == 0, pos) for i, pos in self.agentPositions]
-  
+
   def processLayoutChar(self, x, y, layoutChar):
-    if layoutChar == '%':      
+    if layoutChar == '%':
       self.walls[x][y] = True
     elif layoutChar == '.':
-      self.food[x][y] = True 
-    elif layoutChar == 'o':    
-      self.capsules.append((x, y))   
-    elif layoutChar == 'P':    
+      self.food[x][y] = True
+    elif layoutChar == 'o':
+      self.capsules.append((x, y))
+    elif layoutChar == 'P':
       self.agentPositions.append( (0, (x, y) ) )
-    elif layoutChar in ['G']:    
+    elif layoutChar in ['G']:
       self.agentPositions.append( (1, (x, y) ) )
       self.numGhosts += 1
     elif layoutChar in  ['1', '2', '3', '4']:
       self.agentPositions.append( (int(layoutChar), (x,y)))
-      self.numGhosts += 1 
+      self.numGhosts += 1
 
 def getLayout(name, layout_dir = DEFAULT_LAYOUT_DIR):
   if (not name.endswith('.lay')):

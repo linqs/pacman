@@ -13,13 +13,15 @@ Commands to invoke other search strategies can be found in the project descripti
 
 import time
 
-import game
+from pacai.agents.agent import Agent
+
+import pacai.game
 import search
 import search_student
 import searchAgents
 import util
 
-class GoWestAgent(game.Agent):
+class GoWestAgent(Agent):
   """
   An agent that goes West until it can't.
   """
@@ -29,12 +31,12 @@ class GoWestAgent(game.Agent):
     The agent receives a GameState (defined in pacman.py).
     """
 
-    if game.Directions.WEST in state.getLegalPacmanActions():
-      return game.Directions.WEST
+    if pacai.game.Directions.WEST in state.getLegalPacmanActions():
+      return pacai.game.Directions.WEST
     else:
-      return game.Directions.STOP
+      return pacai.game.Directions.STOP
 
-class SearchAgent(game.Agent):
+class SearchAgent(Agent):
   """
   This very general search agent finds a path using a supplied search algorithm for a
   supplied search problem, then returns actions to follow that path.
@@ -111,7 +113,7 @@ class SearchAgent(game.Agent):
   def getAction(self, state):
     """
     Returns the next action in the path chosen earlier (in registerInitialState).  Return
-    game.Directions.STOP if there is no further action to take.
+    pacai.game.Directions.STOP if there is no further action to take.
 
     state: a GameState object (pacman.py)
     """
@@ -124,7 +126,7 @@ class SearchAgent(game.Agent):
     if i < len(self.actions):
       return self.actions[i]
     else:
-      return game.Directions.STOP
+      return pacai.game.Directions.STOP
 
 class PositionSearchProblem(search.SearchProblem):
   """
@@ -188,9 +190,9 @@ class PositionSearchProblem(search.SearchProblem):
     """
 
     successors = []
-    for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
+    for action in [pacai.game.Directions.NORTH, pacai.game.Directions.SOUTH, pacai.game.Directions.EAST, pacai.game.Directions.WEST]:
       x,y = state
-      dx, dy = game.Actions.directionToVector(action)
+      dx, dy = pacai.game.Actions.directionToVector(action)
       nextx, nexty = int(x + dx), int(y + dy)
       if not self.walls[nextx][nexty]:
         nextState = (nextx, nexty)
@@ -218,7 +220,7 @@ class PositionSearchProblem(search.SearchProblem):
     cost = 0
     for action in actions:
       # Check figure out the next state and see whether its' legal
-      dx, dy = game.Actions.directionToVector(action)
+      dx, dy = pacai.game.Actions.directionToVector(action)
       x, y = int(x + dx), int(y + dy)
       if self.walls[x][y]:
         return 999999
@@ -311,9 +313,9 @@ class FoodSearchProblem(search.SearchProblem):
 
     successors = []
     self._expanded += 1
-    for direction in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
+    for direction in [pacai.game.Directions.NORTH, pacai.game.Directions.SOUTH, pacai.game.Directions.EAST, pacai.game.Directions.WEST]:
       x,y = state[0]
-      dx, dy = game.Actions.directionToVector(direction)
+      dx, dy = pacai.game.Actions.directionToVector(direction)
       nextx, nexty = int(x + dx), int(y + dy)
       if not self.walls[nextx][nexty]:
         nextFood = state[1].copy()
@@ -331,7 +333,7 @@ class FoodSearchProblem(search.SearchProblem):
     cost = 0
     for action in actions:
       # figure out the next state and see whether it's legal
-      dx, dy = game.Actions.directionToVector(action)
+      dx, dy = pacai.game.Actions.directionToVector(action)
       x, y = int(x + dx), int(y + dy)
       if self.walls[x][y]:
         return 999999

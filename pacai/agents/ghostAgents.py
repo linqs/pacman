@@ -1,10 +1,10 @@
 import random
 
-import util
-from game import Agent
-from game import Actions
-from game import Directions
-from util import manhattanDistance
+import pacai.util
+
+from pacai.agents.agent import Agent
+from pacai.game import Actions
+from pacai.game import Directions
 
 class GhostAgent(Agent):
   def __init__(self, index):
@@ -12,17 +12,17 @@ class GhostAgent(Agent):
 
   def getAction(self, state):
     dist = self.getDistribution(state)
-    if len(dist) == 0: 
+    if len(dist) == 0:
       return Directions.STOP
     else:
-      return util.chooseFromDistribution(dist)
-    
+      return pacai.util.chooseFromDistribution(dist)
+
   def getDistribution(self, state):
     """
     Returns a Counter encoding a distribution over actions from the provided state.
     """
 
-    util.raiseNotDefined()
+    pacai.util.raiseNotDefined()
 
 class RandomGhost(GhostAgent):
   """
@@ -30,7 +30,7 @@ class RandomGhost(GhostAgent):
   """
 
   def getDistribution(self, state):
-    dist = util.Counter()
+    dist = pacai.util.Counter()
     for a in state.getLegalActions(self.index):
       dist[a] = 1.0
     dist.normalize()
@@ -45,24 +45,24 @@ class DirectionalGhost(GhostAgent):
     self.index = index
     self.prob_attack = prob_attack
     self.prob_scaredFlee = prob_scaredFlee
-      
+
   def getDistribution(self, state):
     # Read variables from state
     ghostState = state.getGhostState(self.index)
     legalActions = state.getLegalActions(self.index)
     pos = state.getGhostPosition(self.index)
     isScared = ghostState.scaredTimer > 0
-    
+
     speed = 1
     if isScared:
       speed = 0.5
-    
+
     actionVectors = [Actions.directionToVector(a, speed) for a in legalActions]
     newPositions = [(pos[0] + a[0], pos[1] + a[1]) for a in actionVectors]
     pacmanPosition = state.getPacmanPosition()
 
     # Select best actions given the state
-    distancesToPacman = [manhattanDistance(pos, pacmanPosition) for pos in newPositions]
+    distancesToPacman = [pacai.util.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
     if isScared:
       bestScore = max(distancesToPacman)
       bestProb = self.prob_scaredFlee
@@ -70,9 +70,9 @@ class DirectionalGhost(GhostAgent):
       bestScore = min(distancesToPacman)
       bestProb = self.prob_attack
     bestActions = [action for action, distance in zip(legalActions, distancesToPacman) if distance == bestScore]
-    
+
     # Construct distribution
-    dist = util.Counter()
+    dist = pacai.util.Counter()
 
     for a in bestActions:
       dist[a] = float(bestProb) / len(bestActions)
