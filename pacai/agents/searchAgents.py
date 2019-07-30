@@ -13,13 +13,13 @@ Commands to invoke other search strategies can be found in the project descripti
 
 import time
 
-from pacai.agents.agent import Agent
-
+import pacai.agents.searchAgents
 import pacai.game
-import search
-import search_student
-import searchAgents
-import util
+import pacai.search
+import pacai.search_student
+import pacai.util
+
+from pacai.agents.agent import Agent
 
 class GoWestAgent(Agent):
   """
@@ -55,13 +55,13 @@ class SearchAgent(Agent):
     # Warning: some advanced Python magic is employed below to find the right functions and problems
 
     # Break circular dependency.
-    import searchAgents_student
+    import pacai.agents.searchAgents_student
 
     # Get the search function from the name and heuristic.
     self.searchFunction = self._fetchSearchFunction(fn, heuristic)
 
     # Get the search problem type from the name.
-    self.searchType = util.fetchModuleAttribute(prob, [searchAgents, searchAgents_student])
+    self.searchType = pacai.util.fetchModuleAttribute(prob, [pacai.agents.searchAgents, pacai.agents.searchAgents_student])
     print('[SearchAgent] using problem type %s.' % (prob))
 
   def _fetchSearchFunction(self, functionName, heuristicName):
@@ -72,7 +72,7 @@ class SearchAgent(Agent):
     """
 
     # Locate the function.
-    function = util.fetchModuleAttribute(functionName, [search, search_student])
+    function = pacai.util.fetchModuleAttribute(functionName, [pacai.search, pacai.search_student])
 
     # Check if the function has a heuristic.
     if 'heuristic' not in function.__code__.co_varnames:
@@ -80,10 +80,10 @@ class SearchAgent(Agent):
       return function
 
     # Break circular dependency.
-    import searchAgents_student
+    import pacai.agents.searchAgents_student
 
     # Fetch the heuristic.
-    heuristic = util.fetchModuleAttribute(heuristicName, [search, search_student, searchAgents, searchAgents_student])
+    heuristic = pacai.util.fetchModuleAttribute(heuristicName, [pacai.search, pacai.search_student, pacai.agents.searchAgents, pacai.agents.searchAgents_student])
     print('[SearchAgent] using function %s and heuristic %s.' % (functionName, heuristicName))
 
     # Bind the heuristic.
@@ -128,7 +128,7 @@ class SearchAgent(Agent):
     else:
       return pacai.game.Directions.STOP
 
-class PositionSearchProblem(search.SearchProblem):
+class PositionSearchProblem(pacai.search.SearchProblem):
   """
   A search problem defines the state space, start state, goal test,
   successor function and cost function.  This search problem can be
@@ -236,7 +236,7 @@ class StayEastSearchAgent(SearchAgent):
   """
 
   def __init__(self):
-      self.searchFunction = search.ucs
+      self.searchFunction = pacai.search.ucs
       costFn = lambda pos: 0.5 ** pos[0]
       self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
@@ -249,7 +249,7 @@ class StayWestSearchAgent(SearchAgent):
   """
 
   def __init__(self):
-      self.searchFunction = search.ucs
+      self.searchFunction = pacai.search.ucs
       costFn = lambda pos: 2 ** pos[0]
       self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
@@ -278,12 +278,12 @@ class AStarCornersAgent(SearchAgent):
 
   def __init__(self):
     # Break circular dependency.
-    import searchAgents_student
+    import pacai.agents.searchAgents_student
 
-    self.searchFunction = lambda prob: search.astar(prob, searchAgents_student.cornersHeuristic)
-    self.searchType = searchAgents_student.CornersProblem
+    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.agents.searchAgents_student.cornersHeuristic)
+    self.searchType = pacai.agents.searchAgents_student.CornersProblem
 
-class FoodSearchProblem(search.SearchProblem):
+class FoodSearchProblem(pacai.search.SearchProblem):
   """
   A search problem associated with finding the a path that collects all of the
   food (dots) in a Pacman game.
@@ -347,9 +347,9 @@ class AStarFoodSearchAgent(SearchAgent):
 
   def __init__(self):
     # Break circular dependency.
-    import searchAgents_student
+    import pacai.agents.searchAgents_student
 
-    self.searchFunction = lambda prob: search.astar(prob, searchAgents_student.foodHeuristic)
+    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.agents.searchAgents_student.foodHeuristic)
     self.searchType = FoodSearchProblem
 
 def numFoodHeuristic(state, problem):
@@ -373,4 +373,4 @@ def mazeDistance(point1, point2, gameState):
   assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
   prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False)
 
-  return len(search.bfs(prob))
+  return len(pacai.search.bfs(prob))

@@ -1,7 +1,6 @@
-import random
+import pacai.util
 
-import game
-import util
+from pacai.agents.agent import Agent
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -14,7 +13,7 @@ def scoreEvaluationFunction(currentGameState):
 
     return currentGameState.getScore()
 
-class MultiAgentSearchAgent(game.Agent):
+class MultiAgentSearchAgent(Agent):
     """
     This class provides some common elements to all of your multi-agent searchers.
     Any methods defined here will be available to the
@@ -31,10 +30,10 @@ class MultiAgentSearchAgent(game.Agent):
 
     def __init__(self, evalFn = 'scoreEvaluationFunction', depth = '2'):
         self.index = 0  # Pacman is always agent index 0
-        self.evaluationFunction = util.lookup(evalFn)
+        self.evaluationFunction = pacai.util.lookup(evalFn)
         self.treeDepth = int(depth)
 
-class ReflexAgent(game.Agent):
+class ReflexAgent(Agent):
     """
     A reflex agent chooses an action at each choice point by examining
     its alternatives via a state evaluation function.
@@ -120,7 +119,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -133,7 +132,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
@@ -149,7 +148,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -160,7 +159,7 @@ def betterEvaluationFunction(currentGameState):
     """
 
     # *** Your Code Here ***
-    util.raiseNotDefined()
+    pacai.util.raiseNotDefined()
 
 class ContestAgent(MultiAgentSearchAgent):
     """
@@ -178,7 +177,7 @@ class ContestAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
 # Abbreviation
 better = betterEvaluationFunction

@@ -62,10 +62,6 @@ class Agent(object):
             if (os.path.basename(path) in ['__init__.py', os.path.basename(__file__)]):
                 continue
 
-            # TEST
-            if (os.path.basename(path) not in ['keyboardAgents.py', 'ghostAgents.py']):
-                continue
-
             # Ignore the rest of the path and extension.
             module_name = os.path.basename(path)[:-3]
             __import__("pacai.agents.%s" % (module_name))

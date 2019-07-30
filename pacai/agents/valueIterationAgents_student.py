@@ -1,8 +1,7 @@
-import learningAgents
-import mdp
-import util
+import pacai.agents.learningAgents
+import pacai.util
 
-class ValueIterationAgent(learningAgents.ValueEstimationAgent):
+class ValueIterationAgent(pacai.agents.learningAgents.ValueEstimationAgent):
     """
     * Please read learningAgents.py before reading this.*
 
@@ -30,7 +29,7 @@ class ValueIterationAgent(learningAgents.ValueEstimationAgent):
         self.mdp = mdp
         self.discountRate = discountRate
         self.iters = iters
-        self.values = util.Counter() # A Counter is a dict with default 0
+        self.values = pacai.util.Counter() # A Counter is a dict with default 0
 
         """
         Description:
@@ -38,7 +37,7 @@ class ValueIterationAgent(learningAgents.ValueEstimationAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def getValue(self, state):
@@ -63,7 +62,7 @@ class ValueIterationAgent(learningAgents.ValueEstimationAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def getPolicy(self, state):
@@ -81,7 +80,7 @@ class ValueIterationAgent(learningAgents.ValueEstimationAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def getAction(self, state):

@@ -2,9 +2,9 @@
 The base for seach implementations.
 """
 
-import game
-import search_student
-import util
+import pacai.game
+import pacai.search_student
+import pacai.util
 
 class SearchProblem(object):
   """
@@ -19,7 +19,7 @@ class SearchProblem(object):
      Returns the start state for the search problem
      """
 
-     util.raiseNotDefined()
+     pacai.util.raiseNotDefined()
 
   def isGoal(self, state):
      """
@@ -28,7 +28,7 @@ class SearchProblem(object):
      Returns True if and only if the state is a valid goal state
      """
 
-     util.raiseNotDefined()
+     pacai.util.raiseNotDefined()
 
   def successorStates(self, state):
      """
@@ -41,7 +41,7 @@ class SearchProblem(object):
      cost of expanding to that successor
      """
 
-     util.raiseNotDefined()
+     pacai.util.raiseNotDefined()
 
   def actionsCost(self, actions):
      """
@@ -51,7 +51,7 @@ class SearchProblem(object):
      The sequence must be composed of legal moves.
      """
 
-     util.raiseNotDefined()
+     pacai.util.raiseNotDefined()
 
 def tinyMazeSearch(problem):
     """
@@ -59,8 +59,8 @@ def tinyMazeSearch(problem):
     For any other maze, the sequence of moves will be incorrect, so only use this for tinyMaze.
     """
 
-    s = game.Directions.SOUTH
-    w = game.Directions.WEST
+    s = pacai.game.Directions.SOUTH
+    w = pacai.game.Directions.WEST
 
     return  [s, s, w, s, w, w, s, w]
 
@@ -74,14 +74,14 @@ def nullHeuristic(state, problem=None):
 
 # Abbreviations
 
-breadthFirstSearch = search_student.breadthFirstSearch
-bfs = search_student.breadthFirstSearch
+breadthFirstSearch = pacai.search_student.breadthFirstSearch
+bfs = pacai.search_student.breadthFirstSearch
 
-depthFirstSearch = search_student.depthFirstSearch
-dfs = search_student.depthFirstSearch
+depthFirstSearch = pacai.search_student.depthFirstSearch
+dfs = pacai.search_student.depthFirstSearch
 
-aStarSearch = search_student.aStarSearch
-astar = search_student.aStarSearch
+aStarSearch = pacai.search_student.aStarSearch
+astar = pacai.search_student.aStarSearch
 
-uniformCostSearch = search_student.uniformCostSearch
-ucs = search_student.uniformCostSearch
+uniformCostSearch = pacai.search_student.uniformCostSearch
+ucs = pacai.search_student.uniformCostSearch

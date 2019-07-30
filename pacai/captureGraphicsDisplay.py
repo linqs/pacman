@@ -4,8 +4,8 @@ import io
 import math
 import time
 
-from graphicsUtils import *
-from game import Directions
+from pacai.graphicsUtils import *
+from pacai.game import Directions
 
 DEFAULT_GRID_SIZE = 30.0
 INFO_PANE_HEIGHT = 35

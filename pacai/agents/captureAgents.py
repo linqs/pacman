@@ -5,12 +5,13 @@ Interfaces for capture agents and agent factories
 import random
 import time
 
-import captureGraphicsDisplay
-import distanceCalculator
-import game
-import util
+import pacai.captureGraphicsDisplay
+import pacai.distanceCalculator
+import pacai.util
 
-class RandomAgent(game.Agent):
+from pacai.agents.agent import Agent
+
+class RandomAgent(Agent):
     """
     A random agent that abides by the rules.
     """
@@ -22,7 +23,7 @@ class RandomAgent(game.Agent):
     def getAction(self, state):
         return random.choice(state.getLegalActions(self.index))
 
-class CaptureAgent(game.Agent):
+class CaptureAgent(Agent):
     """
     A base class for capture agents.
     The convenience methods herein handle
@@ -79,7 +80,7 @@ class CaptureAgent(game.Agent):
         """
 
         self.red = gameState.isOnRedTeam(self.index)
-        self.distancer = distanceCalculator.Distancer(gameState.data.layout)
+        self.distancer = pacai.distanceCalculator.Distancer(gameState.data.layout)
 
         # Comment this out to forgo maze distance computation and use manhattan distances
         self.distancer.getMazeDistances()
@@ -108,13 +109,13 @@ class CaptureAgent(game.Agent):
 
     def debugDraw(self, cells, color, clear=False):
 
-        if self.display and isinstance(self.display, captureGraphicsDisplay.PacmanGraphics):
+        if self.display and isinstance(self.display, pacai.captureGraphicsDisplay.PacmanGraphics):
             if not type(cells) is list:
                 cells = [cells]
             self.display.debugDraw(cells, color, clear)
 
     def debugClear(self):
-        if self.display and isinstance(self.display, captureGraphicsDisplay.PacmanGraphics):
+        if self.display and isinstance(self.display, pacai.captureGraphicsDisplay.PacmanGraphics):
             self.display.clearDebug()
 
     def getAction(self, gameState):
@@ -131,7 +132,7 @@ class CaptureAgent(game.Agent):
 
         myState = gameState.getAgentState(self.index)
         myPos = myState.getPosition()
-        if myPos != util.nearestPoint(myPos):
+        if myPos != pacai.util.nearestPoint(myPos):
             # We're halfway from one position to the next.
             return gameState.getLegalActions(self.index)[0]
         else:
@@ -143,7 +144,7 @@ class CaptureAgent(game.Agent):
         the time limit (otherwise a random legal action will be chosen for you).
         """
 
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
     #######################
     # Convenience Methods #
@@ -256,7 +257,7 @@ class CaptureAgent(game.Agent):
         Overlays a distribution over positions onto the pacman board that represents
         an agent's beliefs about the positions of each agent.
 
-        The arg distributions is a tuple or list of util.Counter objects, where the i'th
+        The arg distributions is a tuple or list of pacai.util.Counter objects, where the i'th
         Counter has keys that are board positions (x,y) and values that encode the probability
         that agent i is at (x,y).
 
@@ -269,18 +270,18 @@ class CaptureAgent(game.Agent):
         dists = []
         for dist in distributions:
             if dist != None:
-                if not isinstance(dist, util.Counter):
+                if not isinstance(dist, pacai.util.Counter):
                     raise Exception("Wrong type of distribution")
                 dists.append(dist)
             else:
-                dists.append(util.Counter())
+                dists.append(pacai.util.Counter())
 
         if self.display != None and 'updateDistributions' in dir(self.display):
             self.display.updateDistributions(dists)
         else:
             self._distributions = dists
 
-class TimeoutAgent(game.Agent):
+class TimeoutAgent(Agent):
     """
     A random agent that takes too much time. Taking
     too much time results in penalties and random moves.

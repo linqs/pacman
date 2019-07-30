@@ -1,10 +1,10 @@
-import random
 import time
-import util
 
-import game
+import pacai.util
 
-class ValueEstimationAgent(game.Agent):
+from pacai.agents.agent import Agent
+
+class ValueEstimationAgent(Agent):
     """
     Abstract agent which assigns values to (state,action)
     Q-Values for an environment. As well as a value to a
@@ -44,7 +44,7 @@ class ValueEstimationAgent(game.Agent):
         Should return Q(state,action)
         """
 
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
     def getValue(self, state):
         """
@@ -54,7 +54,7 @@ class ValueEstimationAgent(game.Agent):
         V(s) = max_{a in actions} Q(s,a)
         """
 
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
     def getPolicy(self, state):
         """
@@ -68,7 +68,7 @@ class ValueEstimationAgent(game.Agent):
         it doesn't matter which is selected.
         """
 
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
     def getAction(self, state):
         """
@@ -76,7 +76,7 @@ class ValueEstimationAgent(game.Agent):
         Choose an action and return it.
         """
 
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
 class ReinforcementAgent(ValueEstimationAgent):
     """
@@ -103,7 +103,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         observing a transition and reward
         """
 
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
 
     ########################
     # Read These Functions #

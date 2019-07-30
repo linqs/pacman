@@ -1,8 +1,7 @@
-import featureExtractors
-import learningAgents
-import util
+import pacai.agents.learningAgents
+import pacai.util
 
-class QLearningAgent(learningAgents.ReinforcementAgent):
+class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
     """
     Q-Learning Agent
 
@@ -42,7 +41,7 @@ class QLearningAgent(learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def getValue(self, state):
@@ -59,7 +58,7 @@ class QLearningAgent(learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def getPolicy(self, state):
@@ -75,7 +74,7 @@ class QLearningAgent(learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def getAction(self, state):
@@ -100,7 +99,7 @@ class QLearningAgent(learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
         return action
@@ -121,7 +120,7 @@ class QLearningAgent(learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
 class PacmanQAgent(QLearningAgent):
@@ -171,7 +170,7 @@ class ApproximateQAgent(PacmanQAgent):
     """
 
     def __init__(self, extractor='IdentityExtractor', **args):
-        self.featExtractor = util.lookup()()
+        self.featExtractor = pacai.util.lookup()()
         super().__init__(**args)
 
         # You might want to initialize weights here.
@@ -188,7 +187,7 @@ class ApproximateQAgent(PacmanQAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def update(self, state, action, nextState, reward):
@@ -202,7 +201,7 @@ class ApproximateQAgent(PacmanQAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        pacai.util.raiseNotDefined()
         """ END CODE """
 
     def final(self, state):
@@ -216,4 +215,4 @@ class ApproximateQAgent(PacmanQAgent):
         # Did we finish training?
         if self.episodesSoFar == self.numTraining:
             # You might want to print your weights here for debugging.
-            util.raiseNotDefined()
+            pacai.util.raiseNotDefined()
