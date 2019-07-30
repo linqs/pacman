@@ -2,11 +2,11 @@ import optparse
 import random
 import sys
 
-import environment
-import mdp
-import util
+import pacai.environment
+import pacai.mdp
+import pacai.util
 
-class Gridworld(mdp.MarkovDecisionProcess):
+class Gridworld(pacai.mdp.MarkovDecisionProcess):
     """
     Gridworld
     """
@@ -162,7 +162,7 @@ class Gridworld(mdp.MarkovDecisionProcess):
         return successors
 
     def __aggregate(self, statesAndProbs):
-        counter = util.Counter()
+        counter = pacai.util.Counter()
         for state, prob in statesAndProbs:
             counter[state] += prob
 
@@ -181,7 +181,7 @@ class Gridworld(mdp.MarkovDecisionProcess):
 
         return self.grid[x][y] != '#'
 
-class GridworldEnvironment(environment.Environment):
+class GridworldEnvironment(pacai.environment.Environment):
     def __init__(self, gridWorld):
         self.gridWorld = gridWorld
         self.reset()
@@ -505,11 +505,11 @@ if __name__ == '__main__':
     # GET THE AGENT
     ###########################
 
-    import qlearningAgents_student
-    import valueIterationAgents_student
+    import pacai.student.qlearningAgents
+    import pacai.student.valueIterationAgents
     a = None
     if opts.agent == 'value':
-        a = valueIterationAgents_student.ValueIterationAgent(mdp, opts.discount, opts.iters)
+        a = pacai.student.valueIterationAgents.ValueIterationAgent(mdp, opts.discount, opts.iters)
     elif opts.agent == 'q':
         #env.getPossibleActions, opts.discount, opts.learningRate, opts.epsilon
         #simulationFn = lambda agent, state: simulation.GridworldSimulation(agent,state,mdp)
@@ -521,7 +521,7 @@ if __name__ == '__main__':
             'epsilon': opts.epsilon,
             'actionFn': actionFn
         }
-        a = qlearningAgents_student.QLearningAgent(**qLearnOpts)
+        a = pacai.student.qlearningAgents.QLearningAgent(**qLearnOpts)
     elif opts.agent == 'random':
         # # No reason to use the random agent without episodes
         if opts.episodes == 0:
@@ -552,7 +552,7 @@ if __name__ == '__main__':
     if not opts.manual and opts.agent == 'value':
         if opts.valueSteps:
             for i in range(opts.iters):
-                tempAgent = valueIterationAgents_student.ValueIterationAgent(mdp, opts.discount, i)
+                tempAgent = pacai.student.valueIterationAgents.ValueIterationAgent(mdp, opts.discount, i)
                 display.displayValues(tempAgent, message = "VALUES AFTER " + str(i) + " ITERATIONS")
                 display.pause()
 

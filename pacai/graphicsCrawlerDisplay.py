@@ -4,8 +4,8 @@ import threading
 import tkinter
 import traceback
 
-import crawler
-import qlearningAgents_student
+import pacai.crawler
+import pacai.student.qlearningAgents
 
 class Application(object):
     def __init__(self, win, max_steps):
@@ -19,13 +19,13 @@ class Application(object):
         # Init Gui
         self.__initGUI(win)
 
-        self.robot = crawler.CrawlingRobot(self.canvas)
-        self.robotEnvironment = crawler.CrawlingRobotEnvironment(self.robot)
+        self.robot = pacai.crawler.CrawlingRobot(self.canvas)
+        self.robotEnvironment = pacai.crawler.CrawlingRobotEnvironment(self.robot)
 
         # Init Agent
         simulationFn = lambda agent: simulation.SimulationEnvironment(self.robotEnvironment, agent)
         actionFn = lambda state: self.robotEnvironment.getPossibleActions(state)
-        self.learner = qlearningAgents_student.QLearningAgent(actionFn=actionFn)
+        self.learner = pacai.student.qlearningAgents.QLearningAgent(actionFn=actionFn)
 
         self.learner.setEpsilon(self.epsilon)
         self.learner.setLearningRate(self.alpha)

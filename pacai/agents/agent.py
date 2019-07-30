@@ -50,21 +50,8 @@ class Agent(object):
         Create an agent of the given class with the given args.
         """
 
-        # Load all the agents from this package.
-        # Note that we are explicitly doing this now so that others are not
-        # required to pre-load all the possible agents.
-        # We don't need the module in scope, we just need the import to run.
-        paths = []
-        paths += glob.glob(os.path.join(os.path.dirname(__file__), "*.py"))
-        paths += glob.glob(os.path.join(os.path.dirname(__file__), '..', 'student', "*.py"))
-
-        for path in paths:
-            if (os.path.basename(path) in ['__init__.py', os.path.basename(__file__)]):
-                continue
-
-            # Ignore the rest of the path and extension.
-            module_name = os.path.basename(path)[:-3]
-            __import__("pacai.agents.%s" % (module_name))
+        Agent._import_agents(os.path.join(os.path.dirname(__file__), "*.py"), "pacai.agents.%s")
+        Agent._import_agents(os.path.join(os.path.dirname(__file__), '..', 'student', "*.py"), "pacai.student.%s")
 
         # Now that the agent classes have been loaded, just look for subclasses.
         for subclass in pacai.util.getAllDescendents(Agent):
@@ -72,3 +59,22 @@ class Agent(object):
                 return subclass(**args)
 
         raise LookupError("Could not find an agent with the name: " + class_name)
+
+    def _import_agents(glob_path, package_format_string):
+        """
+        Load all the agents from this package.
+        Note that we are explicitly doing this now so that others are not
+        required to pre-load all the possible agents.
+        We don't need the module in scope, we just need the import to run.
+        """
+
+        for path in glob.glob(glob_path):
+            if (not os.path.isfile):
+                continue
+
+            if (os.path.basename(path) in ['__init__.py', os.path.basename(__file__)]):
+                continue
+
+            # Ignore the rest of the path and extension.
+            module_name = os.path.basename(path)[:-3]
+            __import__(package_format_string % (module_name))

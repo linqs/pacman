@@ -1,6 +1,6 @@
 """
 This file contains some of the agents that can be selected to control Pacman.
-You will create more agents in searchAgents_student.py.
+You will create more agents in pacai/student/searchAgents.py.
 
 To select an agent, use the '-p' option when running pacman.py.
 Arguments can be passed to your agent using '-a'.
@@ -16,7 +16,7 @@ import time
 import pacai.agents.searchAgents
 import pacai.game
 import pacai.search
-import pacai.search_student
+import pacai.student.search
 import pacai.util
 
 from pacai.agents.agent import Agent
@@ -55,13 +55,13 @@ class SearchAgent(Agent):
     # Warning: some advanced Python magic is employed below to find the right functions and problems
 
     # Break circular dependency.
-    import pacai.agents.searchAgents_student
+    import pacai.student.searchAgents
 
     # Get the search function from the name and heuristic.
     self.searchFunction = self._fetchSearchFunction(fn, heuristic)
 
     # Get the search problem type from the name.
-    self.searchType = pacai.util.fetchModuleAttribute(prob, [pacai.agents.searchAgents, pacai.agents.searchAgents_student])
+    self.searchType = pacai.util.fetchModuleAttribute(prob, [pacai.agents.searchAgents, pacai.student.searchAgents])
     print('[SearchAgent] using problem type %s.' % (prob))
 
   def _fetchSearchFunction(self, functionName, heuristicName):
@@ -72,7 +72,7 @@ class SearchAgent(Agent):
     """
 
     # Locate the function.
-    function = pacai.util.fetchModuleAttribute(functionName, [pacai.search, pacai.search_student])
+    function = pacai.util.fetchModuleAttribute(functionName, [pacai.search, pacai.student.search])
 
     # Check if the function has a heuristic.
     if 'heuristic' not in function.__code__.co_varnames:
@@ -80,10 +80,10 @@ class SearchAgent(Agent):
       return function
 
     # Break circular dependency.
-    import pacai.agents.searchAgents_student
+    import pacai.student.searchAgents
 
     # Fetch the heuristic.
-    heuristic = pacai.util.fetchModuleAttribute(heuristicName, [pacai.search, pacai.search_student, pacai.agents.searchAgents, pacai.agents.searchAgents_student])
+    heuristic = pacai.util.fetchModuleAttribute(heuristicName, [pacai.search, pacai.student.search, pacai.agents.searchAgents, pacai.student.searchAgents])
     print('[SearchAgent] using function %s and heuristic %s.' % (functionName, heuristicName))
 
     # Bind the heuristic.
@@ -278,10 +278,10 @@ class AStarCornersAgent(SearchAgent):
 
   def __init__(self):
     # Break circular dependency.
-    import pacai.agents.searchAgents_student
+    import pacai.student.searchAgents
 
-    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.agents.searchAgents_student.cornersHeuristic)
-    self.searchType = pacai.agents.searchAgents_student.CornersProblem
+    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.student.searchAgents.cornersHeuristic)
+    self.searchType = pacai.student.searchAgents.CornersProblem
 
 class FoodSearchProblem(pacai.search.SearchProblem):
   """
@@ -347,9 +347,9 @@ class AStarFoodSearchAgent(SearchAgent):
 
   def __init__(self):
     # Break circular dependency.
-    import pacai.agents.searchAgents_student
+    import pacai.student.searchAgents
 
-    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.agents.searchAgents_student.foodHeuristic)
+    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.student.searchAgents.foodHeuristic)
     self.searchType = FoodSearchProblem
 
 def numFoodHeuristic(state, problem):

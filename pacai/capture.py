@@ -583,8 +583,8 @@ def readCommand( argv ):
                                     - starts a game with two baseline agents
                             (2) python capture.py --keys0
                                     - starts a two-player interactive game where the arrow keys control agent 0, and all other agents are baseline agents
-                            (3) python capture.py -r baselineTeam -b myTeam_student
-                                    - starts a fully automated game where the red team is a baseline team and blue team is myTeam_student
+                            (3) python capture.py -r baselineTeam -b pacai.student.myTeam
+                                    - starts a fully automated game where the red team is a baseline team and blue team is pacai.student.myTeam
     """
     parser = OptionParser(usageStr)
 

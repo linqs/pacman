@@ -3,7 +3,7 @@ The base for seach implementations.
 """
 
 import pacai.game
-import pacai.search_student
+import pacai.student.search
 import pacai.util
 
 class SearchProblem(object):
@@ -74,14 +74,14 @@ def nullHeuristic(state, problem=None):
 
 # Abbreviations
 
-breadthFirstSearch = pacai.search_student.breadthFirstSearch
-bfs = pacai.search_student.breadthFirstSearch
+breadthFirstSearch = pacai.student.search.breadthFirstSearch
+bfs = pacai.student.search.breadthFirstSearch
 
-depthFirstSearch = pacai.search_student.depthFirstSearch
-dfs = pacai.search_student.depthFirstSearch
+depthFirstSearch = pacai.student.search.depthFirstSearch
+dfs = pacai.student.search.depthFirstSearch
 
-aStarSearch = pacai.search_student.aStarSearch
-astar = pacai.search_student.aStarSearch
+aStarSearch = pacai.student.search.aStarSearch
+astar = pacai.student.search.aStarSearch
 
-uniformCostSearch = pacai.search_student.uniformCostSearch
-ucs = pacai.search_student.uniformCostSearch
+uniformCostSearch = pacai.student.search.uniformCostSearch
+ucs = pacai.student.search.uniformCostSearch

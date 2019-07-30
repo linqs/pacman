@@ -1,6 +1,6 @@
 import random
 
-import captureAgents
+from pacai.agents.captureAgents import CaptureAgent
 
 #################
 # Team creation #
@@ -30,7 +30,7 @@ def createTeam(firstIndex, secondIndex, isRed,
 # Agents #
 ##########
 
-class DummyAgent(captureAgents.CaptureAgent):
+class DummyAgent(CaptureAgent):
     """
     A Dummy agent to serve as an example of the necessary agent structure.
     You should look at baselineTeam.py for more details about how to
@@ -57,7 +57,7 @@ class DummyAgent(captureAgents.CaptureAgent):
         CaptureAgent.registerInitialState in captureAgents.py. 
         """
 
-        captureAgents.CaptureAgent.registerInitialState(self, gameState)
+        CaptureAgent.registerInitialState(self, gameState)
 
         """ 
         Your initialization code goes here, if you need any.
