@@ -1,9 +1,10 @@
 import random
 import time
 
-import captureAgents
-import game
-import util
+import pacai.util
+
+from pacai.agents.captureAgents import CaptureAgent
+from pacai.game import Directions
 
 def createTeam(firstIndex, secondIndex, isRed,
         first = 'OffensiveReflexAgent', second = 'DefensiveReflexAgent'):
@@ -24,7 +25,7 @@ def createTeam(firstIndex, secondIndex, isRed,
 
     return [eval(first)(firstIndex), eval(second)(secondIndex)]
 
-class ReflexCaptureAgent(captureAgents.CaptureAgent):
+class ReflexCaptureAgent(CaptureAgent):
     """
     A base class for reflex agents that chooses score-maximizing actions
     """
@@ -53,7 +54,7 @@ class ReflexCaptureAgent(captureAgents.CaptureAgent):
 
         successor = gameState.generateSuccessor(self.index, action)
         pos = successor.getAgentState(self.index).getPosition()
-        if pos != util.nearestPoint(pos):
+        if pos != pacai.util.nearestPoint(pos):
             # Only half a grid position was covered.
             return successor.generateSuccessor(self.index, action)
         else:
@@ -74,7 +75,7 @@ class ReflexCaptureAgent(captureAgents.CaptureAgent):
         Returns a counter of features for the state
         """
 
-        features = util.Counter()
+        features = pacai.util.Counter()
         successor = self.getSuccessor(gameState, action)
         features['successorScore'] = self.getScore(successor)
 
@@ -96,7 +97,7 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
     """
 
     def getFeatures(self, gameState, action):
-        features = util.Counter()
+        features = pacai.util.Counter()
         successor = self.getSuccessor(gameState, action)
         features['successorScore'] = self.getScore(successor)
 
@@ -123,7 +124,7 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
     """
 
     def getFeatures(self, gameState, action):
-        features = util.Counter()
+        features = pacai.util.Counter()
         successor = self.getSuccessor(gameState, action)
 
         myState = successor.getAgentState(self.index)
@@ -143,10 +144,10 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
             dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
             features['invaderDistance'] = min(dists)
 
-        if action == game.Directions.STOP:
+        if action == Directions.STOP:
             features['stop'] = 1
 
-        rev = game.Directions.REVERSE[gameState.getAgentState(self.index).configuration.direction]
+        rev = Directions.REVERSE[gameState.getAgentState(self.index).configuration.direction]
         if action == rev:
             features['reverse'] = 1
 

@@ -27,18 +27,29 @@ The keys are
     P2: 'l', ';', ',' and 'p' to move
 """
 
-from game import GameStateData
-from game import Game
-from game import Directions
-from game import Actions
-from util import nearestPoint
-from util import manhattanDistance
-from game import Grid
-from game import Configuration
-from game import Agent
-from game import reconstituteGrid
-import sys, util, types, time, random
-import keyboardAgents
+import importlib
+import optparse
+import pickle
+import random
+import sys
+import time
+import traceback
+import types
+
+import pacai.agents.keyboardAgents
+import pacai.layout
+import pacai.mazeGenerator
+
+from pacai.agents.agent import Agent
+from pacai.game import Actions
+from pacai.game import Configuration
+from pacai.game import Directions
+from pacai.game import Game
+from pacai.game import GameStateData
+from pacai.game import Grid
+from pacai.game import reconstituteGrid
+from pacai.util import manhattanDistance
+from pacai.util import nearestPoint
 
 KILL_POINTS = 0
 SONAR_NOISE_RANGE = 13 # Must be odd
@@ -51,7 +62,7 @@ SCARED_TIME = 40
 FIXED_SEED = 140188
 
 def noisyDistance(pos1, pos2):
-    return int(util.manhattanDistance(pos1, pos2) + random.choice(SONAR_NOISE_VALUES))
+    return int(manhattanDistance(pos1, pos2) + random.choice(SONAR_NOISE_VALUES))
 
 ###################################################
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
@@ -263,7 +274,7 @@ class GameState:
             seen = False
             enemyPos = state.getAgentPosition(enemy)
             for teammate in team:
-                if util.manhattanDistance(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
+                if manhattanDistance(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
                     seen = True
             if not seen: state.data.agentStates[enemy].configuration = None
         return state
@@ -576,20 +587,19 @@ def readCommand( argv ):
     """
     Processes the command used to run pacman from the command line.
     """
-    from optparse import OptionParser
     usageStr = """
     USAGE:        python pacman.py <options>
     EXAMPLES:    (1) python capture.py
                                     - starts a game with two baseline agents
                             (2) python capture.py --keys0
                                     - starts a two-player interactive game where the arrow keys control agent 0, and all other agents are baseline agents
-                            (3) python capture.py -r baselineTeam -b pacai.student.myTeam
+                            (3) python capture.py -r pacai.baselineTeam -b pacai.student.myTeam
                                     - starts a fully automated game where the red team is a baseline team and blue team is pacai.student.myTeam
     """
-    parser = OptionParser(usageStr)
+    parser = optparse.OptionParser(usageStr)
 
-    parser.add_option('-r', '--red', help=default('Red team'), default='baselineTeam')
-    parser.add_option('-b', '--blue', help=default('Blue team'), default='baselineTeam')
+    parser.add_option('-r', '--red', help=default('Red team'), default='pacai.baselineTeam')
+    parser.add_option('-b', '--blue', help=default('Blue team'), default='pacai.baselineTeam')
     parser.add_option('--redOpts', help=default('Options for red team (e.g. first=keys)'), default='')
     parser.add_option('--blueOpts', help=default('Options for blue team (e.g. first=keys)'), default='')
     parser.add_option('--keys0', help='Make agent 0 (first red player) a keyboard agent', action='store_true', default=False)
@@ -619,20 +629,20 @@ def readCommand( argv ):
 
     # Choose a display format
     if options.textgraphics:
-        import textDisplay
-        args['display'] = textDisplay.PacmanGraphics()
+        import pacai.textDisplay
+        args['display'] = pacai.textDisplay.PacmanGraphics()
     elif options.quiet:
-        import textDisplay
-        args['display'] = textDisplay.NullGraphics()
+        import pacai.textDisplay
+        args['display'] = pacai.textDisplay.NullGraphics()
     elif options.super_quiet:
-        import textDisplay
-        args['display'] = textDisplay.NullGraphics()
+        import pacai.textDisplay
+        args['display'] = pacai.textDisplay.NullGraphics()
         args['muteAgents'] = True
     else:
-        import captureGraphicsDisplay
+        import pacai.captureGraphicsDisplay
         # Hack for agents writing to the display
-        captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True,
+        pacai.captureGraphicsDisplay.FRAME_TIME = 0
+        args['display'] = pacai.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True,
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
         import __main__
         __main__.__dict__['_display'] = args['display']
@@ -647,7 +657,6 @@ def readCommand( argv ):
     # Special case: recorded games don't use the runGames method or args structure
     if options.replay != None:
         print('Replaying recorded game %s.' % options.replay)
-        import pickle
 
         recorded = None
         with open(options.replay, 'rb') as file:
@@ -673,26 +682,25 @@ def readCommand( argv ):
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
         if not val: continue
         if numKeyboardAgents == 0:
-            agent = keyboardAgents.KeyboardAgent(index)
+            agent = pacai.agents.keyboardAgents.KeyboardAgent(index)
         elif numKeyboardAgents == 1:
-            agent = keyboardAgents.KeyboardAgent2(index)
+            agent = pacai.agents.keyboardAgents.KeyboardAgent2(index)
         else:
             raise Exception('Max of two keyboard agents supported')
         numKeyboardAgents += 1
         args['agents'][index] = agent
 
     # Choose a layout
-    import layout
     if options.layout.startswith('RANDOM'):
         seed = random.randint(0, 99999999)
         if (options.layout != 'RANDOM'):
             seed = int(options.layout[6:])
 
-        args['layout'] = layout.Layout(randomLayout(seed).split('\n'))
+        args['layout'] = pacai.layout.Layout(randomLayout(seed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise Exception( 'You must use a capture layout with capture.py')
     else:
-        args['layout'] = layout.getLayout( options.layout )
+        args['layout'] = pacai.layout.getLayout( options.layout )
 
     if args['layout'] == None: raise Exception("The layout " + options.layout + " cannot be found")
     args['length'] = options.time
@@ -707,29 +715,27 @@ def randomLayout(seed = None):
         seed = random.randint(0,99999999)
     # layout = 'layouts/random%08dCapture.lay' % seed
     # print('Generating random layout in %s' % layout)
-    import mazeGenerator
-    return mazeGenerator.generateMaze(seed)
+    return pacai.mazeGenerator.generateMaze(seed)
 
-import traceback
-def loadAgents(isRed, factory, textgraphics, cmdLineArgs):
+def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     "Calls agent factories and returns lists of agents"
     try:
-        module = __import__(factory)
+        module = importlib.import_module(agent_module)
     except ImportError:
-        print('Error: The team "' + factory + '" could not be loaded! ')
+        print('Error: The team "' + agent_module + '" could not be loaded! ')
         traceback.print_exc()
         return [None for i in range(2)]
 
     args = dict()
     args.update(cmdLineArgs) # Add command line args with priority
 
-    print("Loading Team:", factory)
+    print("Loading Team:", agent_module)
     print("Arguments:", args)
 
     try:
         createTeamFunc = getattr(module, 'createTeam')
     except AttributeError:
-        print('Error: The team "' + factory + '" could not be loaded! ')
+        print('Error: The team "' + agent_module + '" could not be loaded! ')
         traceback.print_exc()
         return [None for i in range(2)]
 

@@ -483,22 +483,22 @@ if __name__ == '__main__':
     # GET THE GRIDWORLD
     ###########################
 
-    import gridworld
-    mdpFunction = getattr(gridworld, "get" + opts.grid)
+    import pacai.bin.gridworld
+    mdpFunction = getattr(pacai.bin.gridworld, "get" + opts.grid)
     mdp = mdpFunction()
     mdp.setLivingReward(opts.livingReward)
     mdp.setNoise(opts.noise)
-    env = gridworld.GridworldEnvironment(mdp)
+    env = pacai.bin.gridworld.GridworldEnvironment(mdp)
 
     ###########################
     # GET THE DISPLAY ADAPTER
     ###########################
 
-    import textGridworldDisplay
-    display = textGridworldDisplay.TextGridworldDisplay(mdp)
+    import pacai.textGridworldDisplay
+    display = pacai.textGridworldDisplay.TextGridworldDisplay(mdp)
     if not opts.textDisplay:
-        import graphicsGridworldDisplay
-        display = graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
+        import pacai.graphicsGridworldDisplay
+        display = pacai.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
     display.start()
 
     ###########################

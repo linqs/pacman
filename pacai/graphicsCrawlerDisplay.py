@@ -4,7 +4,7 @@ import threading
 import tkinter
 import traceback
 
-import pacai.crawler
+import pacai.bin.crawler
 import pacai.student.qlearningAgents
 
 class Application(object):
@@ -19,8 +19,8 @@ class Application(object):
         # Init Gui
         self.__initGUI(win)
 
-        self.robot = pacai.crawler.CrawlingRobot(self.canvas)
-        self.robotEnvironment = pacai.crawler.CrawlingRobotEnvironment(self.robot)
+        self.robot = pacai.bin.crawler.CrawlingRobot(self.canvas)
+        self.robotEnvironment = pacai.bin.crawler.CrawlingRobotEnvironment(self.robot)
 
         # Init Agent
         simulationFn = lambda agent: simulation.SimulationEnvironment(self.robotEnvironment, agent)

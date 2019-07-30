@@ -1,7 +1,8 @@
 import functools
 
-import util
-from graphicsUtils import *
+import pacai.util
+
+from pacai.graphicsUtils import *
 
 BACKGROUND_COLOR = formatColor(0, 0, 0)
 EDGE_COLOR = formatColor(1, 1, 1)
@@ -28,7 +29,7 @@ class GraphicsGridworldDisplay(object):
         wait_for_keys()
 
     def displayValues(self, agent, currentState = None, message = 'Agent Values'):
-        values = util.Counter()
+        values = pacai.util.Counter()
         policy = {}
         states = self.gridworld.getStates()
         for state in states:
@@ -38,7 +39,7 @@ class GraphicsGridworldDisplay(object):
         sleep(0.05 / self.speed)
 
     def displayNullValues(self, currentState = None, message = ''):
-        values = util.Counter()
+        values = pacai.util.Counter()
         # policy = {}
         states = self.gridworld.getStates()
         for state in states:
@@ -49,7 +50,7 @@ class GraphicsGridworldDisplay(object):
         sleep(0.05 / self.speed)
 
     def displayQValues(self, agent, currentState = None, message = 'Agent Q-Values'):
-        qValues = util.Counter()
+        qValues = pacai.util.Counter()
         states = self.gridworld.getStates()
 
         for state in states:
@@ -149,7 +150,7 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
             bestQ = max([qValues[(state, action)] for action in actions])
             bestActions = [action for action in actions if qValues[(state, action)] == bestQ]
 
-            q = util.Counter()
+            q = pacai.util.Counter()
             valStrings = {}
 
             for action in actions:

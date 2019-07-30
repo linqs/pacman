@@ -1,10 +1,10 @@
 import math
 import sys
 
-import environment
-import graphicsCrawlerDisplay
+import pacai.environment
+import pacai.graphicsCrawlerDisplay
 
-class CrawlingRobotEnvironment(environment.Environment):
+class CrawlingRobotEnvironment(pacai.environment.Environment):
     def __init__(self, crawlingRobot):
         self.crawlingRobot = crawlingRobot
 
@@ -398,4 +398,4 @@ def _load_args(args):
 
 if __name__ == '__main__':
     max_steps = _load_args(sys.argv)
-    sys.exit(graphicsCrawlerDisplay.run(max_steps = max_steps))
+    sys.exit(pacai.graphicsCrawlerDisplay.run(max_steps = max_steps))
