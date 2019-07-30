@@ -5,7 +5,7 @@ Interfaces for capture agents and agent factories
 import random
 import time
 
-import pacai.captureGraphicsDisplay
+import pacai.ui.captureGraphicsDisplay
 import pacai.distanceCalculator
 import pacai.util
 
@@ -109,13 +109,13 @@ class CaptureAgent(Agent):
 
     def debugDraw(self, cells, color, clear=False):
 
-        if self.display and isinstance(self.display, pacai.captureGraphicsDisplay.PacmanGraphics):
+        if self.display and isinstance(self.display, pacai.ui.captureGraphicsDisplay.PacmanGraphics):
             if not type(cells) is list:
                 cells = [cells]
             self.display.debugDraw(cells, color, clear)
 
     def debugClear(self):
-        if self.display and isinstance(self.display, pacai.captureGraphicsDisplay.PacmanGraphics):
+        if self.display and isinstance(self.display, pacai.ui.captureGraphicsDisplay.PacmanGraphics):
             self.display.clearDebug()
 
     def getAction(self, gameState):

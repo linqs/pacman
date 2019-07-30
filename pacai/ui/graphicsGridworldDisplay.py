@@ -2,14 +2,14 @@ import functools
 
 import pacai.util
 
-from pacai.graphicsUtils import *
+from pacai.ui import graphicsUtils
 
-BACKGROUND_COLOR = formatColor(0, 0, 0)
-EDGE_COLOR = formatColor(1, 1, 1)
-OBSTACLE_COLOR = formatColor(0.5, 0.5, 0.5)
-TEXT_COLOR = formatColor(1, 1, 1)
-MUTED_TEXT_COLOR = formatColor(0.7, 0.7, 0.7)
-LOCATION_COLOR = formatColor(0, 0, 1)
+BACKGROUND_COLOR = graphicsUtils.formatColor(0, 0, 0)
+EDGE_COLOR = graphicsUtils.formatColor(1, 1, 1)
+OBSTACLE_COLOR = graphicsUtils.formatColor(0.5, 0.5, 0.5)
+TEXT_COLOR = graphicsUtils.formatColor(1, 1, 1)
+MUTED_TEXT_COLOR = graphicsUtils.formatColor(0.7, 0.7, 0.7)
+LOCATION_COLOR = graphicsUtils.formatColor(0, 0, 1)
 
 WINDOW_SIZE = -1
 GRID_SIZE = -1
@@ -26,7 +26,7 @@ class GraphicsGridworldDisplay(object):
         setup(self.gridworld, size=self.size)
 
     def pause(self):
-        wait_for_keys()
+        graphicsUtils.wait_for_keys()
 
     def displayValues(self, agent, currentState = None, message = 'Agent Values'):
         values = pacai.util.Counter()
@@ -36,7 +36,7 @@ class GraphicsGridworldDisplay(object):
             values[state] = agent.getValue(state)
             policy[state] = agent.getPolicy(state)
         drawValues(self.gridworld, values, policy, currentState, message)
-        sleep(0.05 / self.speed)
+        graphicsUtils.sleep(0.05 / self.speed)
 
     def displayNullValues(self, currentState = None, message = ''):
         values = pacai.util.Counter()
@@ -47,7 +47,7 @@ class GraphicsGridworldDisplay(object):
             # policy[state] = agent.getPolicy(state)
         drawNullValues(self.gridworld, currentState,'')
         # drawValues(self.gridworld, values, policy, currentState, message)
-        sleep(0.05 / self.speed)
+        graphicsUtils.sleep(0.05 / self.speed)
 
     def displayQValues(self, agent, currentState = None, message = 'Agent Q-Values'):
         qValues = pacai.util.Counter()
@@ -58,7 +58,7 @@ class GraphicsGridworldDisplay(object):
                 qValues[(state, action)] = agent.getQValue(state, action)
 
         drawQValues(self.gridworld, qValues, currentState, message)
-        sleep(0.05 / self.speed)
+        graphicsUtils.sleep(0.05 / self.speed)
 
 def setup(gridworld, title = "Gridworld Display", size = 120):
     global GRID_SIZE, MARGIN, SCREEN_WIDTH, SCREEN_HEIGHT, GRID_HEIGHT
@@ -71,7 +71,7 @@ def setup(gridworld, title = "Gridworld Display", size = 120):
     screen_width = (grid.width - 1) * GRID_SIZE + MARGIN * 2
     screen_height = (grid.height - 0.5) * GRID_SIZE + MARGIN * 2
 
-    begin_graphics(screen_width, screen_height, BACKGROUND_COLOR, title=title)
+    graphicsUtils.begin_graphics(screen_width, screen_height, BACKGROUND_COLOR, title=title)
 
 def drawNullValues(gridworld, currentState = None, message = ''):
     grid = gridworld.grid
@@ -90,7 +90,7 @@ def drawNullValues(gridworld, currentState = None, message = ''):
                 drawNullSquare(gridworld.grid, x, y, False, isExit, isCurrent)
 
     pos = to_screen(((grid.width - 1.0) / 2.0, - 0.8))
-    text( pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+    graphicsUtils.text( pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
 def drawValues(gridworld, values, policy, currentState = None, message = 'State Values'):
     grid = gridworld.grid
@@ -124,7 +124,7 @@ def drawValues(gridworld, values, policy, currentState = None, message = 'State 
                 drawSquare(x, y, value, minValue, maxValue, valString, action, False, isExit, isCurrent)
 
     pos = to_screen(((grid.width - 1.0) / 2.0, - 0.8))
-    text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+    graphicsUtils.text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
 def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action Q-Values'):
     grid = gridworld.grid
@@ -169,10 +169,10 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
                 drawSquareQ(x, y, q, minValue, maxValue, valStrings, actions, isCurrent)
 
     pos = to_screen(((grid.width - 1.0) / 2.0, - 0.8))
-    text( pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+    graphicsUtils.text( pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
 def blank():
-    clear_screen()
+    graphicsUtils.clear_screen()
 
 def drawNullSquare(grid,x, y, isObstacle, isTerminal, isCurrent):
     square_color = getColor(0, -1, 1)
@@ -186,15 +186,15 @@ def drawNullSquare(grid,x, y, isObstacle, isTerminal, isCurrent):
 
     if isTerminal and not isObstacle:
         square((screen_x, screen_y), 0.4 * GRID_SIZE, color = EDGE_COLOR, filled = 0, width = 2)
-        text((screen_x, screen_y), TEXT_COLOR, str(grid[x][y]), "Courier", -24, "bold", "c")
+        graphicsUtils.text((screen_x, screen_y), TEXT_COLOR, str(grid[x][y]), "Courier", -24, "bold", "c")
 
     text_color = TEXT_COLOR
 
     if not isObstacle and isCurrent:
-        circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR, fillColor=LOCATION_COLOR)
+        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR, fillColor=LOCATION_COLOR)
 
     # if not isObstacle:
-    #     text((screen_x, screen_y), text_color, valStr, "Courier", 24, "bold", "c")
+    #     graphicsUtils.text((screen_x, screen_y), text_color, valStr, "Courier", 24, "bold", "c")
 
 def drawSquare(x, y, val, min, max, valStr, action, isObstacle, isTerminal, isCurrent):
     square_color = getColor(val, min, max)
@@ -210,21 +210,21 @@ def drawSquare(x, y, val, min, max, valStr, action, isObstacle, isTerminal, isCu
         square((screen_x, screen_y), 0.4 * GRID_SIZE, color = EDGE_COLOR, filled = 0, width = 2)
 
     if action == 'north':
-        polygon([(screen_x, screen_y - 0.45 * GRID_SIZE), (screen_x + 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE), (screen_x - 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        graphicsUtils.polygon([(screen_x, screen_y - 0.45 * GRID_SIZE), (screen_x + 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE), (screen_x - 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
     elif action == 'south':
-        polygon([(screen_x, screen_y + 0.45 * GRID_SIZE), (screen_x + 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE), (screen_x - 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        graphicsUtils.polygon([(screen_x, screen_y + 0.45 * GRID_SIZE), (screen_x + 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE), (screen_x - 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
     elif action == 'west':
-        polygon([(screen_x - 0.45 * GRID_SIZE, screen_y), (screen_x - 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE), (screen_x - 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        graphicsUtils.polygon([(screen_x - 0.45 * GRID_SIZE, screen_y), (screen_x - 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE), (screen_x - 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
     elif action == 'east':
-        polygon([(screen_x + 0.45 * GRID_SIZE, screen_y), (screen_x + 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE), (screen_x + 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        graphicsUtils.polygon([(screen_x + 0.45 * GRID_SIZE, screen_y), (screen_x + 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE), (screen_x + 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
 
     text_color = TEXT_COLOR
 
     if not isObstacle and isCurrent:
-        circle((screen_x, screen_y), 0.1 * GRID_SIZE, outlineColor=LOCATION_COLOR, fillColor=LOCATION_COLOR)
+        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, outlineColor=LOCATION_COLOR, fillColor=LOCATION_COLOR)
 
     if not isObstacle:
-        text((screen_x, screen_y), text_color, valStr, "Courier", -30, "bold", "c")
+        graphicsUtils.text((screen_x, screen_y), text_color, valStr, "Courier", -30, "bold", "c")
 
 def drawSquareQ(x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
     (screen_x, screen_y) = to_screen((x, y))
@@ -244,25 +244,25 @@ def drawSquareQ(x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
         wedge_color = getColor(qVals[action], minVal, maxVal)
 
         if action == 'north':
-            polygon((center, nw, ne), wedge_color, filled = 1, smoothed = False)
+            graphicsUtils.polygon((center, nw, ne), wedge_color, filled = 1, smoothed = False)
             # text(n, text_color, valStr, "Courier", 8, "bold", "n")
         elif action == 'south':
-            polygon((center, sw, se), wedge_color, filled = 1, smoothed = False)
+            graphicsUtils.polygon((center, sw, se), wedge_color, filled = 1, smoothed = False)
             # text(s, text_color, valStr, "Courier", 8, "bold", "s")
         elif action == 'east':
-            polygon((center, ne, se), wedge_color, filled = 1, smoothed = False)
+            graphicsUtils.polygon((center, ne, se), wedge_color, filled = 1, smoothed = False)
             # text(e, text_color, valStr, "Courier", 8, "bold", "e")
         elif action == 'west':
-            polygon((center, nw, sw), wedge_color, filled = 1, smoothed = False)
+            graphicsUtils.polygon((center, nw, sw), wedge_color, filled = 1, smoothed = False)
             # text(w, text_color, valStr, "Courier", 8, "bold", "w")
 
     square((screen_x, screen_y), 0.5 * GRID_SIZE, color = EDGE_COLOR, filled = 0, width = 3)
 
-    line(ne, sw, color = EDGE_COLOR)
-    line(nw, se, color = EDGE_COLOR)
+    graphicsUtils.line(ne, sw, color = EDGE_COLOR)
+    graphicsUtils.line(nw, se, color = EDGE_COLOR)
 
     if isCurrent:
-        circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR, fillColor=LOCATION_COLOR)
+        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR, fillColor=LOCATION_COLOR)
 
     for action in actions:
         text_color = TEXT_COLOR
@@ -277,16 +277,16 @@ def drawSquareQ(x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
 
         if action == 'north':
             # polygon((center, nw, ne), wedge_color, filled = 1, smooth = 0)
-            text(n, text_color, valStr, "Courier", h, "bold", "n")
+            graphicsUtils.text(n, text_color, valStr, "Courier", h, "bold", "n")
         elif action == 'south':
             # polygon((center, sw, se), wedge_color, filled = 1, smooth = 0)
-            text(s, text_color, valStr, "Courier", h, "bold", "s")
+            graphicsUtils.text(s, text_color, valStr, "Courier", h, "bold", "s")
         elif action == 'east':
             # polygon((center, ne, se), wedge_color, filled = 1, smooth = 0)
-            text(e, text_color, valStr, "Courier", h, "bold", "e")
+            graphicsUtils.text(e, text_color, valStr, "Courier", h, "bold", "e")
         elif action == 'west':
             # polygon((center, nw, sw), wedge_color, filled = 1, smooth = 0)
-            text(w, text_color, valStr, "Courier", h, "bold", "w")
+            graphicsUtils.text(w, text_color, valStr, "Courier", h, "bold", "w")
 
 def getColor(val, minVal, max):
     r = 0.0
@@ -298,13 +298,13 @@ def getColor(val, minVal, max):
     if val > 0 and max > 0:
         g = val * 0.65 / max
 
-    return formatColor(r, g, 0.0)
+    return graphicsUtils.formatColor(r, g, 0.0)
 
 def square(pos, size, color, filled, width):
     x, y = pos
     dx, dy = size, size
 
-    return polygon([(x - dx, y - dy), (x - dx, y + dy), (x + dx, y + dy), (x + dx, y - dy)], outlineColor=color, fillColor=color, filled=filled, width=width, smoothed=False)
+    return graphicsUtils.polygon([(x - dx, y - dy), (x - dx, y + dy), (x + dx, y + dy), (x + dx, y - dy)], outlineColor=color, fillColor=color, filled=filled, width=width, smoothed=False)
 
 def to_screen(point):
     (gamex, gamey) = point

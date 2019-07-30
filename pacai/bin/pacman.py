@@ -590,15 +590,15 @@ def readCommand(argv):
 
   # Choose a display format
   if options.quietGraphics:
-    import pacai.textDisplay
-    args['display'] = pacai.textDisplay.NullGraphics()
+    import pacai.ui.textDisplay
+    args['display'] = pacai.ui.textDisplay.NullGraphics()
   elif options.textGraphics:
-    import pacai.textDisplay
-    pacai.textDisplay.SLEEP_TIME = options.frameTime
-    args['display'] = pacai.textDisplay.PacmanGraphics()
+    import pacai.ui.textDisplay
+    pacai.ui.textDisplay.SLEEP_TIME = options.frameTime
+    args['display'] = pacai.ui.textDisplay.PacmanGraphics()
   else:
-    import pacai.graphicsDisplay
-    args['display'] = pacai.graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime,
+    import pacai.ui.graphicsDisplay
+    args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime,
         gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
 
   args['numGames'] = options.numGames
@@ -652,8 +652,8 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
     beQuiet = i < numTraining
     if beQuiet:
         # Suppress output and graphics
-        import pacai.textDisplay
-        gameDisplay = pacai.textDisplay.NullGraphics()
+        import pacai.ui.textDisplay
+        gameDisplay = pacai.ui.textDisplay.NullGraphics()
         rules.quiet = True
     else:
         gameDisplay = display

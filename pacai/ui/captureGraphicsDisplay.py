@@ -4,25 +4,25 @@ import io
 import math
 import time
 
-from pacai.graphicsUtils import *
 from pacai.game import Directions
+from pacai.ui import graphicsUtils
 
 DEFAULT_GRID_SIZE = 30.0
 INFO_PANE_HEIGHT = 35
-BACKGROUND_COLOR = formatColor(0,0,0)
-WALL_COLOR = formatColor(0.0/255.0, 51.0/255.0, 255.0/255.0)
-INFO_PANE_COLOR = formatColor(.4,.4,0)
-SCORE_COLOR = formatColor(.9, .9, .9)
+BACKGROUND_COLOR = graphicsUtils.formatColor(0,0,0)
+WALL_COLOR = graphicsUtils.formatColor(0.0/255.0, 51.0/255.0, 255.0/255.0)
+INFO_PANE_COLOR = graphicsUtils.formatColor(.4,.4,0)
+SCORE_COLOR = graphicsUtils.formatColor(.9, .9, .9)
 PACMAN_OUTLINE_WIDTH = 2
 PACMAN_CAPTURE_OUTLINE_WIDTH = 4
 
 GHOST_COLORS = [
-        formatColor(0.9, 0, 0), # Red
-        formatColor(0, 0.3, 0.9), # Blue
-        formatColor(0.98, 0.41, 0.07), # Orange
-        formatColor(0.1, 0.75, 0.7), # Green
-        formatColor(1.0, 0.6, 0.0), # Yellow
-        formatColor(0.4, 0.13, 0.91), # Purple
+    graphicsUtils.formatColor(0.9, 0, 0), # Red
+    graphicsUtils.formatColor(0, 0.3, 0.9), # Blue
+    graphicsUtils.formatColor(0.98, 0.41, 0.07), # Orange
+    graphicsUtils.formatColor(0.1, 0.75, 0.7), # Green
+    graphicsUtils.formatColor(1.0, 0.6, 0.0), # Yellow
+    graphicsUtils.formatColor(0.4, 0.13, 0.91), # Purple
 ]
 
 TEAM_COLORS = GHOST_COLORS[:2]
@@ -41,24 +41,24 @@ GHOST_SHAPE = [
         (-0.25, 0.75)
 ]
 GHOST_SIZE = 0.65
-SCARED_COLOR = formatColor(1, 1, 1)
+SCARED_COLOR = graphicsUtils.formatColor(1, 1, 1)
 
-GHOST_VEC_COLORS = list(map(colorToVector, GHOST_COLORS))
+GHOST_VEC_COLORS = list(map(graphicsUtils.colorToVector, GHOST_COLORS))
 
-PACMAN_COLOR = formatColor(255.0 / 255.0, 255.0 / 255.0, 61.0 / 255)
+PACMAN_COLOR = graphicsUtils.formatColor(255.0 / 255.0, 255.0 / 255.0, 61.0 / 255)
 PACMAN_SCALE = 0.5
 #pacman_speed = 0.25
 
 # Food
-FOOD_COLOR = formatColor(1, 1, 1)
+FOOD_COLOR = graphicsUtils.formatColor(1, 1, 1)
 FOOD_SIZE = 0.1
 
 # Laser
-LASER_COLOR = formatColor(1, 0, 0)
+LASER_COLOR = graphicsUtils.formatColor(1, 0, 0)
 LASER_SIZE = 0.02
 
 # Capsule graphics
-CAPSULE_COLOR = formatColor(1, 1, 1)
+CAPSULE_COLOR = graphicsUtils.formatColor(1, 1, 1)
 CAPSULE_SIZE = 0.25
 
 # Drawing walls
@@ -91,9 +91,9 @@ class InfoPane:
         return x,y
 
     def drawPane(self):
-        self.scoreText = text( self.toScreen(0, 0), self.textColor, self._infoString(0,1200), "Consolas", self.fontSize, "bold")
-        self.redText = text( self.toScreen(230, 0), TEAM_COLORS[0], self._redScoreString(), "Consolas", self.fontSize, "bold")
-        self.redText = text( self.toScreen(690, 0), TEAM_COLORS[1], self._blueScoreString(), "Consolas", self.fontSize, "bold")
+        self.scoreText = graphicsUtils.text( self.toScreen(0, 0), self.textColor, self._infoString(0,1200), "Consolas", self.fontSize, "bold")
+        self.redText = graphicsUtils.text( self.toScreen(230, 0), TEAM_COLORS[0], self._redScoreString(), "Consolas", self.fontSize, "bold")
+        self.redText = graphicsUtils.text( self.toScreen(690, 0), TEAM_COLORS[1], self._blueScoreString(), "Consolas", self.fontSize, "bold")
 
     def _redScoreString(self):
         return "RED: % 10s "%(self.redTeam[:12])
@@ -102,10 +102,10 @@ class InfoPane:
         return "BLUE: % 10s "%(self.blueTeam[:12])
 
     def updateRedText(self, score):
-        changeText(self.redText, self._redScoreString())
+        graphicsUtils.changeText(self.redText, self._redScoreString())
 
     def updateBlueText(self, score):
-        changeText(self.blueText, self._blueScoreString())
+        graphicsUtils.changeText(self.blueText, self._blueScoreString())
 
     def initializeGhostDistances(self, distances):
         self.ghostDistanceText = []
@@ -117,26 +117,26 @@ class InfoPane:
             size = 10
 
         for i, d in enumerate(distances):
-            t = text( self.toScreen(self.width/2 + self.width/8 * i, 0), GHOST_COLORS[i+1], d, "Times", size, "bold")
+            t = graphicsUtils.text( self.toScreen(self.width/2 + self.width/8 * i, 0), GHOST_COLORS[i+1], d, "Times", size, "bold")
             self.ghostDistanceText.append(t)
 
     def _infoString(self, score, timeleft):
         return "SCORE: % 4d, TIME: % 4d" % (score, timeleft)
 
     def updateScore(self, score, timeleft):
-        changeText(self.scoreText, self._infoString(score,timeleft))
+        graphicsUtils.changeText(self.scoreText, self._infoString(score,timeleft))
 
     def setTeam(self, isBlue):
         text = "RED TEAM"
         if isBlue: text = "BLUE TEAM"
-        self.teamText = text( self.toScreen(300, 0), self.textColor, text, "Times", self.fontSize, "bold")
+        self.teamText = graphicsUtils.text( self.toScreen(300, 0), self.textColor, text, "Times", self.fontSize, "bold")
 
     def updateGhostDistances(self, distances):
         if len(distances) == 0: return
         if 'ghostDistanceText' not in dir(self): self.initializeGhostDistances(distances)
         else:
             for i, d in enumerate(distances):
-                changeText(self.ghostDistanceText[i], d)
+                graphicsUtils.changeText(self.ghostDistanceText[i], d)
 
     def drawGhost(self):
         pass
@@ -204,7 +204,7 @@ class PacmanGraphics:
         if (self.gif_skip_frames != 0 and self.frame % self.gif_skip_frames != 0):
             return
 
-        self.frame_images.append(getPostscript())
+        self.frame_images.append(graphicsUtils.getPostscript())
 
     def write_gif(self):
         if (not self.gif_path):
@@ -233,7 +233,7 @@ class PacmanGraphics:
             dist.append(distx)
             for y in range(walls.height):
                     ( screen_x, screen_y ) = self.to_screen( (x, y) )
-                    block = square( (screen_x, screen_y),
+                    block = graphicsUtils.square( (screen_x, screen_y),
                                                     0.5 * self.gridSize,
                                                     color = BACKGROUND_COLOR,
                                                     filled = 1, behind=2)
@@ -245,7 +245,7 @@ class PacmanGraphics:
         self.drawWalls(layout.walls)
         self.food = self.drawFood(layout.food)
         self.capsules = self.drawCapsules(layout.capsules)
-        refresh()
+        graphicsUtils.refresh()
 
     def drawAgentObjects(self, state):
         self.agentImages = [] # (agentState, image)
@@ -256,21 +256,21 @@ class PacmanGraphics:
             else:
                 image = self.drawGhost(agent, index)
                 self.agentImages.append( (agent, image) )
-        refresh()
+        graphicsUtils.refresh()
 
     def swapImages(self, agentIndex, newState):
         """
             Changes an image from a ghost to a pacman or vis versa (for capture)
         """
         prevState, prevImage = self.agentImages[agentIndex]
-        for item in prevImage: remove_from_screen(item)
+        for item in prevImage: graphicsUtils.remove_from_screen(item)
         if newState.isPacman:
             image = self.drawPacman(newState, agentIndex)
             self.agentImages[agentIndex] = (newState, image )
         else:
             image = self.drawGhost(newState, agentIndex)
             self.agentImages[agentIndex] = (newState, image )
-        refresh()
+        graphicsUtils.refresh()
 
     def update(self, newState):
         self.frame += 1
@@ -302,10 +302,10 @@ class PacmanGraphics:
         screen_width = 2*self.gridSize + grid_width
         screen_height = 2*self.gridSize + grid_height + INFO_PANE_HEIGHT
 
-        begin_graphics(screen_width,
-                                    screen_height,
-                                    BACKGROUND_COLOR,
-                                    "Pacman")
+        graphicsUtils.begin_graphics(screen_width,
+                                     screen_height,
+                                     BACKGROUND_COLOR,
+                                     "Pacman")
 
     def drawPacman(self, pacman, index):
         position = self.getPosition(pacman)
@@ -321,7 +321,7 @@ class PacmanGraphics:
             fillColor = GHOST_COLORS[index]
             width = PACMAN_CAPTURE_OUTLINE_WIDTH
 
-        return [circle(screen_point, PACMAN_SCALE * self.gridSize,
+        return [graphicsUtils.circle(screen_point, PACMAN_SCALE * self.gridSize,
                                     fillColor = fillColor, outlineColor = outlineColor,
                                     endpoints = endpoints,
                                     width = width)]
@@ -346,13 +346,13 @@ class PacmanGraphics:
         screenPosition = self.to_screen(position)
         endpoints = self.getEndpoints( direction, position )
         r = PACMAN_SCALE * self.gridSize
-        moveCircle(image[0], screenPosition, r, endpoints)
-        refresh()
+        graphicsUtils.moveCircle(image[0], screenPosition, r, endpoints)
+        graphicsUtils.refresh()
 
     def animatePacman(self, pacman, prevPacman, image):
         if self.frameTime < 0:
             print('Press any key to step forward, "q" to play')
-            keys = wait_for_keys()
+            keys = graphicsUtils.wait_for_keys()
             if 'q' in keys:
                 self.frameTime = 0.1
         if self.frameTime > 0.01 or self.frameTime < 0:
@@ -363,11 +363,11 @@ class PacmanGraphics:
             for i in range(1,int(frames) + 1):
                 pos = px*i/frames + fx*(frames-i)/frames, py*i/frames + fy*(frames-i)/frames
                 self.movePacman(pos, self.getDirection(pacman), image)
-                refresh()
-                sleep(abs(self.frameTime) / frames)
+                graphicsUtils.refresh()
+                graphicsUtils.sleep(abs(self.frameTime) / frames)
         else:
             self.movePacman(self.getPosition(pacman), self.getDirection(pacman), image)
-        refresh()
+        graphicsUtils.refresh()
 
     def getGhostColor(self, ghost, ghostIndex):
         if ghost.scaredTimer > 0:
@@ -384,9 +384,9 @@ class PacmanGraphics:
             coords.append((x*self.gridSize*GHOST_SIZE + screen_x, y*self.gridSize*GHOST_SIZE + screen_y))
 
         colour = self.getGhostColor(ghost, agentIndex)
-        body = polygon(coords, colour, filled = 1)
-        WHITE = formatColor(1.0, 1.0, 1.0)
-        BLACK = formatColor(0.0, 0.0, 0.0)
+        body = graphicsUtils.polygon(coords, colour, filled = 1)
+        WHITE = graphicsUtils.formatColor(1.0, 1.0, 1.0)
+        BLACK = graphicsUtils.formatColor(0.0, 0.0, 0.0)
 
         dx = 0
         dy = 0
@@ -398,10 +398,10 @@ class PacmanGraphics:
             dx = 0.2
         if dir == 'West':
             dx = -0.2
-        leftEye = circle((screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2, WHITE, WHITE)
-        rightEye = circle((screen_x+self.gridSize*GHOST_SIZE*(0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2, WHITE, WHITE)
-        leftPupil = circle((screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08, BLACK, BLACK)
-        rightPupil = circle((screen_x+self.gridSize*GHOST_SIZE*(0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08, BLACK, BLACK)
+        leftEye = graphicsUtils.circle((screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2, WHITE, WHITE)
+        rightEye = graphicsUtils.circle((screen_x+self.gridSize*GHOST_SIZE*(0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2, WHITE, WHITE)
+        leftPupil = graphicsUtils.circle((screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08, BLACK, BLACK)
+        rightPupil = graphicsUtils.circle((screen_x+self.gridSize*GHOST_SIZE*(0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08, BLACK, BLACK)
         ghostImageParts = []
         ghostImageParts.append(body)
         ghostImageParts.append(leftEye)
@@ -423,10 +423,10 @@ class PacmanGraphics:
             dx = 0.2
         if dir == 'West':
             dx = -0.2
-        moveCircle(eyes[0],(screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2)
-        moveCircle(eyes[1],(screen_x+self.gridSize*GHOST_SIZE*(0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2)
-        moveCircle(eyes[2],(screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08)
-        moveCircle(eyes[3],(screen_x+self.gridSize*GHOST_SIZE*(0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08)
+        graphicsUtils.moveCircle(eyes[0],(screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2)
+        graphicsUtils.moveCircle(eyes[1],(screen_x+self.gridSize*GHOST_SIZE*(0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2)
+        graphicsUtils.moveCircle(eyes[2],(screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08)
+        graphicsUtils.moveCircle(eyes[3],(screen_x+self.gridSize*GHOST_SIZE*(0.3+dx), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy)), self.gridSize*GHOST_SIZE*0.08)
 
     def moveGhost(self, ghost, ghostIndex, prevGhost, ghostImageParts):
         old_x, old_y = self.to_screen(self.getPosition(prevGhost))
@@ -434,16 +434,16 @@ class PacmanGraphics:
         delta = new_x - old_x, new_y - old_y
 
         for ghostImagePart in ghostImageParts:
-            move_by(ghostImagePart, delta)
-        refresh()
+            graphicsUtils.move_by(ghostImagePart, delta)
+        graphicsUtils.refresh()
 
         if ghost.scaredTimer > 0:
             color = SCARED_COLOR
         else:
             color = GHOST_COLORS[ghostIndex]
-        edit(ghostImageParts[0], ('fill', color), ('outline', color))
+        graphicsUtils.edit(ghostImageParts[0], ('fill', color), ('outline', color))
         self.moveEyes(self.getPosition(ghost), self.getDirection(ghost), ghostImageParts[-4:])
-        refresh()
+        graphicsUtils.refresh()
 
     def getPosition(self, agentState):
         if agentState.configuration == None: return (-1000, -1000)
@@ -457,7 +457,7 @@ class PacmanGraphics:
         # Get the last frame.
         self.save_frame(force_save = True)
 
-        end_graphics()
+        graphicsUtils.end_graphics()
 
         self.write_gif()
 
@@ -501,66 +501,66 @@ class PacmanGraphics:
                     # NE quadrant
                     if (not nIsWall) and (not eIsWall):
                         # inner circle
-                        circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (0,91), 'arc')
+                        graphicsUtils.circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (0,91), 'arc')
                     if (nIsWall) and (not eIsWall):
                         # vertical line
-                        line(add(screen, (self.gridSize*WALL_RADIUS, 0)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-0.5)-1)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*WALL_RADIUS, 0)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-0.5)-1)), wallColor)
                     if (not nIsWall) and (eIsWall):
                         # horizontal line
-                        line(add(screen, (0, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (0, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
                     if (nIsWall) and (eIsWall) and (not neIsWall):
                         # outer circle
-                        circle(add(screen2, (self.gridSize*2*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (180,271), 'arc')
-                        line(add(screen, (self.gridSize*2*WALL_RADIUS-1, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
-                        line(add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS+1)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-0.5))), wallColor)
+                        graphicsUtils.circle(add(screen2, (self.gridSize*2*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (180,271), 'arc')
+                        graphicsUtils.line(add(screen, (self.gridSize*2*WALL_RADIUS-1, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS+1)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(-0.5))), wallColor)
 
                     # NW quadrant
                     if (not nIsWall) and (not wIsWall):
                         # inner circle
-                        circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (90,181), 'arc')
+                        graphicsUtils.circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (90,181), 'arc')
                     if (nIsWall) and (not wIsWall):
                         # vertical line
-                        line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, 0)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-0.5)-1)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, 0)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-0.5)-1)), wallColor)
                     if (not nIsWall) and (wIsWall):
                         # horizontal line
-                        line(add(screen, (0, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5)-1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (0, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5)-1, self.gridSize*(-1)*WALL_RADIUS)), wallColor)
                     if (nIsWall) and (wIsWall) and (not nwIsWall):
                         # outer circle
-                        circle(add(screen2, (self.gridSize*(-2)*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (270,361), 'arc')
-                        line(add(screen, (self.gridSize*(-2)*WALL_RADIUS+1, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5), self.gridSize*(-1)*WALL_RADIUS)), wallColor)
-                        line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS+1)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-0.5))), wallColor)
+                        graphicsUtils.circle(add(screen2, (self.gridSize*(-2)*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (270,361), 'arc')
+                        graphicsUtils.line(add(screen, (self.gridSize*(-2)*WALL_RADIUS+1, self.gridSize*(-1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5), self.gridSize*(-1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-2)*WALL_RADIUS+1)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(-0.5))), wallColor)
 
                     # SE quadrant
                     if (not sIsWall) and (not eIsWall):
                         # inner circle
-                        circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (270,361), 'arc')
+                        graphicsUtils.circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (270,361), 'arc')
                     if (sIsWall) and (not eIsWall):
                         # vertical line
-                        line(add(screen, (self.gridSize*WALL_RADIUS, 0)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(0.5)+1)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*WALL_RADIUS, 0)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(0.5)+1)), wallColor)
                     if (not sIsWall) and (eIsWall):
                         # horizontal line
-                        line(add(screen, (0, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (0, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5+1, self.gridSize*(1)*WALL_RADIUS)), wallColor)
                     if (sIsWall) and (eIsWall) and (not seIsWall):
                         # outer circle
-                        circle(add(screen2, (self.gridSize*2*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (90,181), 'arc')
-                        line(add(screen, (self.gridSize*2*WALL_RADIUS-1, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5, self.gridSize*(1)*WALL_RADIUS)), wallColor)
-                        line(add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS-1)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(0.5))), wallColor)
+                        graphicsUtils.circle(add(screen2, (self.gridSize*2*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (90,181), 'arc')
+                        graphicsUtils.line(add(screen, (self.gridSize*2*WALL_RADIUS-1, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*0.5, self.gridSize*(1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS-1)), add(screen, (self.gridSize*WALL_RADIUS, self.gridSize*(0.5))), wallColor)
 
                     # SW quadrant
                     if (not sIsWall) and (not wIsWall):
                         # inner circle
-                        circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (180,271), 'arc')
+                        graphicsUtils.circle(screen2, WALL_RADIUS * self.gridSize, wallColor, wallColor, (180,271), 'arc')
                     if (sIsWall) and (not wIsWall):
                         # vertical line
-                        line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, 0)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(0.5)+1)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, 0)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(0.5)+1)), wallColor)
                     if (not sIsWall) and (wIsWall):
                         # horizontal line
-                        line(add(screen, (0, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5)-1, self.gridSize*(1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (0, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5)-1, self.gridSize*(1)*WALL_RADIUS)), wallColor)
                     if (sIsWall) and (wIsWall) and (not swIsWall):
                         # outer circle
-                        circle(add(screen2, (self.gridSize*(-2)*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (0,91), 'arc')
-                        line(add(screen, (self.gridSize*(-2)*WALL_RADIUS+1, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5), self.gridSize*(1)*WALL_RADIUS)), wallColor)
-                        line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS-1)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(0.5))), wallColor)
+                        graphicsUtils.circle(add(screen2, (self.gridSize*(-2)*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS)), WALL_RADIUS * self.gridSize-1, wallColor, wallColor, (0,91), 'arc')
+                        graphicsUtils.line(add(screen, (self.gridSize*(-2)*WALL_RADIUS+1, self.gridSize*(1)*WALL_RADIUS)), add(screen, (self.gridSize*(-0.5), self.gridSize*(1)*WALL_RADIUS)), wallColor)
+                        graphicsUtils.line(add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(2)*WALL_RADIUS-1)), add(screen, (self.gridSize*(-1)*WALL_RADIUS, self.gridSize*(0.5))), wallColor)
 
     def isWall(self, x, y, walls):
         if x < 0 or y < 0:
@@ -580,7 +580,7 @@ class PacmanGraphics:
             for yNum, cell in enumerate(x):
                 if cell: # There's food here
                     screen = self.to_screen((xNum, yNum ))
-                    dot = circle( screen,
+                    dot = graphicsUtils.circle( screen,
                                                 FOOD_SIZE * self.gridSize,
                                                 outlineColor = color, fillColor = color,
                                                 width = 1)
@@ -593,7 +593,7 @@ class PacmanGraphics:
         capsuleImages = {}
         for capsule in capsules:
             ( screen_x, screen_y ) = self.to_screen(capsule)
-            dot = circle( (screen_x, screen_y),
+            dot = graphicsUtils.circle( (screen_x, screen_y),
                                                 CAPSULE_SIZE * self.gridSize,
                                                 outlineColor = CAPSULE_COLOR,
                                                 fillColor = CAPSULE_COLOR,
@@ -603,11 +603,11 @@ class PacmanGraphics:
 
     def removeFood(self, cell, foodImages ):
         x, y = cell
-        remove_from_screen(foodImages[x][y])
+        graphicsUtils.remove_from_screen(foodImages[x][y])
 
     def removeCapsule(self, cell, capsuleImages ):
         x, y = cell
-        remove_from_screen(capsuleImages[(x, y)])
+        graphicsUtils.remove_from_screen(capsuleImages[(x, y)])
 
     def drawExpandedCells(self, cells):
         """
@@ -619,19 +619,19 @@ class PacmanGraphics:
         self.expandedCells = []
         for k, cell in enumerate(cells):
              screenPos = self.to_screen( cell)
-             cellColor = formatColor(*[(n-k) * c * .5 / n + .25 for c in baseColor])
-             block = square(screenPos,
+             cellColor = graphicsUtils.formatColor(*[(n-k) * c * .5 / n + .25 for c in baseColor])
+             block = graphicsUtils.square(screenPos,
                                 0.5 * self.gridSize,
                                 color = cellColor,
                                 filled = 1, behind=2)
              self.expandedCells.append(block)
              if self.frameTime < 0:
-                 refresh()
+                 graphicsUtils.refresh()
 
     def clearDebug(self):
         if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
             for cell in self.expandedCells:
-                remove_from_screen(cell)
+                graphicsUtils.remove_from_screen(cell)
 
     def debugDraw(self, cells, color=[1.0, 0.0, 0.0], clear=False):
         n = float(len(cells))
@@ -641,19 +641,19 @@ class PacmanGraphics:
 
         for k, cell in enumerate(cells):
              screenPos = self.to_screen( cell)
-             cellColor = formatColor(*color)
-             block = square(screenPos,
+             cellColor = graphicsUtils.formatColor(*color)
+             block = graphicsUtils.square(screenPos,
                                 0.5 * self.gridSize,
                                 color = cellColor,
                                 filled = 1, behind=2)
              self.expandedCells.append(block)
              if self.frameTime < 0:
-                 refresh()
+                 graphicsUtils.refresh()
 
     def clearExpandedCells(self):
         if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
             for cell in self.expandedCells:
-                remove_from_screen(cell)
+                graphicsUtils.remove_from_screen(cell)
 
 
     def updateDistributions(self, distributions):
@@ -673,8 +673,8 @@ class PacmanGraphics:
                 if self.capture: colors = GHOST_VEC_COLORS
                 for weight, gcolor in zip(weights, colors):
                     color = [min(1.0, c + 0.95 * g * weight ** .3) for c,g in zip(color, gcolor)]
-                changeColor(image, formatColor(*color))
-        refresh()
+                graphicsUtils.changeColor(image, graphicsUtils.formatColor(*color))
+        graphicsUtils.refresh()
 
 class FirstPersonPacmanGraphics(PacmanGraphics):
     def __init__(self, zoom = 1.0, showGhosts = True, capture = False, frameTime=0):
@@ -744,4 +744,4 @@ def saveFrame():
     if not os.path.exists(POSTSCRIPT_OUTPUT_DIR): os.mkdir(POSTSCRIPT_OUTPUT_DIR)
     name = os.path.join(POSTSCRIPT_OUTPUT_DIR, 'frame_%08d.ps' % FRAME_NUMBER)
     FRAME_NUMBER += 1
-    writePostscript(name) # writes the current canvas
+    graphicsUtils.writePostscript(name) # writes the current canvas

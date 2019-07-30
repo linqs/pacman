@@ -338,11 +338,11 @@ def getUserAction(state, actionFunction):
     Used for debugging and lecture demos.
     """
 
-    import graphicsUtils
+    import pacai.ui.graphicsUtils
     action = None
 
     while True:
-        keys = graphicsUtils.wait_for_keys()
+        keys = pacai.ui.graphicsUtils.wait_for_keys()
 
         if 'Up' in keys:
             action = 'north'
@@ -494,11 +494,11 @@ if __name__ == '__main__':
     # GET THE DISPLAY ADAPTER
     ###########################
 
-    import pacai.textGridworldDisplay
-    display = pacai.textGridworldDisplay.TextGridworldDisplay(mdp)
+    import pacai.ui.textGridworldDisplay
+    display = pacai.ui.textGridworldDisplay.TextGridworldDisplay(mdp)
     if not opts.textDisplay:
-        import pacai.graphicsGridworldDisplay
-        display = pacai.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
+        import pacai.ui.graphicsGridworldDisplay
+        display = pacai.ui.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
     display.start()
 
     ###########################

@@ -182,7 +182,6 @@ def image(pos, file="../../blueghost.gif"):
     # img = PhotoImage(file=file)
     return _canvas.create_image(x, y, image = tkinter.PhotoImage(file=file), anchor = tkinter.NW)
 
-
 def refresh():
       _canvas.update_idletasks()
 

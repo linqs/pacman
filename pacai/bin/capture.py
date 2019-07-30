@@ -629,20 +629,20 @@ def readCommand( argv ):
 
     # Choose a display format
     if options.textgraphics:
-        import pacai.textDisplay
-        args['display'] = pacai.textDisplay.PacmanGraphics()
+        import pacai.ui.textDisplay
+        args['display'] = pacai.ui.textDisplay.PacmanGraphics()
     elif options.quiet:
-        import pacai.textDisplay
-        args['display'] = pacai.textDisplay.NullGraphics()
+        import pacai.ui.textDisplay
+        args['display'] = pacai.ui.textDisplay.NullGraphics()
     elif options.super_quiet:
-        import pacai.textDisplay
-        args['display'] = pacai.textDisplay.NullGraphics()
+        import pacai.ui.textDisplay
+        args['display'] = pacai.ui.textDisplay.NullGraphics()
         args['muteAgents'] = True
     else:
-        import pacai.captureGraphicsDisplay
+        import pacai.ui.captureGraphicsDisplay
         # Hack for agents writing to the display
-        pacai.captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = pacai.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True,
+        pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
+        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True,
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
         import __main__
         __main__.__dict__['_display'] = args['display']

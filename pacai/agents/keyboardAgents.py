@@ -2,8 +2,7 @@ import random
 
 from pacai.agents.agent import Agent
 from pacai.game import Directions
-from pacai.graphicsUtils import keys_pressed
-from pacai.graphicsUtils import keys_waiting
+from pacai.ui import graphicsUtils
 
 class KeyboardAgent(Agent):
   """
@@ -23,7 +22,7 @@ class KeyboardAgent(Agent):
     self.keys = []
 
   def getAction( self, state):
-    keys = keys_waiting() + keys_pressed()
+    keys = graphicsUtils.keys_waiting() + graphicsUtils.keys_pressed()
     if keys != []:
       self.keys = keys
 
