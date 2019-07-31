@@ -2,7 +2,7 @@
 
 import abc
 
-from pacai import game
+from pacai.core import game
 from pacai.util import util
 
 class FeatureExtractor(abc.ABC):

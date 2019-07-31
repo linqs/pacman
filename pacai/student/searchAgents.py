@@ -19,7 +19,7 @@ Good luck and happy searching!
 
 from pacai.core import game
 from pacai.core import search
-from pacai.agents import Agent
+from pacai.agents import agent
 from pacai.agents import searchAgents
 from pacai.util import util
 

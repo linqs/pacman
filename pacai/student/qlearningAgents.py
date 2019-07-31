@@ -1,7 +1,11 @@
-import pacai.agents.learningAgents
-import pacai.util.util
+from pacai.agents import learningAgents
+from pacai.util import util
 
-class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
+# Force the extractors into scope for util.lookup().
+# TODO(eriq): I hate util.lookup(), get rid of it and this import.
+from pacai.util import featureExtractors
+
+class QLearningAgent(learningAgents.ReinforcementAgent):
     """
     Q-Learning Agent
 
@@ -41,7 +45,7 @@ class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
     def getValue(self, state):
@@ -58,7 +62,7 @@ class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
     def getPolicy(self, state):
@@ -74,7 +78,7 @@ class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
     def getAction(self, state):
@@ -85,7 +89,7 @@ class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
         no legal actions, which is the case at the terminal state, you
         should choose None as the action.
 
-        HINT: You might want to use pacai.util.util.util.flipCoin(prob)
+        HINT: You might want to use util.flipCoin(prob)
         HINT: To pick randomly from a list, use random.choice(list)
         """
 
@@ -99,7 +103,7 @@ class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
         return action
@@ -120,7 +124,7 @@ class QLearningAgent(pacai.agents.learningAgents.ReinforcementAgent):
         """
 
         """ YOUR CODE HERE """
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
 class PacmanQAgent(QLearningAgent):
@@ -128,7 +132,7 @@ class PacmanQAgent(QLearningAgent):
     Exactly the same as QLearningAgent, but with different default parameters.
     """
 
-    def __init__(self, epsilon=0.05, gamma=0.8, alpha=0.2, numTraining=0, **args):
+    def __init__(self, epsilon = 0.05, gamma = 0.8, alpha = 0.2, numTraining = 0, **args):
         """
         These default parameters can be changed from the pacman.py command line.
         For example, to change the exploration rate, try:
@@ -169,8 +173,8 @@ class ApproximateQAgent(PacmanQAgent):
     should work as is.
     """
 
-    def __init__(self, extractor='IdentityExtractor', **args):
-        self.featExtractor = pacai.util.util.lookup()()
+    def __init__(self, extractor = 'IdentityExtractor', **args):
+        self.featExtractor = util.lookup()()
         super().__init__(**args)
 
         # You might want to initialize weights here.
@@ -187,7 +191,7 @@ class ApproximateQAgent(PacmanQAgent):
         """
 
         """ YOUR CODE HERE """
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
     def update(self, state, action, nextState, reward):
@@ -201,7 +205,7 @@ class ApproximateQAgent(PacmanQAgent):
         """
 
         """ YOUR CODE HERE """
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
     def final(self, state):
@@ -215,4 +219,4 @@ class ApproximateQAgent(PacmanQAgent):
         # Did we finish training?
         if self.episodesSoFar == self.numTraining:
             # You might want to print your weights here for debugging.
-            pacai.util.util.raiseNotDefined()
+            util.raiseNotDefined()
