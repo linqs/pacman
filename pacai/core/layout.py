@@ -2,7 +2,7 @@ import os
 import random
 from functools import reduce
 
-from pacai.game import Grid
+from pacai.core.game import Grid
 from pacai.util.util import manhattanDistance
 
 VISIBILITY_MATRIX_CACHE = {}

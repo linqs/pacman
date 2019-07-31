@@ -14,8 +14,8 @@ Commands to invoke other search strategies can be found in the project descripti
 import time
 
 import pacai.agents.searchAgents
-import pacai.game
-import pacai.search
+import pacai.core.game
+import pacai.core.search
 import pacai.student.search
 import pacai.util.util
 
@@ -31,10 +31,10 @@ class GoWestAgent(Agent):
     The agent receives a GameState (defined in pacman.py).
     """
 
-    if pacai.game.Directions.WEST in state.getLegalPacmanActions():
-      return pacai.game.Directions.WEST
+    if pacai.core.game.Directions.WEST in state.getLegalPacmanActions():
+      return pacai.core.game.Directions.WEST
     else:
-      return pacai.game.Directions.STOP
+      return pacai.core.game.Directions.STOP
 
 class SearchAgent(Agent):
   """
@@ -72,7 +72,7 @@ class SearchAgent(Agent):
     """
 
     # Locate the function.
-    function = pacai.util.util.fetchModuleAttribute(functionName, [pacai.search, pacai.student.search])
+    function = pacai.util.util.fetchModuleAttribute(functionName, [pacai.core.search, pacai.student.search])
 
     # Check if the function has a heuristic.
     if 'heuristic' not in function.__code__.co_varnames:
@@ -83,7 +83,7 @@ class SearchAgent(Agent):
     import pacai.student.searchAgents
 
     # Fetch the heuristic.
-    heuristic = pacai.util.util.fetchModuleAttribute(heuristicName, [pacai.search, pacai.student.search, pacai.agents.searchAgents, pacai.student.searchAgents])
+    heuristic = pacai.util.util.fetchModuleAttribute(heuristicName, [pacai.core.search, pacai.student.search, pacai.agents.searchAgents, pacai.student.searchAgents])
     print('[SearchAgent] using function %s and heuristic %s.' % (functionName, heuristicName))
 
     # Bind the heuristic.
@@ -113,7 +113,7 @@ class SearchAgent(Agent):
   def getAction(self, state):
     """
     Returns the next action in the path chosen earlier (in registerInitialState).  Return
-    pacai.game.Directions.STOP if there is no further action to take.
+    pacai.core.game.Directions.STOP if there is no further action to take.
 
     state: a GameState object (pacman.py)
     """
@@ -126,9 +126,9 @@ class SearchAgent(Agent):
     if i < len(self.actions):
       return self.actions[i]
     else:
-      return pacai.game.Directions.STOP
+      return pacai.core.game.Directions.STOP
 
-class PositionSearchProblem(pacai.search.SearchProblem):
+class PositionSearchProblem(pacai.core.search.SearchProblem):
   """
   A search problem defines the state space, start state, goal test,
   successor function and cost function.  This search problem can be
@@ -190,9 +190,9 @@ class PositionSearchProblem(pacai.search.SearchProblem):
     """
 
     successors = []
-    for action in [pacai.game.Directions.NORTH, pacai.game.Directions.SOUTH, pacai.game.Directions.EAST, pacai.game.Directions.WEST]:
+    for action in [pacai.core.game.Directions.NORTH, pacai.core.game.Directions.SOUTH, pacai.core.game.Directions.EAST, pacai.core.game.Directions.WEST]:
       x,y = state
-      dx, dy = pacai.game.Actions.directionToVector(action)
+      dx, dy = pacai.core.game.Actions.directionToVector(action)
       nextx, nexty = int(x + dx), int(y + dy)
       if not self.walls[nextx][nexty]:
         nextState = (nextx, nexty)
@@ -220,7 +220,7 @@ class PositionSearchProblem(pacai.search.SearchProblem):
     cost = 0
     for action in actions:
       # Check figure out the next state and see whether its' legal
-      dx, dy = pacai.game.Actions.directionToVector(action)
+      dx, dy = pacai.core.game.Actions.directionToVector(action)
       x, y = int(x + dx), int(y + dy)
       if self.walls[x][y]:
         return 999999
@@ -236,7 +236,7 @@ class StayEastSearchAgent(SearchAgent):
   """
 
   def __init__(self):
-      self.searchFunction = pacai.search.ucs
+      self.searchFunction = pacai.core.search.ucs
       costFn = lambda pos: 0.5 ** pos[0]
       self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
@@ -249,7 +249,7 @@ class StayWestSearchAgent(SearchAgent):
   """
 
   def __init__(self):
-      self.searchFunction = pacai.search.ucs
+      self.searchFunction = pacai.core.search.ucs
       costFn = lambda pos: 2 ** pos[0]
       self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
@@ -280,10 +280,10 @@ class AStarCornersAgent(SearchAgent):
     # Break circular dependency.
     import pacai.student.searchAgents
 
-    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.student.searchAgents.cornersHeuristic)
+    self.searchFunction = lambda prob: pacai.core.search.astar(prob, pacai.student.searchAgents.cornersHeuristic)
     self.searchType = pacai.student.searchAgents.CornersProblem
 
-class FoodSearchProblem(pacai.search.SearchProblem):
+class FoodSearchProblem(pacai.core.search.SearchProblem):
   """
   A search problem associated with finding the a path that collects all of the
   food (dots) in a Pacman game.
@@ -313,9 +313,9 @@ class FoodSearchProblem(pacai.search.SearchProblem):
 
     successors = []
     self._expanded += 1
-    for direction in [pacai.game.Directions.NORTH, pacai.game.Directions.SOUTH, pacai.game.Directions.EAST, pacai.game.Directions.WEST]:
+    for direction in [pacai.core.game.Directions.NORTH, pacai.core.game.Directions.SOUTH, pacai.core.game.Directions.EAST, pacai.core.game.Directions.WEST]:
       x,y = state[0]
-      dx, dy = pacai.game.Actions.directionToVector(direction)
+      dx, dy = pacai.core.game.Actions.directionToVector(direction)
       nextx, nexty = int(x + dx), int(y + dy)
       if not self.walls[nextx][nexty]:
         nextFood = state[1].copy()
@@ -333,7 +333,7 @@ class FoodSearchProblem(pacai.search.SearchProblem):
     cost = 0
     for action in actions:
       # figure out the next state and see whether it's legal
-      dx, dy = pacai.game.Actions.directionToVector(action)
+      dx, dy = pacai.core.game.Actions.directionToVector(action)
       x, y = int(x + dx), int(y + dy)
       if self.walls[x][y]:
         return 999999
@@ -349,7 +349,7 @@ class AStarFoodSearchAgent(SearchAgent):
     # Break circular dependency.
     import pacai.student.searchAgents
 
-    self.searchFunction = lambda prob: pacai.search.astar(prob, pacai.student.searchAgents.foodHeuristic)
+    self.searchFunction = lambda prob: pacai.core.search.astar(prob, pacai.student.searchAgents.foodHeuristic)
     self.searchType = FoodSearchProblem
 
 def numFoodHeuristic(state, problem):
@@ -373,4 +373,4 @@ def mazeDistance(point1, point2, gameState):
   assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
   prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False)
 
-  return len(pacai.search.bfs(prob))
+  return len(pacai.core.search.bfs(prob))

@@ -1,10 +1,10 @@
 import math
 import sys
 
-import pacai.environment
+import pacai.core.environment
 import pacai.ui.graphicsCrawlerDisplay
 
-class CrawlingRobotEnvironment(pacai.environment.Environment):
+class CrawlingRobotEnvironment(pacai.core.environment.Environment):
     def __init__(self, crawlingRobot):
         self.crawlingRobot = crawlingRobot
 

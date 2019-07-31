@@ -1,7 +1,7 @@
 import random
 
 from pacai.agents.agent import Agent
-from pacai.game import Directions
+from pacai.core.game import Directions
 from pacai.ui import graphicsUtils
 
 class KeyboardAgent(Agent):

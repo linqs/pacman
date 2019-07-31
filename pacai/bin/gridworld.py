@@ -2,11 +2,11 @@ import optparse
 import random
 import sys
 
-import pacai.environment
-import pacai.mdp
+import pacai.core.environment
+import pacai.core.mdp
 import pacai.util.util
 
-class Gridworld(pacai.mdp.MarkovDecisionProcess):
+class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
     """
     Gridworld
     """
@@ -181,7 +181,7 @@ class Gridworld(pacai.mdp.MarkovDecisionProcess):
 
         return self.grid[x][y] != '#'
 
-class GridworldEnvironment(pacai.environment.Environment):
+class GridworldEnvironment(pacai.core.environment.Environment):
     def __init__(self, gridWorld):
         self.gridWorld = gridWorld
         self.reset()

@@ -3,7 +3,7 @@ import random
 import pacai.util.util
 
 from pacai.agents.agent import Agent
-from pacai.game import Directions
+from pacai.core.game import Directions
 
 class LeftTurnAgent(Agent):
     """

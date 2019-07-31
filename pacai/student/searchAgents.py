@@ -17,14 +17,14 @@ Look for the lines that say:
 Good luck and happy searching!
 """
 
-import pacai.game
-import pacai.search
+import pacai.core.game
+import pacai.core.search
 import pacai.agents.searchAgents
 import pacai.util.util
 
 from pacai.agents.agent import Agent
 
-class CornersProblem(pacai.search.SearchProblem):
+class CornersProblem(pacai.core.search.SearchProblem):
     """
     This search problem finds paths through all four corners of a layout.
 
@@ -84,7 +84,7 @@ class CornersProblem(pacai.search.SearchProblem):
         """
 
         successors = []
-        for action in [pacai.game.Directions.NORTH, pacai.game.Directions.SOUTH, pacai.game.Directions.EAST, pacai.game.Directions.WEST]:
+        for action in [pacai.core.game.Directions.NORTH, pacai.core.game.Directions.SOUTH, pacai.core.game.Directions.EAST, pacai.core.game.Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
             #   x, y = currentPosition
@@ -109,7 +109,7 @@ class CornersProblem(pacai.search.SearchProblem):
 
         x, y = self.startingPosition
         for action in actions:
-            dx, dy = pacai.game.Actions.directionToVector(action)
+            dx, dy = pacai.core.game.Actions.directionToVector(action)
             x, y = int(x + dx), int(y + dy)
             if self.walls[x][y]:
                 return 999999
@@ -166,7 +166,7 @@ def foodHeuristic(state, problem):
 
     # *** Your Code Here ***
     pacai.util.util.raiseNotDefined()
-    return pacai.search.nullHeuristic(state, problem)  # Default to the null heuristic.
+    return pacai.core.search.nullHeuristic(state, problem)  # Default to the null heuristic.
 
 class ClosestDotSearchAgent(pacai.agents.searchAgents.SearchAgent):
     """

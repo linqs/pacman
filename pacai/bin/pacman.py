@@ -33,11 +33,11 @@ import time
 import types
 
 from pacai.agents.agent import Agent
-from pacai.game import Actions
-from pacai.game import Directions
-from pacai.game import Game
-from pacai.game import GameStateData
-from pacai.layout import getLayout
+from pacai.core.game import Actions
+from pacai.core.game import Directions
+from pacai.core.game import Game
+from pacai.core.game import GameStateData
+from pacai.core.layout import getLayout
 from pacai.util.util import nearestPoint
 from pacai.util.util import manhattanDistance
 

@@ -37,17 +37,17 @@ import traceback
 import types
 
 import pacai.agents.keyboardAgents
-import pacai.layout
+import pacai.core.layout
 import pacai.util.mazeGenerator
 
 from pacai.agents.agent import Agent
-from pacai.game import Actions
-from pacai.game import Configuration
-from pacai.game import Directions
-from pacai.game import Game
-from pacai.game import GameStateData
-from pacai.game import Grid
-from pacai.game import reconstituteGrid
+from pacai.core.game import Actions
+from pacai.core.game import Configuration
+from pacai.core.game import Directions
+from pacai.core.game import Game
+from pacai.core.game import GameStateData
+from pacai.core.game import Grid
+from pacai.core.game import reconstituteGrid
 from pacai.util.util import manhattanDistance
 from pacai.util.util import nearestPoint
 
@@ -593,13 +593,13 @@ def readCommand( argv ):
                                     - starts a game with two baseline agents
                             (2) python capture.py --keys0
                                     - starts a two-player interactive game where the arrow keys control agent 0, and all other agents are baseline agents
-                            (3) python capture.py -r pacai.baselineTeam -b pacai.student.myTeam
+                            (3) python capture.py -r pacai.core.baselineTeam -b pacai.student.myTeam
                                     - starts a fully automated game where the red team is a baseline team and blue team is pacai.student.myTeam
     """
     parser = optparse.OptionParser(usageStr)
 
-    parser.add_option('-r', '--red', help=default('Red team'), default='pacai.baselineTeam')
-    parser.add_option('-b', '--blue', help=default('Blue team'), default='pacai.baselineTeam')
+    parser.add_option('-r', '--red', help=default('Red team'), default='pacai.core.baselineTeam')
+    parser.add_option('-b', '--blue', help=default('Blue team'), default='pacai.core.baselineTeam')
     parser.add_option('--redOpts', help=default('Options for red team (e.g. first=keys)'), default='')
     parser.add_option('--blueOpts', help=default('Options for blue team (e.g. first=keys)'), default='')
     parser.add_option('--keys0', help='Make agent 0 (first red player) a keyboard agent', action='store_true', default=False)
@@ -696,11 +696,11 @@ def readCommand( argv ):
         if (options.layout != 'RANDOM'):
             seed = int(options.layout[6:])
 
-        args['layout'] = pacai.layout.Layout(randomLayout(seed).split('\n'))
+        args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise Exception( 'You must use a capture layout with capture.py')
     else:
-        args['layout'] = pacai.layout.getLayout( options.layout )
+        args['layout'] = pacai.core.layout.getLayout( options.layout )
 
     if args['layout'] == None: raise Exception("The layout " + options.layout + " cannot be found")
     args['length'] = options.time

@@ -4,7 +4,7 @@ import time
 import pacai.util.util
 
 from pacai.agents.captureAgents import CaptureAgent
-from pacai.game import Directions
+from pacai.core.game import Directions
 
 def createTeam(firstIndex, secondIndex, isRed,
         first = 'OffensiveReflexAgent', second = 'DefensiveReflexAgent'):

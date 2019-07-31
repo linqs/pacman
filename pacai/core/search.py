@@ -2,7 +2,7 @@
 The base for seach implementations.
 """
 
-import pacai.game
+import pacai.core.game
 import pacai.student.search
 import pacai.util.util
 
@@ -59,8 +59,8 @@ def tinyMazeSearch(problem):
     For any other maze, the sequence of moves will be incorrect, so only use this for tinyMaze.
     """
 
-    s = pacai.game.Directions.SOUTH
-    w = pacai.game.Directions.WEST
+    s = pacai.core.game.Directions.SOUTH
+    w = pacai.core.game.Directions.WEST
 
     return  [s, s, w, s, w, w, s, w]
 
