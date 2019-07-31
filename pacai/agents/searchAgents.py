@@ -54,8 +54,10 @@ class SearchAgent(Agent):
   def __init__(self, fn='depthFirstSearch', prob='PositionSearchProblem', heuristic='nullHeuristic'):
     # Warning: some advanced Python magic is employed below to find the right functions and problems
 
-    # Break circular dependency.
+    # Break circular dependency (other import is for import scoping).
+    # TODO(eriq): Remove once this is file is broken up.
     import pacai.student.searchAgents
+    import pacai.agents.searchAgents
 
     # Get the search function from the name and heuristic.
     self.searchFunction = self._fetchSearchFunction(fn, heuristic)
@@ -71,6 +73,13 @@ class SearchAgent(Agent):
     then return a lambda that binds the heuristic.
     """
 
+    # Break circular dependency (other imports are for import scoping).
+    # TODO(eriq): Remove once this is file is broken up.
+    import pacai.student.searchAgents
+    import pacai.agents.searchAgents
+    import pacai.core.search
+    import pacai.student.search
+
     # Locate the function.
     function = pacai.util.util.fetchModuleAttribute(functionName, [pacai.core.search, pacai.student.search])
 
@@ -78,9 +87,6 @@ class SearchAgent(Agent):
     if 'heuristic' not in function.__code__.co_varnames:
       print('[SearchAgent] using function %s.' % (functionName))
       return function
-
-    # Break circular dependency.
-    import pacai.student.searchAgents
 
     # Fetch the heuristic.
     heuristic = pacai.util.util.fetchModuleAttribute(heuristicName, [pacai.core.search, pacai.student.search, pacai.agents.searchAgents, pacai.student.searchAgents])
@@ -278,6 +284,7 @@ class AStarCornersAgent(SearchAgent):
 
   def __init__(self):
     # Break circular dependency.
+    # TODO(eriq): Remove once this is file is broken up.
     import pacai.student.searchAgents
 
     self.searchFunction = lambda prob: pacai.core.search.astar(prob, pacai.student.searchAgents.cornersHeuristic)
@@ -347,6 +354,7 @@ class AStarFoodSearchAgent(SearchAgent):
 
   def __init__(self):
     # Break circular dependency.
+    # TODO(eriq): Remove once this is file is broken up.
     import pacai.student.searchAgents
 
     self.searchFunction = lambda prob: pacai.core.search.astar(prob, pacai.student.searchAgents.foodHeuristic)

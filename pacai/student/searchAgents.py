@@ -17,14 +17,13 @@ Look for the lines that say:
 Good luck and happy searching!
 """
 
-import pacai.core.game
-import pacai.core.search
-import pacai.agents.searchAgents
-import pacai.util.util
+from pacai.core import game
+from pacai.core import search
+from pacai.agents import Agent
+from pacai.agents import searchAgents
+from pacai.util import util
 
-from pacai.agents.agent import Agent
-
-class CornersProblem(pacai.core.search.SearchProblem):
+class CornersProblem(search.SearchProblem):
     """
     This search problem finds paths through all four corners of a layout.
 
@@ -52,7 +51,7 @@ class CornersProblem(pacai.core.search.SearchProblem):
         self._expanded = 0  # Number of search nodes expanded
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
     def startingState(self):
         """
@@ -60,7 +59,7 @@ class CornersProblem(pacai.core.search.SearchProblem):
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         return None
 
     def isGoal(self, state):
@@ -69,7 +68,7 @@ class CornersProblem(pacai.core.search.SearchProblem):
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         return None
 
     def successorStates(self, state):
@@ -84,7 +83,7 @@ class CornersProblem(pacai.core.search.SearchProblem):
         """
 
         successors = []
-        for action in [pacai.core.game.Directions.NORTH, pacai.core.game.Directions.SOUTH, pacai.core.game.Directions.EAST, pacai.core.game.Directions.WEST]:
+        for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
             #   x, y = currentPosition
@@ -93,7 +92,7 @@ class CornersProblem(pacai.core.search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             # *** Your Code Here ***
-            pacai.util.util.raiseNotDefined()
+            util.raiseNotDefined()
 
         self._expanded += 1
         return successors
@@ -109,7 +108,7 @@ class CornersProblem(pacai.core.search.SearchProblem):
 
         x, y = self.startingPosition
         for action in actions:
-            dx, dy = pacai.core.game.Actions.directionToVector(action)
+            dx, dy = game.Actions.directionToVector(action)
             x, y = int(x + dx), int(y + dy)
             if self.walls[x][y]:
                 return 999999
@@ -134,7 +133,7 @@ def cornersHeuristic(state, problem):
     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     # *** Your Code Here ***
-    pacai.util.util.raiseNotDefined()
+    util.raiseNotDefined()
     return 0  # Default to trivial solution
 
 def foodHeuristic(state, problem):
@@ -165,10 +164,10 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
 
     # *** Your Code Here ***
-    pacai.util.util.raiseNotDefined()
-    return pacai.core.search.nullHeuristic(state, problem)  # Default to the null heuristic.
+    util.raiseNotDefined()
+    return search.nullHeuristic(state, problem)  # Default to the null heuristic.
 
-class ClosestDotSearchAgent(pacai.agents.searchAgents.SearchAgent):
+class ClosestDotSearchAgent(searchAgents.SearchAgent):
     """
     Search for all food using a sequence of searches
     """
@@ -203,10 +202,10 @@ class ClosestDotSearchAgent(pacai.agents.searchAgents.SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         return None
 
-class AnyFoodSearchProblem(pacai.agents.searchAgents.PositionSearchProblem):
+class AnyFoodSearchProblem(searchAgents.PositionSearchProblem):
     """
     A search problem for finding a path to any food.
 
@@ -246,10 +245,10 @@ class AnyFoodSearchProblem(pacai.agents.searchAgents.PositionSearchProblem):
         x, y = state
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         return None
 
-class ApproximateSearchAgent(Agent):
+class ApproximateSearchAgent(agent.Agent):
     """
     Implement your contest entry here.  Change anything but the class name.
     """
@@ -260,15 +259,15 @@ class ApproximateSearchAgent(Agent):
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
     def getAction(self, state):
         """
         From game.py:
-        The game.Agent will receive a GameState and must return an action from
+        The agent.Agent will receive a GameState and must return an action from
         game.Directions.{North, South, East, West, Stop}
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
         return None
