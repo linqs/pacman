@@ -1,6 +1,5 @@
-import pacai.util.util
-
-from pacai.agents.agent import Agent
+from pacai.agents import agent
+from pacai.util import util
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -13,7 +12,7 @@ def scoreEvaluationFunction(currentGameState):
 
     return currentGameState.getScore()
 
-class MultiAgentSearchAgent(Agent):
+class MultiAgentSearchAgent(agent.Agent):
     """
     This class provides some common elements to all of your multi-agent searchers.
     Any methods defined here will be available to the
@@ -25,15 +24,15 @@ class MultiAgentSearchAgent(Agent):
 
     Note: this is an abstract class: one that should not be instantiated.
     It's only partially specified, and designed to be extended.
-    Agent (game.py) is another abstract class.
+    Agent is another abstract class.
     """
 
     def __init__(self, evalFn = 'scoreEvaluationFunction', depth = '2'):
         self.index = 0  # Pacman is always agent index 0
-        self.evaluationFunction = pacai.util.util.lookup(evalFn)
+        self.evaluationFunction = util.lookup(evalFn)
         self.treeDepth = int(depth)
 
-class ReflexAgent(Agent):
+class ReflexAgent(agent.Agent):
     """
     A reflex agent chooses an action at each choice point by examining
     its alternatives via a state evaluation function.
@@ -119,7 +118,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -132,7 +131,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
@@ -148,7 +147,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -159,7 +158,7 @@ def betterEvaluationFunction(currentGameState):
     """
 
     # *** Your Code Here ***
-    pacai.util.util.raiseNotDefined()
+    util.raiseNotDefined()
 
 class ContestAgent(MultiAgentSearchAgent):
     """
@@ -177,7 +176,7 @@ class ContestAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
 # Abbreviation
 better = betterEvaluationFunction

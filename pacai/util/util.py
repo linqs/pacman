@@ -1,4 +1,5 @@
 import heapq
+import importlib
 import inspect
 import random
 import sys
@@ -502,15 +503,16 @@ def matrixAsList(matrix, value = True):
 
   return cells
 
+# TODO(eriq): I would like this method to be removed.
+#  There should be better ways than reflexivly searching modules.
 def lookup(name):
   """
   Get a method or class from any imported module from its name.
   """
 
-  # TODO(eriq): We made this change when switching up the packages, but this needs to be removed.
   for module_name in sys.modules:
     try:
-      module = __import__(module_name)
+      module = importlib.import_module(module_name)
     except ImportError:
       continue
 
