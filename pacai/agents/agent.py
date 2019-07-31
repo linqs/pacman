@@ -77,4 +77,8 @@ class Agent(object):
 
             # Ignore the rest of the path and extension.
             module_name = os.path.basename(path)[:-3]
-            __import__(package_format_string % (module_name))
+
+            try:
+                __import__(package_format_string % (module_name))
+            except ImportError as ex:
+                print("WARN: Unable to import agent: '%s'. -- %s" % (module_name, str(ex)))
