@@ -1,6 +1,6 @@
 import random
 
-import pacai.util
+import pacai.util.util
 
 from pacai.agents.agent import Agent
 from pacai.game import Directions
@@ -33,7 +33,7 @@ class LeftTurnAgent(Agent):
 
 class GreedyAgent(Agent):
     def __init__(self, evalFn = "scoreEvaluation"):
-        self.evaluationFunction = pacai.util.lookup(evalFn, globals())
+        self.evaluationFunction = pacai.util.util.lookup(evalFn, globals())
         assert self.evaluationFunction != None
 
     def getAction(self, state):

@@ -12,7 +12,7 @@ distancer.getDistance((1, 1), (10, 10))
 
 import sys
 
-import pacai.util
+from pacai.util import util
 
 DEFAULT_DISTANCE = 10000
 
@@ -115,7 +115,7 @@ def computeDistances(layout):
             for node in allNodes:
                 dist[node] = sys.maxsize
 
-            queue = pacai.util.PriorityQueue()
+            queue = util.PriorityQueue()
             queue.push(source, 0)
             dist[source] = 0
 

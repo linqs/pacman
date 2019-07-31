@@ -2,8 +2,8 @@
 
 import abc
 
-from game import Directions, Actions
-import util
+from pacai import game
+from pacai.util import util
 
 class FeatureExtractor(abc.ABC):
     @abc.abstractmethod
@@ -43,7 +43,7 @@ def closestFood(pos, food, walls):
             return dist
 
         # Otherwise spread out from the location to its neighbours.
-        nbrs = Actions.getLegalNeighbors((pos_x, pos_y), walls)
+        nbrs = game.Actions.getLegalNeighbors((pos_x, pos_y), walls)
         for nbr_x, nbr_y in nbrs:
             fringe.append((nbr_x, nbr_y, dist + 1))
 
@@ -71,11 +71,11 @@ class SimpleExtractor(FeatureExtractor):
 
         # Compute the location of pacman after he takes the action.
         x, y = state.getPacmanPosition()
-        dx, dy = Actions.directionToVector(action)
+        dx, dy = game.Actions.directionToVector(action)
         next_x, next_y = int(x + dx), int(y + dy)
 
         # Count the number of ghosts 1-step away.
-        features["#-of-ghosts-1-step-away"] = sum((next_x, next_y) in Actions.getLegalNeighbors(g, walls) for g in ghosts)
+        features["#-of-ghosts-1-step-away"] = sum((next_x, next_y) in game.Actions.getLegalNeighbors(g, walls) for g in ghosts)
 
         # If there is no danger of ghosts then add the food feature.
         if not features["#-of-ghosts-1-step-away"] and food[next_x][next_y]:

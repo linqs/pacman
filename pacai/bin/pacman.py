@@ -38,8 +38,8 @@ from pacai.game import Directions
 from pacai.game import Game
 from pacai.game import GameStateData
 from pacai.layout import getLayout
-from pacai.util import nearestPoint
-from pacai.util import manhattanDistance
+from pacai.util.util import nearestPoint
+from pacai.util.util import manhattanDistance
 
 FIXED_SEED = 140188
 

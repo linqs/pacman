@@ -20,7 +20,7 @@ Good luck and happy searching!
 import pacai.game
 import pacai.search
 import pacai.agents.searchAgents
-import pacai.util
+import pacai.util.util
 
 from pacai.agents.agent import Agent
 
@@ -52,7 +52,7 @@ class CornersProblem(pacai.search.SearchProblem):
         self._expanded = 0  # Number of search nodes expanded
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
     def startingState(self):
         """
@@ -60,7 +60,7 @@ class CornersProblem(pacai.search.SearchProblem):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
         return None
 
     def isGoal(self, state):
@@ -69,7 +69,7 @@ class CornersProblem(pacai.search.SearchProblem):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
         return None
 
     def successorStates(self, state):
@@ -93,7 +93,7 @@ class CornersProblem(pacai.search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             # *** Your Code Here ***
-            pacai.util.raiseNotDefined()
+            pacai.util.util.raiseNotDefined()
 
         self._expanded += 1
         return successors
@@ -134,7 +134,7 @@ def cornersHeuristic(state, problem):
     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     # *** Your Code Here ***
-    pacai.util.raiseNotDefined()
+    pacai.util.util.raiseNotDefined()
     return 0  # Default to trivial solution
 
 def foodHeuristic(state, problem):
@@ -165,7 +165,7 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
 
     # *** Your Code Here ***
-    pacai.util.raiseNotDefined()
+    pacai.util.util.raiseNotDefined()
     return pacai.search.nullHeuristic(state, problem)  # Default to the null heuristic.
 
 class ClosestDotSearchAgent(pacai.agents.searchAgents.SearchAgent):
@@ -203,7 +203,7 @@ class ClosestDotSearchAgent(pacai.agents.searchAgents.SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
         return None
 
 class AnyFoodSearchProblem(pacai.agents.searchAgents.PositionSearchProblem):
@@ -246,7 +246,7 @@ class AnyFoodSearchProblem(pacai.agents.searchAgents.PositionSearchProblem):
         x, y = state
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
         return None
 
 class ApproximateSearchAgent(Agent):
@@ -260,7 +260,7 @@ class ApproximateSearchAgent(Agent):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
     def getAction(self, state):
         """
@@ -270,5 +270,5 @@ class ApproximateSearchAgent(Agent):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
         return None

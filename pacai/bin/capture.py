@@ -38,7 +38,7 @@ import types
 
 import pacai.agents.keyboardAgents
 import pacai.layout
-import pacai.mazeGenerator
+import pacai.util.mazeGenerator
 
 from pacai.agents.agent import Agent
 from pacai.game import Actions
@@ -48,8 +48,8 @@ from pacai.game import Game
 from pacai.game import GameStateData
 from pacai.game import Grid
 from pacai.game import reconstituteGrid
-from pacai.util import manhattanDistance
-from pacai.util import nearestPoint
+from pacai.util.util import manhattanDistance
+from pacai.util.util import nearestPoint
 
 KILL_POINTS = 0
 SONAR_NOISE_RANGE = 13 # Must be odd
@@ -715,7 +715,7 @@ def randomLayout(seed = None):
         seed = random.randint(0,99999999)
     # layout = 'layouts/random%08dCapture.lay' % seed
     # print('Generating random layout in %s' % layout)
-    return pacai.mazeGenerator.generateMaze(seed)
+    return pacai.util.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     "Calls agent factories and returns lists of agents"

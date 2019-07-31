@@ -1,6 +1,6 @@
 import time
 
-import pacai.util
+import pacai.util.util
 
 from pacai.agents.agent import Agent
 
@@ -44,7 +44,7 @@ class ValueEstimationAgent(Agent):
         Should return Q(state,action)
         """
 
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
     def getValue(self, state):
         """
@@ -54,7 +54,7 @@ class ValueEstimationAgent(Agent):
         V(s) = max_{a in actions} Q(s,a)
         """
 
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
     def getPolicy(self, state):
         """
@@ -68,7 +68,7 @@ class ValueEstimationAgent(Agent):
         it doesn't matter which is selected.
         """
 
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
     def getAction(self, state):
         """
@@ -76,7 +76,7 @@ class ValueEstimationAgent(Agent):
         Choose an action and return it.
         """
 
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
 class ReinforcementAgent(ValueEstimationAgent):
     """
@@ -103,7 +103,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         observing a transition and reward
         """
 
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
     ########################
     # Read These Functions #

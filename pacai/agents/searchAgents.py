@@ -17,7 +17,7 @@ import pacai.agents.searchAgents
 import pacai.game
 import pacai.search
 import pacai.student.search
-import pacai.util
+import pacai.util.util
 
 from pacai.agents.agent import Agent
 
@@ -61,7 +61,7 @@ class SearchAgent(Agent):
     self.searchFunction = self._fetchSearchFunction(fn, heuristic)
 
     # Get the search problem type from the name.
-    self.searchType = pacai.util.fetchModuleAttribute(prob, [pacai.agents.searchAgents, pacai.student.searchAgents])
+    self.searchType = pacai.util.util.fetchModuleAttribute(prob, [pacai.agents.searchAgents, pacai.student.searchAgents])
     print('[SearchAgent] using problem type %s.' % (prob))
 
   def _fetchSearchFunction(self, functionName, heuristicName):
@@ -72,7 +72,7 @@ class SearchAgent(Agent):
     """
 
     # Locate the function.
-    function = pacai.util.fetchModuleAttribute(functionName, [pacai.search, pacai.student.search])
+    function = pacai.util.util.fetchModuleAttribute(functionName, [pacai.search, pacai.student.search])
 
     # Check if the function has a heuristic.
     if 'heuristic' not in function.__code__.co_varnames:
@@ -83,7 +83,7 @@ class SearchAgent(Agent):
     import pacai.student.searchAgents
 
     # Fetch the heuristic.
-    heuristic = pacai.util.fetchModuleAttribute(heuristicName, [pacai.search, pacai.student.search, pacai.agents.searchAgents, pacai.student.searchAgents])
+    heuristic = pacai.util.util.fetchModuleAttribute(heuristicName, [pacai.search, pacai.student.search, pacai.agents.searchAgents, pacai.student.searchAgents])
     print('[SearchAgent] using function %s and heuristic %s.' % (functionName, heuristicName))
 
     # Bind the heuristic.

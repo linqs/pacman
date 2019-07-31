@@ -94,7 +94,7 @@ class Maze(object):
             if not self.root.c-1 in slots:
                 if self.root.grid[max(slots)+1][add_c+i] == EMPTY:
                     slots.remove(max(slots))
-                    
+
             if len(slots) <= gaps:
                 return 0
 

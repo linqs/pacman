@@ -1,7 +1,7 @@
 import glob
 import os
 
-import pacai.util
+import pacai.util.util
 
 # TODO(eriq): Rename to BaseAgent
 class Agent(object):
@@ -22,7 +22,7 @@ class Agent(object):
         must return an action from Directions.{North, South, East, West, Stop}
         """
 
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
     def registerInitialState(self, state):
         """
@@ -54,7 +54,7 @@ class Agent(object):
         Agent._import_agents(os.path.join(os.path.dirname(__file__), '..', 'student', "*.py"), "pacai.student.%s")
 
         # Now that the agent classes have been loaded, just look for subclasses.
-        for subclass in pacai.util.getAllDescendents(Agent):
+        for subclass in pacai.util.util.getAllDescendents(Agent):
             if (subclass.__name__ == class_name):
                 return subclass(**args)
 

@@ -1,6 +1,6 @@
 import random
 
-import pacai.util
+import pacai.util.util
 
 from pacai.agents.agent import Agent
 from pacai.game import Actions
@@ -15,14 +15,14 @@ class GhostAgent(Agent):
     if len(dist) == 0:
       return Directions.STOP
     else:
-      return pacai.util.chooseFromDistribution(dist)
+      return pacai.util.util.chooseFromDistribution(dist)
 
   def getDistribution(self, state):
     """
     Returns a Counter encoding a distribution over actions from the provided state.
     """
 
-    pacai.util.raiseNotDefined()
+    pacai.util.util.raiseNotDefined()
 
 class RandomGhost(GhostAgent):
   """
@@ -30,7 +30,7 @@ class RandomGhost(GhostAgent):
   """
 
   def getDistribution(self, state):
-    dist = pacai.util.Counter()
+    dist = pacai.util.util.Counter()
     for a in state.getLegalActions(self.index):
       dist[a] = 1.0
     dist.normalize()
@@ -62,7 +62,7 @@ class DirectionalGhost(GhostAgent):
     pacmanPosition = state.getPacmanPosition()
 
     # Select best actions given the state
-    distancesToPacman = [pacai.util.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
+    distancesToPacman = [pacai.util.util.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
     if isScared:
       bestScore = max(distancesToPacman)
       bestProb = self.prob_scaredFlee
@@ -72,7 +72,7 @@ class DirectionalGhost(GhostAgent):
     bestActions = [action for action, distance in zip(legalActions, distancesToPacman) if distance == bestScore]
 
     # Construct distribution
-    dist = pacai.util.Counter()
+    dist = pacai.util.util.Counter()
 
     for a in bestActions:
       dist[a] = float(bestProb) / len(bestActions)

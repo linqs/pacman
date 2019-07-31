@@ -1,4 +1,4 @@
-import pacai.util
+import pacai.util.util
 
 from pacai.agents.agent import Agent
 
@@ -30,7 +30,7 @@ class MultiAgentSearchAgent(Agent):
 
     def __init__(self, evalFn = 'scoreEvaluationFunction', depth = '2'):
         self.index = 0  # Pacman is always agent index 0
-        self.evaluationFunction = pacai.util.lookup(evalFn)
+        self.evaluationFunction = pacai.util.util.lookup(evalFn)
         self.treeDepth = int(depth)
 
 class ReflexAgent(Agent):
@@ -119,7 +119,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -132,7 +132,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
@@ -148,7 +148,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -159,7 +159,7 @@ def betterEvaluationFunction(currentGameState):
     """
 
     # *** Your Code Here ***
-    pacai.util.raiseNotDefined()
+    pacai.util.util.raiseNotDefined()
 
 class ContestAgent(MultiAgentSearchAgent):
     """
@@ -177,7 +177,7 @@ class ContestAgent(MultiAgentSearchAgent):
         """
 
         # *** Your Code Here ***
-        pacai.util.raiseNotDefined()
+        pacai.util.util.raiseNotDefined()
 
 # Abbreviation
 better = betterEvaluationFunction

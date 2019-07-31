@@ -4,7 +4,7 @@ The base for seach implementations.
 
 import pacai.game
 import pacai.student.search
-import pacai.util
+import pacai.util.util
 
 class SearchProblem(object):
   """
@@ -19,7 +19,7 @@ class SearchProblem(object):
      Returns the start state for the search problem
      """
 
-     pacai.util.raiseNotDefined()
+     pacai.util.util.raiseNotDefined()
 
   def isGoal(self, state):
      """
@@ -28,7 +28,7 @@ class SearchProblem(object):
      Returns True if and only if the state is a valid goal state
      """
 
-     pacai.util.raiseNotDefined()
+     pacai.util.util.raiseNotDefined()
 
   def successorStates(self, state):
      """
@@ -41,7 +41,7 @@ class SearchProblem(object):
      cost of expanding to that successor
      """
 
-     pacai.util.raiseNotDefined()
+     pacai.util.util.raiseNotDefined()
 
   def actionsCost(self, actions):
      """
@@ -51,7 +51,7 @@ class SearchProblem(object):
      The sequence must be composed of legal moves.
      """
 
-     pacai.util.raiseNotDefined()
+     pacai.util.util.raiseNotDefined()
 
 def tinyMazeSearch(problem):
     """
