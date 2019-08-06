@@ -1,6 +1,6 @@
 import random
 
-from pacai.agents.captureAgents import CaptureAgent
+from pacai.agents.capture import CaptureAgent
 
 #################
 # Team creation #
@@ -56,7 +56,7 @@ class DummyAgent(CaptureAgent):
         Make sure you do not delete the following line. If you would like to
         use Manhattan distances instead of maze distances in order to save
         on initialization time, please take a look at
-        CaptureAgent.registerInitialState in captureAgents.py.
+        CaptureAgent.registerInitialState.
         """
 
         CaptureAgent.registerInitialState(self, gameState)

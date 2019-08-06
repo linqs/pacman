@@ -2,14 +2,10 @@
 Interfaces for capture agents and agent factories
 """
 
-import random
-import time
-
-import pacai.util.util
-
 from pacai.agents.agent import Agent
 from pacai.ui import captureGraphicsDisplay
 from pacai.util import distanceCalculator
+from pacai.util import util
 
 class CaptureAgent(Agent):
     """
@@ -117,7 +113,7 @@ class CaptureAgent(Agent):
 
         myState = gameState.getAgentState(self.index)
         myPos = myState.getPosition()
-        if myPos != pacai.util.util.nearestPoint(myPos):
+        if myPos != util.nearestPoint(myPos):
             # We're halfway from one position to the next.
             return gameState.getLegalActions(self.index)[0]
         else:
@@ -129,7 +125,7 @@ class CaptureAgent(Agent):
         the time limit (otherwise a random legal action will be chosen for you).
         """
 
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
     #######################
     # Convenience Methods #
@@ -242,7 +238,7 @@ class CaptureAgent(Agent):
         Overlays a distribution over positions onto the pacman board that represents
         an agent's beliefs about the positions of each agent.
 
-        The arg distributions is a tuple or list of pacai.util.util.Counter objects, where the i'th
+        The arg distributions is a tuple or list of util.Counter objects, where the i'th
         Counter has keys that are board positions (x,y) and values that encode the probability
         that agent i is at (x,y).
 
@@ -255,26 +251,13 @@ class CaptureAgent(Agent):
         dists = []
         for dist in distributions:
             if dist != None:
-                if not isinstance(dist, pacai.util.util.Counter):
+                if not isinstance(dist, util.Counter):
                     raise Exception("Wrong type of distribution")
                 dists.append(dist)
             else:
-                dists.append(pacai.util.util.Counter())
+                dists.append(util.Counter())
 
         if self.display != None and 'updateDistributions' in dir(self.display):
             self.display.updateDistributions(dists)
         else:
             self._distributions = dists
-
-class TimeoutAgent(Agent):
-    """
-    A random agent that takes too much time. Taking
-    too much time results in penalties and random moves.
-    """
-
-    def __init__(self, index):
-        super().__init__(index)
-
-    def getAction( self, state ):
-        time.sleep(2.0)
-        return random.choice(state.getLegalActions(self.index))
