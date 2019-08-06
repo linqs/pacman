@@ -26,6 +26,9 @@ class GoWestAgent(Agent):
   An agent that goes West until it can't.
   """
 
+  def __init__(self, index):
+    super().__init__(index)
+
   def getAction(self, state):
     """
     The agent receives a GameState (defined in pacman.py).
@@ -51,8 +54,11 @@ class SearchAgent(Agent):
   Note: You should NOT change any code in SearchAgent
   """
 
-  def __init__(self, fn='depthFirstSearch', prob='PositionSearchProblem', heuristic='nullHeuristic'):
+  def __init__(self, index, fn='depthFirstSearch', prob='PositionSearchProblem', heuristic='nullHeuristic'):
+    super().__init__(index)
+
     # Warning: some advanced Python magic is employed below to find the right functions and problems
+    # TODO(eriq): Get rid of that "magic".
 
     # Break circular dependency (other import is for import scoping).
     # TODO(eriq): Remove once this is file is broken up.
@@ -241,7 +247,9 @@ class StayEastSearchAgent(SearchAgent):
   The cost function for stepping into a position (x,y) is 1/2^x.
   """
 
-  def __init__(self):
+  def __init__(self, index):
+      super().__init__(index)
+
       self.searchFunction = pacai.core.search.ucs
       costFn = lambda pos: 0.5 ** pos[0]
       self.searchType = lambda state: PositionSearchProblem(state, costFn)
@@ -254,7 +262,9 @@ class StayWestSearchAgent(SearchAgent):
   The cost function for stepping into a position (x,y) is 2^x.
   """
 
-  def __init__(self):
+  def __init__(self, index):
+      super().__init__(index)
+
       self.searchFunction = pacai.core.search.ucs
       costFn = lambda pos: 2 ** pos[0]
       self.searchType = lambda state: PositionSearchProblem(state, costFn)
@@ -282,7 +292,9 @@ class AStarCornersAgent(SearchAgent):
   A SearchAgent for CornersProblem using A* and your cornersHeuristic
   """
 
-  def __init__(self):
+  def __init__(self, index):
+    super().__init__(index)
+
     # Break circular dependency.
     # TODO(eriq): Remove once this is file is broken up.
     import pacai.student.searchAgents
@@ -352,7 +364,9 @@ class AStarFoodSearchAgent(SearchAgent):
   A SearchAgent for FoodSearchProblem using A* and your foodHeuristic
   """
 
-  def __init__(self):
+  def __init__(self, index):
+    super().__init__(index)
+
     # Break circular dependency.
     # TODO(eriq): Remove once this is file is broken up.
     import pacai.student.searchAgents

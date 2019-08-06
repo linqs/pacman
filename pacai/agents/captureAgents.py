@@ -11,18 +11,6 @@ from pacai.agents.agent import Agent
 from pacai.ui import captureGraphicsDisplay
 from pacai.util import distanceCalculator
 
-class RandomAgent(Agent):
-    """
-    A random agent that abides by the rules.
-    """
-
-    def __init__(self, index):
-        super().__init__()
-        self.index = index
-
-    def getAction(self, state):
-        return random.choice(state.getLegalActions(self.index))
-
 class CaptureAgent(Agent):
     """
     A base class for capture agents.
@@ -45,10 +33,7 @@ class CaptureAgent(Agent):
                 (part of the provided distance calculator)
         """
 
-        super().__init__()
-
-        # Agent index for querying state
-        self.index = index
+        super().__init__(index)
 
         # Whether or not you're on the red team
         self.red = None
@@ -288,8 +273,7 @@ class TimeoutAgent(Agent):
     """
 
     def __init__(self, index):
-        super().__init__()
-        self.index = index
+        super().__init__(index)
 
     def getAction( self, state ):
         time.sleep(2.0)

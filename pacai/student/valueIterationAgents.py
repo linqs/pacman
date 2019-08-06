@@ -11,7 +11,7 @@ class ValueIterationAgent(learningAgents.ValueEstimationAgent):
     discount factor.
     """
 
-    def __init__(self, mdp, discountRate = 0.9, iters = 100):
+    def __init__(self, index, mdp, discountRate = 0.9, iters = 100):
         """
         Your value iteration agent should take an mdp on
         construction, run the indicated number of iterations
@@ -24,7 +24,7 @@ class ValueIterationAgent(learningAgents.ValueEstimationAgent):
             mdp.getReward(state, action, nextState)
         """
 
-        super().__init__()
+        super().__init__(index)
 
         self.mdp = mdp
         self.discountRate = discountRate

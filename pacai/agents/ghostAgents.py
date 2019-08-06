@@ -8,7 +8,7 @@ from pacai.core.game import Directions
 
 class GhostAgent(Agent):
   def __init__(self, index):
-    self.index = index
+    super().__init__(index)
 
   def getAction(self, state):
     dist = self.getDistribution(state)
@@ -29,6 +29,9 @@ class RandomGhost(GhostAgent):
   A ghost that chooses a legal action uniformly at random.
   """
 
+  def __init__(self, index):
+    super().__init__(index)
+
   def getDistribution(self, state):
     dist = pacai.util.util.Counter()
     for a in state.getLegalActions(self.index):
@@ -40,6 +43,9 @@ class DirectionalGhost(GhostAgent):
   """
   A ghost that prefers to rush Pacman, or flee when scared.
   """
+
+  def __init__(self, index):
+    super().__init__(index)
 
   def __init__(self, index, prob_attack=0.8, prob_scaredFlee=0.8):
     self.index = index

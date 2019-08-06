@@ -787,10 +787,9 @@ def runGames( layout, agents, display, length, numGames, record, numTraining, re
 
         g.record = None
         if record:
-            import time, pickle, game
             components = {
                 'layout': layout,
-                'agents': [game.Agent() for a in agents],
+                'agents': [Agent(i) for i in range(len(agents))],
                 'actions': g.moveHistory,
                 'length': length,
                 'redTeamName': redTeamName,

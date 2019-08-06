@@ -172,6 +172,9 @@ class ClosestDotSearchAgent(searchAgents.SearchAgent):
     Search for all food using a sequence of searches
     """
 
+    def __init__(self, index):
+        super().__init__(index)
+
     def registerInitialState(self, state):
         self.actions = []
         currentState = state
@@ -252,6 +255,9 @@ class ApproximateSearchAgent(agent.Agent):
     """
     Implement your contest entry here.  Change anything but the class name.
     """
+
+    def __init__(self, index):
+        super().__init__(index)
 
     def registerInitialState(self, state):
         """

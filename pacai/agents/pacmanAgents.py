@@ -10,6 +10,9 @@ class LeftTurnAgent(Agent):
     An agent that turns left at every opportunity
     """
 
+    def __init__(self, index):
+        super().__init__(index)
+
     def getAction(self, state):
         legal = state.getLegalPacmanActions()
         current = state.getPacmanState().configuration.direction
@@ -32,7 +35,9 @@ class LeftTurnAgent(Agent):
         return Directions.STOP
 
 class GreedyAgent(Agent):
-    def __init__(self, evalFn = "scoreEvaluation"):
+    def __init__(self, index, evalFn = "scoreEvaluation"):
+        super().__init__(index)
+
         self.evaluationFunction = pacai.util.util.lookup(evalFn, globals())
         assert self.evaluationFunction != None
 

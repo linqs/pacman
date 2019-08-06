@@ -578,7 +578,7 @@ def readCommand(argv):
     if 'numTraining' not in agentOpts:
       agentOpts['numTraining'] = options.numTraining
 
-  args['pacman'] = Agent.loadAgent(options.pacman, agentOpts)
+  args['pacman'] = Agent.loadAgent(options.pacman, 0, agentOpts)
 
   # Don't display training games
   if 'numTrain' in agentOpts:
@@ -586,7 +586,7 @@ def readCommand(argv):
     options.numIgnore = int(agentOpts['numTrain'])
 
   # Choose a ghost agent
-  args['ghosts'] = [Agent.loadAgent(options.ghost, {'index': (i + 1)}) for i in range(options.numGhosts)]
+  args['ghosts'] = [Agent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
 
   # Choose a display format
   if options.quietGraphics:
@@ -626,7 +626,7 @@ def replayGame(layout, actions, display):
     import pacmanAgents
 
     rules = ClassicGameRules()
-    agents = [pacmanAgents.GreedyAgent()] + [ghostAgents.RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
+    agents = [pacmanAgents.GreedyAgent(0)] + [ghostAgents.RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
     game = rules.newGame(layout, agents[0], agents[1:], display)
     state = game.state
     display.initialize(state.data)

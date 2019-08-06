@@ -15,10 +15,10 @@ class KeyboardAgent(Agent):
   SOUTH_KEY = 's'
   STOP_KEY = 'q'
 
-  def __init__( self, index = 0 ):
+  def __init__(self, index = 0):
+    super().__init__(index)
 
     self.lastMove = Directions.STOP
-    self.index = index
     self.keys = []
 
   def getAction( self, state):
@@ -61,6 +61,9 @@ class KeyboardAgent2(KeyboardAgent):
   NORTH_KEY = 'i'
   SOUTH_KEY = 'k'
   STOP_KEY = 'u'
+
+  def __init__(self, index = 0):
+    super().__init__(index)
 
   def getMove(self, legal):
     move = Directions.STOP

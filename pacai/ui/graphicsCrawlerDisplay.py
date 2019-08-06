@@ -25,7 +25,7 @@ class Application(object):
         # Init Agent
         simulationFn = lambda agent: simulation.SimulationEnvironment(self.robotEnvironment, agent)
         actionFn = lambda state: self.robotEnvironment.getPossibleActions(state)
-        self.learner = pacai.student.qlearningAgents.QLearningAgent(actionFn=actionFn)
+        self.learner = pacai.student.qlearningAgents.QLearningAgent(0, actionFn=actionFn)
 
         self.learner.setEpsilon(self.epsilon)
         self.learner.setLearningRate(self.alpha)

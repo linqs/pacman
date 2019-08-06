@@ -21,7 +21,7 @@ class ValueEstimationAgent(Agent):
     Q-Values while acting in the environment.
     """
 
-    def __init__(self, alpha=1.0, epsilon=0.05, gamma=0.8, numTraining = 10):
+    def __init__(self, index, alpha=1.0, epsilon=0.05, gamma=0.8, numTraining = 10):
         """
         Sets options, which can be passed in via the Pacman command line using -a alpha=0.5,...
         alpha - learning rate
@@ -29,6 +29,8 @@ class ValueEstimationAgent(Agent):
         gamma - discount factor
         numTraining - number of training episodes, i.e. no learning after these many episodes
         """
+
+        super().__init__(index)
 
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)
@@ -92,6 +94,31 @@ class ReinforcementAgent(ValueEstimationAgent):
         - Use self.getLegalActions(state) to know which actions
             are available in a state
     """
+
+    def __init__(self, index, actionFn = None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
+        """
+        actionFn: Function which takes a state and returns the list of legal actions
+
+        alpha - learning rate
+        epsilon - exploration rate
+        gamma - discount factor
+        numTraining - number of training episodes, i.e. no learning after these many episodes
+        """
+
+        super().__init__(index)
+
+        if actionFn == None:
+            actionFn = lambda state: state.getLegalActions()
+
+        self.actionFn = actionFn
+        self.episodesSoFar = 0
+        self.accumTrainRewards = 0.0
+        self.accumTestRewards = 0.0
+        self.numTraining = int(numTraining)
+        self.epsilon = float(epsilon)
+        self.alpha = float(alpha)
+        self.discountRate = float(gamma)
+
 
     ############################
     # Override These Functions #
@@ -160,28 +187,6 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def isInTesting(self):
         return not self.isInTraining()
-
-    def __init__(self, actionFn = None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
-        """
-        actionFn: Function which takes a state and returns the list of legal actions
-
-        alpha - learning rate
-        epsilon - exploration rate
-        gamma - discount factor
-        numTraining - number of training episodes, i.e. no learning after these many episodes
-        """
-
-        if actionFn == None:
-            actionFn = lambda state: state.getLegalActions()
-
-        self.actionFn = actionFn
-        self.episodesSoFar = 0
-        self.accumTrainRewards = 0.0
-        self.accumTestRewards = 0.0
-        self.numTraining = int(numTraining)
-        self.epsilon = float(epsilon)
-        self.alpha = float(alpha)
-        self.discountRate = float(gamma)
 
     ###############################
     # Controls needed for Crawler #

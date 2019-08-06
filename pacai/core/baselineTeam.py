@@ -3,11 +3,11 @@ import time
 
 import pacai.util.util
 
+from pacai.agents.agent import Agent
 from pacai.agents.captureAgents import CaptureAgent
 from pacai.core.game import Directions
 
-def createTeam(firstIndex, secondIndex, isRed,
-        first = 'OffensiveReflexAgent', second = 'DefensiveReflexAgent'):
+def createTeam(firstIndex, secondIndex, isRed, first = 'OffensiveReflexAgent', second = 'DefensiveReflexAgent'):
     """
     This function should return a list of two agents that will form the
     team, initialized using firstIndex and secondIndex as their agent
@@ -23,12 +23,15 @@ def createTeam(firstIndex, secondIndex, isRed,
     behavior is what you want for the nightly contest.
     """
 
-    return [eval(first)(firstIndex), eval(second)(secondIndex)]
+    return [Agent.loadAgent(first, firstIndex), Agent.loadAgent(second, secondIndex)]
 
 class ReflexCaptureAgent(CaptureAgent):
     """
     A base class for reflex agents that chooses score-maximizing actions
     """
+
+    def __init__(self, index):
+        super().__init__(index)
 
     def chooseAction(self, gameState):
         """
@@ -96,6 +99,9 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
     but it is by no means the best or only way to build an offensive agent.
     """
 
+    def __init__(self, index):
+        super().__init__(index)
+
     def getFeatures(self, gameState, action):
         features = pacai.util.util.Counter()
         successor = self.getSuccessor(gameState, action)
@@ -122,6 +128,9 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
     Again, this is to give you an idea of what a defensive agent could be like.
     It is not the best or only way to make such an agent.
     """
+
+    def __init__(self, index):
+        super().__init__(index)
 
     def getFeatures(self, gameState, action):
         features = pacai.util.util.Counter()

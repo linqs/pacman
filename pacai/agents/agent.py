@@ -45,9 +45,9 @@ class Agent(object):
 
         pass
 
-    def loadAgent(class_name, args):
+    def loadAgent(class_name, index, args = {}):
         """
-        Create an agent of the given class with the given args.
+        Create an agent of the given class with the given index and args.
         """
 
         Agent._import_agents(os.path.join(os.path.dirname(__file__), "*.py"), "pacai.agents.%s")
@@ -56,7 +56,7 @@ class Agent(object):
         # Now that the agent classes have been loaded, just look for subclasses.
         for subclass in pacai.util.util.getAllDescendents(Agent):
             if (subclass.__name__ == class_name):
-                return subclass(**args)
+                return subclass(index = index, **args)
 
         raise LookupError("Could not find an agent with the name: " + class_name)
 

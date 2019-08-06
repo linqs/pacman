@@ -27,8 +27,9 @@ class MultiAgentSearchAgent(agent.Agent):
     Agent is another abstract class.
     """
 
-    def __init__(self, evalFn = 'scoreEvaluationFunction', depth = '2'):
-        self.index = 0  # Pacman is always agent index 0
+    def __init__(self, index, evalFn = 'scoreEvaluationFunction', depth = '2'):
+        super().__init__(index)
+
         self.evaluationFunction = util.lookup(evalFn)
         self.treeDepth = int(depth)
 
@@ -40,6 +41,9 @@ class ReflexAgent(agent.Agent):
     The code below is provided as a guide.
     You are welcome to change it in any way you see fit, so long as you don't touch the method headers.
     """
+
+    def __init__(self, index):
+        super().__init__(index)
 
     def getAction(self, gameState):
         """
@@ -96,6 +100,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
     Your minimax agent (question 2)
     """
 
+    def __init__(self, index):
+        super().__init__(index)
+
     def getAction(self, gameState):
         """
         Returns the minimax action from the current gameState using self.treeDepth
@@ -125,6 +132,9 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     Your minimax agent with alpha-beta pruning (question 3)
     """
 
+    def __init__(self, index):
+        super().__init__(index)
+
     def getAction(self, gameState):
         """
         Returns the minimax action using self.treeDepth and self.evaluationFunction
@@ -137,6 +147,9 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     """
     Your expectimax agent (question 4)
     """
+
+    def __init__(self, index):
+        super().__init__(index)
 
     def getAction(self, gameState):
         """
@@ -164,6 +177,9 @@ class ContestAgent(MultiAgentSearchAgent):
     """
     Your agent for the mini-contest
     """
+
+    def __init__(self, index):
+        super().__init__(index)
 
     def getAction(self, gameState):
         """

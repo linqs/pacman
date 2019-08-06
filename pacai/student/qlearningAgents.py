@@ -25,12 +25,12 @@ class QLearningAgent(learningAgents.ReinforcementAgent):
         - self.getLegalActions(state) which returns legal actions for a state
     """
 
-    def __init__(self, **args):
+    def __init__(self, index, **args):
         """
         You can initialize Q-values here...
         """
 
-        super().__init__(**args)
+        super().__init__(index, **args)
 
     def getQValue(self, state, action):
         """
@@ -132,7 +132,7 @@ class PacmanQAgent(QLearningAgent):
     Exactly the same as QLearningAgent, but with different default parameters.
     """
 
-    def __init__(self, epsilon = 0.05, gamma = 0.8, alpha = 0.2, numTraining = 0, **args):
+    def __init__(self, index, epsilon = 0.05, gamma = 0.8, alpha = 0.2, numTraining = 0, **args):
         """
         These default parameters can be changed from the pacman.py command line.
         For example, to change the exploration rate, try:
@@ -148,9 +148,8 @@ class PacmanQAgent(QLearningAgent):
         args['gamma'] = gamma
         args['alpha'] = alpha
         args['numTraining'] = numTraining
-        self.index = 0 # This is always Pacman
 
-        super().__init__(**args)
+        super().__init__(index, **args)
 
     def getAction(self, state):
         """
@@ -173,9 +172,9 @@ class ApproximateQAgent(PacmanQAgent):
     should work as is.
     """
 
-    def __init__(self, extractor = 'IdentityExtractor', **args):
+    def __init__(self, index, extractor = 'IdentityExtractor', **args):
+        super().__init__(index, **args)
         self.featExtractor = util.lookup()()
-        super().__init__(**args)
 
         # You might want to initialize weights here.
 

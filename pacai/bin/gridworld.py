@@ -509,7 +509,7 @@ if __name__ == '__main__':
     import pacai.student.valueIterationAgents
     a = None
     if opts.agent == 'value':
-        a = pacai.student.valueIterationAgents.ValueIterationAgent(mdp, opts.discount, opts.iters)
+        a = pacai.student.valueIterationAgents.ValueIterationAgent(0, mdp, opts.discount, opts.iters)
     elif opts.agent == 'q':
         #env.getPossibleActions, opts.discount, opts.learningRate, opts.epsilon
         #simulationFn = lambda agent, state: simulation.GridworldSimulation(agent,state,mdp)
@@ -521,13 +521,13 @@ if __name__ == '__main__':
             'epsilon': opts.epsilon,
             'actionFn': actionFn
         }
-        a = pacai.student.qlearningAgents.QLearningAgent(**qLearnOpts)
+        a = pacai.student.qlearningAgents.QLearningAgent(0, **qLearnOpts)
     elif opts.agent == 'random':
         # # No reason to use the random agent without episodes
         if opts.episodes == 0:
             opts.episodes = 10
 
-        class RandomAgent:
+        class RandomMDPAgent:
             def getAction(self, state):
                 return random.choice(mdp.getPossibleActions(state))
             def getValue(self, state):
@@ -540,7 +540,7 @@ if __name__ == '__main__':
             def update(self, state, action, nextState, reward):
                 pass
 
-        a = RandomAgent()
+        a = RandomMDPAgent()
     else:
         if not opts.manual: raise 'Unknown agent type: '+opts.agent
 
@@ -552,7 +552,7 @@ if __name__ == '__main__':
     if not opts.manual and opts.agent == 'value':
         if opts.valueSteps:
             for i in range(opts.iters):
-                tempAgent = pacai.student.valueIterationAgents.ValueIterationAgent(mdp, opts.discount, i)
+                tempAgent = pacai.student.valueIterationAgents.ValueIterationAgent(0, mdp, opts.discount, i)
                 display.displayValues(tempAgent, message = "VALUES AFTER " + str(i) + " ITERATIONS")
                 display.pause()
 
