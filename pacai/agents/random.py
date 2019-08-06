@@ -4,9 +4,9 @@ Interfaces for capture agents and agent factories
 
 import random
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 
-class RandomAgent(Agent):
+class RandomAgent(BaseAgent):
     """
     A random agent that abides by the rules.
     """

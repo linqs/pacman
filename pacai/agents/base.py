@@ -1,10 +1,9 @@
 import glob
 import os
 
-import pacai.util.util
+from pacai.util import util
 
-# TODO(eriq): Rename to BaseAgent
-class Agent(object):
+class BaseAgent(object):
     """
     An agent is something in the pacman world that does something (takes some action).
     Could be a ghost, the player controller Pac-Man, an AI controlling Pac-Man, etc.
@@ -18,11 +17,11 @@ class Agent(object):
 
     def getAction(self, state):
         """
-        The Agent will receive a GameState (from either {pacman, capture, sonar}.py) and
+        The BaseAgent will receive a GameState (from either {pacman, capture, sonar}.py) and
         must return an action from Directions.{North, South, East, West, Stop}
         """
 
-        pacai.util.util.raiseNotDefined()
+        util.raiseNotDefined()
 
     def registerInitialState(self, state):
         """
@@ -50,11 +49,11 @@ class Agent(object):
         Create an agent of the given class with the given index and args.
         """
 
-        Agent._import_agents(os.path.join(os.path.dirname(__file__), "*.py"), "pacai.agents.%s")
-        Agent._import_agents(os.path.join(os.path.dirname(__file__), '..', 'student', "*.py"), "pacai.student.%s")
+        BaseAgent._import_agents(os.path.join(os.path.dirname(__file__), "*.py"), "pacai.agents.%s")
+        BaseAgent._import_agents(os.path.join(os.path.dirname(__file__), '..', 'student', "*.py"), "pacai.student.%s")
 
         # Now that the agent classes have been loaded, just look for subclasses.
-        for subclass in pacai.util.util.getAllDescendents(Agent):
+        for subclass in util.getAllDescendents(BaseAgent):
             if (subclass.__name__ == class_name):
                 return subclass(index = index, **args)
 

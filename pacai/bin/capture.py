@@ -40,7 +40,7 @@ import pacai.agents.keyboardAgents
 import pacai.core.layout
 import pacai.util.mazeGenerator
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
 from pacai.core.game import Configuration
 from pacai.core.game import Directions
@@ -789,7 +789,7 @@ def runGames( layout, agents, display, length, numGames, record, numTraining, re
         if record:
             components = {
                 'layout': layout,
-                'agents': [Agent(i) for i in range(len(agents))],
+                'agents': [BaseAgent(i) for i in range(len(agents))],
                 'actions': g.moveHistory,
                 'length': length,
                 'redTeamName': redTeamName,

@@ -2,11 +2,11 @@ import random
 
 import pacai.util.util
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 
-class GhostAgent(Agent):
+class GhostAgent(BaseAgent):
   def __init__(self, index):
     super().__init__(index)
 

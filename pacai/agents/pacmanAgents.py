@@ -2,10 +2,10 @@ import random
 
 import pacai.util.util
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 from pacai.core.game import Directions
 
-class LeftTurnAgent(Agent):
+class LeftTurnAgent(BaseAgent):
     """
     An agent that turns left at every opportunity
     """
@@ -34,7 +34,7 @@ class LeftTurnAgent(Agent):
 
         return Directions.STOP
 
-class GreedyAgent(Agent):
+class GreedyAgent(BaseAgent):
     def __init__(self, index, evalFn = "scoreEvaluation"):
         super().__init__(index)
 

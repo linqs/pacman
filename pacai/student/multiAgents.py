@@ -1,4 +1,4 @@
-from pacai.agents import agent
+from pacai.agents.base import BaseAgent
 from pacai.util import util
 
 def scoreEvaluationFunction(currentGameState):
@@ -12,7 +12,7 @@ def scoreEvaluationFunction(currentGameState):
 
     return currentGameState.getScore()
 
-class MultiAgentSearchAgent(agent.Agent):
+class MultiAgentSearchAgent(BaseAgent):
     """
     This class provides some common elements to all of your multi-agent searchers.
     Any methods defined here will be available to the
@@ -33,7 +33,7 @@ class MultiAgentSearchAgent(agent.Agent):
         self.evaluationFunction = util.lookup(evalFn)
         self.treeDepth = int(depth)
 
-class ReflexAgent(agent.Agent):
+class ReflexAgent(BaseAgent):
     """
     A reflex agent chooses an action at each choice point by examining
     its alternatives via a state evaluation function.

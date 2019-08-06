@@ -3,7 +3,7 @@ import time
 
 import pacai.util.util
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 from pacai.agents.capture import CaptureAgent
 from pacai.core.game import Directions
 
@@ -23,7 +23,7 @@ def createTeam(firstIndex, secondIndex, isRed, first = 'OffensiveReflexAgent', s
     behavior is what you want for the nightly contest.
     """
 
-    return [Agent.loadAgent(first, firstIndex), Agent.loadAgent(second, secondIndex)]
+    return [BaseAgent.loadAgent(first, firstIndex), BaseAgent.loadAgent(second, secondIndex)]
 
 class ReflexCaptureAgent(CaptureAgent):
     """

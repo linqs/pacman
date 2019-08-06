@@ -1,10 +1,10 @@
 import random
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 from pacai.core.game import Directions
 from pacai.ui import graphicsUtils
 
-class KeyboardAgent(Agent):
+class KeyboardAgent(BaseAgent):
   """
   An agent controlled by the keyboard.
   """

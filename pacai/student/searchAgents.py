@@ -19,8 +19,8 @@ Good luck and happy searching!
 
 from pacai.core import game
 from pacai.core import search
-from pacai.agents import agent
 from pacai.agents import searchAgents
+from pacai.agents.base import BaseAgent
 from pacai.util import util
 
 class CornersProblem(search.SearchProblem):
@@ -251,7 +251,7 @@ class AnyFoodSearchProblem(searchAgents.PositionSearchProblem):
         util.raiseNotDefined()
         return None
 
-class ApproximateSearchAgent(agent.Agent):
+class ApproximateSearchAgent(BaseAgent):
     """
     Implement your contest entry here.  Change anything but the class name.
     """
@@ -270,7 +270,7 @@ class ApproximateSearchAgent(agent.Agent):
     def getAction(self, state):
         """
         From game.py:
-        The agent.Agent will receive a GameState and must return an action from
+        The BaseAgent will receive a GameState and must return an action from
         game.Directions.{North, South, East, West, Stop}
         """
 

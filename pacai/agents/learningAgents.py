@@ -2,9 +2,9 @@ import time
 
 import pacai.util.util
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 
-class ValueEstimationAgent(Agent):
+class ValueEstimationAgent(BaseAgent):
     """
     Abstract agent which assigns values to (state,action)
     Q-Values for an environment. As well as a value to a

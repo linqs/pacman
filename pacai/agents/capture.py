@@ -2,12 +2,12 @@
 Interfaces for capture agents and agent factories
 """
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 from pacai.ui import captureGraphicsDisplay
 from pacai.util import distanceCalculator
 from pacai.util import util
 
-class CaptureAgent(Agent):
+class CaptureAgent(BaseAgent):
     """
     A base class for capture agents.
     The convenience methods herein handle

@@ -32,7 +32,7 @@ import sys
 import time
 import types
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.game import Game
@@ -578,7 +578,7 @@ def readCommand(argv):
     if 'numTraining' not in agentOpts:
       agentOpts['numTraining'] = options.numTraining
 
-  args['pacman'] = Agent.loadAgent(options.pacman, 0, agentOpts)
+  args['pacman'] = BaseAgent.loadAgent(options.pacman, 0, agentOpts)
 
   # Don't display training games
   if 'numTrain' in agentOpts:
@@ -586,7 +586,7 @@ def readCommand(argv):
     options.numIgnore = int(agentOpts['numTrain'])
 
   # Choose a ghost agent
-  args['ghosts'] = [Agent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
+  args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
 
   # Choose a display format
   if options.quietGraphics:

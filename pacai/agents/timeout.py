@@ -5,9 +5,9 @@ Interfaces for capture agents and agent factories
 import random
 import time
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 
-class TimeoutAgent(Agent):
+class TimeoutAgent(BaseAgent):
     """
     A random agent that takes too much time. Taking
     too much time results in penalties and random moves.

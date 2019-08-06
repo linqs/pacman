@@ -19,9 +19,9 @@ import pacai.core.search
 import pacai.student.search
 import pacai.util.util
 
-from pacai.agents.agent import Agent
+from pacai.agents.base import BaseAgent
 
-class GoWestAgent(Agent):
+class GoWestAgent(BaseAgent):
   """
   An agent that goes West until it can't.
   """
@@ -39,7 +39,7 @@ class GoWestAgent(Agent):
     else:
       return pacai.core.game.Directions.STOP
 
-class SearchAgent(Agent):
+class SearchAgent(BaseAgent):
   """
   This very general search agent finds a path using a supplied search algorithm for a
   supplied search problem, then returns actions to follow that path.
