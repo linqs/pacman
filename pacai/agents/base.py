@@ -49,8 +49,23 @@ class BaseAgent(object):
         Create an agent of the given class with the given index and args.
         """
 
-        BaseAgent._import_agents(os.path.join(os.path.dirname(__file__), "*.py"), "pacai.agents.%s")
-        BaseAgent._import_agents(os.path.join(os.path.dirname(__file__), '..', 'student', "*.py"), "pacai.student.%s")
+        this_dir = os.path.dirname(__file__)
+
+        BaseAgent._import_agents(os.path.join(this_dir, "*.py"), "pacai.agents.%s")
+        BaseAgent._import_agents(os.path.join(this_dir, '..', 'student', "*.py"), "pacai.student.%s")
+
+        # Also check any subpackages of pacai.agents.
+        for path in glob.glob(os.path.join(this_dir, '*')):
+            if (os.path.isfile(path)):
+                continue
+
+            if (os.path.basename(path).startswith('__')):
+                continue
+
+            package_name = os.path.basename(path)
+            package_format_string = "pacai.agents.%s.%%s" % (package_name)
+
+            BaseAgent._import_agents(os.path.join(path, "*.py"), package_format_string)
 
         # Now that the agent classes have been loaded, just look for subclasses.
         for subclass in util.getAllDescendents(BaseAgent):
@@ -68,7 +83,7 @@ class BaseAgent(object):
         """
 
         for path in glob.glob(glob_path):
-            if (not os.path.isfile):
+            if (not os.path.isfile(path)):
                 continue
 
             if (os.path.basename(path) in ['__init__.py', os.path.basename(__file__)]):
