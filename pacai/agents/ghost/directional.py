@@ -1,43 +1,6 @@
-import random
-
-import pacai.util.util
-
-from pacai.agents.base import BaseAgent
+from pacai.agents.ghost.base import GhostAgent
 from pacai.core.game import Actions
-from pacai.core.game import Directions
-
-class GhostAgent(BaseAgent):
-    def __init__(self, index):
-        super().__init__(index)
-
-    def getAction(self, state):
-        dist = self.getDistribution(state)
-        if len(dist) == 0:
-            return Directions.STOP
-        else:
-            return pacai.util.util.chooseFromDistribution(dist)
-
-    def getDistribution(self, state):
-        """
-        Returns a Counter encoding a distribution over actions from the provided state.
-        """
-
-        pacai.util.util.raiseNotDefined()
-
-class RandomGhost(GhostAgent):
-    """
-    A ghost that chooses a legal action uniformly at random.
-    """
-
-    def __init__(self, index):
-        super().__init__(index)
-
-    def getDistribution(self, state):
-        dist = pacai.util.util.Counter()
-        for a in state.getLegalActions(self.index):
-            dist[a] = 1.0
-        dist.normalize()
-        return dist
+from pacai.util import util
 
 class DirectionalGhost(GhostAgent):
     """
@@ -68,7 +31,7 @@ class DirectionalGhost(GhostAgent):
         pacmanPosition = state.getPacmanPosition()
 
         # Select best actions given the state
-        distancesToPacman = [pacai.util.util.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
+        distancesToPacman = [util.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
         if isScared:
             bestScore = max(distancesToPacman)
             bestProb = self.prob_scaredFlee
@@ -78,7 +41,7 @@ class DirectionalGhost(GhostAgent):
         bestActions = [action for action, distance in zip(legalActions, distancesToPacman) if distance == bestScore]
 
         # Construct distribution
-        dist = pacai.util.util.Counter()
+        dist = util.Counter()
 
         for a in bestActions:
             dist[a] = float(bestProb) / len(bestActions)
