@@ -1,5 +1,6 @@
 from pacai.agents.search.base import SearchAgent
-from pacai.core import search
+from pacai.core.search import search
+from pacai.core.search.position import PositionSearchProblem
 
 class StayEastSearchAgent(SearchAgent):
     """
@@ -14,7 +15,7 @@ class StayEastSearchAgent(SearchAgent):
 
             self.searchFunction = search.ucs
             costFn = lambda pos: 0.5 ** pos[0]
-            self.searchType = lambda state: search.PositionSearchProblem(state, costFn)
+            self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
 class StayWestSearchAgent(SearchAgent):
     """
@@ -29,4 +30,4 @@ class StayWestSearchAgent(SearchAgent):
 
             self.searchFunction = search.ucs
             costFn = lambda pos: 2 ** pos[0]
-            self.searchType = lambda state: search.PositionSearchProblem(state, costFn)
+            self.searchType = lambda state: PositionSearchProblem(state, costFn)

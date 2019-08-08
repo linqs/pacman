@@ -1,5 +1,5 @@
 from pacai.agents.search.base import SearchAgent
-from pacai.core import search
+from pacai.core.search import search
 from pacai.student import searchAgents
 
 class AStarCornersAgent(SearchAgent):

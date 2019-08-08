@@ -18,13 +18,14 @@ Good luck and happy searching!
 """
 
 from pacai.core import game
-from pacai.core import heuristic
-from pacai.core import search
+from pacai.core.search import heuristic
+from pacai.core.search.position import PositionSearchProblem
+from pacai.core.search.problem import SearchProblem
 from pacai.agents.base import BaseAgent
 from pacai.agents.search.base import SearchAgent
 from pacai.util import util
 
-class CornersProblem(search.SearchProblem):
+class CornersProblem(SearchProblem):
     """
     This search problem finds paths through all four corners of a layout.
 
@@ -209,7 +210,7 @@ class ClosestDotSearchAgent(SearchAgent):
         util.raiseNotDefined()
         return None
 
-class AnyFoodSearchProblem(search.PositionSearchProblem):
+class AnyFoodSearchProblem(PositionSearchProblem):
     """
     A search problem for finding a path to any food.
 

@@ -21,7 +21,7 @@ class SearchAgent(BaseAgent):
 
     # TODO(eriq): We should pass actual objects instead of strings.
 
-    def __init__(self, index, fn = 'pacai.core.search.depthFirstSearch', prob = 'pacai.core.search.PositionSearchProblem', heuristic = 'pacai.core.heuristic.null'):
+    def __init__(self, index, fn = 'pacai.core.search.search.dfs', prob = 'pacai.core.search.position.PositionSearchProblem', heuristic = 'pacai.core.search.heuristic.null'):
         super().__init__(index)
 
         # Get the search problem type from the name.

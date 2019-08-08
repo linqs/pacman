@@ -1,6 +1,7 @@
 import random
 
-import pacai.core.search
+from pacai.core.search import search
+from pacai.core.search.problem import SearchProblem
 
 # Module Classes
 
@@ -172,7 +173,7 @@ class EightPuzzleState:
 
 # TODO: Implement The methods in this class
 
-class EightPuzzleSearchProblem(pacai.core.search.SearchProblem):
+class EightPuzzleSearchProblem(SearchProblem):
   """
     Implementation of a SearchProblem for the  Eight Puzzle domain
 
@@ -255,7 +256,7 @@ if __name__ == '__main__':
   print(puzzle)
 
   problem = EightPuzzleSearchProblem(puzzle)
-  path = pacai.core.search.bfs(problem)
+  path = search.bfs(problem)
   print('BFS found a path of %d moves: %s' % (len(path), str(path)))
   curr = puzzle
   i = 1
