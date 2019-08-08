@@ -5,10 +5,10 @@ from pacai.core.game import Directions
 from pacai.util import util
 
 class GreedyAgent(BaseAgent):
-    def __init__(self, index, evalFn = "scoreEvaluation"):
+    def __init__(self, index, evalFn = "pacai.core.eval.score"):
         super().__init__(index)
 
-        self.evaluationFunction = util.lookup(evalFn, globals())
+        self.evaluationFunction = util.qualifiedImport(evalFn)
         assert self.evaluationFunction != None
 
     def getAction(self, state):
@@ -23,7 +23,3 @@ class GreedyAgent(BaseAgent):
         bestActions = [pair[1] for pair in scored if pair[0] == bestScore]
 
         return random.choice(bestActions)
-
-# TODO(eriq): Move?
-def scoreEvaluation(state):
-    return state.getScore()

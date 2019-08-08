@@ -1,17 +1,6 @@
 from pacai.agents.base import BaseAgent
 from pacai.util import util
 
-def scoreEvaluationFunction(currentGameState):
-    """
-    This default evaluation function just returns the score of the state.
-    The score is the same one displayed in the Pacman GUI.
-
-    This evaluation function is meant for use with adversarial search agents
-    (not reflex agents).
-    """
-
-    return currentGameState.getScore()
-
 class MultiAgentSearchAgent(BaseAgent):
     """
     This class provides some common elements to all of your multi-agent searchers.
@@ -27,10 +16,10 @@ class MultiAgentSearchAgent(BaseAgent):
     Agent is another abstract class.
     """
 
-    def __init__(self, index, evalFn = 'scoreEvaluationFunction', depth = '2'):
+    def __init__(self, index, evalFn = 'pacai.core.eval.score', depth = '2'):
         super().__init__(index)
 
-        self.evaluationFunction = util.lookup(evalFn)
+        self.evaluationFunction = util.qualifiedImport(evalFn)
         self.treeDepth = int(depth)
 
 class ReflexAgent(BaseAgent):
@@ -195,4 +184,5 @@ class ContestAgent(MultiAgentSearchAgent):
         util.raiseNotDefined()
 
 # Abbreviation
+# TODO(eriq): Get rid of this abbreviation
 better = betterEvaluationFunction

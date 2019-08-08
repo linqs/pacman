@@ -585,9 +585,15 @@ def qualifiedImport(qualified_name):
     Import a fully qualified name, e.g. 'pacai.util.util.qualifiedImport'.
     """
 
+    if (qualified_name is None or qualified_name == 0):
+        raise AttributeError("Empty supplied for import")
+
     parts = qualified_name.split('.')
     module_name = '.'.join(parts[0:-1])
     target_name = parts[-1]
+
+    if (len(parts) == 1):
+        raise AttributeError("Non-qualified name supplied for import: " + qualified_name)
 
     try:
         module = importlib.import_module(module_name)
