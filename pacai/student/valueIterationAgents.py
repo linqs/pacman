@@ -1,9 +1,9 @@
-from pacai.agents import learningAgents
+from pacai.agents.learning.value import ValueEstimationAgent
 from pacai.util import util
 
-class ValueIterationAgent(learningAgents.ValueEstimationAgent):
+class ValueIterationAgent(ValueEstimationAgent):
     """
-    * Please read learningAgents.py before reading this.*
+    * Please read pacai.agents.learning before reading this.*
 
     A ValueIterationAgent takes a Markov decision process
     (see mdp.py) on initialization and runs value iteration

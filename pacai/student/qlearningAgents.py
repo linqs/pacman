@@ -1,11 +1,11 @@
-from pacai.agents import learningAgents
+from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.util import util
 
 # Force the extractors into scope for util.lookup().
 # TODO(eriq): I hate util.lookup(), get rid of it and this import.
 from pacai.util import featureExtractors
 
-class QLearningAgent(learningAgents.ReinforcementAgent):
+class QLearningAgent(ReinforcementAgent):
     """
     Q-Learning Agent
 
