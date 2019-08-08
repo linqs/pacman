@@ -36,10 +36,10 @@ import time
 import traceback
 import types
 
-import pacai.agents.keyboardAgents
 import pacai.core.layout
 import pacai.util.mazeGenerator
 
+from pacai.agents import keyboard
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
 from pacai.core.game import Configuration
@@ -682,9 +682,9 @@ def readCommand( argv ):
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
         if not val: continue
         if numKeyboardAgents == 0:
-            agent = pacai.agents.keyboardAgents.KeyboardAgent(index)
+            agent = keyboard.WASDKeyboardAgent(index)
         elif numKeyboardAgents == 1:
-            agent = pacai.agents.keyboardAgents.KeyboardAgent2(index)
+            agent = keyboard.IJKLKeyboardAgent(index)
         else:
             raise Exception('Max of two keyboard agents supported')
         numKeyboardAgents += 1

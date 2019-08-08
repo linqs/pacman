@@ -520,7 +520,7 @@ def readCommand(argv):
                     metavar='LAYOUT_FILE', default='mediumClassic')
   parser.add_option('-p', '--pacman', dest='pacman',
                     help=default('the agent TYPE in the pacmanAgents module to use'),
-                    metavar='TYPE', default='KeyboardAgent')
+                    metavar='TYPE', default='WASDKeyboardAgent')
   parser.add_option('-t', '--textGraphics', action='store_true', dest='textGraphics',
                     help='Display output as text only', default=False)
   parser.add_option('-q', '--quietTextGraphics', action='store_true', dest='quietGraphics',
@@ -569,9 +569,10 @@ def readCommand(argv):
   if args['layout'] == None:
     raise Exception("The layout " + options.layout + " cannot be found")
 
+  # TODO(eriq): There are multiple keyboard agents.
   # Choose a Pacman agent
   noKeyboard = options.gameToReplay == None and (options.textGraphics or options.quietGraphics)
-  if (noKeyboard and options.pacman == 'KeyboardAgent'):
+  if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
     raise Exception("Keyboard agents require graphics.")
 
   agentOpts = parseAgentArgs(options.agentArgs)
