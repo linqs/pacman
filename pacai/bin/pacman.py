@@ -34,6 +34,7 @@ import types
 
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
+from pacai.agents.greedy import GreedyAgent
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.game import Game
@@ -626,7 +627,7 @@ def replayGame(layout, actions, display):
     import pacmanAgents
 
     rules = ClassicGameRules()
-    agents = [pacmanAgents.GreedyAgent(0)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
+    agents = [GreedyAgent(0)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
     game = rules.newGame(layout, agents[0], agents[1:], display)
     state = game.state
     display.initialize(state.data)
