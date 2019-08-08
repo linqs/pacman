@@ -18,9 +18,10 @@ Good luck and happy searching!
 """
 
 from pacai.core import game
+from pacai.core import heuristic
 from pacai.core import search
-from pacai.agents import searchAgents
 from pacai.agents.base import BaseAgent
+from pacai.agents.search.base import SearchAgent
 from pacai.util import util
 
 class CornersProblem(search.SearchProblem):
@@ -29,7 +30,7 @@ class CornersProblem(search.SearchProblem):
 
     You must select a suitable state space and successor function.
 
-    See the searchAgents.PositionSearchProblem class for an example of
+    See the PositionSearchProblem class for an example of
     a working SearchProblem.
     """
 
@@ -165,9 +166,9 @@ def foodHeuristic(state, problem):
 
     # *** Your Code Here ***
     util.raiseNotDefined()
-    return search.nullHeuristic(state, problem)  # Default to the null heuristic.
+    return heuristic.null(state, problem)  # Default to the null heuristic.
 
-class ClosestDotSearchAgent(searchAgents.SearchAgent):
+class ClosestDotSearchAgent(SearchAgent):
     """
     Search for all food using a sequence of searches
     """
@@ -208,7 +209,7 @@ class ClosestDotSearchAgent(searchAgents.SearchAgent):
         util.raiseNotDefined()
         return None
 
-class AnyFoodSearchProblem(searchAgents.PositionSearchProblem):
+class AnyFoodSearchProblem(search.PositionSearchProblem):
     """
     A search problem for finding a path to any food.
 
@@ -216,7 +217,7 @@ class AnyFoodSearchProblem(searchAgents.PositionSearchProblem):
     has a different goal test, which you need to fill in below.  The
     state space and successor function do not need to be changed.
 
-    The class definition above, AnyFoodSearchProblem(searchAgents.PositionSearchProblem),
+    The class definition above, AnyFoodSearchProblem(search.PositionSearchProblem),
     inherits the methods of the PositionSearchProblem.
 
     You can use this search problem to help you fill in

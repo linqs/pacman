@@ -579,3 +579,22 @@ def getAllDescendents(classObject):
         descendents |= getAllDescendents(childClass)
 
     return descendents
+
+def qualifiedImport(qualified_name):
+    """
+    Import a fully qualified name, e.g. 'pacai.util.util.qualifiedImport'.
+    """
+
+    parts = qualified_name.split('.')
+    module_name = '.'.join(parts[0:-1])
+    target_name = parts[-1]
+
+    try:
+        module = importlib.import_module(module_name)
+    except ImportError:
+        raise AttributeError("Unable to locate module (%s) for qualified object (%s)." % (module_name, qualified_name))
+
+    if (target_name == ''):
+        return module
+
+    return getattr(module, target_name)
