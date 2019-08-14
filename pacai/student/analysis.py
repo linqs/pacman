@@ -4,6 +4,7 @@
 
 # Change these default values to obtain the specified policies through
 # value iteration.
+import logging
 
 def question2():
     """
@@ -131,8 +132,8 @@ if __name__ == '__main__':
         question3e,
         question6,
     ]
-
-    print('Answers to analysis questions:')
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.info('Answers to analysis questions:')
     for question in questions:
         response = question()
-        print('    Question %-10s:\t%s' % (question.__name__, str(response)))
+        logging.info('    Question %-10s:\t%s' % (question.__name__, str(response)))

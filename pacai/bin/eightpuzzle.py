@@ -1,5 +1,5 @@
 import random
-
+import logging
 from pacai.core.search import search
 from pacai.core.search.problem import SearchProblem
 
@@ -225,7 +225,7 @@ def loadEightPuzzle(puzzleNumber):
 
     puzzleNumber can range from 0 to 5.
 
-    >>> print loadEightPuzzle(0)
+    >>> logging.info(loadEightPuzzle(0))
     -------------
     | 1 |   | 2 |
     -------------
@@ -252,18 +252,19 @@ def createRandomEightPuzzle(moves=100):
 
 if __name__ == '__main__':
   puzzle = createRandomEightPuzzle(25)
-  print('A random puzzle:')
-  print(puzzle)
+  logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+  logging.info('A random puzzle:')
+  logging.info('\n' + str(puzzle))
 
   problem = EightPuzzleSearchProblem(puzzle)
   path = search.bfs(problem)
-  print('BFS found a path of %d moves: %s' % (len(path), str(path)))
+  logging.info('BFS found a path of %d moves: %s' % (len(path), str(path)))
   curr = puzzle
   i = 1
   for a in path:
     curr = curr.result(a)
-    print('After %d move%s: %s' % (i, ("", "s")[i>1], a))
-    print(curr)
+    logging.info('After %d move%s: %s' % (i, ("", "s")[i>1], a))
+    logging.info(curr)
 
     input("Press return for the next state...")  # wait for key stroke
     i += 1

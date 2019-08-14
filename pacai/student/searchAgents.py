@@ -24,6 +24,7 @@ from pacai.core.search.problem import SearchProblem
 from pacai.agents.base import BaseAgent
 from pacai.agents.search.base import SearchAgent
 from pacai.util import util
+import logging
 
 class CornersProblem(SearchProblem):
     """
@@ -34,7 +35,6 @@ class CornersProblem(SearchProblem):
     See the PositionSearchProblem class for an example of
     a working SearchProblem.
     """
-
     def __init__(self, startingGameState):
         """
         Stores the walls, pacman's starting position and corners.
@@ -48,7 +48,7 @@ class CornersProblem(SearchProblem):
         self.corners = ((1, 1), (1, top), (right, 1), (right, top))
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
-                print('Warning: no food in corner ' + str(corner))
+                logging.info('Warning: no food in corner ' + str(corner))
 
         self._expanded = 0  # Number of search nodes expanded
 
@@ -193,7 +193,7 @@ class ClosestDotSearchAgent(SearchAgent):
                 currentState = currentState.generateSuccessor(0, action)
 
         self.actionIndex = 0
-        print('Path found with cost %d.' % len(self.actions))
+        logging.info('Path found with cost %d.' % len(self.actions))
 
     def findPathToClosestDot(self, gameState):
         """

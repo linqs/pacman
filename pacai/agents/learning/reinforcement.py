@@ -1,5 +1,5 @@
 import time
-
+import logging
 from pacai.agents.learning.value import ValueEstimationAgent
 from pacai.util import util
 
@@ -17,7 +17,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         - Use self.getLegalActions(state) to know which actions
             are available in a state
     """
-
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     def __init__(self, index, actionFn = None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
         """
         actionFn: Function which takes a state and returns the list of legal actions
@@ -152,7 +152,7 @@ class ReinforcementAgent(ValueEstimationAgent):
     def registerInitialState(self, state):
         self.startEpisode()
         if self.episodesSoFar == 0:
-            print('Beginning %d episodes of Training' % (self.numTraining))
+            logging.info('Beginning %d episodes of Training' % (self.numTraining))
 
     def final(self, state):
         """
@@ -174,24 +174,24 @@ class ReinforcementAgent(ValueEstimationAgent):
 
         NUM_EPS_UPDATE = 100
         if self.episodesSoFar % NUM_EPS_UPDATE == 0:
-                print('Reinforcement Learning Status:')
+                logging.info('Reinforcement Learning Status:')
                 windowAvg = self.lastWindowAccumRewards / float(NUM_EPS_UPDATE)
 
                 if self.episodesSoFar <= self.numTraining:
                     trainAvg = self.accumTrainRewards / float(self.episodesSoFar)
-                    print('\tCompleted %d out of %d training episodes' % (self.episodesSoFar,self.numTraining))
-                    print('\tAverage Rewards over all training: %.2f' % (trainAvg))
+                    logging.info('\tCompleted %d out of %d training episodes' % (self.episodesSoFar,self.numTraining))
+                    logging.info('\tAverage Rewards over all training: %.2f' % (trainAvg))
                 else:
                     testAvg = float(self.accumTestRewards) / (self.episodesSoFar - self.numTraining)
-                    print('\tCompleted %d test episodes' % (self.episodesSoFar - self.numTraining))
-                    print('\tAverage Rewards over testing: %.2f' % (testAvg))
+                    logging.info('\tCompleted %d test episodes' % (self.episodesSoFar - self.numTraining))
+                    logging.info('\tAverage Rewards over testing: %.2f' % (testAvg))
 
-                print('\tAverage Rewards for last %d episodes: %.2f' % (NUM_EPS_UPDATE,windowAvg))
-                print('\tEpisode took %.2f seconds' % (time.time() - self.episodeStartTime))
+                logging.info('\tAverage Rewards for last %d episodes: %.2f' % (NUM_EPS_UPDATE,windowAvg))
+                logging.info('\tEpisode took %.2f seconds' % (time.time() - self.episodeStartTime))
 
                 self.lastWindowAccumRewards = 0.0
                 self.episodeStartTime = time.time()
 
         if self.episodesSoFar == self.numTraining:
             msg = 'Training Done (turning off epsilon and alpha)'
-            print('%s\n%s' % (msg, '-' * len(msg)))
+            logging.info('%s\n%s' % (msg, '-' * len(msg)))

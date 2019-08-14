@@ -1,7 +1,7 @@
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.search.problem import SearchProblem
-
+import logging
 class PositionSearchProblem(SearchProblem):
     """
     A search problem defines the state space, start state, goal test,
@@ -12,7 +12,7 @@ class PositionSearchProblem(SearchProblem):
 
     Note: this search problem is fully specified; you should NOT change it.
     """
-
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     def __init__(self, gameState, costFn = lambda x: 1, goal=(1, 1), start = None, warn = True):
         """
         Stores the start and goal.
@@ -30,7 +30,7 @@ class PositionSearchProblem(SearchProblem):
         self.costFn = costFn
 
         if (warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal))):
-            print('Warning: this does not look like a regular search maze')
+            logging.info('Warning: this does not look like a regular search maze')
 
         # For display purposes
         self._visited, self._visitedlist, self._expanded = {}, [], 0

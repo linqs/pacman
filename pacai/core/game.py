@@ -5,6 +5,7 @@ The core of a Pac-Man game.
 import os
 import time
 import traceback
+import logging
 
 class Directions:
     NORTH = 'North'
@@ -390,7 +391,7 @@ class GameStateData:
             try:
                 int(hash(state))
             except TypeError as e:
-                print(e)
+                logging.error(e)
                 #hash(state)
         return int((hash(tuple(self.agentStates)) + 13*hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575 )
 
@@ -547,7 +548,7 @@ class Game:
                         time_taken = time.time() - start_time
                         self.totalAgentTimes[i] += time_taken
                     except TimeoutFunctionException:
-                        print("Agent %d ran out of time on startup!" % i)
+                        logging.warning("Agent %d ran out of time on startup!" % i)
                         self.unmute()
                         self.agentTimeout = True
                         self._agentCrash(i, quiet=True)
@@ -601,7 +602,7 @@ class Game:
                             raise TimeoutFunctionException()
                         action = timed_func( observation )
                     except TimeoutFunctionException:
-                        print("Agent %d timed out on a single move!" % agentIndex)
+                        logging.warning("Agent %d timed out on a single move!" % agentIndex)
                         self.agentTimeout = True
                         self.unmute()
                         self._agentCrash(agentIndex, quiet=True)
@@ -611,9 +612,9 @@ class Game:
 
                     if move_time > self.rules.getMoveWarningTime(agentIndex):
                         self.totalAgentTimeWarnings[agentIndex] += 1
-                        print("Agent %d took too long to make a move! This is warning %d" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]))
+                        logging.warning("Agent %d took too long to make a move! This is warning %d" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]))
                         if self.totalAgentTimeWarnings[agentIndex] > self.rules.getMaxTimeWarnings(agentIndex):
-                            print("Agent %d exceeded the maximum number of warnings: %d" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]))
+                            logging.warning("Agent %d exceeded the maximum number of warnings: %d" % (agentIndex, self.totalAgentTimeWarnings[agentIndex]))
                             self.agentTimeout = True
                             self.unmute()
                             self._agentCrash(agentIndex, quiet=True)
@@ -621,7 +622,7 @@ class Game:
                     self.totalAgentTimes[agentIndex] += move_time
                     #print "Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex])
                     if self.totalAgentTimes[agentIndex] > self.rules.getMaxTotalTime(agentIndex):
-                        print("Agent %d ran out of time! (time: %1.2f)" % (agentIndex, self.totalAgentTimes[agentIndex]))
+                        logging.warning("Agent %d ran out of time! (time: %1.2f)" % (agentIndex, self.totalAgentTimes[agentIndex]))
                         self.agentTimeout = True
                         self.unmute()
                         self._agentCrash(agentIndex, quiet=True)
@@ -669,7 +670,7 @@ class Game:
             except Exception as data:
                 if not self.catchExceptions: raise
                 self.unmute()
-                print("Exception", data)
+                logging.warning("Exception %s", data)
                 self._agentCrash(agent.index)
                 return
 

@@ -1,7 +1,7 @@
 import optparse
 import random
 import sys
-
+import logging
 import pacai.core.environment
 import pacai.core.mdp
 import pacai.util.util
@@ -378,7 +378,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
     if 'startEpisode' in dir(agent):
         agent.startEpisode()
 
-    message("BEGINNING EPISODE: " + str(episode) + "\n")
+    logging.info("BEGINNING EPISODE: " + str(episode) + "\n")
 
     while True:
         # DISPLAY CURRENT STATE
@@ -389,7 +389,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
         # END IF IN A TERMINAL STATE
         actions = environment.getPossibleActions(state)
         if len(actions) == 0:
-            message("EPISODE " + str(episode) + " COMPLETE: RETURN WAS " + str(returns) + "\n")
+            logging.info("EPISODE " + str(episode) + " COMPLETE: RETURN WAS " + str(returns) + "\n")
             return returns
 
         # GET ACTION (USUALLY FROM AGENT)
@@ -399,7 +399,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
 
         # EXECUTE ACTION
         nextState, reward = environment.doAction(action)
-        message("Started in state: " + str(state) + "\nTook action: " + str(action) + "\nEnded in state: " + str(nextState) + "\nGot reward: " + str(reward) + "\n")
+        logging.info("\nStarted in state: " + str(state) + "\nTook action: " + str(action) + "\nEnded in state: " + str(nextState) + "\nGot reward: " + str(reward) + "\n")
 
         # UPDATE LEARNER
         if 'observeTransition' in dir(agent):
@@ -464,7 +464,7 @@ def parseOptions():
         opts, args = optParser.parse_args()
 
         if opts.manual and opts.agent != 'q':
-            print('## Disabling Agents in Manual Mode (-m) ##')
+            logging.info('## Disabling Agents in Manual Mode (-m) ##')
             opts.agent = None
 
         # MANAGE CONFLICTS
@@ -478,7 +478,8 @@ def parseOptions():
 
 if __name__ == '__main__':
     opts = parseOptions()
-
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.debug('A random puzzle:\n')
     ###########################
     # GET THE GRIDWORLD
     ###########################
@@ -588,19 +589,13 @@ if __name__ == '__main__':
 
     # RUN EPISODES
     if opts.episodes > 0:
-        print()
-        print("RUNNING", opts.episodes, "EPISODES")
-        print()
-
+        logging.info("RUNNING " + str(opts.episodes) + " EPISODES\n")
     returns = 0
     for episode in range(1, opts.episodes + 1):
         returns += runEpisode(a, env, opts.discount, decisionCallback, displayCallback, messageCallback, pauseCallback, episode)
 
     if opts.episodes > 0:
-        print()
-        print("AVERAGE RETURNS FROM START STATE: " + str((returns + 0.0) / opts.episodes))
-        print()
-        print()
+        logging.info("AVERAGE RETURNS FROM START STATE:" + str((returns + 0.0) / opts.episodes) + "\n")
 
     # DISPLAY POST-LEARNING VALUES / Q-VALUES
     if opts.agent == 'q' and not opts.manual:

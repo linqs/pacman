@@ -31,7 +31,7 @@ import random
 import sys
 import time
 import types
-
+import logging
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
 from pacai.agents.greedy import GreedyAgent
@@ -294,12 +294,12 @@ class ClassicGameRules(object):
 
   def win(self, state, game):
     if not self.quiet:
-      print("Pacman emerges victorious! Score: %d" % state.data.score)
+      logging.info("Pacman emerges victorious! Score: %d" % state.data.score)
     game.gameOver = True
 
   def lose(self, state, game):
     if not self.quiet:
-      print("Pacman died! Score: %d" % state.data.score)
+      logging.info("Pacman died! Score: %d" % state.data.score)
     game.gameOver = True
 
   def getProgress(self, game):
@@ -307,9 +307,9 @@ class ClassicGameRules(object):
 
   def agentCrash(self, game, agentIndex):
     if agentIndex == 0:
-      print("Pacman crashed")
+      logging.info("Pacman crashed")
     else:
-      print("A ghost crashed")
+      logging.info("A ghost crashed")
 
   def getMaxTotalTime(self, agentIndex):
     return self.timeout
@@ -611,7 +611,7 @@ def readCommand(argv):
 
   # Special case: recorded games don't use the runGames method or args structure
   if options.gameToReplay is not None:
-    print('Replaying recorded game %s.' % options.gameToReplay)
+    logging.info('Replaying recorded game %s.' % options.gameToReplay)
     import pickle
 
     with open(options.gameToReplay) as f:
@@ -680,10 +680,10 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
     scores = [game.state.getScore() for game in games]
     wins = [game.state.isWin() for game in games]
     winRate = wins.count(True) / float(len(wins))
-    print('Average Score:', sum(scores) / float(len(scores)))
-    print('Scores:       ', ', '.join([str(score) for score in scores]))
-    print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
-    print('Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
+    logging.info('Average Score: %s', sum(scores) / float(len(scores)))
+    logging.info('Scores:       %s', ', '.join([str(score) for score in scores]))
+    logging.info('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
+    logging.info('Record:       %s', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
 
   return games
 
@@ -700,7 +700,7 @@ def main(argv):
 
   argv already has the executable stripped.
   """
-
+  logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
   args = readCommand(argv)  # Get game components based on input
   return runGames(**args)
 
