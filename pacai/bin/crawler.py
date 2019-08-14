@@ -1,8 +1,10 @@
+import logging
 import math
 import sys
-
 import pacai.core.environment
 import pacai.ui.graphicsCrawlerDisplay
+
+from pacai.util.logs import initLogging
 
 class CrawlingRobotEnvironment(pacai.core.environment.Environment):
     def __init__(self, crawlingRobot):
@@ -397,5 +399,6 @@ def _load_args(args):
     return max_steps
 
 if __name__ == '__main__':
+    initLogging()
     max_steps = _load_args(sys.argv)
     sys.exit(pacai.ui.graphicsCrawlerDisplay.run(max_steps = max_steps))

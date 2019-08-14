@@ -1,3 +1,5 @@
+import logging
+
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.search.problem import SearchProblem
@@ -12,7 +14,6 @@ class PositionSearchProblem(SearchProblem):
 
     Note: this search problem is fully specified; you should NOT change it.
     """
-
     def __init__(self, gameState, costFn = lambda x: 1, goal=(1, 1), start = None, warn = True):
         """
         Stores the start and goal.
@@ -30,7 +31,7 @@ class PositionSearchProblem(SearchProblem):
         self.costFn = costFn
 
         if (warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal))):
-            print('Warning: this does not look like a regular search maze')
+            logging.warning('This does not look like a regular search maze')
 
         # For display purposes
         self._visited, self._visitedlist, self._expanded = {}, [], 0

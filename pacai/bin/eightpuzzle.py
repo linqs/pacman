@@ -1,8 +1,9 @@
+import logging
 import random
 
 from pacai.core.search import search
 from pacai.core.search.problem import SearchProblem
-
+from pacai.util.logs import initLogging
 # Module Classes
 
 class EightPuzzleState:
@@ -121,7 +122,7 @@ class EightPuzzleState:
      newrow = row
      newcol = col + 1
    else:
-     raise Exception("Illegal Move")
+     raise Exception('Illegal Move')
 
    # Create a copy of the current eightPuzzle
    newPuzzle = EightPuzzleState([0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -225,7 +226,7 @@ def loadEightPuzzle(puzzleNumber):
 
     puzzleNumber can range from 0 to 5.
 
-    >>> print loadEightPuzzle(0)
+    >>> print(loadEightPuzzle(0))
     -------------
     | 1 |   | 2 |
     -------------
@@ -251,9 +252,9 @@ def createRandomEightPuzzle(moves=100):
  return puzzle
 
 if __name__ == '__main__':
+  initLogging()
   puzzle = createRandomEightPuzzle(25)
-  print('A random puzzle:')
-  print(puzzle)
+  print('A random puzzle:\n' + str(puzzle))
 
   problem = EightPuzzleSearchProblem(puzzle)
   path = search.bfs(problem)
@@ -262,8 +263,7 @@ if __name__ == '__main__':
   i = 1
   for a in path:
     curr = curr.result(a)
-    print('After %d move%s: %s' % (i, ("", "s")[i>1], a))
-    print(curr)
+    print('After %d move%s: %s' % (i, ("", "s")[i>1], a) + '\n' + str(curr))
 
-    input("Press return for the next state...")  # wait for key stroke
+    input('Press return for the next state...')  # wait for key stroke
     i += 1

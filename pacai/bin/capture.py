@@ -28,6 +28,7 @@ The keys are
 """
 
 import importlib
+import logging
 import optparse
 import pickle
 import random
@@ -38,7 +39,6 @@ import types
 
 import pacai.core.layout
 import pacai.util.mazeGenerator
-
 from pacai.agents import keyboard
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
@@ -48,6 +48,7 @@ from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.game import Grid
 from pacai.core.game import reconstituteGrid
+from pacai.util.logs import initLogging
 from pacai.util.util import manhattanDistance
 from pacai.util.util import nearestPoint
 
@@ -353,7 +354,7 @@ class CaptureRules:
         initState = GameState()
         initState.initialize( layout, len(agents) )
         starter = random.randint(0,1)
-        print('%s team starts' % ['Red', 'Blue'][starter])
+        logging.info('%s team starts' % ['Red', 'Blue'][starter])
         game = Game(agents, display, self, startingIndex=starter, muteAgents=muteAgents, catchExceptions=catchExceptions)
         game.state = initState
         game.length = length
@@ -376,19 +377,19 @@ class CaptureRules:
             game.gameOver = True
             if not game.rules.quiet:
                 if state.getRedFood().count() == MIN_FOOD:
-                    print('The Blue team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
+                    logging.info('The Blue team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
                 if state.getBlueFood().count() == MIN_FOOD:
-                    print('The Red team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
+                    logging.info('The Red team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
                 if state.getBlueFood().count() > MIN_FOOD and state.getRedFood().count() > MIN_FOOD:
-                    print('Time is up.')
+                    logging.info('Time is up.')
                     if state.data.score == 0:
-                        print('Tie game!')
+                        logging.info('Tie game!')
                     else:
                         winner = 'Red'
                         if state.data.score < 0:
                             winner = 'Blue'
 
-                        print('The %s team wins by %d points.' % (winner, abs(state.data.score)))
+                        logging.info('The %s team wins by %d points.' % (winner, abs(state.data.score)))
 
     def getProgress(self, game):
         blue = 1.0 - (game.state.getBlueFood().count() / float(self._initBlueFood))
@@ -400,10 +401,10 @@ class CaptureRules:
 
     def agentCrash(self, game, agentIndex):
         if agentIndex % 2 == 0:
-            print("Red agent crashed")
+            logging.error("Red agent crashed")
             game.state.data.score = -1
         else:
-            print("Blue agent crashed")
+            logging.error("Blue agent crashed")
             game.state.data.score = 1
 
     def getMaxTotalTime(self, agentIndex):
@@ -447,7 +448,7 @@ class AgentRules:
         """
         legal = AgentRules.getLegalActions( state, agentIndex )
         if action not in legal:
-            raise Exception("Illegal action " + str(action))
+            raise Exception('Illegal action ' + str(action))
 
         # Update Configuration
         agentState = state.data.agentStates[agentIndex]
@@ -656,7 +657,7 @@ def readCommand( argv ):
 
     # Special case: recorded games don't use the runGames method or args structure
     if options.replay != None:
-        print('Replaying recorded game %s.' % options.replay)
+        logging.info('Replaying recorded game %s.' % options.replay)
 
         recorded = None
         with open(options.replay, 'rb') as file:
@@ -672,9 +673,9 @@ def readCommand( argv ):
         redArgs['numTraining'] = options.numTraining
         blueArgs['numTraining'] = options.numTraining
     nokeyboard = options.textgraphics or options.quiet or options.numTraining > 0
-    print('\nRed team %s with %s:' % (options.red, redArgs))
+    logging.debug('\nRed team %s with %s:' % (options.red, redArgs))
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
-    print('\nBlue team %s with %s:' % (options.blue, blueArgs))
+    logging.debug('\nBlue team %s with %s:' % (options.blue, blueArgs))
     blueAgents = loadAgents(False, options.blue, nokeyboard, blueArgs)
     args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)],[]) # list of agents
 
@@ -713,8 +714,6 @@ def readCommand( argv ):
 def randomLayout(seed = None):
     if not seed:
         seed = random.randint(0,99999999)
-    # layout = 'layouts/random%08dCapture.lay' % seed
-    # print('Generating random layout in %s' % layout)
     return pacai.util.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
@@ -722,20 +721,20 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     try:
         module = importlib.import_module(agent_module)
     except ImportError:
-        print('Error: The team "' + agent_module + '" could not be loaded! ')
+        logging.error('The team "' + agent_module + '" could not be loaded! ')
         traceback.print_exc()
         return [None for i in range(2)]
 
     args = dict()
     args.update(cmdLineArgs) # Add command line args with priority
 
-    print("Loading Team:", agent_module)
-    print("Arguments:", args)
+    logging.info('Loading Team:%s', agent_module)
+    logging.info('Arguments:%s', args)
 
     try:
         createTeamFunc = getattr(module, 'createTeam')
     except AttributeError:
-        print('Error: The team "' + agent_module + '" could not be loaded! ')
+        logging.error('The team "' + agent_module + '" could not be loaded! ')
         traceback.print_exc()
         return [None for i in range(2)]
 
@@ -763,13 +762,13 @@ def replayGame( layout, agents, actions, display, length, redTeamName, blueTeamN
 
         display.finish()
 
-def runGames( layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False ):
+def runGames(layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False ):
 
     rules = CaptureRules()
     games = []
 
     if numTraining > 0:
-        print('Playing %d training games' % numTraining)
+        logging.info('Playing %d training games' % numTraining)
 
     for i in range( numGames ):
         beQuiet = i < numTraining
@@ -804,17 +803,17 @@ def runGames( layout, agents, display, length, numGames, record, numTraining, re
             with open(path, 'wb') as file:
                 file.write(g.record)
 
-            print("Game recorded to: '%s'." % (path))
+            logging.info("Game recorded to: '%s'." % (path))
 
     if numGames > 0:
         scores = [game.state.data.score for game in games]
         redWinRate = [s > 0 for s in scores].count(True)/ float(len(scores))
         blueWinRate = [s < 0 for s in scores].count(True)/ float(len(scores))
-        print('Average Score:', sum(scores) / float(len(scores)))
-        print('Scores: ', ', '.join([str(score) for score in scores]))
-        print('Red Win Rate: %d/%d (%.2f)' % ([s > 0 for s in scores].count(True), len(scores), redWinRate))
-        print('Blue Win Rate: %d/%d (%.2f)' % ([s < 0 for s in scores].count(True), len(scores), blueWinRate))
-        print('Record: ', ', '.join([('Blue', 'Tie', 'Red')[max(0, min(2, 1 + s))] for s in scores]))
+        logging.info('Average Score:%s', sum(scores) / float(len(scores)))
+        logging.info('Scores:%s', ', '.join([str(score) for score in scores]))
+        logging.info('Red Win Rate: %d/%d (%.2f)' % ([s > 0 for s in scores].count(True), len(scores), redWinRate))
+        logging.info('Blue Win Rate: %d/%d (%.2f)' % ([s < 0 for s in scores].count(True), len(scores), blueWinRate))
+        logging.info('Record: %s', ', '.join([('Blue', 'Tie', 'Red')[max(0, min(2, 1 + s))] for s in scores]))
 
     return games
 
@@ -832,7 +831,7 @@ def main(argv):
 
     argv already has the executable stripped.
     """
-
+    initLogging()
     options = readCommand(argv) # Get game components based on input
     return runGames(**options)
 

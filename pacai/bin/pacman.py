@@ -25,7 +25,7 @@ code to run a game.  This file is divided into three sections:
 To play your first game, type 'python pacman.py' from the command line.
 The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).  Have fun!
 """
-
+import logging
 import os
 import random
 import sys
@@ -40,6 +40,7 @@ from pacai.core.game import Directions
 from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.layout import getLayout
+from pacai.util.logs import initLogging
 from pacai.util.util import nearestPoint
 from pacai.util.util import manhattanDistance
 
@@ -143,12 +144,12 @@ class GameState(object):
 
   def getGhostState(self, agentIndex):
     if agentIndex == 0 or agentIndex >= self.getNumAgents():
-      raise Exception("Invalid index passed to getGhostState")
+      raise Exception('Invalid index passed to getGhostState')
     return self.data.agentStates[agentIndex]
 
   def getGhostPosition(self, agentIndex):
     if agentIndex == 0:
-      raise Exception("Pacman's index passed to getGhostPosition")
+      raise Exception('\Pacman\'s index passed to getGhostPosition')
     return self.data.agentStates[agentIndex].getPosition()
 
   def getGhostPositions(self):
@@ -294,12 +295,12 @@ class ClassicGameRules(object):
 
   def win(self, state, game):
     if not self.quiet:
-      print("Pacman emerges victorious! Score: %d" % state.data.score)
+      logging.info('Pacman emerges victorious! Score: %d' % state.data.score)
     game.gameOver = True
 
   def lose(self, state, game):
     if not self.quiet:
-      print("Pacman died! Score: %d" % state.data.score)
+      logging.info('Pacman died! Score: %d' % state.data.score)
     game.gameOver = True
 
   def getProgress(self, game):
@@ -307,9 +308,9 @@ class ClassicGameRules(object):
 
   def agentCrash(self, game, agentIndex):
     if agentIndex == 0:
-      print("Pacman crashed")
+      logging.error('Pacman crashed')
     else:
-      print("A ghost crashed")
+      logging.error('A ghost crashed')
 
   def getMaxTotalTime(self, agentIndex):
     return self.timeout
@@ -350,7 +351,7 @@ class PacmanRules:
 
     legal = PacmanRules.getLegalActions(state)
     if action not in legal:
-      raise Exception("Illegal action " + str(action))
+      raise Exception('Illegal action ' + str(action))
 
     pacmanState = state.data.agentStates[0]
 
@@ -421,7 +422,7 @@ class GhostRules:
   def applyAction(state, action, ghostIndex):
     legal = GhostRules.getLegalActions(state, ghostIndex)
     if action not in legal:
-      raise Exception("Illegal ghost action " + str(action))
+      raise Exception('Illegal ghost action ' + str(action))
 
     ghostState = state.data.agentStates[ghostIndex]
     speed = GhostRules.GHOST_SPEED
@@ -573,7 +574,7 @@ def readCommand(argv):
   # Choose a Pacman agent
   noKeyboard = options.gameToReplay == None and (options.textGraphics or options.quietGraphics)
   if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
-    raise Exception("Keyboard agents require graphics.")
+    raise Exception('Keyboard agents require graphics.')
 
   agentOpts = parseAgentArgs(options.agentArgs)
   if options.numTraining > 0:
@@ -611,7 +612,7 @@ def readCommand(argv):
 
   # Special case: recorded games don't use the runGames method or args structure
   if options.gameToReplay is not None:
-    print('Replaying recorded game %s.' % options.gameToReplay)
+    logging.info('Replaying recorded game %s.' % options.gameToReplay)
     import pickle
 
     with open(options.gameToReplay) as f:
@@ -680,10 +681,10 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
     scores = [game.state.getScore() for game in games]
     wins = [game.state.isWin() for game in games]
     winRate = wins.count(True) / float(len(wins))
-    print('Average Score:', sum(scores) / float(len(scores)))
-    print('Scores:       ', ', '.join([str(score) for score in scores]))
-    print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
-    print('Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
+    logging.info('Average Score: %s', sum(scores) / float(len(scores)))
+    logging.info('Scores:       %s', ', '.join([str(score) for score in scores]))
+    logging.info('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
+    logging.info('Record:       %s', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
 
   return games
 
@@ -700,7 +701,7 @@ def main(argv):
 
   argv already has the executable stripped.
   """
-
+  initLogging()
   args = readCommand(argv)  # Get game components based on input
   return runGames(**args)
 

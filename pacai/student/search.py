@@ -28,7 +28,6 @@ def breadthFirstSearch(problem):
     """
     Search the shallowest nodes in the search tree first. [p 81]
     """
-
     # *** Your Code Here ***
     pacai.util.util.raiseNotDefined()
 
