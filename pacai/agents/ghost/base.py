@@ -13,9 +13,10 @@ class GhostAgent(BaseAgent):
         else:
             return util.chooseFromDistribution(dist)
 
+    @abc.abstractmethod
     def getDistribution(self, state):
         """
         Returns a Counter encoding a distribution over actions from the provided state.
         """
 
-        util.raiseNotDefined()
+        pass
