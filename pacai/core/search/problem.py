@@ -1,20 +1,23 @@
+import abc
+
 from pacai.util import util
 
-class SearchProblem(object):
+class SearchProblem(abc.ABC):
   """
   This class outlines the structure of a search problem, but doesn't implement
   any of the methods (in object-oriented terminology: an abstract class).
 
   You do not need to change anything in this class, ever.
   """
-
+  @abc.abstractmethod
   def startingState(self):
      """
      Returns the start state for the search problem
      """
 
-     util.raiseNotDefined()
+     pass
 
+  @abc.abstractmethod
   def isGoal(self, state):
      """
      state: Search state
@@ -22,8 +25,9 @@ class SearchProblem(object):
      Returns True if and only if the state is a valid goal state
      """
 
-     util.raiseNotDefined()
+     pass
 
+  @abc.abstractmethod
   def successorStates(self, state):
      """
      state: Search state
@@ -35,8 +39,9 @@ class SearchProblem(object):
      cost of expanding to that successor
      """
 
-     util.raiseNotDefined()
+     pass
 
+  @abc.abstractmethod
   def actionsCost(self, actions):
      """
      actions: A list of actions to take
@@ -45,4 +50,4 @@ class SearchProblem(object):
      The sequence must be composed of legal moves.
      """
 
-     util.raiseNotDefined()
+     pass

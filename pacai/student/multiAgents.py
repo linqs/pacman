@@ -87,69 +87,61 @@ class ReflexAgent(BaseAgent):
 class MinimaxAgent(MultiAgentSearchAgent):
     """
     Your minimax agent (question 2)
+
+    Here are some method calls that might be useful when implementing minimax.
+
+    gameState.getLegalActions(agentIndex):
+        Returns a list of legal actions for an agent
+        agentIndex=0 means Pacman, ghosts are >= 1
+
+    game.Directions.STOP:
+        The stop direction, which is always legal
+
+    gameState.generateSuccessor(agentIndex, action):
+        Returns the successor game state after an agent takes an action
+
+    gameState.getNumAgents():
+        Returns the total number of agents in the game
+            
+    Method to Implement:
+
+    def getAction(self, gameState):
+        Returns the minimax action from the current gameState using self.treeDepth
+        and self.evaluationFunction.
     """
 
     def __init__(self, index):
         super().__init__(index)
-
-    def getAction(self, gameState):
-        """
-        Returns the minimax action from the current gameState using self.treeDepth
-        and self.evaluationFunction.
-
-        Here are some method calls that might be useful when implementing minimax.
-
-        gameState.getLegalActions(agentIndex):
-            Returns a list of legal actions for an agent
-            agentIndex=0 means Pacman, ghosts are >= 1
-
-        game.Directions.STOP:
-            The stop direction, which is always legal
-
-        gameState.generateSuccessor(agentIndex, action):
-            Returns the successor game state after an agent takes an action
-
-        gameState.getNumAgents():
-            Returns the total number of agents in the game
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
     Your minimax agent with alpha-beta pruning (question 3)
+
+    Method to Implement: 
+
+    def getAction(self, gameState):
+        Returns the minimax action using self.treeDepth and self.evaluationFunction
     """
 
     def __init__(self, index):
         super().__init__(index)
 
-    def getAction(self, gameState):
-        """
-        Returns the minimax action using self.treeDepth and self.evaluationFunction
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
     Your expectimax agent (question 4)
+
+    All ghosts should be modeled as choosing uniformly at random from their
+    legal moves.
+
+    Method to Implement:
+
+    def getAction(self, gameState):
+        Returns the expectimax action using self.treeDepth and self.evaluationFunction
     """
 
     def __init__(self, index):
         super().__init__(index)
-
-    def getAction(self, gameState):
-        """
-        Returns the expectimax action using self.treeDepth and self.evaluationFunction
-
-        All ghosts should be modeled as choosing uniformly at random from their
-        legal moves.
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -165,23 +157,22 @@ def betterEvaluationFunction(currentGameState):
 class ContestAgent(MultiAgentSearchAgent):
     """
     Your agent for the mini-contest
+
+    You can use any method you want and search to any depth you want.
+    Just remember that the mini-contest is timed, so you have to trade off speed and computation.
+
+    Ghosts don't behave randomly anymore, but they aren't perfect either -- they'll usually
+    just make a beeline straight towards Pacman (or away from him if they're scared!)
+
+    Method to Implement:
+    
+    def getAction(self, gameState):
+        Returns an action.
     """
 
     def __init__(self, index):
         super().__init__(index)
 
-    def getAction(self, gameState):
-        """
-        Returns an action.
-        You can use any method you want and search to any depth you want.
-        Just remember that the mini-contest is timed, so you have to trade off speed and computation.
-
-        Ghosts don't behave randomly anymore, but they aren't perfect either -- they'll usually
-        just make a beeline straight towards Pacman (or away from him if they're scared!)
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
 
 # Abbreviation
 # TODO(eriq): Get rid of this abbreviation
