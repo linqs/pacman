@@ -1,5 +1,5 @@
-import random
 import logging
+import random
 from pacai.core.search import search
 from pacai.core.search.problem import SearchProblem
 
