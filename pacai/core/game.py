@@ -1,11 +1,10 @@
 """
 The core of a Pac-Man game.
 """
-
+import logging
 import os
 import time
 import traceback
-import logging
 
 class Directions:
     NORTH = 'North'

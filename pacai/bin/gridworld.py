@@ -1,7 +1,7 @@
+import logging
 import optparse
 import random
 import sys
-import logging
 import pacai.core.environment
 import pacai.core.mdp
 import pacai.util.util

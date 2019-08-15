@@ -1,7 +1,8 @@
+import logging
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.search.problem import SearchProblem
-import logging
+
 class PositionSearchProblem(SearchProblem):
     """
     A search problem defines the state space, start state, goal test,
