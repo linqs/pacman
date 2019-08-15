@@ -833,7 +833,6 @@ def main(argv):
     argv already has the executable stripped.
     """
     logging.basicConfig(format='%(levelname)s - %(asctime)s - (%(message)s', level=logging.INFO)
-    args = readCommand(argv)  # Get game components based on input
     options = readCommand(argv) # Get game components based on input
     return runGames(**options)
 

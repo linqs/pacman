@@ -390,7 +390,7 @@ class GameStateData:
             try:
                 int(hash(state))
             except TypeError as e:
-                logging.error(e)
+                logging.error("TypeError %s" % (e))
                 #hash(state)
         return int((hash(tuple(self.agentStates)) + 13*hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575 )
 
@@ -669,7 +669,7 @@ class Game:
             except Exception as data:
                 if not self.catchExceptions: raise
                 self.unmute()
-                logging.warning("Exception %s", data)
+                logging.warning('Exception %s' % data)
                 self._agentCrash(agent.index)
                 return
 

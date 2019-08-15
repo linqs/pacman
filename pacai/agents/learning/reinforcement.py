@@ -151,7 +151,7 @@ class ReinforcementAgent(ValueEstimationAgent):
     def registerInitialState(self, state):
         self.startEpisode()
         if self.episodesSoFar == 0:
-            logging.info('Beginning %d episodes of Training' % (self.numTraining))
+            logging.debug('Beginning %d episodes of Training' % (self.numTraining))
 
     def final(self, state):
         """
@@ -173,7 +173,7 @@ class ReinforcementAgent(ValueEstimationAgent):
 
         NUM_EPS_UPDATE = 100
         if self.episodesSoFar % NUM_EPS_UPDATE == 0:
-                logging.info('Reinforcement Learning Status:')
+                logging.debug('Reinforcement Learning Status:')
                 windowAvg = self.lastWindowAccumRewards / float(NUM_EPS_UPDATE)
 
                 if self.episodesSoFar <= self.numTraining:
@@ -193,4 +193,4 @@ class ReinforcementAgent(ValueEstimationAgent):
 
         if self.episodesSoFar == self.numTraining:
             msg = 'Training Done (turning off epsilon and alpha)'
-            logging.info('%s\n%s' % (msg, '-' * len(msg)))
+            logging.debug('%s\n%s' % (msg, '-' * len(msg)))

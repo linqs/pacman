@@ -399,8 +399,8 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
 
         # EXECUTE ACTION
         nextState, reward = environment.doAction(action)
-        logging.info("\nStarted in state: " + str(state) + "\nTook action: " + str(action) + "\nEnded in state: " + str(nextState) + "\nGot reward: " + str(reward) + "\n")
-
+        logging.debug("\nStarted in state: " + str(state) + "\nTook action: " + str(action) + "\nEnded in state: " + str(nextState) + "\nGot reward: " + str(reward) + "\n")
+ST5[0XSD89]
         # UPDATE LEARNER
         if 'observeTransition' in dir(agent):
             agent.observeTransition(state, action, nextState, reward)
@@ -589,13 +589,13 @@ if __name__ == '__main__':
 
     # RUN EPISODES
     if opts.episodes > 0:
-        logging.info("RUNNING " + str(opts.episodes) + " EPISODES\n")
+        logging.debug("RUNNING " + str(opts.episodes) + " EPISODES\n")
     returns = 0
     for episode in range(1, opts.episodes + 1):
         returns += runEpisode(a, env, opts.discount, decisionCallback, displayCallback, messageCallback, pauseCallback, episode)
 
     if opts.episodes > 0:
-        logging.info("AVERAGE RETURNS FROM START STATE:" + str((returns + 0.0) / opts.episodes) + "\n")
+        logging.debug("AVERAGE RETURNS FROM START STATE:" + str((returns + 0.0) / opts.episodes) + "\n")
 
     # DISPLAY POST-LEARNING VALUES / Q-VALUES
     if opts.agent == 'q' and not opts.manual:
