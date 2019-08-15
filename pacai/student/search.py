@@ -28,7 +28,27 @@ def breadthFirstSearch(problem):
     """
     Search the shallowest nodes in the search tree first. [p 81]
     """
-
+    fringe = pacai.util.util.Queue()  # uses a queue, which acts like a LIFO
+    x = problem.startingState()
+    fringe.push((x, ()))
+    explored = set()
+    while not fringe.isEmpty():
+        state = fringe.pop()
+        explored.add(state[0])
+        children = problem.successorStates(state[0])
+        trackfringe = list(fringe.list)
+        trackpositions = [i[0] for i in trackfringe]  # create a list to check if child is going to be expanded anyway
+        for child in children:
+            addpath = list(state[1])
+            addpath.append(child[1])
+            child = (child[0], addpath)  # add direction to go to chil's position into the child[1] indice
+            checkchild = list(child)
+            if child[0] not in explored and child[0] not in trackpositions:  # check if node needs to  been expanded
+                if problem.isGoal(child[0]):
+                    return child[1]
+                else:
+                    fringe.push(child)  # push child onto node to be expanded
+    return []
     # *** Your Code Here ***
     pacai.util.util.raiseNotDefined()
 

@@ -397,5 +397,6 @@ def _load_args(args):
     return max_steps
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     max_steps = _load_args(sys.argv)
     sys.exit(pacai.ui.graphicsCrawlerDisplay.run(max_steps = max_steps))

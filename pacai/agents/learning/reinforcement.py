@@ -1,5 +1,5 @@
-import time
 import logging
+import time
 from pacai.agents.learning.value import ValueEstimationAgent
 from pacai.util import util
 
@@ -17,7 +17,6 @@ class ReinforcementAgent(ValueEstimationAgent):
         - Use self.getLegalActions(state) to know which actions
             are available in a state
     """
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     def __init__(self, index, actionFn = None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
         """
         actionFn: Function which takes a state and returns the list of legal actions
@@ -27,8 +26,8 @@ class ReinforcementAgent(ValueEstimationAgent):
         gamma - discount factor
         numTraining - number of training episodes, i.e. no learning after these many episodes
         """
-
         super().__init__(index)
+
 
         if actionFn == None:
             actionFn = lambda state: state.getLegalActions()

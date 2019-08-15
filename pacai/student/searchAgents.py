@@ -16,7 +16,7 @@ Look for the lines that say:
 
 Good luck and happy searching!
 """
-
+import logging
 from pacai.core import game
 from pacai.core.search import heuristic
 from pacai.core.search.position import PositionSearchProblem
@@ -24,7 +24,6 @@ from pacai.core.search.problem import SearchProblem
 from pacai.agents.base import BaseAgent
 from pacai.agents.search.base import SearchAgent
 from pacai.util import util
-import logging
 
 class CornersProblem(SearchProblem):
     """

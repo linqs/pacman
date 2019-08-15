@@ -252,9 +252,8 @@ def createRandomEightPuzzle(moves=100):
 
 if __name__ == '__main__':
   puzzle = createRandomEightPuzzle(25)
-  logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-  logging.info('A random puzzle:')
-  logging.info('\n' + str(puzzle))
+  logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+  logging.info('A random puzzle:\n'+ str(puzzle))
 
   problem = EightPuzzleSearchProblem(puzzle)
   path = search.bfs(problem)
@@ -263,8 +262,7 @@ if __name__ == '__main__':
   i = 1
   for a in path:
     curr = curr.result(a)
-    logging.info('After %d move%s: %s' % (i, ("", "s")[i>1], a))
-    logging.info(curr)
+    logging.info('After %d move%s: %s' % (i, ("", "s")[i>1], a) + '\n' + str(curr))
 
     input("Press return for the next state...")  # wait for key stroke
     i += 1

@@ -28,6 +28,7 @@ The keys are
 """
 
 import importlib
+import logging
 import optparse
 import pickle
 import random
@@ -38,7 +39,6 @@ import types
 
 import pacai.core.layout
 import pacai.util.mazeGenerator
-import logging
 from pacai.agents import keyboard
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
@@ -832,7 +832,7 @@ def main(argv):
 
     argv already has the executable stripped.
     """
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(levelname)s - %(asctime)s - (%(message)s', level=logging.INFO)
     args = readCommand(argv)  # Get game components based on input
     options = readCommand(argv) # Get game components based on input
     return runGames(**options)

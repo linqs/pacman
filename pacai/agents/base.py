@@ -1,6 +1,6 @@
 import glob
-import os
 import logging
+import os
 from pacai.util import util
 
 class BaseAgent(object):
@@ -95,4 +95,4 @@ class BaseAgent(object):
             try:
                 __import__(package_format_string % (module_name))
             except ImportError as ex:
-                logging.warning("Unable to import agent: '%s'. -- %s" % (module_name, str(ex)))
+                logging.warning("WARN: Unable to import agent: '%s'. -- %s" % (module_name, str(ex)))
