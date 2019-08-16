@@ -622,7 +622,6 @@ def readCommand( argv ):
     parser.add_option('--gif', dest='gif', help=default('Save the game as a gif to the specified path'))
     parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0, help=default('Skip this number of frames between frames of the gif.'))
     parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10, help=default('FPS of the gif.'))
-
     options, otherjunk = parser.parse_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
     args = dict()
@@ -763,7 +762,7 @@ def replayGame( layout, agents, actions, display, length, redTeamName, blueTeamN
 
         display.finish()
 
-def runGames( layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False ):
+def runGames(layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False ):
 
     rules = CaptureRules()
     games = []
@@ -832,7 +831,7 @@ def main(argv):
 
     argv already has the executable stripped.
     """
-    logging.basicConfig(format='%(levelname)s - %(asctime)s - (%(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
     options = readCommand(argv) # Get game components based on input
     return runGames(**options)
 

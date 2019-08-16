@@ -400,7 +400,6 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
         # EXECUTE ACTION
         nextState, reward = environment.doAction(action)
         logging.debug("\nStarted in state: " + str(state) + "\nTook action: " + str(action) + "\nEnded in state: " + str(nextState) + "\nGot reward: " + str(reward) + "\n")
-ST5[0XSD89]
         # UPDATE LEARNER
         if 'observeTransition' in dir(agent):
             agent.observeTransition(state, action, nextState, reward)
@@ -478,8 +477,7 @@ def parseOptions():
 
 if __name__ == '__main__':
     opts = parseOptions()
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-    logging.debug('A random puzzle:\n')
+    logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
     ###########################
     # GET THE GRIDWORLD
     ###########################

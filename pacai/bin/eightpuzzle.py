@@ -252,7 +252,7 @@ def createRandomEightPuzzle(moves=100):
 
 if __name__ == '__main__':
   puzzle = createRandomEightPuzzle(25)
-  logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+  logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
   logging.info('A random puzzle:\n'+ str(puzzle))
 
   problem = EightPuzzleSearchProblem(puzzle)
