@@ -1,10 +1,11 @@
+import logging
 ######################
 # ANALYSIS QUESTIONS #
 ######################
 
 # Change these default values to obtain the specified policies through
 # value iteration.
-import logging
+
 
 def question2():
     """

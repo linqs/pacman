@@ -121,7 +121,7 @@ class EightPuzzleState:
      newrow = row
      newcol = col + 1
    else:
-     raise Exception("Illegal Move")
+     raise Exception('Illegal Move')
 
    # Create a copy of the current eightPuzzle
    newPuzzle = EightPuzzleState([0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -264,5 +264,5 @@ if __name__ == '__main__':
     curr = curr.result(a)
     logging.info('After %d move%s: %s' % (i, ("", "s")[i>1], a) + '\n' + str(curr))
 
-    input("Press return for the next state...")  # wait for key stroke
+    input('Press return for the next state...')  # wait for key stroke
     i += 1

@@ -120,7 +120,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
         """
 
         if action not in self.getPossibleActions(state):
-            raise Exception("Illegal action!")
+            raise Exception('Illegal action!')
 
         if self.isTerminal(state):
             return []
@@ -378,7 +378,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
     if 'startEpisode' in dir(agent):
         agent.startEpisode()
 
-    logging.info("BEGINNING EPISODE: " + str(episode) + "\n")
+    logging.info('BEGINNING EPISODE: ' + str(episode) + "\n")
 
     while True:
         # DISPLAY CURRENT STATE
@@ -389,7 +389,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
         # END IF IN A TERMINAL STATE
         actions = environment.getPossibleActions(state)
         if len(actions) == 0:
-            logging.info("EPISODE " + str(episode) + " COMPLETE: RETURN WAS " + str(returns) + "\n")
+            logging.info('EPISODE ' + str(episode) + ' COMPLETE: RETURN WAS ' + str(returns) + '\n'')
             return returns
 
         # GET ACTION (USUALLY FROM AGENT)
@@ -399,7 +399,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
 
         # EXECUTE ACTION
         nextState, reward = environment.doAction(action)
-        logging.debug("\nStarted in state: " + str(state) + "\nTook action: " + str(action) + "\nEnded in state: " + str(nextState) + "\nGot reward: " + str(reward) + "\n")
+        logging.debug('\nStarted in state: ' + str(state) + '\nTook action: ' + str(action) + '\nEnded in state: ' + str(nextState) + '\nGot reward: ' + str(reward) + '\n')
         # UPDATE LEARNER
         if 'observeTransition' in dir(agent):
             agent.observeTransition(state, action, nextState, reward)
@@ -483,7 +483,7 @@ if __name__ == '__main__':
     ###########################
 
     import pacai.bin.gridworld
-    mdpFunction = getattr(pacai.bin.gridworld, "get" + opts.grid)
+    mdpFunction = getattr(pacai.bin.gridworld, 'get' + opts.grid)
     mdp = mdpFunction()
     mdp.setLivingReward(opts.livingReward)
     mdp.setNoise(opts.noise)
@@ -552,12 +552,12 @@ if __name__ == '__main__':
         if opts.valueSteps:
             for i in range(opts.iters):
                 tempAgent = pacai.student.valueIterationAgents.ValueIterationAgent(0, mdp, opts.discount, i)
-                display.displayValues(tempAgent, message = "VALUES AFTER " + str(i) + " ITERATIONS")
+                display.displayValues(tempAgent, message = 'VALUES AFTER ' + str(i) + ' ITERATIONS')
                 display.pause()
 
-        display.displayValues(a, message = "VALUES AFTER " + str(opts.iters) + " ITERATIONS")
+        display.displayValues(a, message = 'VALUES AFTER ' + str(opts.iters) + ' ITERATIONS')
         display.pause()
-        display.displayQValues(a, message = "Q-VALUES AFTER " + str(opts.iters) + " ITERATIONS")
+        display.displayQValues(a, message = 'Q-VALUES AFTER ' + str(opts.iters) + ' ITERATIONS')
         display.pause()
 
     # FIGURE OUT WHAT TO DISPLAY EACH TIME STEP (IF ANYTHING)
@@ -566,9 +566,9 @@ if __name__ == '__main__':
         if opts.manual and opts.agent == None:
             displayCallback = lambda state: display.displayNullValues(state)
         else:
-            if opts.agent == 'random': displayCallback = lambda state: display.displayValues(a, state, "CURRENT VALUES")
-            if opts.agent == 'value': displayCallback = lambda state: display.displayValues(a, state, "CURRENT VALUES")
-            if opts.agent == 'q': displayCallback = lambda state: display.displayQValues(a, state, "CURRENT Q-VALUES")
+            if opts.agent == 'random': displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
+            if opts.agent == 'value': displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
+            if opts.agent == 'q': displayCallback = lambda state: display.displayQValues(a, state, 'CURRENT Q-VALUES')
 
     messageCallback = lambda x: print(x)
     if opts.quiet:
@@ -587,17 +587,17 @@ if __name__ == '__main__':
 
     # RUN EPISODES
     if opts.episodes > 0:
-        logging.debug("RUNNING " + str(opts.episodes) + " EPISODES\n")
+        logging.debug('\nRUNNING ' + str(opts.episodes) + ' EPISODES\n')
     returns = 0
     for episode in range(1, opts.episodes + 1):
         returns += runEpisode(a, env, opts.discount, decisionCallback, displayCallback, messageCallback, pauseCallback, episode)
 
     if opts.episodes > 0:
-        logging.debug("AVERAGE RETURNS FROM START STATE:" + str((returns + 0.0) / opts.episodes) + "\n")
+        logging.debug('\nAVERAGE RETURNS FROM START STATE:' + str((returns + 0.0) / opts.episodes) + '\n')
 
     # DISPLAY POST-LEARNING VALUES / Q-VALUES
     if opts.agent == 'q' and not opts.manual:
-        display.displayQValues(a, message = "Q-VALUES AFTER " + str(opts.episodes) + " EPISODES")
+        display.displayQValues(a, message = 'Q-VALUES AFTER ' + str(opts.episodes) + ' EPISODES')
         display.pause()
-        display.displayValues(a, message = "VALUES AFTER " + str(opts.episodes) + " EPISODES")
+        display.displayValues(a, message = 'VALUES AFTER ' + str(opts.episodes) + ' EPISODES')
         display.pause()

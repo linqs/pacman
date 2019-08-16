@@ -142,12 +142,12 @@ class GameState(object):
 
   def getGhostState(self, agentIndex):
     if agentIndex == 0 or agentIndex >= self.getNumAgents():
-      raise Exception("Invalid index passed to getGhostState")
+      raise Exception('Invalid index passed to getGhostState')
     return self.data.agentStates[agentIndex]
 
   def getGhostPosition(self, agentIndex):
     if agentIndex == 0:
-      raise Exception("Pacman's index passed to getGhostPosition")
+      raise Exception('Pacman's index passed to getGhostPosition')
     return self.data.agentStates[agentIndex].getPosition()
 
   def getGhostPositions(self):
@@ -293,12 +293,12 @@ class ClassicGameRules(object):
 
   def win(self, state, game):
     if not self.quiet:
-      logging.info("Pacman emerges victorious! Score: %d" % state.data.score)
+      logging.info('Pacman emerges victorious! Score: %d' % state.data.score)
     game.gameOver = True
 
   def lose(self, state, game):
     if not self.quiet:
-      logging.info("Pacman died! Score: %d" % state.data.score)
+      logging.info('Pacman died! Score: %d' % state.data.score)
     game.gameOver = True
 
   def getProgress(self, game):
@@ -306,9 +306,9 @@ class ClassicGameRules(object):
 
   def agentCrash(self, game, agentIndex):
     if agentIndex == 0:
-      logging.info("Pacman crashed")
+      logging.info('Pacman crashed')
     else:
-      logging.info("A ghost crashed")
+      logging.info('A ghost crashed')
 
   def getMaxTotalTime(self, agentIndex):
     return self.timeout
@@ -349,7 +349,7 @@ class PacmanRules:
 
     legal = PacmanRules.getLegalActions(state)
     if action not in legal:
-      raise Exception("Illegal action " + str(action))
+      raise Exception('Illegal action ' + str(action))
 
     pacmanState = state.data.agentStates[0]
 
@@ -420,7 +420,7 @@ class GhostRules:
   def applyAction(state, action, ghostIndex):
     legal = GhostRules.getLegalActions(state, ghostIndex)
     if action not in legal:
-      raise Exception("Illegal ghost action " + str(action))
+      raise Exception('Illegal ghost action ' + str(action))
 
     ghostState = state.data.agentStates[ghostIndex]
     speed = GhostRules.GHOST_SPEED
@@ -572,7 +572,7 @@ def readCommand(argv):
   # Choose a Pacman agent
   noKeyboard = options.gameToReplay == None and (options.textGraphics or options.quietGraphics)
   if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
-    raise Exception("Keyboard agents require graphics.")
+    raise Exception('Keyboard agents require graphics.')
 
   agentOpts = parseAgentArgs(options.agentArgs)
   if options.numTraining > 0:
