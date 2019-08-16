@@ -61,7 +61,7 @@ class SearchAgent(BaseAgent):
         """
 
         if self.searchFunction == None:
-            raise Exception("No search function provided for SearchAgent")
+            raise Exception('No search function provided for SearchAgent')
 
         starttime = time.time()
         problem = self.searchType(state) # Makes a new search problem

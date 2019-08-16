@@ -447,7 +447,7 @@ class AgentRules:
         """
         legal = AgentRules.getLegalActions( state, agentIndex )
         if action not in legal:
-            raise Exception("Illegal action " + str(action))
+            raise Exception('Illegal action ' + str(action))
 
         # Update Configuration
         agentState = state.data.agentStates[agentIndex]
@@ -728,8 +728,8 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     args = dict()
     args.update(cmdLineArgs) # Add command line args with priority
 
-    logging.debug("Loading Team:%s", agent_module)
-    logging.debug("Arguments:%s", args)
+    logging.debug('Loading Team:%s', agent_module)
+    logging.debug('Arguments:%s', args)
 
     try:
         createTeamFunc = getattr(module, 'createTeam')

@@ -132,8 +132,7 @@ if __name__ == '__main__':
         question3e,
         question6,
     ]
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     logging.info('Answers to analysis questions:')
     for question in questions:
         response = question()
-        logging.info('    Question %-10s:\t%s' % (question.__name__, str(response)))
+        logging.info('Question %-10s:\t%s' % (question.__name__, str(response)))
