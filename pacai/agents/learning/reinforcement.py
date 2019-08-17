@@ -178,12 +178,12 @@ class ReinforcementAgent(ValueEstimationAgent):
 
                 if self.episodesSoFar <= self.numTraining:
                     trainAvg = self.accumTrainRewards / float(self.episodesSoFar)
-                    logging.info('\tCompleted %d out of %d training episodes' % (self.episodesSoFar,self.numTraining))
-                    logging.info('\tAverage Rewards over all training: %.2f' % (trainAvg))
+                    logging.debug('\tCompleted %d out of %d training episodes' % (self.episodesSoFar,self.numTraining))
+                    logging.debug('\tAverage Rewards over all training: %.2f' % (trainAvg))
                 else:
                     testAvg = float(self.accumTestRewards) / (self.episodesSoFar - self.numTraining)
-                    logging.info('\tCompleted %d test episodes' % (self.episodesSoFar - self.numTraining))
-                    logging.info('\tAverage Rewards over testing: %.2f' % (testAvg))
+                    logging.debug('\tCompleted %d test episodes' % (self.episodesSoFar - self.numTraining))
+                    logging.debug('\tAverage Rewards over testing: %.2f' % (testAvg))
 
                 logging.info('\tAverage Rewards for last %d episodes: %.2f' % (NUM_EPS_UPDATE,windowAvg))
                 logging.info('\tEpisode took %.2f seconds' % (time.time() - self.episodeStartTime))
