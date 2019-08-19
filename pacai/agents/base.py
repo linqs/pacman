@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+
 from pacai.util import util
 
 class BaseAgent(object):

@@ -306,9 +306,9 @@ class ClassicGameRules(object):
 
   def agentCrash(self, game, agentIndex):
     if agentIndex == 0:
-      logging.info('Pacman crashed')
+      logging.error('Pacman crashed')
     else:
-      logging.info('A ghost crashed')
+      logging.error('A ghost crashed')
 
   def getMaxTotalTime(self, agentIndex):
     return self.timeout
