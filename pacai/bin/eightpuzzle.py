@@ -225,7 +225,7 @@ def loadEightPuzzle(puzzleNumber):
 
     puzzleNumber can range from 0 to 5.
 
-    >>> logging.info(loadEightPuzzle(0))
+    >>> print(loadEightPuzzle(0))
     -------------
     | 1 |   | 2 |
     -------------
@@ -253,16 +253,16 @@ def createRandomEightPuzzle(moves=100):
 if __name__ == '__main__':
   puzzle = createRandomEightPuzzle(25)
   logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
-  logging.info('A random puzzle:\n'+ str(puzzle))
+  print('A random puzzle:\n' + str(puzzle))
 
   problem = EightPuzzleSearchProblem(puzzle)
   path = search.bfs(problem)
-  logging.info('BFS found a path of %d moves: %s' % (len(path), str(path)))
+  print('BFS found a path of %d moves: %s' % (len(path), str(path)))
   curr = puzzle
   i = 1
   for a in path:
     curr = curr.result(a)
-    logging.info('After %d move%s: %s' % (i, ("", "s")[i>1], a) + '\n' + str(curr))
+    print('After %d move%s: %s' % (i, ("", "s")[i>1], a) + '\n' + str(curr))
 
     input('Press return for the next state...')  # wait for key stroke
     i += 1
