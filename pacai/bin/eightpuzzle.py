@@ -1,8 +1,9 @@
 import logging
 import random
+
 from pacai.core.search import search
 from pacai.core.search.problem import SearchProblem
-
+from pacai.util.logs import initLogging
 # Module Classes
 
 class EightPuzzleState:
@@ -252,7 +253,7 @@ def createRandomEightPuzzle(moves=100):
 
 if __name__ == '__main__':
   puzzle = createRandomEightPuzzle(25)
-  logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
+  initLogging()
   print('A random puzzle:\n' + str(puzzle))
 
   problem = EightPuzzleSearchProblem(puzzle)

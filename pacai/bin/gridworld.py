@@ -6,6 +6,8 @@ import pacai.core.environment
 import pacai.core.mdp
 import pacai.util.util
 
+from pacai.util.logs import initLogging
+
 class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
     """
     Gridworld
@@ -477,7 +479,7 @@ def parseOptions():
 
 if __name__ == '__main__':
     opts = parseOptions()
-    logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
+    initLogging()
     ###########################
     # GET THE GRIDWORLD
     ###########################

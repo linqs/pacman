@@ -31,6 +31,7 @@ import random
 import sys
 import time
 import types
+
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
 from pacai.agents.greedy import GreedyAgent
@@ -39,6 +40,7 @@ from pacai.core.game import Directions
 from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.layout import getLayout
+from pacai.util.logs import initLogging
 from pacai.util.util import nearestPoint
 from pacai.util.util import manhattanDistance
 
@@ -699,7 +701,7 @@ def main(argv):
 
   argv already has the executable stripped.
   """
-  logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
+  initLogging()
   args = readCommand(argv)  # Get game components based on input
   return runGames(**args)
 
