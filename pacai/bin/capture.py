@@ -400,10 +400,10 @@ class CaptureRules:
 
     def agentCrash(self, game, agentIndex):
         if agentIndex % 2 == 0:
-            logging.warning("Red agent crashed")
+            logging.error("Red agent crashed")
             game.state.data.score = -1
         else:
-            logging.warning("Blue agent crashed")
+            logging.error("Blue agent crashed")
             game.state.data.score = 1
 
     def getMaxTotalTime(self, agentIndex):
@@ -623,6 +623,7 @@ def readCommand( argv ):
     parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0, help=default('Skip this number of frames between frames of the gif.'))
     parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10, help=default('FPS of the gif.'))
     options, otherjunk = parser.parse_args(argv)
+
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
     args = dict()
 
@@ -712,8 +713,6 @@ def readCommand( argv ):
 def randomLayout(seed = None):
     if not seed:
         seed = random.randint(0,99999999)
-    # layout = 'layouts/random%08dCapture.lay' % seed
-    # logging.info('Generating random layout in %s' % layout)
     return pacai.util.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
@@ -729,7 +728,7 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     args.update(cmdLineArgs) # Add command line args with priority
 
     logging.debug('Loading Team:%s', agent_module)
-    logging.debug('Arguments:%s', args)
+    logging.info('Arguments:%s', args)
 
     try:
         createTeamFunc = getattr(module, 'createTeam')
