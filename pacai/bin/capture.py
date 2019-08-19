@@ -48,6 +48,7 @@ from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.game import Grid
 from pacai.core.game import reconstituteGrid
+from pacai.util.logs import initLogging
 from pacai.util.util import manhattanDistance
 from pacai.util.util import nearestPoint
 
@@ -830,7 +831,7 @@ def main(argv):
 
     argv already has the executable stripped.
     """
-    logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', level=logging.INFO)
+    initLogging()
     options = readCommand(argv) # Get game components based on input
     return runGames(**options)
 
