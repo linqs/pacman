@@ -623,8 +623,8 @@ def readCommand( argv ):
     parser.add_option('--gif', dest='gif', help=default('Save the game as a gif to the specified path'))
     parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0, help=default('Skip this number of frames between frames of the gif.'))
     parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10, help=default('FPS of the gif.'))
-    options, otherjunk = parser.parse_args(argv)
 
+    options, otherjunk = parser.parse_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
     args = dict()
 
@@ -728,7 +728,7 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     args = dict()
     args.update(cmdLineArgs) # Add command line args with priority
 
-    logging.debug('Loading Team:%s', agent_module)
+    logging.info('Loading Team:%s', agent_module)
     logging.info('Arguments:%s', args)
 
     try:

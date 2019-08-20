@@ -17,6 +17,7 @@ Look for the lines that say:
 Good luck and happy searching!
 """
 import logging
+
 from pacai.core import game
 from pacai.core.search import heuristic
 from pacai.core.search.position import PositionSearchProblem

@@ -136,4 +136,4 @@ if __name__ == '__main__':
     logging.info('Answers to analysis questions:')
     for question in questions:
         response = question()
-    logging.info('Question %-10s:\t%s' % (question.__name__, str(response)))
+        logging.info('    Question %-10s:\t%s' % (question.__name__, str(response)))
