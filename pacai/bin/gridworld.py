@@ -478,8 +478,9 @@ def parseOptions():
         return opts
 
 if __name__ == '__main__':
-    opts = parseOptions()
     initLogging()
+    opts = parseOptions()
+
     ###########################
     # GET THE GRIDWORLD
     ###########################

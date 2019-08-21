@@ -252,8 +252,8 @@ def createRandomEightPuzzle(moves=100):
  return puzzle
 
 if __name__ == '__main__':
-  puzzle = createRandomEightPuzzle(25)
   initLogging()
+  puzzle = createRandomEightPuzzle(25)
   print('A random puzzle:\n' + str(puzzle))
 
   problem = EightPuzzleSearchProblem(puzzle)
