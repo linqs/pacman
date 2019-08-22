@@ -47,13 +47,14 @@ class ReinforcementAgent(ValueEstimationAgent):
     # Override These Functions #
     ############################
 
+    @abc.abstractmethod
     def update(self, state, action, nextState, reward):
         """
         This class will call this function, which you write, after
         observing a transition and reward
         """
 
-        util.raiseNotDefined()
+        pass
 
     ########################
     # Read These Functions #

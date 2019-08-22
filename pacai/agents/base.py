@@ -1,10 +1,11 @@
+import abc
 import glob
 import logging
 import os
 
 from pacai.util import util
 
-class BaseAgent(object):
+class BaseAgent(abc.ABC):
     """
     An agent is something in the pacman world that does something (takes some action).
     Could be a ghost, the player controller Pac-Man, an AI controlling Pac-Man, etc.
@@ -16,13 +17,14 @@ class BaseAgent(object):
     def __init__(self, index = 0):
         self.index = index
 
+    @abc.abstractmethod
     def getAction(self, state):
         """
         The BaseAgent will receive a GameState (from either {pacman, capture, sonar}.py) and
         must return an action from Directions.{North, South, East, West, Stop}
         """
 
-        util.raiseNotDefined()
+        pass
 
     def registerInitialState(self, state):
         """

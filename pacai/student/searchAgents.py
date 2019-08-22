@@ -34,6 +34,34 @@ class CornersProblem(SearchProblem):
 
     See the PositionSearchProblem class for an example of
     a working SearchProblem.
+
+    Methods to Implement:
+
+    def startingState(self):
+        Returns the start state (in your state space, not the full Pacman state space)
+
+    def isGoal(self, state):
+        Returns whether this search state is a goal state of the problem
+
+    def successorStates(self, state):
+        Returns successor states, the actions they require, and a cost of 1.
+
+        As noted in search.py:
+        For a given state, this should return a list of triples, (successor, action, stepCost),
+        where 'successor' is a successor to the current state, 'action' is the action
+        required to get there, and 'stepCost' is the incremental
+        cost of expanding to that successor
+        
+        successors = []
+        for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
+            Add a successor state to the successor list if the action is legal
+            Here's a code snippet for figuring out whether a new position hits a wall:
+               x, y = currentPosition
+               dx, dy = game.Actions.directionToVector(action)
+               nextx, nexty = int(x + dx), int(y + dy)
+               hitsWall = self.walls[nextx][nexty]
+        self._expanded += 1
+        return successors
     """
     def __init__(self, startingGameState):
         """
@@ -54,50 +82,6 @@ class CornersProblem(SearchProblem):
 
         # *** Your Code Here ***
         util.raiseNotDefined()
-
-    def startingState(self):
-        """
-        Returns the start state (in your state space, not the full Pacman state space)
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None
-
-    def isGoal(self, state):
-        """
-        Returns whether this search state is a goal state of the problem
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None
-
-    def successorStates(self, state):
-        """
-        Returns successor states, the actions they require, and a cost of 1.
-
-        As noted in search.py:
-        For a given state, this should return a list of triples, (successor, action, stepCost),
-        where 'successor' is a successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
-        """
-
-        successors = []
-        for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x, y = currentPosition
-            #   dx, dy = game.Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            # *** Your Code Here ***
-            util.raiseNotDefined()
-
-        self._expanded += 1
-        return successors
 
     def actionsCost(self, actions):
         """
@@ -223,6 +207,12 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 
     You can use this search problem to help you fill in
     the findPathToClosestDot method.
+
+    Methods to Implement:
+
+    def isGoal(self, state):
+        The state is Pacman's position. Fill this in with a goal test
+        that will complete the problem definition.
     """
 
     def __init__(self, gameState):
@@ -241,41 +231,20 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         self._visitedlist = []
         self._expanded = 0
 
-    def isGoal(self, state):
-        """
-        The state is Pacman's position. Fill this in with a goal test
-        that will complete the problem definition.
-        """
-
-        x, y = state
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None
-
 class ApproximateSearchAgent(BaseAgent):
     """
     Implement your contest entry here.  Change anything but the class name.
+
+    Methods to Implement:
+
+    def getAction(self, state):
+        From game.py:
+        The BaseAgent will receive a GameState and must return an action from
+        game.Directions.{North, South, East, West, Stop}
+
+    def registerInitialState(self, state):
+        This method is called before any moves are made.
     """
 
     def __init__(self, index):
         super().__init__(index)
-
-    def registerInitialState(self, state):
-        """
-        This method is called before any moves are made.
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-
-    def getAction(self, state):
-        """
-        From game.py:
-        The BaseAgent will receive a GameState and must return an action from
-        game.Directions.{North, South, East, West, Stop}
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None

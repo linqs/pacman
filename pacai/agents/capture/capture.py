@@ -119,13 +119,14 @@ class CaptureAgent(BaseAgent):
         else:
             return self.chooseAction(gameState)
 
+    @abc.abstractmethod
     def chooseAction(self, gameState):
         """
         Override this method to make a good agent. It should return a legal action within
         the time limit (otherwise a random legal action will be chosen for you).
         """
 
-        util.raiseNotDefined()
+        pass
 
     #######################
     # Convenience Methods #
