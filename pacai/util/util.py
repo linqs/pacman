@@ -37,6 +37,9 @@ class Stack(object):
 
     return len(self.list) == 0
 
+  def __len__(self):
+    return len(self.list)
+
 class Queue:
   """
   A container with a first-in-first-out (FIFO) queuing policy.
@@ -67,6 +70,9 @@ class Queue:
 
     return len(self.list) == 0
 
+  def __len__(self):
+    return len(self.list)
+
 class PriorityQueue(object):
   """
   Implements a priority queue data structure. Each inserted item
@@ -92,6 +98,9 @@ class PriorityQueue(object):
 
   def isEmpty(self):
     return len(self.heap) == 0
+
+  def __len__(self):
+    return len(self.heap)
 
 class PriorityQueueWithFunction(PriorityQueue):
   """
