@@ -2,6 +2,8 @@
 Interfaces for capture agents and agent factories
 """
 
+import abc
+
 from pacai.agents.base import BaseAgent
 from pacai.ui import captureGraphicsDisplay
 from pacai.util import distanceCalculator

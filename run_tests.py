@@ -28,7 +28,7 @@ def main(pattern = None):
 
     tests = unittest.suite.TestSuite()
 
-    failed = False
+    fail = False
     for testCase in testCases:
         if (isinstance(testCase, unittest.loader._FailedTest)):
             print('Failed to load test: %s' % (testCase.id()))
