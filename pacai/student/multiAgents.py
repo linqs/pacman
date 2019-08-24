@@ -102,7 +102,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
     gameState.getNumAgents():
         Returns the total number of agents in the game
-            
+
     Method to Implement:
 
     def getAction(self, gameState):
@@ -117,7 +117,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
     Your minimax agent with alpha-beta pruning (question 3)
 
-    Method to Implement: 
+    Method to Implement:
 
     def getAction(self, gameState):
         Returns the minimax action using self.treeDepth and self.evaluationFunction
@@ -165,7 +165,7 @@ class ContestAgent(MultiAgentSearchAgent):
     just make a beeline straight towards Pacman (or away from him if they're scared!)
 
     Method to Implement:
-    
+
     def getAction(self, gameState):
         Returns an action.
     """

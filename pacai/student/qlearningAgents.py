@@ -44,14 +44,14 @@ class QLearningAgent(ReinforcementAgent):
 
         HINT: You might want to use util.flipCoin(prob)
         HINT: To pick randomly from a list, use random.choice(list)
-        
+
     def update(self, state, action, nextState, reward):
         The parent class calls this to observe a state = action => nextState
         and reward transition. You should do your Q-Value update here
 
         NOTE: You should never call this function,
         it will be called on your behalf
-        
+
     DESCRIPTION: <Write something here so we know what you did.>
     """
 
@@ -114,8 +114,8 @@ class ApproximateQAgent(PacmanQAgent):
 
     def update(self, state, action, nextState, reward):
         Should update your weights based on transition
-        
-    DESCRIPTION: <Write something here so we know what you did.>    
+
+    DESCRIPTION: <Write something here so we know what you did.>
     """
 
     def __init__(self, index, extractor = 'IdentityExtractor', **args):
