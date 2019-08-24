@@ -268,7 +268,7 @@ class Counter(dict):
 
     return Counter(dict.copy(self))
 
-  def __mul__(self, y ):
+  def __mul__(self, y):
     """
     Multiplying two counters gives the dot product of their vectors where
     each unique label is a vector element.
@@ -508,7 +508,7 @@ def matrixAsList(matrix, value = True):
   for row in range(rows):
     for col in range(cols):
       if matrix[row][col] == value:
-        cells.append(( row, col) )
+        cells.append((row, col))
 
   return cells
 

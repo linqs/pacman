@@ -91,9 +91,9 @@ class GameState:
         Returns the legal actions for the agent specified.
         """
 
-        return AgentRules.getLegalActions( self, agentIndex )
+        return AgentRules.getLegalActions(self, agentIndex)
 
-    def generateSuccessor( self, agentIndex, action):
+    def generateSuccessor(self, agentIndex, action):
         """
         Returns the successor state (a GameState object) after the specified agent takes the action.
         """
@@ -101,7 +101,7 @@ class GameState:
         state = GameState(self)
 
         # Find appropriate rules for the agent
-        AgentRules.applyAction( state, action, agentIndex )
+        AgentRules.applyAction(state, action, agentIndex)
         AgentRules.checkDeath(state, agentIndex)
         AgentRules.decrementTimer(state.data.agentStates[agentIndex])
 
@@ -125,10 +125,10 @@ class GameState:
             return tuple(int(x) for x in ret)
         return ret
 
-    def getNumAgents( self ):
-        return len( self.data.agentStates )
+    def getNumAgents(self):
+        return len(self.data.agentStates)
 
-    def getScore( self ):
+    def getScore(self):
         """
         Returns a number corresponding to the current score.
         """
@@ -175,7 +175,7 @@ class GameState:
         """
         return self.data.layout.walls[x][y]
 
-    def isOver( self ):
+    def isOver(self):
         return self.data._win
 
     def getRedTeamIndices(self):
@@ -227,7 +227,7 @@ class GameState:
     # You shouldn't need to call these directly #
     #############################################
 
-    def __init__( self, prevState = None ):
+    def __init__(self, prevState = None):
         """
         Generates a new state by copying information from its predecessor.
         """
@@ -243,8 +243,8 @@ class GameState:
             self.data = GameStateData()
             self.agentDistances = []
 
-    def deepCopy( self ):
-        state = GameState( self )
+    def deepCopy(self):
+        state = GameState(self)
         state.data = self.data.deepCopy()
         state.data.timeleft = self.data.timeleft
 
@@ -280,7 +280,7 @@ class GameState:
             if not seen: state.data.agentStates[enemy].configuration = None
         return state
 
-    def __eq__( self, other ):
+    def __eq__(self, other):
         """
         Allows two states to be compared.
         """
@@ -288,17 +288,17 @@ class GameState:
             return False
         return self.data == other.data
 
-    def __hash__( self ):
+    def __hash__(self):
         """
         Allows states to be keys of dictionaries.
         """
-        return int(hash( self.data ))
+        return int(hash(self.data))
 
-    def __str__( self ):
+    def __str__(self):
 
         return str(self.data)
 
-    def initialize( self, layout, numAgents):
+    def initialize(self, layout, numAgents):
         """
         Creates an initial game state from a layout array (see layout.py).
         """
@@ -351,9 +351,9 @@ class CaptureRules:
     def __init__(self, quiet = False):
         self.quiet = quiet
 
-    def newGame( self, layout, agents, display, length, muteAgents, catchExceptions ):
+    def newGame(self, layout, agents, display, length, muteAgents, catchExceptions):
         initState = GameState()
-        initState.initialize( layout, len(agents) )
+        initState.initialize(layout, len(agents))
         starter = random.randint(0,1)
         logging.info('%s team starts' % ['Red', 'Blue'][starter])
         game = Game(agents, display, self, startingIndex=starter, muteAgents=muteAgents, catchExceptions=catchExceptions)
@@ -428,26 +428,26 @@ class AgentRules:
     These functions govern how each agent interacts with her environment.
     """
 
-    def getLegalActions( state, agentIndex ):
+    def getLegalActions(state, agentIndex):
         """
         Returns a list of legal actions (which are both possible & allowed)
         """
         agentState = state.getAgentState(agentIndex)
         conf = agentState.configuration
-        possibleActions = Actions.getPossibleActions( conf, state.data.layout.walls )
-        return AgentRules.filterForAllowedActions( agentState, possibleActions)
-    getLegalActions = staticmethod( getLegalActions )
+        possibleActions = Actions.getPossibleActions(conf, state.data.layout.walls)
+        return AgentRules.filterForAllowedActions(agentState, possibleActions)
+    getLegalActions = staticmethod(getLegalActions)
 
     def filterForAllowedActions(agentState, possibleActions):
         return possibleActions
-    filterForAllowedActions = staticmethod( filterForAllowedActions )
+    filterForAllowedActions = staticmethod(filterForAllowedActions)
 
 
-    def applyAction( state, action, agentIndex ):
+    def applyAction(state, action, agentIndex):
         """
         Edits the state to reflect the results of the action.
         """
-        legal = AgentRules.getLegalActions( state, agentIndex )
+        legal = AgentRules.getLegalActions(state, agentIndex)
         if action not in legal:
             raise Exception('Illegal action ' + str(action))
 
@@ -455,22 +455,22 @@ class AgentRules:
         agentState = state.data.agentStates[agentIndex]
         speed = 1.0
         # if agentState.isPacman: speed = 0.5
-        vector = Actions.directionToVector( action, speed )
+        vector = Actions.directionToVector(action, speed)
         oldConfig = agentState.configuration
-        agentState.configuration = oldConfig.generateSuccessor( vector )
+        agentState.configuration = oldConfig.generateSuccessor(vector)
 
         # Eat
         next = agentState.configuration.getPosition()
-        nearest = nearestPoint( next )
-        if agentState.isPacman and manhattanDistance( nearest, next ) <= 0.9 :
-            AgentRules.consume( nearest, state, state.isOnRedTeam(agentIndex) )
+        nearest = nearestPoint(next)
+        if agentState.isPacman and manhattanDistance(nearest, next) <= 0.9 :
+            AgentRules.consume(nearest, state, state.isOnRedTeam(agentIndex))
 
         # Change agent type
         if next == nearest:
             agentState.isPacman = [state.isOnRedTeam(agentIndex), state.isRed(agentState.configuration)].count(True) == 1
-    applyAction = staticmethod( applyAction )
+    applyAction = staticmethod(applyAction)
 
-    def consume( position, state, isRed ):
+    def consume(position, state, isRed):
         x,y = position
         # Eat food
         if state.data.food[x][y]:
@@ -487,8 +487,8 @@ class AgentRules:
         # Eat capsule
         if isRed: myCapsules = state.getBlueCapsules()
         else: myCapsules = state.getRedCapsules()
-        if( position in myCapsules ):
-            state.data.capsules.remove( position )
+        if(position in myCapsules):
+            state.data.capsules.remove(position)
             state.data._capsuleEaten = position
 
             # Reset all ghosts' scared timers
@@ -497,16 +497,16 @@ class AgentRules:
             for index in otherTeam:
                 state.data.agentStates[index].scaredTimer = SCARED_TIME
 
-    consume = staticmethod( consume )
+    consume = staticmethod(consume)
 
     def decrementTimer(state):
         timer = state.scaredTimer
         if timer == 1:
-            state.configuration.pos = nearestPoint( state.configuration.pos )
-        state.scaredTimer = max( 0, timer - 1 )
-    decrementTimer = staticmethod( decrementTimer )
+            state.configuration.pos = nearestPoint(state.configuration.pos)
+        state.scaredTimer = max(0, timer - 1)
+    decrementTimer = staticmethod(decrementTimer)
 
-    def checkDeath( state, agentIndex):
+    def checkDeath(state, agentIndex):
         agentState = state.data.agentStates[agentIndex]
         if state.isOnRedTeam(agentIndex):
             otherTeam = state.getBlueTeamIndices()
@@ -522,7 +522,7 @@ class AgentRules:
                 if (ghostPosition is None):
                     continue
 
-                if manhattanDistance( ghostPosition, agentState.getPosition() ) <= COLLISION_TOLERANCE:
+                if manhattanDistance(ghostPosition, agentState.getPosition()) <= COLLISION_TOLERANCE:
                     #award points to the other team for killing Pacmen
                     if otherAgentState.scaredTimer <= 0:
                         score = KILL_POINTS
@@ -550,7 +550,7 @@ class AgentRules:
                 if (pacPos is None):
                     continue
 
-                if manhattanDistance( pacPos, agentState.getPosition() ) <= COLLISION_TOLERANCE:
+                if manhattanDistance(pacPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
                     #award points to the other team for killing Pacmen
                     if agentState.scaredTimer <= 0:
                         score = KILL_POINTS
@@ -568,11 +568,11 @@ class AgentRules:
                         agentState.isPacman = False
                         agentState.configuration = agentState.start
                         agentState.scaredTimer = 0
-    checkDeath = staticmethod( checkDeath )
+    checkDeath = staticmethod(checkDeath)
 
     def placeGhost(state, ghostState):
         ghostState.configuration = ghostState.start
-    placeGhost = staticmethod( placeGhost )
+    placeGhost = staticmethod(placeGhost)
 
 #############################
 # FRAMEWORK TO START A GAME #
@@ -595,7 +595,7 @@ def parseAgentArgs(str):
         opts[key] = val
     return opts
 
-def readCommand( argv ):
+def readCommand(argv):
     """
     Processes the command used to run pacman from the command line.
     """
@@ -710,9 +710,9 @@ def readCommand( argv ):
 
         args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
-        raise Exception( 'You must use a capture layout with capture.py')
+        raise Exception('You must use a capture layout with capture.py')
     else:
-        args['layout'] = pacai.core.layout.getLayout( options.layout )
+        args['layout'] = pacai.core.layout.getLayout(options.layout)
 
     if (args['layout'] is None):
         raise Exception("The layout " + options.layout + " cannot be found")
@@ -758,9 +758,9 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     indices = [2*i + indexAddend for i in range(2)]
     return createTeamFunc(indices[0], indices[1], isRed, **args)
 
-def replayGame( layout, agents, actions, display, length, redTeamName, blueTeamName ):
+def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
         rules = CaptureRules()
-        game = rules.newGame( layout, agents, display, length, False, False )
+        game = rules.newGame(layout, agents, display, length, False, False)
         state = game.state
         display.redTeam = redTeamName
         display.blueTeam = blueTeamName
@@ -768,15 +768,15 @@ def replayGame( layout, agents, actions, display, length, redTeamName, blueTeamN
 
         for action in actions:
             # Execute the action
-            state = state.generateSuccessor( *action )
+            state = state.generateSuccessor(*action)
             # Change the display
-            display.update( state.data )
+            display.update(state.data)
             # Allow for game specific conditions (winning, losing, etc.)
             rules.process(state, game)
 
         display.finish()
 
-def runGames(layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False ):
+def runGames(layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False):
 
     rules = CaptureRules()
     games = []
@@ -784,7 +784,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
     if numTraining > 0:
         logging.info('Playing %d training games' % numTraining)
 
-    for i in range( numGames ):
+    for i in range(numGames):
         beQuiet = i < numTraining
         if beQuiet:
                 # Suppress output and graphics
@@ -794,7 +794,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
         else:
                 gameDisplay = display
                 rules.quiet = False
-        g = rules.newGame( layout, agents, gameDisplay, length, muteAgents, catchExceptions )
+        g = rules.newGame(layout, agents, gameDisplay, length, muteAgents, catchExceptions)
         g.run()
         if not beQuiet: games.append(g)
 

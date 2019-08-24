@@ -87,19 +87,19 @@ class AgentState:
     AgentStates hold the state of an agent (configuration, speed, scared, etc).
     """
 
-    def __init__( self, startConfiguration, isPacman ):
+    def __init__(self, startConfiguration, isPacman):
         self.start = startConfiguration
         self.configuration = startConfiguration
         self.isPacman = isPacman
         self.scaredTimer = 0
 
-    def __str__( self ):
+    def __str__(self):
         if self.isPacman:
-            return 'Pacman: ' + str( self.configuration )
+            return 'Pacman: ' + str(self.configuration)
         else:
-            return 'Ghost: ' + str( self.configuration )
+            return 'Ghost: ' + str(self.configuration)
 
-    def __eq__( self, other ):
+    def __eq__(self, other):
         if (other is None):
             return False
         return self.configuration == other.configuration and self.scaredTimer == other.scaredTimer
@@ -107,8 +107,8 @@ class AgentState:
     def __hash__(self):
         return hash(hash(self.configuration) + 13 * hash(self.scaredTimer))
 
-    def copy( self ):
-        state = AgentState( self.start, self.isPacman )
+    def copy(self):
+        state = AgentState(self.start, self.isPacman)
         state.configuration = self.configuration
         state.scaredTimer = self.scaredTimer
         return state
@@ -182,14 +182,14 @@ class Grid:
         g.data = self.data
         return g
 
-    def count(self, item =True ):
+    def count(self, item =True):
         return sum([x.count(item) for x in self.data])
 
     def asList(self, key = True):
         list = []
         for x in range(self.width):
             for y in range(self.height):
-                if self[x][y] == key: list.append( (x,y) )
+                if self[x][y] == key: list.append((x,y))
         return list
 
     def packBits(self):
@@ -340,14 +340,14 @@ class GameStateData:
     """
 
     """
-    def __init__( self, prevState = None ):
+    def __init__(self, prevState = None):
         """
         Generates a new data packet by copying information from its predecessor.
         """
         if prevState is not None:
             self.food = prevState.food.shallowCopy()
             self.capsules = prevState.capsules[:]
-            self.agentStates = self.copyAgentStates( prevState.agentStates )
+            self.agentStates = self.copyAgentStates(prevState.agentStates)
             self.layout = prevState.layout
             self._eaten = prevState._eaten
             self.score = prevState.score
@@ -358,8 +358,8 @@ class GameStateData:
         self._win = False
         self.scoreChange = 0
 
-    def deepCopy( self ):
-        state = GameStateData( self )
+    def deepCopy(self):
+        state = GameStateData(self)
         state.food = self.food.deepCopy()
         state.layout = self.layout.deepCopy()
         state._agentMoved = self._agentMoved
@@ -367,13 +367,13 @@ class GameStateData:
         state._capsuleEaten = self._capsuleEaten
         return state
 
-    def copyAgentStates( self, agentStates ):
+    def copyAgentStates(self, agentStates):
         copiedStates = []
         for agentState in agentStates:
-            copiedStates.append( agentState.copy() )
+            copiedStates.append(agentState.copy())
         return copiedStates
 
-    def __eq__( self, other ):
+    def __eq__(self, other):
         """
         Allows two states to be compared.
         """
@@ -395,19 +395,19 @@ class GameStateData:
 
         return True
 
-    def __hash__( self ):
+    def __hash__(self):
         """
         Allows states to be keys of dictionaries.
         """
-        for i, state in enumerate( self.agentStates ):
+        for i, state in enumerate(self.agentStates):
             try:
                 int(hash(state))
             except TypeError as e:
                 logging.error('TypeError %s' % (e))
                 #hash(state)
-        return int((hash(tuple(self.agentStates)) + 13*hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575 )
+        return int((hash(tuple(self.agentStates)) + 13*hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575)
 
-    def __str__( self ):
+    def __str__(self):
         width, height = self.layout.width, self.layout.height
         map = Grid(width, height)
         if type(self.food) == type((1,2)):
@@ -424,19 +424,19 @@ class GameStateData:
             if (agentState.configuration is None):
                 continue
 
-            x,y = [int( i ) for i in nearestPoint( agentState.configuration.pos )]
+            x,y = [int(i) for i in nearestPoint(agentState.configuration.pos)]
             agent_dir = agentState.configuration.direction
             if (agentState.isPacman):
-                map[x][y] = self._pacStr( agent_dir )
+                map[x][y] = self._pacStr(agent_dir)
             else:
-                map[x][y] = self._ghostStr( agent_dir )
+                map[x][y] = self._ghostStr(agent_dir)
 
         for x, y in self.capsules:
             map[x][y] = 'o'
 
         return str(map) + ('\nScore: %d\n' % self.score)
 
-    def _foodWallStr( self, hasFood, hasWall ):
+    def _foodWallStr(self, hasFood, hasWall):
         if hasFood:
             return '.'
         elif hasWall:
@@ -444,7 +444,7 @@ class GameStateData:
         else:
             return ' '
 
-    def _pacStr( self, dir ):
+    def _pacStr(self, dir):
         if dir == Directions.NORTH:
             return 'v'
         if dir == Directions.SOUTH:
@@ -453,7 +453,7 @@ class GameStateData:
             return '>'
         return '<'
 
-    def _ghostStr( self, dir ):
+    def _ghostStr(self, dir):
         return 'G'
         if dir == Directions.NORTH:
             return 'M'
@@ -463,7 +463,7 @@ class GameStateData:
             return '3'
         return 'E'
 
-    def initialize( self, layout, numGhostAgents ):
+    def initialize(self, layout, numGhostAgents):
         """
         Creates an initial game state from a layout array (see layout.py).
         """
@@ -479,7 +479,7 @@ class GameStateData:
             if not isPacman:
                 if numGhosts == numGhostAgents: continue # Max ghosts reached already
                 else: numGhosts += 1
-            self.agentStates.append( AgentState( Configuration( pos, Directions.STOP), isPacman) )
+            self.agentStates.append(AgentState(Configuration(pos, Directions.STOP), isPacman))
         self._eaten = [False for a in self.agentStates]
 
 class Game:
@@ -487,7 +487,7 @@ class Game:
     The Game manages the control flow, soliciting actions from agents.
     """
 
-    def __init__( self, agents, display, rules, startingIndex=0, muteAgents=False, catchExceptions=False ):
+    def __init__(self, agents, display, rules, startingIndex=0, muteAgents=False, catchExceptions=False):
         self.agentCrashed = False
         self.agents = agents
         self.display = display
@@ -507,7 +507,7 @@ class Game:
         else:
             return self.rules.getProgress(self)
 
-    def _agentCrash( self, agentIndex, quiet=False):
+    def _agentCrash(self, agentIndex, quiet=False):
         "Helper method for handling agent crashes"
         if not quiet: traceback.print_exc()
         self.gameOver = True
@@ -578,7 +578,7 @@ class Game:
             self.unmute()
 
         agentIndex = self.startingIndex
-        numAgents = len( self.agents )
+        numAgents = len(self.agents)
 
         while not self.gameOver:
             # Fetch the next agent
@@ -616,7 +616,7 @@ class Game:
                         start_time = time.time()
                         if skip_action:
                             raise TimeoutFunctionException()
-                        action = timed_func( observation )
+                        action = timed_func(observation)
                     except TimeoutFunctionException:
                         logging.warning('Agent %d timed out on a single move!' % agentIndex)
                         self.agentTimeout = True
@@ -653,20 +653,20 @@ class Game:
             self.unmute()
 
             # Execute the action
-            self.moveHistory.append( (agentIndex, action) )
+            self.moveHistory.append((agentIndex, action))
             if self.catchExceptions:
                 try:
-                    self.state = self.state.generateSuccessor( agentIndex, action )
+                    self.state = self.state.generateSuccessor(agentIndex, action)
                 except Exception as data:
                     self._agentCrash(agentIndex)
                     return
             else:
-                self.state = self.state.generateSuccessor( agentIndex, action )
+                self.state = self.state.generateSuccessor(agentIndex, action)
 
             # Change the display
-            self.display.update( self.state.data )
+            self.display.update(self.state.data)
             ###idx = agentIndex - agentIndex % 2 + 1
-            ###self.display.update( self.state.makeObservation(idx).data )
+            ###self.display.update(self.state.makeObservation(idx).data)
 
             # Allow for game specific conditions (winning, losing, etc.)
             self.rules.process(self.state, self)
@@ -675,7 +675,7 @@ class Game:
                 self.numMoves += 1
 
             # Next agent
-            agentIndex = ( agentIndex + 1 ) % numAgents
+            agentIndex = (agentIndex + 1) % numAgents
 
         # Inform a learning agent of the game result
         for agent in self.agents:

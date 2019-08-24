@@ -90,7 +90,7 @@ def drawNullValues(gridworld, currentState = None, message = ''):
                 drawNullSquare(gridworld.grid, x, y, False, isExit, isCurrent)
 
     pos = to_screen(((grid.width - 1.0) / 2.0, - 0.8))
-    graphicsUtils.text( pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+    graphicsUtils.text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
 def drawValues(gridworld, values, policy, currentState = None, message = 'State Values'):
     grid = gridworld.grid
@@ -169,7 +169,7 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
                 drawSquareQ(x, y, q, minValue, maxValue, valStrings, actions, isCurrent)
 
     pos = to_screen(((grid.width - 1.0) / 2.0, - 0.8))
-    graphicsUtils.text( pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+    graphicsUtils.text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
 def blank():
     graphicsUtils.clear_screen()

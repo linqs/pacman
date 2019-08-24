@@ -70,14 +70,14 @@ def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None
       raise
 
     # Bind to key-down and key-up events
-    _root_window.bind( "<KeyPress>", _keypress )
-    _root_window.bind( "<KeyRelease>", _keyrelease )
-    _root_window.bind( "<FocusIn>", _clear_keys )
-    _root_window.bind( "<FocusOut>", _clear_keys )
-    _root_window.bind( "<Button-1>", _leftclick )
-    _root_window.bind( "<Button-2>", _rightclick )
-    _root_window.bind( "<Button-3>", _rightclick )
-    _root_window.bind( "<Control-Button-1>", _ctrl_leftclick)
+    _root_window.bind("<KeyPress>", _keypress)
+    _root_window.bind("<KeyRelease>", _keyrelease)
+    _root_window.bind("<FocusIn>", _clear_keys)
+    _root_window.bind("<FocusOut>", _clear_keys)
+    _root_window.bind("<Button-1>", _leftclick)
+    _root_window.bind("<Button-2>", _rightclick)
+    _root_window.bind("<Button-3>", _rightclick)
+    _root_window.bind("<Control-Button-1>", _ctrl_leftclick)
     _clear_keys()
 
 _leftclick_loc = None

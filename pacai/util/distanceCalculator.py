@@ -62,8 +62,8 @@ class Distancer(object):
     def isReadyForMazeDistance(self):
         return (self._distances is not None)
 
-def manhattanDistance(x, y ):
-    return abs( x[0] - y[0] ) + abs( x[1] - y[1] )
+def manhattanDistance(x, y):
+    return abs(x[0] - y[0]) + abs(x[1] - y[1])
 
 def isInt(pos):
     x, y = pos
@@ -133,10 +133,10 @@ def computeDistances(layout):
                     adjacent.append((x, y + 1))
 
                 if not layout.isWall((x, y - 1)):
-                    adjacent.append((x, y - 1) )
+                    adjacent.append((x, y - 1))
 
                 if not layout.isWall((x + 1, y)):
-                    adjacent.append((x + 1, y) )
+                    adjacent.append((x + 1, y))
 
                 if not layout.isWall((x - 1, y)):
                     adjacent.append((x - 1, y))

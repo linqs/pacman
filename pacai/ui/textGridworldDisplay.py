@@ -348,7 +348,7 @@ def wrap_always(text, width):
     It doesn't split the text in words.
     """
 
-    return '\n'.join([text[width * i:width * (i + 1)] for i in range(int(math.ceil(1.0 * len(text) / width))) ])
+    return '\n'.join([text[width * i:width * (i + 1)] for i in range(int(math.ceil(1.0 * len(text) / width)))])
 
 # TEST OF DISPLAY CODE
 

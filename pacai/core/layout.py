@@ -58,7 +58,7 @@ class Layout(object):
   def getRandomLegalPosition(self):
     x = random.choice(list(range(self.width)))
     y = random.choice(list(range(self.height)))
-    while self.isWall( (x, y) ):
+    while self.isWall((x, y)):
       x = random.choice(list(range(self.width)))
       y = random.choice(list(range(self.height)))
     return (x,y)
@@ -101,7 +101,7 @@ class Layout(object):
         layoutChar = layoutText[maxY - y][x]
         self.processLayoutChar(x, y, layoutChar)
     self.agentPositions.sort()
-    self.agentPositions = [ ( i == 0, pos) for i, pos in self.agentPositions]
+    self.agentPositions = [(i == 0, pos) for i, pos in self.agentPositions]
 
   def processLayoutChar(self, x, y, layoutChar):
     if layoutChar == '%':
@@ -111,12 +111,12 @@ class Layout(object):
     elif layoutChar == 'o':
       self.capsules.append((x, y))
     elif layoutChar == 'P':
-      self.agentPositions.append( (0, (x, y) ) )
+      self.agentPositions.append((0, (x, y)))
     elif layoutChar in ['G']:
-      self.agentPositions.append( (1, (x, y) ) )
+      self.agentPositions.append((1, (x, y)))
       self.numGhosts += 1
     elif layoutChar in  ['1', '2', '3', '4']:
-      self.agentPositions.append( (int(layoutChar), (x,y)))
+      self.agentPositions.append((int(layoutChar), (x,y)))
       self.numGhosts += 1
 
 def getLayout(name, layout_dir = DEFAULT_LAYOUT_DIR):

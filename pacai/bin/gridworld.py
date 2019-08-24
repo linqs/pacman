@@ -307,7 +307,7 @@ def getDiscountGrid():
 def getBridgeGrid():
     grid = [
         ['#', -100, -100, -100, -100, -100, '#'],
-        [ 1, 'S', ' ', ' ', ' ', ' ', 10],
+        [1, 'S', ' ', ' ', ' ', ' ', 10],
         ['#',-100, -100, -100, -100, -100, '#']
     ]
 
@@ -423,13 +423,13 @@ def parseOptions():
         optParser.add_option('-n', '--noise', action='store',
                                                  type='float', dest='noise', default=0.2,
                                                  metavar="P", help='How often action results in ' +
-                                                 'unintended direction (default %default)' )
+                                                 'unintended direction (default %default)')
         optParser.add_option('-e', '--epsilon', action='store',
                                                  type='float', dest='epsilon', default=0.3,
                                                  metavar="E", help='Chance of taking a random action in q-learning (default %default)')
         optParser.add_option('-l', '--learningRate', action='store',
                                                  type='float', dest='learningRate', default=0.5,
-                                                 metavar="P", help='TD learning rate (default %default)' )
+                                                 metavar="P", help='TD learning rate (default %default)')
         optParser.add_option('-i', '--iterations', action='store',
                                                  type='int', dest='iters', default=10,
                                                  metavar="K", help='Number of rounds of value iteration (default %default)')
@@ -438,7 +438,7 @@ def parseOptions():
                                                  metavar="K", help='Number of epsiodes of the MDP to run (default %default)')
         optParser.add_option('-g', '--grid', action='store',
                                                  metavar="G", type='string', dest='grid', default="BookGrid",
-                                                 help='Grid to use (case sensitive; options are BookGrid, BridgeGrid, CliffGrid, MazeGrid, default %default)' )
+                                                 help='Grid to use (case sensitive; options are BookGrid, BridgeGrid, CliffGrid, MazeGrid, default %default)')
         optParser.add_option('-w', '--windowSize', metavar="X", type='int', dest='gridSize', default=150,
                                                  help='Request a window width of X pixels *per grid cell* (default %default)')
         optParser.add_option('-a', '--agent', action='store', metavar="A",
