@@ -78,14 +78,15 @@ class InfoPane(object):
     """
       Translates a point relative from the bottom left of the info pane.
     """
-    if y == None:
+    if (y is None):
       x,y = pos
     else:
       x = pos
 
     x = self.gridSize + x # Margin
     y = self.base + y
-    return x,y
+
+    return (x, y)
 
   def drawPane(self):
     self.scoreText = graphicsUtils.text( self.toScreen(0, 0), self.textColor, "SCORE:    0", "Times", self.fontSize, "bold")
@@ -426,11 +427,13 @@ class PacmanGraphics:
     graphicsUtils.refresh()
 
   def getPosition(self, agentState):
-    if agentState.configuration == None: return (-1000, -1000)
+    if (agentState.configuration is None):
+        return (-1000, -1000)
     return agentState.getPosition()
 
   def getDirection(self, agentState):
-    if agentState.configuration == None: return Directions.STOP
+    if (agentState.configuration is None):
+        return Directions.STOP
     return agentState.configuration.getDirection()
 
   def finish(self):
@@ -616,15 +619,17 @@ class PacmanGraphics:
 
   def updateDistributions(self, distributions):
     "Draws an agent's belief distributions"
-    if self.distributionImages == None:
+    if (self.distributionImages is None):
       self.drawDistributions(self.previousState)
+
     for x in range(len(self.distributionImages)):
       for y in range(len(self.distributionImages[0])):
         image = self.distributionImages[x][y]
         weights = [dist[ (x,y) ] for dist in distributions]
 
-        if sum(weights) != 0:
+        if (sum(weights) != 0):
           pass
+
         # Fog of war
         color = [0.0,0.0,0.0]
         colors = GHOST_VEC_COLORS[1:] # With Pacman

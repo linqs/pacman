@@ -32,7 +32,7 @@ else:
 
 def sleep(secs):
     global _root_window
-    if _root_window == None:
+    if (_root_window is None):
         time.sleep(secs)
     else:
         _root_window.update_idletasks()
@@ -152,8 +152,13 @@ def polygon(coords, outlineColor, fillColor=None, filled=1, smoothed=1, behind=0
   for coord in coords:
     c.append(coord[0])
     c.append(coord[1])
-  if fillColor == None: fillColor = outlineColor
-  if filled == 0: fillColor = ""
+
+  if (fillColor is None):
+    fillColor = outlineColor
+
+  if filled == 0:
+    fillColor = ""
+
   poly = _canvas.create_polygon(c, outline=outlineColor, fill=fillColor, smooth=smoothed, width=width)
   if behind > 0:
     _canvas.tag_lower(poly, behind) # Higher should be more visible
@@ -168,11 +173,13 @@ def circle(pos, r, outlineColor, fillColor, endpoints=None, style='pieslice', wi
     x, y = pos
     x0, x1 = x - r - 1, x + r
     y0, y1 = y - r - 1, y + r
-    if endpoints == None:
+    if (endpoints is None):
       e = [0, 359]
     else:
       e = list(endpoints)
-    while e[0] > e[1]: e[1] = e[1] + 360
+
+    while e[0] > e[1]:
+        e[1] = e[1] + 360
 
     return _canvas.create_arc(x0, y0, x1, y1, outline=outlineColor, fill=fillColor,
                               extent=e[1] - e[0], start=e[0], style=style, width=width)
@@ -189,15 +196,15 @@ def moveCircle(id, pos, r, endpoints=None):
     global _canvas_x, _canvas_y
 
     x, y = pos
-#    x0, x1 = x - r, x + r + 1
-#    y0, y1 = y - r, y + r + 1
     x0, x1 = x - r - 1, x + r
     y0, y1 = y - r - 1, y + r
-    if endpoints == None:
+    if (endpoints is None):
       e = [0, 359]
     else:
       e = list(endpoints)
-    while e[0] > e[1]: e[1] = e[1] + 360
+
+    while e[0] > e[1]:
+      e[1] = e[1] + 360
 
     edit(id, ('start', e[0]), ('extent', e[1] - e[0]))
     move_to(id, x0, y0)

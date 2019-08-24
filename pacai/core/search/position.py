@@ -88,7 +88,7 @@ class PositionSearchProblem(SearchProblem):
         include an illegal move, return 999999
         """
 
-        if actions == None:
+        if (actions is None):
             return 999999
 
         x, y = self.startingState()

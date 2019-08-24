@@ -237,7 +237,7 @@ class Grid(object):
         self.data[key] = item
 
     def __eq__(self, other):
-        if other == None:
+        if (other is None):
             return False
         return self.data == other.data
 
@@ -346,22 +346,22 @@ def getUserAction(state, actionFunction):
     while True:
         keys = pacai.ui.graphicsUtils.wait_for_keys()
 
-        if 'Up' in keys:
+        if ('Up' in keys):
             action = 'north'
 
-        if 'Down' in keys:
+        if ('Down' in keys):
             action = 'south'
 
-        if 'Left' in keys:
+        if ('Left' in keys):
             action = 'west'
 
-        if 'Right' in keys:
+        if ('Right' in keys):
             action = 'east'
 
-        if 'q' in keys:
+        if ('q' in keys):
             sys.exit(0)
 
-        if action == None:
+        if (action is None):
             continue
 
         break
@@ -390,13 +390,13 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
 
         # END IF IN A TERMINAL STATE
         actions = environment.getPossibleActions(state)
-        if len(actions) == 0:
+        if (len(actions) == 0):
             logging.info('EPISODE ' + str(episode) + ' COMPLETE: RETURN WAS ' + str(returns) + '\n')
             return returns
 
         # GET ACTION (USUALLY FROM AGENT)
         action = decision(state)
-        if action == None:
+        if (action is None):
             raise Exception('Error: Agent returned None action')
 
         # EXECUTE ACTION
@@ -566,12 +566,15 @@ if __name__ == '__main__':
     # FIGURE OUT WHAT TO DISPLAY EACH TIME STEP (IF ANYTHING)
     displayCallback = lambda x: None
     if not opts.quiet:
-        if opts.manual and opts.agent == None:
+        if (opts.manual and opts.agent is None):
             displayCallback = lambda state: display.displayNullValues(state)
         else:
-            if opts.agent == 'random': displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
-            if opts.agent == 'value': displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
-            if opts.agent == 'q': displayCallback = lambda state: display.displayQValues(a, state, 'CURRENT Q-VALUES')
+            if opts.agent == 'random':
+                displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
+            elif opts.agent == 'value':
+                displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
+            elif opts.agent == 'q':
+                displayCallback = lambda state: display.displayQValues(a, state, 'CURRENT Q-VALUES')
 
     messageCallback = lambda x: print(x)
     if opts.quiet:

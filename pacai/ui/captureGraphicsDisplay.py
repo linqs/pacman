@@ -81,7 +81,7 @@ class InfoPane:
         Translates a point relative from the bottom left of the info pane.
         """
 
-        if y == None:
+        if (y is None):
             x,y = pos
         else:
             x = pos
@@ -278,20 +278,24 @@ class PacmanGraphics:
         agentIndex = newState._agentMoved
         agentState = newState.agentStates[agentIndex]
 
-        if self.agentImages[agentIndex][0].isPacman != agentState.isPacman: self.swapImages(agentIndex, agentState)
+        if (self.agentImages[agentIndex][0].isPacman != agentState.isPacman):
+            self.swapImages(agentIndex, agentState)
+
         prevState, prevImage = self.agentImages[agentIndex]
-        if agentState.isPacman:
+        if (agentState.isPacman):
             self.animatePacman(agentState, prevState, prevImage)
         else:
             self.moveGhost(agentState, agentIndex, prevState, prevImage)
         self.agentImages[agentIndex] = (agentState, prevImage)
 
-        if newState._foodEaten != None:
+        if (newState._foodEaten is not None):
             self.removeFood(newState._foodEaten, self.food)
-        if newState._capsuleEaten != None:
+
+        if (newState._capsuleEaten is not None):
             self.removeCapsule(newState._capsuleEaten, self.capsules)
+
         self.infoPane.updateScore(newState.score, newState.timeleft)
-        if 'ghostDistances' in dir(newState):
+        if ('ghostDistances' in dir(newState)):
             self.infoPane.updateGhostDistances(newState.ghostDistances)
 
         self.save_frame()
@@ -446,11 +450,13 @@ class PacmanGraphics:
         graphicsUtils.refresh()
 
     def getPosition(self, agentState):
-        if agentState.configuration == None: return (-1000, -1000)
+        if (agentState.configuration is None):
+            return (-1000, -1000)
         return agentState.getPosition()
 
     def getDirection(self, agentState):
-        if agentState.configuration == None: return Directions.STOP
+        if (agentState.configuration is None):
+            return Directions.STOP
         return agentState.configuration.getDirection()
 
     def finish(self):
@@ -657,9 +663,10 @@ class PacmanGraphics:
 
 
     def updateDistributions(self, distributions):
-        "Draws an agent's belief distributions"
-        if self.distributionImages == None:
+        # Draws an agent's belief distributions
+        if (self.distributionImages is None):
             self.drawDistributions(self.previousState)
+
         for x in range(len(self.distributionImages)):
             for y in range(len(self.distributionImages[0])):
                 image = self.distributionImages[x][y]

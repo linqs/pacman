@@ -483,7 +483,7 @@ def default(str):
   return str + ' [Default: %default]'
 
 def parseAgentArgs(str):
-  if str == None:
+  if (str is None):
     return {}
 
   pieces = str.split(',')
@@ -567,12 +567,12 @@ def readCommand(argv):
 
   # Choose a layout
   args['layout'] = getLayout(options.layout)
-  if args['layout'] == None:
+  if (args['layout'] is None):
     raise Exception("The layout " + options.layout + " cannot be found")
 
   # TODO(eriq): There are multiple keyboard agents.
   # Choose a Pacman agent
-  noKeyboard = options.gameToReplay == None and (options.textGraphics or options.quietGraphics)
+  noKeyboard = (options.gameToReplay is None and (options.textGraphics or options.quietGraphics))
   if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
     raise Exception('Keyboard agents require graphics.')
 

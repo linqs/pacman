@@ -168,7 +168,7 @@ class Application(object):
             print('Reset!')
 
         action = self.learner.getAction(state)
-        if action == None:
+        if (action is None):
             raise Exception('None action returned: Code Not Complete')
 
         nextState, reward = self.robotEnvironment.doAction(action)

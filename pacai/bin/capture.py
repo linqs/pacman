@@ -231,7 +231,7 @@ class GameState:
         """
         Generates a new state by copying information from its predecessor.
         """
-        if prevState != None: # Initial state
+        if (prevState is not None):  # Initial state
             self.data = GameStateData(prevState.data)
             self.blueTeam = prevState.blueTeam
             self.redTeam = prevState.redTeam
@@ -284,7 +284,8 @@ class GameState:
         """
         Allows two states to be compared.
         """
-        if other == None: return False
+        if (other is None):
+            return False
         return self.data == other.data
 
     def __hash__( self ):
@@ -514,9 +515,13 @@ class AgentRules:
         if agentState.isPacman:
             for index in otherTeam:
                 otherAgentState = state.data.agentStates[index]
-                if otherAgentState.isPacman: continue
+                if (otherAgentState.isPacman):
+                    continue
+
                 ghostPosition = otherAgentState.getPosition()
-                if ghostPosition == None: continue
+                if (ghostPosition is None):
+                    continue
+
                 if manhattanDistance( ghostPosition, agentState.getPosition() ) <= COLLISION_TOLERANCE:
                     #award points to the other team for killing Pacmen
                     if otherAgentState.scaredTimer <= 0:
@@ -538,9 +543,13 @@ class AgentRules:
         else: # Agent is a ghost
             for index in otherTeam:
                 otherAgentState = state.data.agentStates[index]
-                if not otherAgentState.isPacman: continue
+                if (not otherAgentState.isPacman):
+                    continue
+
                 pacPos = otherAgentState.getPosition()
-                if pacPos == None: continue
+                if (pacPos is None):
+                    continue
+
                 if manhattanDistance( pacPos, agentState.getPosition() ) <= COLLISION_TOLERANCE:
                     #award points to the other team for killing Pacmen
                     if agentState.scaredTimer <= 0:
@@ -573,7 +582,9 @@ def default(str):
     return str + ' [Default: %default]'
 
 def parseAgentArgs(str):
-    if str == None or str == '': return {}
+    if (str is None or str == ''):
+        return {}
+
     pieces = str.split(',')
     opts = {}
     for p in pieces:
@@ -656,7 +667,7 @@ def readCommand( argv ):
         random.seed(FIXED_SEED)
 
     # Special case: recorded games don't use the runGames method or args structure
-    if options.replay != None:
+    if (options.replay is not None):
         logging.info('Replaying recorded game %s.' % options.replay)
 
         recorded = None
@@ -703,12 +714,15 @@ def readCommand( argv ):
     else:
         args['layout'] = pacai.core.layout.getLayout( options.layout )
 
-    if args['layout'] == None: raise Exception("The layout " + options.layout + " cannot be found")
+    if (args['layout'] is None):
+        raise Exception("The layout " + options.layout + " cannot be found")
+
     args['length'] = options.time
     args['numGames'] = options.numGames
     args['numTraining'] = options.numTraining
     args['record'] = options.record
     args['catchExceptions'] = options.catchExceptions
+
     return args
 
 def randomLayout(seed = None):

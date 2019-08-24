@@ -61,7 +61,7 @@ class SearchAgent(BaseAgent):
         state: a GameState object (pacman.py)
         """
 
-        if self.searchFunction == None:
+        if (self.searchFunction is None):
             raise Exception('No search function provided for SearchAgent')
 
         starttime = time.time()

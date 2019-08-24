@@ -56,7 +56,8 @@ class Configuration:
         return x == int(x) and y == int(y)
 
     def __eq__(self, other):
-        if other == None: return False
+        if (other is None):
+            return False
         return (self.pos == other.pos and self.direction == other.direction)
 
     def __hash__(self):
@@ -99,7 +100,7 @@ class AgentState:
             return 'Ghost: ' + str( self.configuration )
 
     def __eq__( self, other ):
-        if other == None:
+        if (other is None):
             return False
         return self.configuration == other.configuration and self.scaredTimer == other.scaredTimer
 
@@ -113,7 +114,8 @@ class AgentState:
         return state
 
     def getPosition(self):
-        if self.configuration == None: return None
+        if (self.configuration is None):
+            return None
         return self.configuration.getPosition()
 
     def getDirection(self):
@@ -149,7 +151,8 @@ class Grid:
         return '\n'.join([''.join(x) for x in out])
 
     def __eq__(self, other):
-        if other == None: return False
+        if (other is None):
+            return False
         return self.data == other.data
 
     def __lt__(self, other):
@@ -374,12 +377,22 @@ class GameStateData:
         """
         Allows two states to be compared.
         """
-        if other == None: return False
+        if (other is None):
+            return False
+
         # TODO Check for type of other
-        if not self.agentStates == other.agentStates: return False
-        if not self.food == other.food: return False
-        if not self.capsules == other.capsules: return False
-        if not self.score == other.score: return False
+        if (not self.agentStates == other.agentStates):
+            return False
+
+        if (not self.food == other.food):
+            return False
+
+        if (not self.capsules == other.capsules):
+            return False
+
+        if (not self.score == other.score):
+            return False
+
         return True
 
     def __hash__( self ):
@@ -405,11 +418,15 @@ class GameStateData:
                 map[x][y] = self._foodWallStr(food[x][y], walls[x][y])
 
         for agentState in self.agentStates:
-            if agentState == None: continue
-            if agentState.configuration == None: continue
+            if (agentState is None):
+                continue
+
+            if (agentState.configuration is None):
+                continue
+
             x,y = [int( i ) for i in nearestPoint( agentState.configuration.pos )]
             agent_dir = agentState.configuration.direction
-            if agentState.isPacman:
+            if (agentState.isPacman):
                 map[x][y] = self._pacStr( agent_dir )
             else:
                 map[x][y] = self._ghostStr( agent_dir )

@@ -31,7 +31,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         """
         super().__init__(index)
 
-        if actionFn == None:
+        if (actionFn is None):
             actionFn = lambda state: state.getLegalActions()
 
         self.actionFn = actionFn

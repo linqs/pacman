@@ -33,7 +33,7 @@ class Distancer(object):
         The getDistance function is the only one you'll need after you create the object.
         """
 
-        if self._distances == None:
+        if (self._distances is None):
             return manhattanDistance(pos1, pos2)
 
         if isInt(pos1) and isInt(pos2):
@@ -60,7 +60,7 @@ class Distancer(object):
         raise Exception("Position not in grid: " + str(key))
 
     def isReadyForMazeDistance(self):
-        return self._distances != None
+        return (self._distances is not None)
 
 def manhattanDistance(x, y ):
     return abs( x[0] - y[0] ) + abs( x[1] - y[1] )

@@ -51,7 +51,7 @@ class CornersProblem(SearchProblem):
         where 'successor' is a successor to the current state, 'action' is the action
         required to get there, and 'stepCost' is the incremental
         cost of expanding to that successor
-        
+
         successors = []
         for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
             Add a successor state to the successor list if the action is legal
@@ -89,7 +89,7 @@ class CornersProblem(SearchProblem):
         include an illegal move, return 999999.  This is implemented for you.
         """
 
-        if actions == None:
+        if (actions is None):
             return 999999
 
         x, y = self.startingPosition

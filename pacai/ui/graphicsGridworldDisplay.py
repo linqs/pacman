@@ -113,7 +113,7 @@ def drawValues(gridworld, values, policy, currentState = None, message = 'State 
                 value = values[state]
                 action = None
 
-                if policy != None and state in policy:
+                if (policy is not None and state in policy):
                     action = policy[state]
                     actions = gridworld.getPossibleActions(state)
 
@@ -144,7 +144,7 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
             isCurrent = (currentState == state)
 
             actions = gridworld.getPossibleActions(state)
-            if actions == None or len(actions) == 0:
+            if (actions is None or len(actions) == 0):
                 actions = [None]
 
             bestQ = max([qValues[(state, action)] for action in actions])

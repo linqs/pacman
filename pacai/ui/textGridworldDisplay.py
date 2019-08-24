@@ -17,7 +17,7 @@ class TextGridworldDisplay(object):
         pass
 
     def displayValues(self, agent, currentState = None, message = None):
-        if message != None:
+        if (message is not None):
             print(message)
 
         values = pacai.util.util.Counter()
@@ -31,13 +31,13 @@ class TextGridworldDisplay(object):
         prettyPrintValues(self.gridworld, values, policy, currentState)
 
     def displayNullValues(self, agent, currentState = None, message = None):
-        if message != None:
+        if (message is not None):
             print(message)
 
         prettyPrintNullValues(self.gridworld, currentState)
 
     def displayQValues(self, agent, currentState = None, message = None):
-        if message != None:
+        if (message is not None):
             print(message)
 
         qValues = pacai.util.util.Counter()
@@ -62,7 +62,7 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
             value = values[state]
             action = None
 
-            if policy != None and state in policy:
+            if (policy is not None and state in policy):
                 action = policy[state]
 
             actions = gridWorld.getPossibleActions(state)
@@ -133,9 +133,8 @@ def prettyPrintNullValues(gridWorld, currentState = None):
                 # value = values[state]
 
                 action = None
-                # if policy != None and state in policy:
+                # if (policy is not None) and state in policy:
                 #     action = policy[state]
-                #
 
                 actions = gridWorld.getPossibleActions(state)
 
@@ -143,7 +142,7 @@ def prettyPrintNullValues(gridWorld, currentState = None):
                     action = 'exit'
 
                 valString = None
-                # if action == 'exit':
+                # if (action == 'exit'):
                 #     valString = border('%.2f' % value)
                 # else:
                 #     valString = '\n\n%.2f\n\n' % value
@@ -207,7 +206,7 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
             for x in range(grid.width):
                 state = (x, y)
                 actions = gridWorld.getPossibleActions(state)
-                if actions == None or len(actions) == 0:
+                if (actions is None or len(actions) == 0):
                     actions = [None]
 
                 bestQ = max([qValues[(state, action)] for action in actions])
