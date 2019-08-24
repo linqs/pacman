@@ -28,10 +28,12 @@ def main(pattern = None):
 
     tests = unittest.suite.TestSuite()
 
+    failed = False
     for testCase in testCases:
         if (isinstance(testCase, unittest.loader._FailedTest)):
             print('Failed to load test: %s' % (testCase.id()))
             print(testCase._exception)
+            fail = True
             continue
 
         if (pattern is None or re.search(pattern, testCase.id())):
@@ -39,7 +41,7 @@ def main(pattern = None):
         else:
             print("Skipping %s because of match pattern." % (testCase.id()))
 
-    if not runner.run(tests).wasSuccessful():
+    if (not runner.run(tests).wasSuccessful() or fail):
         sys.exit(1)
 
 def _load_args(args):
