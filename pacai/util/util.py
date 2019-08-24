@@ -540,6 +540,7 @@ def pause():
 
 ## code to handle timeouts
 import signal
+
 class TimeoutFunctionException(Exception):
     """
     Exception to raise on a timeout
