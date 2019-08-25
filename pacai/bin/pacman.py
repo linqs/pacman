@@ -37,8 +37,8 @@ from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.layout import getLayout
 from pacai.util.logs import initLogging
-from pacai.util.util import nearestPoint
-from pacai.util.util import manhattanDistance
+from pacai.util.distanceCalculator import manhattanDistance
+from pacai.util.distanceCalculator import nearestPoint
 
 FIXED_SEED = 140188
 

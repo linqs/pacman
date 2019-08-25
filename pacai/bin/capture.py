@@ -49,8 +49,8 @@ from pacai.core.game import GameStateData
 from pacai.core.game import Grid
 from pacai.core.game import reconstituteGrid
 from pacai.util.logs import initLogging
-from pacai.util.util import manhattanDistance
-from pacai.util.util import nearestPoint
+from pacai.util.distanceCalculator import manhattanDistance
+from pacai.util.distanceCalculator import nearestPoint
 
 KILL_POINTS = 0
 SONAR_NOISE_RANGE = 13 # Must be odd

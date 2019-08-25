@@ -115,7 +115,7 @@ class CaptureAgent(BaseAgent):
 
         myState = gameState.getAgentState(self.index)
         myPos = myState.getPosition()
-        if myPos != util.nearestPoint(myPos):
+        if myPos != distanceCalculator.nearestPoint(myPos):
             # We're halfway from one position to the next.
             return gameState.getLegalActions(self.index)[0]
         else:

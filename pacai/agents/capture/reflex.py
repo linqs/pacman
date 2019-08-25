@@ -2,6 +2,7 @@ import random
 import time
 
 from pacai.agents.capture.capture import CaptureAgent
+from pacai.util import distanceCalculator
 from pacai.util import util
 
 class ReflexCaptureAgent(CaptureAgent):
@@ -36,7 +37,7 @@ class ReflexCaptureAgent(CaptureAgent):
 
         successor = gameState.generateSuccessor(self.index, action)
         pos = successor.getAgentState(self.index).getPosition()
-        if pos != util.nearestPoint(pos):
+        if pos != distanceCalculator.nearestPoint(pos):
             # Only half a grid position was covered.
             return successor.generateSuccessor(self.index, action)
         else:
