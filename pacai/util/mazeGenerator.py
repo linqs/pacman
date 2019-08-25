@@ -85,13 +85,13 @@ class Maze(object):
         if vert:
             gaps = min(self.r, gaps)
             slots = [add_r + x for x in range(self.r)]
-            if not 0 in slots:
+            if 0 not in slots:
                 if self.root.grid[min(slots) - 1][add_c+i] == EMPTY:
                     slots.remove(min(slots))
 
                 if len(slots) <= gaps:
                     return 0
-            if not self.root.c-1 in slots:
+            if (self.root.c - 1) not in slots:
                 if self.root.grid[max(slots)+1][add_c+i] == EMPTY:
                     slots.remove(max(slots))
 
@@ -108,14 +108,14 @@ class Maze(object):
             gaps = min(self.c, gaps)
             slots = [add_c + x for x in range(self.c)]
 
-            if not 0 in slots:
+            if 0 not in slots:
                 if self.root.grid[add_r + i][min(slots) - 1] == EMPTY:
                     slots.remove(min(slots))
 
                 if len(slots) <= gaps:
                     return 0
 
-            if not self.root.r - 1 in slots:
+            if (self.root.r - 1) not in slots:
                 if self.root.grid[add_r + i][max(slots) + 1] == EMPTY:
                     slots.remove(max(slots))
 

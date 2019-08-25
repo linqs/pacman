@@ -145,7 +145,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         The simulation should somehow ensure this is called
         """
 
-        if not self.lastState is None:
+        if self.lastState not is None:
             reward = state.getScore() - self.lastState.getScore()
             self.observeTransition(self.lastState, self.lastAction, state, reward)
 
@@ -166,10 +166,10 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.stopEpisode()
 
         # Make sure we have this var
-        if not 'episodeStartTime' in self.__dict__:
+        if 'episodeStartTime' not in self.__dict__:
             self.episodeStartTime = time.time()
 
-        if not 'lastWindowAccumRewards' in self.__dict__:
+        if 'lastWindowAccumRewards' not in self.__dict__:
             self.lastWindowAccumRewards = 0.0
 
         self.lastWindowAccumRewards += state.getScore()

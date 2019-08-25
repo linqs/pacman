@@ -557,7 +557,7 @@ class TimeoutFunction:
         raise TimeoutFunctionException()
 
     def __call__(self, *args):
-        if not 'SIGALRM' in dir(signal):
+        if 'SIGALRM' not in dir(signal):
             return self.function(*args)
         old = signal.signal(signal.SIGALRM, self.handle_timeout)
         signal.alarm(self.timeout)

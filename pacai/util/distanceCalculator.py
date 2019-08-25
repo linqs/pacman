@@ -142,7 +142,7 @@ def computeDistances(layout):
                     adjacent.append((x - 1, y))
 
                 for other in adjacent:
-                    if not other in dist:
+                    if other not in dist:
                         continue
 
                     oldDist = dist[other]
