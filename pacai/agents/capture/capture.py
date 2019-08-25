@@ -7,7 +7,7 @@ import abc
 from pacai.agents.base import BaseAgent
 from pacai.ui import captureGraphicsDisplay
 from pacai.util import distanceCalculator
-from pacai.util import util
+from pacai.util import containers
 
 class CaptureAgent(BaseAgent):
     """
@@ -241,7 +241,7 @@ class CaptureAgent(BaseAgent):
         Overlays a distribution over positions onto the pacman board that represents
         an agent's beliefs about the positions of each agent.
 
-        The arg distributions is a tuple or list of util.Counter objects, where the i'th
+        The arg distributions is a tuple or list of containers.Counter objects, where the i'th
         Counter has keys that are board positions (x,y) and values that encode the probability
         that agent i is at (x,y).
 
@@ -254,11 +254,11 @@ class CaptureAgent(BaseAgent):
         dists = []
         for dist in distributions:
             if (dist is not None):
-                if not isinstance(dist, util.Counter):
+                if not isinstance(dist, containers.Counter):
                     raise Exception("Wrong type of distribution")
                 dists.append(dist)
             else:
-                dists.append(util.Counter())
+                dists.append(containers.Counter())
 
         if (self.display is not None and 'updateDistributions' in dir(self.display)):
             self.display.updateDistributions(dists)

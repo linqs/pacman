@@ -2,7 +2,7 @@ import abc
 
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Directions
-from pacai.util import util
+from pacai.util import containers
 
 class GhostAgent(BaseAgent):
     def __init__(self, index):
@@ -13,7 +13,7 @@ class GhostAgent(BaseAgent):
         if len(dist) == 0:
             return Directions.STOP
         else:
-            return util.chooseFromDistribution(dist)
+            return containers.chooseFromDistribution(dist)
 
     @abc.abstractmethod
     def getDistribution(self, state):

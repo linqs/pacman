@@ -3,7 +3,7 @@ import time
 
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Directions
-from pacai.util import util
+from pacai.util import find_modules
 
 class SearchAgent(BaseAgent):
     """
@@ -24,7 +24,7 @@ class SearchAgent(BaseAgent):
     def __init__(self, index, fn = 'pacai.core.search.search.dfs', prob = 'pacai.core.search.position.PositionSearchProblem', heuristic = 'pacai.core.search.heuristic.null'):
         super().__init__(index)
         # Get the search problem type from the name.
-        self.searchType = util.qualifiedImport(prob)
+        self.searchType = find_modules.qualifiedImport(prob)
         logging.info('[SearchAgent] using problem type %s.' % (prob))
 
         # Get the search function from the name and heuristic.
@@ -38,7 +38,7 @@ class SearchAgent(BaseAgent):
         """
 
         # Locate the function.
-        function = util.qualifiedImport(functionName)
+        function = find_modules.qualifiedImport(functionName)
 
         # Check if the function has a heuristic.
         if 'heuristic' not in function.__code__.co_varnames:
@@ -46,7 +46,7 @@ class SearchAgent(BaseAgent):
             return function
 
         # Fetch the heuristic.
-        heuristic = util.qualifiedImport(heuristicName)
+        heuristic = find_modules.qualifiedImport(heuristicName)
         logging.info('[SearchAgent] using function %s and heuristic %s.' % (functionName, heuristicName))
 
         # Bind the heuristic.

@@ -1,10 +1,10 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.util import find_modules
 from pacai.util import interrupts
-from pacai.util import util
+from pacai.util import containers
 
-# Force the extractors into scope for util.lookup().
-# TODO(eriq): I hate util.lookup(), get rid of it and this import.
+# Force the extractors into scope for find_modules.lookup().
+# TODO(eriq): I hate find_modules.lookup(), get rid of it and this import.
 from pacai.util import featureExtractors
 
 class QLearningAgent(ReinforcementAgent):
@@ -44,7 +44,7 @@ class QLearningAgent(ReinforcementAgent):
         no legal actions, which is the case at the terminal state, you
         should choose None as the action.
 
-        HINT: You might want to use util.flipCoin(prob)
+        HINT: You might want to use containers.flipCoin(prob)
         HINT: To pick randomly from a list, use random.choice(list)
 
     def update(self, state, action, nextState, reward):

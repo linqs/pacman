@@ -3,7 +3,7 @@ import time
 
 from pacai.agents.capture.capture import CaptureAgent
 from pacai.util import distanceCalculator
-from pacai.util import util
+from pacai.util import containers
 
 class ReflexCaptureAgent(CaptureAgent):
     """
@@ -58,7 +58,7 @@ class ReflexCaptureAgent(CaptureAgent):
         Returns a counter of features for the state
         """
 
-        features = util.Counter()
+        features = containers.Counter()
         successor = self.getSuccessor(gameState, action)
         features['successorScore'] = self.getScore(successor)
 

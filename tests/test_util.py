@@ -1,6 +1,6 @@
 import unittest
 
-from pacai.util import util
+from pacai.util import containers
 
 """
 This is a test class to assess the functionality of the data structures
@@ -9,7 +9,7 @@ and the Priority Queue.
 """
 class UtilTest(unittest.TestCase):
     def test_queue(self):
-        queue = util.Queue()
+        queue = containers.Queue()
         self.assertTrue(queue.isEmpty())
 
         val_list = [x for x in range(1, 10)]
@@ -23,7 +23,7 @@ class UtilTest(unittest.TestCase):
             self.assertEqual(val, queue.pop())
 
     def test_stack(self):
-        stack = util.Stack()
+        stack = containers.Stack()
         self.assertTrue(stack.isEmpty())
 
         val_list = [x for x in range(1, 10)]
@@ -37,7 +37,7 @@ class UtilTest(unittest.TestCase):
             self.assertEqual(val, stack.pop())
 
     def test_priority_queue(self):
-        priority_queue = util.PriorityQueue()
+        priority_queue = containers.PriorityQueue()
         self.assertTrue(priority_queue.isEmpty())
 
         # List of values with a priority number that correspondes to the position in the list.
