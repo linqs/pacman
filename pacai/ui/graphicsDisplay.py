@@ -213,10 +213,11 @@ class PacmanGraphics:
             dist.append(distx)
             for y in range(walls.height):
                 (screen_x, screen_y) = self.to_screen((x, y))
-                block = graphicsUtils.square((screen_x, screen_y),
-                                                0.5 * self.gridSize,
-                                                color = BACKGROUND_COLOR,
-                                                filled = 1, behind=2)
+                block = graphicsUtils.square(
+                        (screen_x, screen_y),
+                        0.5 * self.gridSize,
+                        color = BACKGROUND_COLOR,
+                        filled = 1, behind=2)
                 distx.append(block)
         self.distributionImages = dist
 
@@ -288,10 +289,7 @@ class PacmanGraphics:
         screen_width = 2 * self.gridSize + grid_width
         screen_height = 2 * self.gridSize + grid_height + INFO_PANE_HEIGHT
 
-        graphicsUtils.begin_graphics(screen_width,
-                                                                 screen_height,
-                                                                 BACKGROUND_COLOR,
-                                                                 "Pacman")
+        graphicsUtils.begin_graphics(screen_width, screen_height, BACKGROUND_COLOR, "Pacman")
 
     def drawPacman(self, pacman, index):
         position = self.getPosition(pacman)
@@ -307,10 +305,10 @@ class PacmanGraphics:
             fillColor = GHOST_COLORS[index]
             width = PACMAN_CAPTURE_OUTLINE_WIDTH
 
-        return [graphicsUtils.circle(screen_point, PACMAN_SCALE * self.gridSize,
-                                     fillColor = fillColor, outlineColor = outlineColor,
-                                     endpoints = endpoints,
-                                     width = width)]
+        return [graphicsUtils.circle(
+                screen_point, PACMAN_SCALE * self.gridSize,
+                fillColor = fillColor, outlineColor = outlineColor,
+                endpoints = endpoints, width = width)]
 
     def getEndpoints(self, direction, position=(0, 0)):
         x, y = position
@@ -606,10 +604,8 @@ class PacmanGraphics:
             for yNum, cell in enumerate(x):
                 if cell: # There's food here
                     screen = self.to_screen((xNum, yNum))
-                    dot = graphicsUtils.circle(screen,
-                                                FOOD_SIZE * self.gridSize,
-                                                outlineColor = color, fillColor = color,
-                                                width = 1)
+                    dot = graphicsUtils.circle(screen, FOOD_SIZE * self.gridSize,
+                            outlineColor = color, fillColor = color, width = 1)
                     imageRow.append(dot)
                 else:
                     imageRow.append(None)
@@ -620,11 +616,8 @@ class PacmanGraphics:
         capsuleImages = {}
         for capsule in capsules:
             (screen_x, screen_y) = self.to_screen(capsule)
-            dot = graphicsUtils.circle((screen_x, screen_y),
-                                                CAPSULE_SIZE * self.gridSize,
-                                                outlineColor = CAPSULE_COLOR,
-                                                fillColor = CAPSULE_COLOR,
-                                                width = 1)
+            dot = graphicsUtils.circle((screen_x, screen_y), CAPSULE_SIZE * self.gridSize,
+                    outlineColor = CAPSULE_COLOR, fillColor = CAPSULE_COLOR, width = 1)
             capsuleImages[capsule] = dot
 
         return capsuleImages
