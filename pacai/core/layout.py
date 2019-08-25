@@ -3,7 +3,7 @@ import random
 from functools import reduce
 
 from pacai.core.game import Grid
-from pacai.util.util import manhattanDistance
+from pacai.util.distanceCalculator import manhattanDistance
 
 VISIBILITY_MATRIX_CACHE = {}
 

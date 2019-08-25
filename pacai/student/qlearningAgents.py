@@ -1,4 +1,6 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
+from pacai.util import find_modules
+from pacai.util import interrupts
 from pacai.util import util
 
 # Force the extractors into scope for util.lookup().
@@ -120,7 +122,7 @@ class ApproximateQAgent(PacmanQAgent):
 
     def __init__(self, index, extractor = 'IdentityExtractor', **args):
         super().__init__(index, **args)
-        self.featExtractor = util.lookup()()
+        self.featExtractor = find_modules.lookup()()
 
         # You might want to initialize weights here.
 
@@ -135,4 +137,4 @@ class ApproximateQAgent(PacmanQAgent):
         # Did we finish training?
         if self.episodesSoFar == self.numTraining:
             # You might want to print your weights here for debugging.
-            util.raiseNotDefined()
+            interrupts.raiseNotDefined()

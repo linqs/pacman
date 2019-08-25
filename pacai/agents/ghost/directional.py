@@ -1,5 +1,6 @@
 from pacai.agents.ghost.base import GhostAgent
 from pacai.core.game import Actions
+from pacai.util import distanceCalculator
 from pacai.util import util
 
 class DirectionalGhost(GhostAgent):
@@ -31,7 +32,7 @@ class DirectionalGhost(GhostAgent):
         pacmanPosition = state.getPacmanPosition()
 
         # Select best actions given the state
-        distancesToPacman = [util.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
+        distancesToPacman = [distanceCalculator.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
         if isScared:
             bestScore = max(distancesToPacman)
             bestProb = self.prob_scaredFlee

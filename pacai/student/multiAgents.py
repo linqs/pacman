@@ -1,5 +1,6 @@
 from pacai.agents.base import BaseAgent
-from pacai.util import util
+from pacai.util import find_modules
+from pacai.util import interrupts
 
 class MultiAgentSearchAgent(BaseAgent):
     """
@@ -19,7 +20,7 @@ class MultiAgentSearchAgent(BaseAgent):
     def __init__(self, index, evalFn = 'pacai.core.eval.score', depth = '2'):
         super().__init__(index)
 
-        self.evaluationFunction = util.qualifiedImport(evalFn)
+        self.evaluationFunction = find_modules.qualifiedImport(evalFn)
         self.treeDepth = int(depth)
 
 class ReflexAgent(BaseAgent):
@@ -152,7 +153,7 @@ def betterEvaluationFunction(currentGameState):
     """
 
     # *** Your Code Here ***
-    util.raiseNotDefined()
+    interrupts.raiseNotDefined()
 
 class ContestAgent(MultiAgentSearchAgent):
     """

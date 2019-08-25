@@ -1,8 +1,5 @@
 import heapq
-import importlib
-import inspect
 import random
-import sys
 
 """
 Data structures useful for implementing SearchAgents
@@ -125,12 +122,8 @@ class PriorityQueueWithFunction(PriorityQueue):
 
         super().push(item, self.priorityFunction(item))
 
-def manhattanDistance(xy1, xy2):
-    """
-    Returns the Manhattan distance between points xy1 and xy2
-    """
-
-    return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+    def __len__(self):
+        return len(self.heap)
 
 """
 Data structures and functions useful for various course projects
@@ -369,10 +362,6 @@ class Counter(dict):
 
         return addend
 
-def raiseNotDefined():
-    print("Method not implemented: %s" % inspect.stack()[1][3])
-    sys.exit(1)
-
 def normalize(vectorOrCounter):
     """
     normalize a vector or counter by dividing each value by the sum of all values
@@ -465,17 +454,6 @@ def chooseFromDistribution(distribution):
         if r <= base:
             return element
 
-def nearestPoint(pos):
-    """
-    Finds the nearest grid point to a position (discretizes).
-    """
-
-    (current_row, current_col) = pos
-
-    grid_row = int(current_row + 0.5)
-    grid_col = int(current_col + 0.5)
-    return (grid_row, grid_col)
-
 def sign(x):
     """
     Returns 1 or -1 depending on the sign of x
@@ -512,75 +490,6 @@ def matrixAsList(matrix, value = True):
 
     return cells
 
-# TODO(eriq): I would like this method to be removed.
-# There should be better ways than reflexivly searching modules.
-def lookup(name):
-    """
-    Get a method or class from any imported module from its name.
-    """
-
-    for module_name in sys.modules:
-        try:
-            module = importlib.import_module(module_name)
-        except ImportError:
-            continue
-
-        if (name in dir(module)):
-            return getattr(module, name)
-
-    raise Exception('%s not found as a method or class' % name)
-
-def pause():
-    """
-    Pauses the output stream awaiting user feedback.
-    """
-
-    print("<Press enter/return to continue>")
-    input()
-
-## code to handle timeouts
-import signal
-
-class TimeoutFunctionException(Exception):
-    """
-    Exception to raise on a timeout
-    """
-
-    pass
-
-class TimeoutFunction:
-    def __init__(self, function, timeout):
-        self.timeout = timeout
-        self.function = function
-
-    def handle_timeout(self, signum, frame):
-        raise TimeoutFunctionException()
-
-    def __call__(self, *args):
-        if 'SIGALRM' not in dir(signal):
-            return self.function(*args)
-        old = signal.signal(signal.SIGALRM, self.handle_timeout)
-        signal.alarm(self.timeout)
-        try:
-            result = self.function(*args)
-        finally:
-            signal.signal(signal.SIGALRM, old)
-
-        signal.alarm(0)
-        return result
-
-def fetchModuleAttribute(name, modules):
-    """
-    Looks in the given modules for an attribute with the given name.
-    Raises an exception if the attribute is not found.
-    """
-
-    for module in modules:
-        if name in dir(module):
-            return getattr(module, name)
-
-    raise AttributeError("Could not locate attribute '%s' in modules: %s." % (name, modules))
-
 def getAllDescendents(classObject):
     descendents = set()
 
@@ -589,28 +498,3 @@ def getAllDescendents(classObject):
         descendents |= getAllDescendents(childClass)
 
     return descendents
-
-def qualifiedImport(qualified_name):
-    """
-    Import a fully qualified name, e.g. 'pacai.util.util.qualifiedImport'.
-    """
-
-    if (qualified_name is None or qualified_name == 0):
-        raise AttributeError("Empty supplied for import")
-
-    parts = qualified_name.split('.')
-    module_name = '.'.join(parts[0:-1])
-    target_name = parts[-1]
-
-    if (len(parts) == 1):
-        raise AttributeError("Non-qualified name supplied for import: " + qualified_name)
-
-    try:
-        module = importlib.import_module(module_name)
-    except ImportError:
-        raise AttributeError("Unable to locate module (%s) for qualified object (%s)." % (module_name, qualified_name))
-
-    if (target_name == ''):
-        return module
-
-    return getattr(module, target_name)
