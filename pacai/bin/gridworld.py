@@ -544,7 +544,8 @@ if __name__ == '__main__':
 
         a = RandomMDPAgent()
     else:
-        if not opts.manual: raise 'Unknown agent type: '+opts.agent
+        if not opts.manual:
+            raise 'Unknown agent type: ' + opts.agent
 
     ###########################
     # RUN EPISODES

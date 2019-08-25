@@ -22,10 +22,10 @@ class CrawlingRobotEnvironment(pacai.core.environment.Environment):
         # discretize the state space
         minArmAngle,maxArmAngle = self.crawlingRobot.getMinAndMaxArmAngles()
         minHandAngle,maxHandAngle = self.crawlingRobot.getMinAndMaxHandAngles()
-        armIncrement = (maxArmAngle - minArmAngle) / (self.nArmStates-1)
-        handIncrement = (maxHandAngle - minHandAngle) / (self.nHandStates-1)
-        self.armBuckets = [minArmAngle+(armIncrement*i) for i in range(self.nArmStates)]
-        self.handBuckets = [minHandAngle+(handIncrement*i) for i in range(self.nHandStates)]
+        armIncrement = (maxArmAngle - minArmAngle) / (self.nArmStates - 1)
+        handIncrement = (maxHandAngle - minHandAngle) / (self.nHandStates - 1)
+        self.armBuckets = [minArmAngle + (armIncrement * i) for i in range(self.nArmStates)]
+        self.handBuckets = [minHandAngle + (handIncrement * i) for i in range(self.nHandStates)]
 
         # Reset
         self.reset()
@@ -82,7 +82,7 @@ class CrawlingRobotEnvironment(pacai.core.environment.Environment):
             newArmAngle = self.armBuckets[armBucket + 1]
             self.crawlingRobot.moveArm(newArmAngle)
 
-            nextState = (armBucket+1,handBucket)
+            nextState = (armBucket + 1,handBucket)
         if action == 'arm-down':
             newArmAngle = self.armBuckets[armBucket - 1]
             self.crawlingRobot.moveArm(newArmAngle)
@@ -192,7 +192,7 @@ class CrawlingRobot:
 
         disp = self.displacement(self.armAngle, self.handAngle, self.armAngle, newHandAngle)
         curXPos = self.robotPos[0]
-        self.robotPos = (curXPos+disp, self.robotPos[1])
+        self.robotPos = (curXPos + disp, self.robotPos[1])
         self.handAngle = newHandAngle
 
         # Position and Velocity Sign Post

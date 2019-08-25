@@ -74,15 +74,15 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
                 valString = border('%.2f' % value)
             else:
                 valString = '\n\n%.2f\n\n' % value
-                valString += ' '*maxLen
+                valString += ' ' * maxLen
 
             if grid[x][y] == 'S':
                 valString = '\n\nS: %.2f\n\n' % value
-                valString += ' '*maxLen
+                valString += ' ' * maxLen
 
             if grid[x][y] == '#':
                 valString = '\n#####\n#####\n#####\n'
-                valString += ' '*maxLen
+                valString += ' ' * maxLen
 
             pieces = [valString]
             text = ("\n".join(pieces)).split('\n')
@@ -92,16 +92,16 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
                 if l == 0:
                     text[1] = '*'
                 else:
-                    text[1] = "|" + ' ' * int((l-1)/2-1) + '*' + ' ' * int((l)/2-1) + "|"
+                    text[1] = "|" + ' ' * int((l - 1) / 2 - 1) + ' * ' + ' ' * int((l) / 2 - 1) + "|"
 
             if action == 'east':
                 text[2] = '  ' + text[2] + ' >'
             elif action == 'west':
                 text[2] = '< ' + text[2] + '  '
             elif action == 'north':
-                text[0] = ' ' * int(maxLen/2) + '^' +' ' * int(maxLen/2)
+                text[0] = ' ' * int(maxLen / 2) + '^' +' ' * int(maxLen / 2)
             elif action == 'south':
-                text[4] = ' ' * int(maxLen/2) + 'v' +' ' * int(maxLen/2)
+                text[4] = ' ' * int(maxLen / 2) + 'v' +' ' * int(maxLen / 2)
 
             newCell = "\n".join(text)
             newRow.append(newCell)
@@ -110,7 +110,7 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
 
     numCols = grid.width
     for rowNum, row in enumerate(newRows):
-        row.insert(0,"\n\n"+str(rowNum))
+        row.insert(0, "\n\n" + str(rowNum))
 
     newRows.reverse()
     colLabels = [str(colNum) for colNum in range(numCols)]
@@ -150,10 +150,10 @@ def prettyPrintNullValues(gridWorld, currentState = None):
 
                 if grid[x][y] == 'S':
                     valString = '\n\nS\n\n'
-                    valString += ' '*maxLen
+                    valString += ' ' * maxLen
                 elif grid[x][y] == '#':
                     valString = '\n#####\n#####\n#####\n'
-                    valString += ' '*maxLen
+                    valString += ' ' * maxLen
                 elif type(grid[x][y]) == float or type(grid[x][y]) == int:
                     valString = border('%.2f' % float(grid[x][y]))
                 else:
@@ -167,16 +167,16 @@ def prettyPrintNullValues(gridWorld, currentState = None):
                     if l == 0:
                         text[1] = '*'
                     else:
-                        text[1] = "|" + ' ' * int((l-1)/2-1) + '*' + ' ' * int((l)/2-1) + "|"
+                        text[1] = "|" + ' ' * int((l - 1) / 2 - 1) + '*' + ' ' * int((l) / 2 - 1) + "|"
 
                 if action == 'east':
                     text[2] = '  ' + text[2] + ' >'
                 elif action == 'west':
                     text[2] = '< ' + text[2] + '  '
                 elif action == 'north':
-                    text[0] = ' ' * int(maxLen/2) + '^' +' ' * int(maxLen/2)
+                    text[0] = ' ' * int(maxLen / 2) + '^' + ' ' * int(maxLen / 2)
                 elif action == 'south':
-                    text[4] = ' ' * int(maxLen/2) + 'v' +' ' * int(maxLen/2)
+                    text[4] = ' ' * int(maxLen / 2) + 'v' + ' ' * int(maxLen / 2)
 
                 newCell = "\n".join(text)
                 newRow.append(newCell)
@@ -186,7 +186,7 @@ def prettyPrintNullValues(gridWorld, currentState = None):
         numCols = grid.width
 
         for rowNum, row in enumerate(newRows):
-            row.insert(0,"\n\n"+str(rowNum))
+            row.insert(0, "\n\n" + str(rowNum))
 
         newRows.reverse()
         colLabels = [str(colNum) for colNum in range(numCols)]
@@ -224,29 +224,29 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
                 westLen = len(westString)
 
                 if eastLen < westLen:
-                    eastString = ' '*(westLen-eastLen)+eastString
+                    eastString = ' ' * (westLen - eastLen) + eastString
 
                 if westLen < eastLen:
-                    westString = westString+' '*(eastLen-westLen)
+                    westString = westString + ' ' * (eastLen - westLen)
 
                 if 'north' in bestActions:
-                    northString = '/'+northString+'\\'
+                    northString = '/' + northString + '\\'
 
                 if 'south' in bestActions:
-                    southString = '\\'+southString+'/'
+                    southString = '\\' + southString + '/'
 
                 if 'east' in bestActions:
-                    eastString = ''+eastString+'>'
+                    eastString = '' + eastString + '>'
                 else:
-                    eastString = ''+eastString+' '
+                    eastString = '' + eastString + ' '
 
                 if 'west' in bestActions:
-                    westString = '<'+westString+''
+                    westString = '<' + westString + ''
                 else:
-                    westString = ' '+westString+''
+                    westString = ' ' + westString + ''
 
                 if 'exit' in bestActions:
-                    exitString = '[ '+exitString+' ]'
+                    exitString = '[ ' + exitString + ' ]'
 
 
                 ewString = westString + "     " + eastString
@@ -259,7 +259,7 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
                 if state == currentState and state == gridWorld.getStartState():
                     ewString = westString + " S:* " + eastString
 
-                text = [northString, "\n"+exitString, ewString, ' '*maxLen+"\n", southString]
+                text = [northString, "\n" + exitString, ewString, ' ' * maxLen + "\n", southString]
 
                 if grid[x][y] == '#':
                     text = ['', '\n#####\n#####\n#####', '']
@@ -272,7 +272,7 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
         numCols = grid.width
 
         for rowNum, row in enumerate(newRows):
-            row.insert(0,"\n\n\n"+str(rowNum))
+            row.insert(0, "\n\n\n" + str(rowNum))
 
         newRows.reverse()
         colLabels = [str(colNum) for colNum in range(numCols)]

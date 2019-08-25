@@ -131,7 +131,7 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
     blank()
 
     stateCrossActions = [[(state, action) for action in gridworld.getPossibleActions(state)] for state in gridworld.getStates()]
-    qStates = functools.reduce(lambda x,y: x+y, stateCrossActions, [])
+    qStates = functools.reduce(lambda x,y: x + y, stateCrossActions, [])
     qValueList = [qValues[(state, action)] for state, action in qStates] + [0.0]
     minValue = min(qValueList)
     maxValue = max(qValueList)

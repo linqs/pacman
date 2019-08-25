@@ -12,7 +12,7 @@ Pacman Details:
 
 Notes:
  - The final map includes a symmetric, flipped copy.
- - The first wall has k gaps, the next wall has k/2 gaps, etc. (min=1).
+ - The first wall has k gaps, the next wall has k / 2 gaps, etc. (min=1).
 
 @author: Dan Gillick
 @author: Jie Tang
@@ -86,13 +86,13 @@ class Maze(object):
             gaps = min(self.r, gaps)
             slots = [add_r + x for x in range(self.r)]
             if 0 not in slots:
-                if self.root.grid[min(slots) - 1][add_c+i] == EMPTY:
+                if self.root.grid[min(slots) - 1][add_c + i] == EMPTY:
                     slots.remove(min(slots))
 
                 if len(slots) <= gaps:
                     return 0
             if (self.root.c - 1) not in slots:
-                if self.root.grid[max(slots)+1][add_c+i] == EMPTY:
+                if self.root.grid[max(slots) + 1][add_c + i] == EMPTY:
                     slots.remove(max(slots))
 
             if len(slots) <= gaps:
@@ -100,7 +100,7 @@ class Maze(object):
 
             random.shuffle(slots)
             for row in slots[int(round(gaps)):]:
-                self.root.grid[row][add_c+i] = WALL
+                self.root.grid[row][add_c + i] = WALL
 
             self.rooms.append(Maze(self.r, i, (add_r, add_c), self.root))
             self.rooms.append(Maze(self.r, self.c - i - 1, (add_r, add_c + i + 1), self.root))
@@ -124,7 +124,7 @@ class Maze(object):
 
             random.shuffle(slots)
             for col in slots[int(round(gaps)):]:
-                self.root.grid[add_r+i][col] = WALL
+                self.root.grid[add_r + i][col] = WALL
 
             self.rooms.append(Maze(i, self.c, (add_r, add_c), self.root))
             self.rooms.append(Maze(self.r - i - 1, self.c, (add_r + i + 1, add_c), self.root))
@@ -190,7 +190,7 @@ def make(room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
 
     # Add a wall to the current room
     if depth == 0:
-        wall_slots = [num-2] # Fix the first wall
+        wall_slots = [num - 2] # Fix the first wall
     else:
         wall_slots = range(1, num - 1)
 
@@ -235,7 +235,7 @@ def add_pacman_stuff(maze, max_food=60, max_capsules=4, toskip=0):
 
         for row in range(1, maze.r - 1):
             for col in range(1 + toskip, int(maze.c / 2) - 1):
-                if (row > maze.r-6) and (col < 6):
+                if (row > maze.r - 6) and (col < 6):
                     continue
 
                 if maze.grid[row][col] != EMPTY:

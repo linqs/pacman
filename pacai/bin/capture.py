@@ -208,7 +208,7 @@ class GameState:
     def getDistanceProb(self, trueDistance, noisyDistance):
         "Returns the probability of a noisy distance given the true distance"
         if noisyDistance - trueDistance in SONAR_NOISE_VALUES:
-            return 1.0/SONAR_NOISE_RANGE
+            return 1.0 / SONAR_NOISE_RANGE
         else:
             return 0
 
@@ -755,7 +755,7 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     indexAddend = 0
     if not isRed:
         indexAddend = 1
-    indices = [2*i + indexAddend for i in range(2)]
+    indices = [2 * i + indexAddend for i in range(2)]
     return createTeamFunc(indices[0], indices[1], isRed, **args)
 
 def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):

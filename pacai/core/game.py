@@ -66,7 +66,7 @@ class Configuration:
         return hash(x + 13 * y)
 
     def __str__(self):
-        return '(x,y)='+str(self.pos)+', '+str(self.direction)
+        return '(x,y)=' + str(self.pos) + ', ' + str(self.direction)
 
     def generateSuccessor(self, vector):
         """
@@ -80,7 +80,7 @@ class Configuration:
         direction = Actions.vectorToDirection(vector)
         if direction == Directions.STOP:
             direction = self.direction # There is no stop direction
-        return Configuration((x + dx, y+dy), direction)
+        return Configuration((x + dx, y + dy), direction)
 
 class AgentState:
     """
@@ -405,7 +405,7 @@ class GameStateData:
             except TypeError as e:
                 logging.error('TypeError %s' % (e))
                 #hash(state)
-        return int((hash(tuple(self.agentStates)) + 13*hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575)
+        return int((hash(tuple(self.agentStates)) + 13 * hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575)
 
     def __str__(self):
         width, height = self.layout.width, self.layout.height
