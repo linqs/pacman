@@ -28,17 +28,17 @@ GHOST_COLORS = [
 TEAM_COLORS = GHOST_COLORS[:2]
 
 GHOST_SHAPE = [
-        (0, 0.3),
-        (0.25, 0.75),
-        (0.5, 0.3),
-        (0.75, 0.75),
-        (0.75, -0.5),
-        (0.5, -0.75),
-        (-0.5, -0.75),
-        (-0.75, -0.5),
-        (-0.75, 0.75),
-        (-0.5, 0.3),
-        (-0.25, 0.75)
+    (0, 0.3),
+    (0.25, 0.75),
+    (0.5, 0.3),
+    (0.75, 0.75),
+    (0.75, -0.5),
+    (0.5, -0.75),
+    (-0.5, -0.75),
+    (-0.75, -0.5),
+    (-0.75, 0.75),
+    (-0.5, 0.3),
+    (-0.25, 0.75)
 ]
 GHOST_SIZE = 0.65
 SCARED_COLOR = graphicsUtils.formatColor(1, 1, 1)
@@ -624,15 +624,15 @@ class PacmanGraphics:
         self.clearExpandedCells()
         self.expandedCells = []
         for k, cell in enumerate(cells):
-             screenPos = self.to_screen(cell)
-             cellColor = graphicsUtils.formatColor(*[(n-k) * c * .5 / n + .25 for c in baseColor])
-             block = graphicsUtils.square(screenPos,
+            screenPos = self.to_screen(cell)
+            cellColor = graphicsUtils.formatColor(*[(n-k) * c * .5 / n + .25 for c in baseColor])
+            block = graphicsUtils.square(screenPos,
                                 0.5 * self.gridSize,
                                 color = cellColor,
                                 filled = 1, behind=2)
-             self.expandedCells.append(block)
-             if self.frameTime < 0:
-                 graphicsUtils.refresh()
+            self.expandedCells.append(block)
+            if self.frameTime < 0:
+                graphicsUtils.refresh()
 
     def clearDebug(self):
         if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
@@ -646,15 +646,15 @@ class PacmanGraphics:
             self.expandedCells = []
 
         for k, cell in enumerate(cells):
-             screenPos = self.to_screen(cell)
-             cellColor = graphicsUtils.formatColor(*color)
-             block = graphicsUtils.square(screenPos,
+            screenPos = self.to_screen(cell)
+            cellColor = graphicsUtils.formatColor(*color)
+            block = graphicsUtils.square(screenPos,
                                 0.5 * self.gridSize,
                                 color = cellColor,
                                 filled = 1, behind=2)
-             self.expandedCells.append(block)
-             if self.frameTime < 0:
-                 graphicsUtils.refresh()
+            self.expandedCells.append(block)
+            if self.frameTime < 0:
+                graphicsUtils.refresh()
 
     def clearExpandedCells(self):
         if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:

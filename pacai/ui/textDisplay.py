@@ -6,54 +6,54 @@ DISPLAY_MOVES = False
 QUIET = False  # Supresses output
 
 class NullGraphics(object):
-  def initialize(self, state, isBlue = False):
-    pass
+    def initialize(self, state, isBlue = False):
+        pass
 
-  def update(self, state):
-    pass
+    def update(self, state):
+        pass
 
-  def pause(self):
-    time.sleep(SLEEP_TIME)
+    def pause(self):
+        time.sleep(SLEEP_TIME)
 
-  def draw(self, state):
-    print(state)
+    def draw(self, state):
+        print(state)
 
-  def finish(self):
-    pass
+    def finish(self):
+        pass
 
 class PacmanGraphics(object):
-  def __init__(self, speed=None):
-    if speed is not None:
-      global SLEEP_TIME
-      SLEEP_TIME = speed
+    def __init__(self, speed=None):
+        if speed is not None:
+            global SLEEP_TIME
+            SLEEP_TIME = speed
 
-  def initialize(self, state, isBlue = False):
-    self.draw(state)
-    self.pause()
-    self.turn = 0
-    self.agentCounter = 0
-
-  def update(self, state):
-    numAgents = len(state.agentStates)
-    self.agentCounter = (self.agentCounter + 1) % numAgents
-    if self.agentCounter == 0:
-      self.turn += 1
-      if DISPLAY_MOVES:
-        ghosts = [pacai.util.util.nearestPoint(state.getGhostPosition(i)) for i in range(1, numAgents)]
-        print("%4d) P: %-8s" % (self.turn, str(pacai.util.util.nearestPoint(state.getPacmanPosition()))),'| Score: %-5d' % state.score,'| Ghosts:', ghosts)
-
-      if self.turn % DRAW_EVERY == 0:
+    def initialize(self, state, isBlue = False):
         self.draw(state)
         self.pause()
+        self.turn = 0
+        self.agentCounter = 0
 
-    if state._win or state._lose:
-      self.draw(state)
+    def update(self, state):
+        numAgents = len(state.agentStates)
+        self.agentCounter = (self.agentCounter + 1) % numAgents
+        if self.agentCounter == 0:
+            self.turn += 1
+            if DISPLAY_MOVES:
+                ghosts = [pacai.util.util.nearestPoint(state.getGhostPosition(i)) for i in range(1, numAgents)]
+                print("%4d) P: %-8s" % (self.turn, str(pacai.util.util.nearestPoint(state.getPacmanPosition()))),'| Score: %-5d' % state.score,'| Ghosts:', ghosts)
 
-  def pause(self):
-    time.sleep(SLEEP_TIME)
+            if self.turn % DRAW_EVERY == 0:
+                self.draw(state)
+                self.pause()
 
-  def draw(self, state):
-    print(state)
+        if state._win or state._lose:
+            self.draw(state)
 
-  def finish(self):
-    pass
+    def pause(self):
+        time.sleep(SLEEP_TIME)
+
+    def draw(self, state):
+        print(state)
+
+    def finish(self):
+        pass
