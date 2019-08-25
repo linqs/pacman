@@ -3,7 +3,7 @@
 import abc
 
 from pacai.core import game
-from pacai.util import util
+from pacai.util import containers
 
 class FeatureExtractor(abc.ABC):
     @abc.abstractmethod
@@ -18,7 +18,7 @@ class FeatureExtractor(abc.ABC):
 
 class IdentityExtractor(FeatureExtractor):
     def getFeatures(self, state, action):
-        feats = util.Counter()
+        feats = containers.Counter()
         feats[(state, action)] = 1.0
 
         return feats
@@ -65,7 +65,7 @@ class SimpleExtractor(FeatureExtractor):
         walls = state.getWalls()
         ghosts = state.getGhostPositions()
 
-        features = util.Counter()
+        features = containers.Counter()
 
         features["bias"] = 1.0
 

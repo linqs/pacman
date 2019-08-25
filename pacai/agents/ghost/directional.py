@@ -1,7 +1,7 @@
 from pacai.agents.ghost.base import GhostAgent
 from pacai.core.game import Actions
 from pacai.util import distanceCalculator
-from pacai.util import util
+from pacai.util import containers
 
 class DirectionalGhost(GhostAgent):
     """
@@ -42,7 +42,7 @@ class DirectionalGhost(GhostAgent):
         bestActions = [action for action, distance in zip(legalActions, distancesToPacman) if distance == bestScore]
 
         # Construct distribution
-        dist = util.Counter()
+        dist = containers.Counter()
 
         for a in bestActions:
             dist[a] = float(bestProb) / len(bestActions)
