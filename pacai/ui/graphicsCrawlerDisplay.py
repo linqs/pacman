@@ -44,7 +44,7 @@ class Application(object):
     def incrementSpeed(self, inc):
         self.tickTime *= inc
         # self.epsilon = min(1.0, self.epsilon)
-        # self.epsilon = max(0.0,self.epsilon)
+        # self.epsilon = max(0.0, self.epsilon)
         # self.learner.setSpeed(self.epsilon)
         self.speed_label['text'] = 'Step Delay: %.5f' % (self.tickTime)
 
@@ -88,7 +88,7 @@ class Application(object):
         self.setupAlphaButtonAndLabel(win)
 
         # Exit Button
-        # self.exit_button = tkinter.Button(win,text='Quit', command=self.exit)
+        # self.exit_button = tkinter.Button(win, text='Quit', command=self.exit)
         # self.exit_button.grid(row=0, column=9)
 
         # Simulation Buttons
@@ -117,28 +117,28 @@ class Application(object):
         self.gamma_label = tkinter.Label(win, text='Discount: %.3f' % (self.gamma))
         self.gamma_label.grid(row=1, column=1)
 
-        self.gamma_plus = tkinter.Button(win, text="+",command=(lambda: self.incrementGamma(self.inc)))
+        self.gamma_plus = tkinter.Button(win, text="+", command=(lambda: self.incrementGamma(self.inc)))
         self.gamma_plus.grid(row=1, column=2, padx=10)
 
     def setupEpsilonButtonAndLabel(self, win):
-        self.epsilon_minus = tkinter.Button(win, text="-",command=(lambda: self.incrementEpsilon(self.dec)))
+        self.epsilon_minus = tkinter.Button(win, text="-", command=(lambda: self.incrementEpsilon(self.dec)))
         self.epsilon_minus.grid(row=0, column=3)
 
         self.epsilon = self.sigmoid(self.ep)
         self.epsilon_label = tkinter.Label(win, text='Epsilon: %.3f' % (self.epsilon))
         self.epsilon_label.grid(row=0, column=4)
 
-        self.epsilon_plus = tkinter.Button(win, text="+",command=(lambda: self.incrementEpsilon(self.inc)))
+        self.epsilon_plus = tkinter.Button(win, text="+", command=(lambda: self.incrementEpsilon(self.inc)))
         self.epsilon_plus.grid(row=0, column=5)
 
     def setupSpeedButtonAndLabel(self, win):
-        self.speed_minus = tkinter.Button(win, text="-",command=(lambda: self.incrementSpeed(0.5)))
+        self.speed_minus = tkinter.Button(win, text="-", command=(lambda: self.incrementSpeed(0.5)))
         self.speed_minus.grid(row=0, column=0)
 
         self.speed_label = tkinter.Label(win, text='Step Delay: %.5f' % (self.tickTime))
         self.speed_label.grid(row=0, column=1)
 
-        self.speed_plus = tkinter.Button(win, text="+",command=(lambda: self.incrementSpeed(2)))
+        self.speed_plus = tkinter.Button(win, text="+", command=(lambda: self.incrementSpeed(2)))
         self.speed_plus.grid(row=0, column=2)
 
     def skip5kSteps(self):

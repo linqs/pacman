@@ -13,7 +13,7 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     What you need to know:
         - The environment will call
-            observeTransition(state,action,nextState,deltaReward),
+            observeTransition(state, action, nextState, deltaReward),
             which will call update(state, action, nextState, deltaReward)
             which you should override.
         - Use self.getLegalActions(state) to know which actions
@@ -80,7 +80,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         """
 
         self.episodeRewards += deltaReward
-        self.update(state,action,nextState,deltaReward)
+        self.update(state, action, nextState, deltaReward)
 
     def startEpisode(self):
         """

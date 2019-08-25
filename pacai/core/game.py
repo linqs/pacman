@@ -33,12 +33,12 @@ class Directions:
 
 class Configuration:
     """
-    A Configuration holds the (x,y) coordinate of a character, along with its
+    A Configuration holds the (x, y) coordinate of a character, along with its
     traveling direction.
 
-    The convention for positions, like a graph, is that (0,0) is the lower left corner,
+    The convention for positions, like a graph, is that (0, 0) is the lower left corner,
     x increases horizontally and y increases vertically.
-    Therefore, north is the direction of increasing y, or (0,1).
+    Therefore, north is the direction of increasing y, or (0, 1).
     """
 
     def __init__(self, pos, direction):
@@ -52,7 +52,7 @@ class Configuration:
         return self.direction
 
     def isInteger(self):
-        x,y = self.pos
+        x, y = self.pos
         return x == int(x) and y == int(y)
 
     def __eq__(self, other):
@@ -124,8 +124,8 @@ class AgentState:
 class Grid:
     """
     A 2-dimensional array of objects backed by a list of lists.
-    Data is accessed via grid[x][y] where (x,y) are positions on a Pacman map with x horizontal,
-    y vertical and the origin (0,0) in the bottom left corner.
+    Data is accessed via grid[x][y] where (x, y) are positions on a Pacman map with x horizontal,
+    y vertical and the origin (0, 0) in the bottom left corner.
 
     The __str__ method constructs an output that is oriented like a pacman board.
     """
@@ -189,7 +189,7 @@ class Grid:
         list = []
         for x in range(self.width):
             for y in range(self.height):
-                if self[x][y] == key: list.append((x,y))
+                if self[x][y] == key: list.append((x, y))
         return list
 
     def packBits(self):
@@ -243,7 +243,7 @@ class Grid:
         return bools
 
 def reconstituteGrid(bitRep):
-    if type(bitRep) is not type((1,2)):
+    if type(bitRep) is not type((1, 2)):
         return bitRep
     width, height = bitRep[:2]
     return Grid(width, height, bitRepresentation= bitRep[2:])
@@ -317,7 +317,7 @@ class Actions:
     getPossibleActions = staticmethod(getPossibleActions)
 
     def getLegalNeighbors(position, walls):
-        x,y = position
+        x, y = position
         x_int, y_int = int(x + 0.5), int(y + 0.5)
         neighbors = []
         for dir, vec in Actions._directionsAsList:
@@ -410,7 +410,7 @@ class GameStateData:
     def __str__(self):
         width, height = self.layout.width, self.layout.height
         map = Grid(width, height)
-        if type(self.food) == type((1,2)):
+        if type(self.food) == type((1, 2)):
             self.food = reconstituteGrid(self.food)
         for x in range(width):
             for y in range(height):
@@ -424,7 +424,7 @@ class GameStateData:
             if (agentState.configuration is None):
                 continue
 
-            x,y = [int(i) for i in nearestPoint(agentState.configuration.pos)]
+            x, y = [int(i) for i in nearestPoint(agentState.configuration.pos)]
             agent_dir = agentState.configuration.direction
             if (agentState.isPacman):
                 map[x][y] = self._pacStr(agent_dir)

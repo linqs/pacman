@@ -119,7 +119,7 @@ def wait_for_click():
         sleep(0.05)
 
 def draw_background():
-    corners = [(0,0), (0, _canvas_ys), (_canvas_xs, _canvas_ys), (_canvas_xs, 0)]
+    corners = [(0, 0), (0, _canvas_ys), (_canvas_xs, _canvas_ys), (_canvas_xs, 0)]
     polygon(corners, _bg_color, fillColor=_bg_color, filled=True, smoothed=False)
 
 def _destroy_window(event=None):

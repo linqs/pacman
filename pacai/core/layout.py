@@ -34,9 +34,9 @@ class Layout(object):
         global VISIBILITY_MATRIX_CACHE
         if reduce(str.__add__, self.layoutText) not in VISIBILITY_MATRIX_CACHE:
             from game import Directions
-            vecs = [(-0.5,0), (0.5,0),(0,-0.5),(0,0.5)]
+            vecs = [(-0.5, 0), (0.5, 0), (0, -0.5), (0, 0.5)]
             dirs = [Directions.NORTH, Directions.SOUTH, Directions.WEST, Directions.EAST]
-            vis = Grid(self.width, self.height, {Directions.NORTH:set(), Directions.SOUTH:set(), Directions.EAST:set(), Directions.WEST:set(), Directions.STOP:set()})
+            vis = Grid(self.width, self.height, {Directions.NORTH: set(), Directions.SOUTH: set(), Directions.EAST: set(), Directions.WEST: set(), Directions.STOP: set()})
             for x in range(self.width):
                 for y in range(self.height):
                     if self.walls[x][y] == False:
@@ -61,14 +61,14 @@ class Layout(object):
         while self.isWall((x, y)):
             x = random.choice(list(range(self.width)))
             y = random.choice(list(range(self.height)))
-        return (x,y)
+        return (x, y)
 
     def getRandomCorner(self):
-        poses = [(1,1), (1, self.height - 2), (self.width - 2, 1), (self.width - 2, self.height - 2)]
+        poses = [(1, 1), (1, self.height - 2), (self.width - 2, 1), (self.width - 2, self.height - 2)]
         return random.choice(poses)
 
     def getFurthestCorner(self, pacPos):
-        poses = [(1,1), (1, self.height - 2), (self.width - 2, 1), (self.width - 2, self.height - 2)]
+        poses = [(1, 1), (1, self.height - 2), (self.width - 2, 1), (self.width - 2, self.height - 2)]
         dist, pos = max([(manhattanDistance(p, pacPos), p) for p in poses])
         return pos
 
@@ -84,7 +84,7 @@ class Layout(object):
 
     def processLayoutText(self, layoutText):
         """
-        Coordinates are flipped from the input format to the (x,y) convention here
+        Coordinates are flipped from the input format to the (x, y) convention here
 
         The shape of the maze.
         Each character represents a different type of object.
@@ -117,7 +117,7 @@ class Layout(object):
             self.agentPositions.append((1, (x, y)))
             self.numGhosts += 1
         elif layoutChar in ['1', '2', '3', '4']:
-            self.agentPositions.append((int(layoutChar), (x,y)))
+            self.agentPositions.append((int(layoutChar), (x, y)))
             self.numGhosts += 1
 
 def getLayout(name, layout_dir = DEFAULT_LAYOUT_DIR):

@@ -200,10 +200,10 @@ class EightPuzzleSearchProblem(SearchProblem):
     def startingState(self):
         return puzzle
 
-    def isGoal(self,state):
+    def isGoal(self, state):
         return state.isGoal()
 
-    def successorStates(self,state):
+    def successorStates(self, state):
         """
         Returns list of (successor, action, stepCost) pairs where
         each succesor is either left, right, up, or down
@@ -263,7 +263,7 @@ def createRandomEightPuzzle(moves = 100):
     a series of 'moves' random moves to a solved
     puzzle.
     """
-    puzzle = EightPuzzleState([0,1,2,3,4,5,6,7,8])
+    puzzle = EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8])
     for i in range(moves):
         # Execute a random legal move
         puzzle = puzzle.result(random.sample(puzzle.legalMoves(), 1)[0])

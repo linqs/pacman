@@ -20,8 +20,8 @@ class CrawlingRobotEnvironment(pacai.core.environment.Environment):
 
         # create a list of arm buckets and hand buckets to
         # discretize the state space
-        minArmAngle,maxArmAngle = self.crawlingRobot.getMinAndMaxArmAngles()
-        minHandAngle,maxHandAngle = self.crawlingRobot.getMinAndMaxHandAngles()
+        minArmAngle, maxArmAngle = self.crawlingRobot.getMinAndMaxArmAngles()
+        minHandAngle, maxHandAngle = self.crawlingRobot.getMinAndMaxHandAngles()
         armIncrement = (maxArmAngle - minArmAngle) / (self.nArmStates - 1)
         handIncrement = (maxHandAngle - minHandAngle) / (self.nHandStates - 1)
         self.armBuckets = [minArmAngle + (armIncrement * i) for i in range(self.nArmStates)]
@@ -73,16 +73,16 @@ class CrawlingRobotEnvironment(pacai.core.environment.Environment):
 
         nextState, reward =  None, None
 
-        oldX,oldY = self.crawlingRobot.getRobotPosition()
+        oldX, oldY = self.crawlingRobot.getRobotPosition()
 
-        armBucket,handBucket = self.state
-        armAngle,handAngle = self.crawlingRobot.getAngles()
+        armBucket, handBucket = self.state
+        armAngle, handAngle = self.crawlingRobot.getAngles()
 
         if action == 'arm-up':
             newArmAngle = self.armBuckets[armBucket + 1]
             self.crawlingRobot.moveArm(newArmAngle)
 
-            nextState = (armBucket + 1,handBucket)
+            nextState = (armBucket + 1, handBucket)
         if action == 'arm-down':
             newArmAngle = self.armBuckets[armBucket - 1]
             self.crawlingRobot.moveArm(newArmAngle)
@@ -114,7 +114,7 @@ class CrawlingRobotEnvironment(pacai.core.environment.Environment):
         ## Initialize the state to be the middle
         ## value for each parameter e.g. if there are 13 and 19
         ## buckets for the arm and hand parameters, then the intial
-        ## state should be (6,9)
+        ## state should be (6, 9)
 
         ## Also call self.crawlingRobot.setAngles()
         ## to the initial arm and hand angle
@@ -145,7 +145,7 @@ class CrawlingRobot:
 
     def getRobotPosition(self):
         """
-        returns the (x,y) coordinates
+        returns the (x, y) coordinates
         of the lower-left point of the robot
         """
 
@@ -206,7 +206,7 @@ class CrawlingRobot:
     def getMinAndMaxArmAngles(self):
         """
         get the lower- and upper- bound
-        for the arm angles returns (min,max) pair
+        for the arm angles returns (min, max) pair
         """
 
         return self.minArmAngle, self.maxArmAngle
@@ -214,7 +214,7 @@ class CrawlingRobot:
     def getMinAndMaxHandAngles(self):
         """
         get the lower- and upper- bound
-        for the hand angles returns (min,max) pair
+        for the hand angles returns (min, max) pair
         """
 
         return self.minHandAngle, self.maxHandAngle
@@ -331,7 +331,7 @@ class CrawlingRobot:
             self.canvas.delete(self.step_msg)
             self.canvas.delete(self.velavg_msg)
             # self.canvas.delete(self.velavg2_msg)
-            # self.velavg2_msg = self.canvas.create_text(850,190,text=velMsg2)
+            # self.velavg2_msg = self.canvas.create_text(850, 190, text=velMsg2)
 
         self.velavg_msg = self.canvas.create_text(650, 190, text=velMsg)
         self.vel_msg = self.canvas.create_text(450, 190, text=velocityMsg)

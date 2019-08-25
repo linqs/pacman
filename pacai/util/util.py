@@ -16,7 +16,7 @@ class Stack(object):
     def __init__(self):
         self.list = []
 
-    def push(self,item):
+    def push(self, item):
         """
         Push 'item' onto the stack
         """
@@ -48,12 +48,12 @@ class Queue:
     def __init__(self):
         self.list = []
 
-    def push(self,item):
+    def push(self, item):
         """
         Enqueue the 'item' into the queue
         """
 
-        self.list.insert(0,item)
+        self.list.insert(0, item)
 
     def pop(self):
         """
@@ -188,7 +188,7 @@ class Counter(dict):
         Increments all elements of keys by the same count.
 
         >>> a = Counter()
-        >>> a.incrementAll(['one','two', 'three'], 1)
+        >>> a.incrementAll(['one', 'two', 'three'], 1)
         >>> a['one']
         1
         >>> a['two']
@@ -287,7 +287,7 @@ class Counter(dict):
         sum = 0
         x = self
         if len(x) > len(y):
-            x,y = y,x
+            x, y = y, x
         for key in x:
             if key not in y:
                 continue
@@ -399,7 +399,7 @@ def nSample(distribution, values, n):
     rand = [random.random() for i in range(n)]
     rand.sort()
     samples = []
-    samplePos, distPos, cdf = 0,0, distribution[0]
+    samplePos, distPos, cdf = 0, 0, distribution[0]
     while samplePos < n:
         if rand[samplePos] < cdf:
             samplePos += 1
@@ -431,7 +431,7 @@ def sample(distribution, values = None):
 
 def sampleFromCounter(ctr):
     items = sorted(list(ctr.items()))
-    return sample([v for k,v in items], [k for k,v in items])
+    return sample([v for k, v in items], [k for k, v in items])
 
 def getProbability(value, distribution, values):
     """

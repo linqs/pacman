@@ -45,7 +45,7 @@ class GraphicsGridworldDisplay(object):
         for state in states:
             values[state] = 0.0
             # policy[state] = agent.getPolicy(state)
-        drawNullValues(self.gridworld, currentState,'')
+        drawNullValues(self.gridworld, currentState, '')
         # drawValues(self.gridworld, values, policy, currentState, message)
         graphicsUtils.sleep(0.05 / self.speed)
 
@@ -131,7 +131,7 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
     blank()
 
     stateCrossActions = [[(state, action) for action in gridworld.getPossibleActions(state)] for state in gridworld.getStates()]
-    qStates = functools.reduce(lambda x,y: x + y, stateCrossActions, [])
+    qStates = functools.reduce(lambda x, y: x + y, stateCrossActions, [])
     qValueList = [qValues[(state, action)] for state, action in qStates] + [0.0]
     minValue = min(qValueList)
     maxValue = max(qValueList)
@@ -174,7 +174,7 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
 def blank():
     graphicsUtils.clear_screen()
 
-def drawNullSquare(grid,x, y, isObstacle, isTerminal, isCurrent):
+def drawNullSquare(grid, x, y, isObstacle, isTerminal, isCurrent):
     square_color = getColor(0, -1, 1)
 
     if isObstacle:

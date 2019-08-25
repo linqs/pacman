@@ -56,7 +56,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
 
         x, y = state
         if type(self.grid[x][y]) == int:
-            return ('exit',)
+            return ('exit', )
 
         return ('north', 'west', 'south', 'east')
 
@@ -70,7 +70,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
         for x in range(self.grid.width):
             for y in range(self.grid.height):
                 if self.grid[x][y] != '#':
-                    state = (x,y)
+                    state = (x, y)
                     states.append(state)
 
         return states
@@ -147,8 +147,8 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
                 successors.append((southState, 1 - self.noise))
 
             massLeft = self.noise
-            successors.append((westState,massLeft / 2.0))
-            successors.append((eastState,massLeft / 2.0))
+            successors.append((westState, massLeft / 2.0))
+            successors.append((eastState, massLeft / 2.0))
 
         if action == 'west' or action == 'east':
             if action == 'west':
@@ -157,8 +157,8 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
                 successors.append((eastState, 1 - self.noise))
 
             massLeft = self.noise
-            successors.append((northState,massLeft / 2.0))
-            successors.append((southState,massLeft / 2.0))
+            successors.append((northState, massLeft / 2.0))
+            successors.append((southState, massLeft / 2.0))
 
         successors = self.__aggregate(successors)
         return successors
@@ -218,8 +218,8 @@ class GridworldEnvironment(pacai.core.environment.Environment):
 class Grid(object):
     """
     A 2-dimensional array of immutables backed by a list of lists.
-    Data is accessed via grid[x][y] where (x,y) are cartesian coordinates with x horizontal,
-    y vertical and the origin (0,0) in the bottom left corner.
+    Data is accessed via grid[x][y] where (x, y) are cartesian coordinates with x horizontal,
+    y vertical and the origin (0, 0) in the bottom left corner.
 
     The __str__ method constructs an output that is oriented appropriately.
     """
@@ -299,7 +299,7 @@ def getDiscountGrid():
         [' ', '#', ' ', ' ', ' '],
         [' ', '#', 1, '#', 10],
         ['S', ' ', ' ', ' ', ' '],
-        [-10,-10, -10, -10, -10]
+        [-10, -10, -10, -10, -10]
     ]
 
     return Gridworld(grid)
@@ -308,15 +308,15 @@ def getBridgeGrid():
     grid = [
         ['#', -100, -100, -100, -100, -100, '#'],
         [1, 'S', ' ', ' ', ' ', ' ', 10],
-        ['#',-100, -100, -100, -100, -100, '#']
+        ['#', -100, -100, -100, -100, -100, '#']
     ]
 
     return Gridworld(grid)
 
 def getBookGrid():
     grid = [
-        [' ', ' ', ' ',+1],
-        [' ', '#', ' ',-1],
+        [' ', ' ', ' ', +1],
+        [' ', '#', ' ', -1],
         ['S', ' ', ' ', ' ']
     ]
 
@@ -324,7 +324,7 @@ def getBookGrid():
 
 def getMazeGrid():
     grid = [
-        [' ', ' ', ' ',+1],
+        [' ', ' ', ' ', +1],
         ['#', '#', ' ', '#'],
         [' ', '#', ' ', ' '],
         [' ', '#', '#', ' '],
@@ -514,7 +514,7 @@ if __name__ == '__main__':
         a = pacai.student.valueIterationAgents.ValueIterationAgent(0, mdp, opts.discount, opts.iters)
     elif opts.agent == 'q':
         #env.getPossibleActions, opts.discount, opts.learningRate, opts.epsilon
-        #simulationFn = lambda agent, state: simulation.GridworldSimulation(agent,state,mdp)
+        #simulationFn = lambda agent, state: simulation.GridworldSimulation(agent, state, mdp)
         gridWorldEnv = GridworldEnvironment(mdp)
         actionFn = lambda state: mdp.getPossibleActions(state)
         qLearnOpts = {

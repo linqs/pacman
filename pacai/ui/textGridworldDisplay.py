@@ -117,7 +117,7 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
     colLabels.insert(0, ' ')
     finalRows = [colLabels] + newRows
 
-    print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center',hasHeader=True))
+    print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
 
 def prettyPrintNullValues(gridWorld, currentState = None):
         grid = gridWorld.grid
@@ -190,7 +190,7 @@ def prettyPrintNullValues(gridWorld, currentState = None):
 
         newRows.reverse()
         colLabels = [str(colNum) for colNum in range(numCols)]
-        colLabels.insert(0,' ')
+        colLabels.insert(0, ' ')
         finalRows = [colLabels] + newRows
 
         print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
@@ -276,7 +276,7 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
 
         newRows.reverse()
         colLabels = [str(colNum) for colNum in range(numCols)]
-        colLabels.insert(0,' ')
+        colLabels.insert(0, ' ')
         finalRows = [colLabels] + newRows
 
         print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
@@ -292,7 +292,7 @@ def border(text):
 # (http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/267662)
 
 def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
-                     separateRows=False, prefix='', postfix='', wrapfunc=lambda x:x):
+                     separateRows=False, prefix='', postfix='', wrapfunc=lambda x: x):
         """
         Indents a table by column.
              - rows: A sequence of sequences of items, one sequence per row.
@@ -301,7 +301,7 @@ def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
                  (if hasHeader==True or separateRows==True).
              - delim: The column delimiter.
              - justify: Determines how are data justified in their column.
-                 Valid values are 'left','right' and 'center'.
+                 Valid values are 'left', 'right' and 'center'.
              - separateRows: True if rows are to be separated by a line
                  of 'headerChar's.
              - prefix: A string prepended to each printed row.

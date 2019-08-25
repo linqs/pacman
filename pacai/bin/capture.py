@@ -24,7 +24,7 @@ Capture.py holds the logic for Pacman capture the flag.
 To play your first game, type 'python capture.py' from the command line.
 The keys are
     P1: 'a', 's', 'd', and 'w' to move
-    P2: 'l', ';', ',' and 'p' to move
+    P2: 'l', ';', ',', and 'p' to move
 """
 
 import importlib
@@ -137,7 +137,7 @@ class GameState:
     def getRedFood(self):
         """
         Returns a matrix of food that corresponds to the food on the red team's side.
-        For the matrix m, m[x][y]=true if there is food in (x,y) that belongs to
+        For the matrix m, m[x][y]=true if there is food in (x, y) that belongs to
         red (meaning red is protecting it, blue is trying to eat it).
         """
         return halfGrid(self.data.food, red = True)
@@ -145,7 +145,7 @@ class GameState:
     def getBlueFood(self):
         """
         Returns a matrix of food that corresponds to the food on the blue team's side.
-        For the matrix m, m[x][y]=true if there is food in (x,y) that belongs to
+        For the matrix m, m[x][y]=true if there is food in (x, y) that belongs to
         blue (meaning blue is protecting it, red is trying to eat it).
         """
         return halfGrid(self.data.food, red = False)
@@ -164,14 +164,14 @@ class GameState:
 
     def hasFood(self, x, y):
         """
-        Returns true if the location (x,y) has food, regardless of
+        Returns true if the location (x, y) has food, regardless of
         whether it's blue team food or red team food.
         """
         return self.data.food[x][y]
 
     def hasWall(self, x, y):
         """
-        Returns true if (x,y) has a wall, false otherwise.
+        Returns true if (x, y) has a wall, false otherwise.
         """
         return self.data.layout.walls[x][y]
 
@@ -218,7 +218,7 @@ class GameState:
 
     def getCapsules(self):
         """
-        Returns a list of positions (x,y) of the remaining capsules.
+        Returns a list of positions (x, y) of the remaining capsules.
         """
         return self.data.capsules
 
@@ -304,8 +304,8 @@ class GameState:
         """
         self.data.initialize(layout, numAgents)
         positions = [a.configuration for a in self.data.agentStates]
-        self.blueTeam = [i for i,p in enumerate(positions) if not self.isRed(p)]
-        self.redTeam = [i for i,p in enumerate(positions) if self.isRed(p)]
+        self.blueTeam = [i for i, p in enumerate(positions) if not self.isRed(p)]
+        self.redTeam = [i for i, p in enumerate(positions) if self.isRed(p)]
         self.teams = [self.isRed(p) for p in positions]
 
     def isRed(self, configOrPos):
@@ -332,9 +332,9 @@ def halfGrid(grid, red):
 def halfList(l, grid, red):
     halfway = int(grid.width / 2)
     newList = []
-    for x,y in l:
-        if red and x <= halfway: newList.append((x,y))
-        elif not red and x > halfway: newList.append((x,y))
+    for x, y in l:
+        if red and x <= halfway: newList.append((x, y))
+        elif not red and x > halfway: newList.append((x, y))
     return newList
 
 # THE HIDDEN SECRETS OF PACMAN
@@ -354,7 +354,7 @@ class CaptureRules:
     def newGame(self, layout, agents, display, length, muteAgents, catchExceptions):
         initState = GameState()
         initState.initialize(layout, len(agents))
-        starter = random.randint(0,1)
+        starter = random.randint(0, 1)
         logging.info('%s team starts' % ['Red', 'Blue'][starter])
         game = Game(agents, display, self, startingIndex=starter, muteAgents=muteAgents, catchExceptions=catchExceptions)
         game.state = initState
@@ -471,7 +471,7 @@ class AgentRules:
     applyAction = staticmethod(applyAction)
 
     def consume(position, state, isRed):
-        x,y = position
+        x, y = position
         # Eat food
         if state.data.food[x][y]:
             score = -1
@@ -591,7 +591,7 @@ def parseAgentArgs(str):
         if '=' in p:
             key, val = p.split('=')
         else:
-            key,val = p, 1
+            key, val = p, 1
         opts[key] = val
     return opts
 
@@ -688,7 +688,7 @@ def readCommand(argv):
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
     logging.debug('\nBlue team %s with %s:' % (options.blue, blueArgs))
     blueAgents = loadAgents(False, options.blue, nokeyboard, blueArgs)
-    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)],[]) # list of agents
+    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], []) # list of agents
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
@@ -727,7 +727,7 @@ def readCommand(argv):
 
 def randomLayout(seed = None):
     if not seed:
-        seed = random.randint(0,99999999)
+        seed = random.randint(0, 99999999)
     return pacai.util.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
@@ -806,7 +806,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
                 'actions': g.moveHistory,
                 'length': length,
                 'redTeamName': redTeamName,
-                'blueTeamName':blueTeamName
+                'blueTeamName': blueTeamName
             }
 
             path = 'replay'

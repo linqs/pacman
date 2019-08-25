@@ -159,7 +159,7 @@ class GameState(object):
 
     def getCapsules(self):
         """
-        Returns a list of positions (x,y) of the remaining capsules.
+        Returns a list of positions (x, y) of the remaining capsules.
         """
 
         return self.data.capsules
@@ -172,7 +172,7 @@ class GameState(object):
         Returns a Grid of boolean food indicator variables.
 
         Grids can be accessed via list notation, so to check
-        if there is food at (x,y), just call
+        if there is food at (x, y), just call
 
         currentFood = state.getFood()
         if currentFood[x][y] == True: ...
@@ -185,7 +185,7 @@ class GameState(object):
         Returns a Grid of boolean wall indicator variables.
 
         Grids can be accessed via list notation, so to check
-        if there is food at (x,y), just call
+        if there is food at (x, y), just call
 
         walls = state.getWalls()
         if walls[x][y] == True: ...
@@ -535,7 +535,7 @@ def readCommand(argv):
                                         help='Writes game histories to a file (named by the time they were played)', default=False)
     parser.add_option('--replay', dest='gameToReplay',
                                         help='A recorded game file (pickle) to replay', default=None)
-    parser.add_option('-a','--agentArgs',dest='agentArgs',
+    parser.add_option('-a', '--agentArgs', dest='agentArgs',
                                         help='Comma separated values sent to agent. e.g. "opt1=val1,opt2,opt3=val3"')
     parser.add_option('-x', '--numTraining', dest='numTraining', type='int',
                                         help=default('How many episodes are training (suppresses output)'), default=0)
