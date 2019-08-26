@@ -238,8 +238,8 @@ class PacmanGraphics:
             for y in range(walls.height):
                 (screen_x, screen_y) = self.to_screen((x, y))
                 block = graphicsUtils.square(
-                        (screen_x, screen_y), 0.5 * self.gridSize,
-                        color = BACKGROUND_COLOR, filled = 1, behind=2)
+                    (screen_x, screen_y), 0.5 * self.gridSize,
+                    color = BACKGROUND_COLOR, filled = 1, behind=2)
                 distx.append(block)
 
         self.distributionImages = dist
@@ -594,8 +594,8 @@ class PacmanGraphics:
                 if cell:  # There's food here
                     screen = self.to_screen((xNum, yNum))
                     dot = graphicsUtils.circle(
-                            screen, FOOD_SIZE * self.gridSize,
-                            outlineColor = color, fillColor = color, width = 1)
+                        screen, FOOD_SIZE * self.gridSize,
+                        outlineColor = color, fillColor = color, width = 1)
                     imageRow.append(dot)
                 else:
                     imageRow.append(None)
@@ -606,8 +606,8 @@ class PacmanGraphics:
         for capsule in capsules:
             (screen_x, screen_y) = self.to_screen(capsule)
             dot = graphicsUtils.circle(
-                    (screen_x, screen_y), CAPSULE_SIZE * self.gridSize,
-                    outlineColor = CAPSULE_COLOR, fillColor = CAPSULE_COLOR, width = 1)
+                (screen_x, screen_y), CAPSULE_SIZE * self.gridSize,
+                outlineColor = CAPSULE_COLOR, fillColor = CAPSULE_COLOR, width = 1)
             capsuleImages[capsule] = dot
         return capsuleImages
 
