@@ -200,7 +200,7 @@ class GameState:
         """
         Returns a noisy distance to each agent.
         """
-        if 'agentDistances' in dir(self) :
+        if 'agentDistances' in dir(self):
             return self.agentDistances
         else:
             return None
@@ -467,7 +467,7 @@ class AgentRules:
         # Eat
         next = agentState.configuration.getPosition()
         nearest = nearestPoint(next)
-        if agentState.isPacman and manhattanDistance(nearest, next) <= 0.9 :
+        if agentState.isPacman and manhattanDistance(nearest, next) <= 0.9:
             AgentRules.consume(nearest, state, state.isOnRedTeam(agentIndex))
 
         # Change agent type

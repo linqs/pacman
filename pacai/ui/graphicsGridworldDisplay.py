@@ -315,8 +315,8 @@ def to_screen(point):
 
 def to_grid(point):
     (x, y) = point
-    x = int ((y - MARGIN + GRID_SIZE * 0.5) / GRID_SIZE)
-    y = int ((x - MARGIN + GRID_SIZE * 0.5) / GRID_SIZE)
+    x = int((y - MARGIN + GRID_SIZE * 0.5) / GRID_SIZE)
+    y = int((x - MARGIN + GRID_SIZE * 0.5) / GRID_SIZE)
     print(point, "-->", (x, y))
 
     return (x, y)

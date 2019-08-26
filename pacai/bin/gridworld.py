@@ -459,7 +459,7 @@ def parseOptions():
     optParser.add_option('-m', '--manual', action='store_true',
             dest='manual', default=False,
             help='Manually control agent')
-    optParser.add_option('-v', '--valueSteps', action='store_true' , default=False,
+    optParser.add_option('-v', '--valueSteps', action='store_true', default=False,
             help='Display each step of value iteration')
 
     opts, args = optParser.parse_args()
@@ -583,13 +583,13 @@ if __name__ == '__main__':
         messageCallback = lambda x: None
 
     # FIGURE OUT WHETHER TO WAIT FOR A KEY PRESS AFTER EACH TIME STEP
-    pauseCallback = lambda : None
+    pauseCallback = lambda: None
     if opts.pause:
-        pauseCallback = lambda : display.pause()
+        pauseCallback = lambda: display.pause()
 
     # FIGURE OUT WHETHER THE USER WANTS MANUAL CONTROL (FOR DEBUGGING AND DEMOS)
     if opts.manual:
-        decisionCallback = lambda state : getUserAction(state, mdp.getPossibleActions)
+        decisionCallback = lambda state: getUserAction(state, mdp.getPossibleActions)
     else:
         decisionCallback = a.getAction
 

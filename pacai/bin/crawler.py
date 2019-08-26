@@ -71,7 +71,7 @@ class CrawlingRobotEnvironment(pacai.core.environment.Environment):
             nextState, reward
         """
 
-        nextState, reward =  None, None
+        nextState, reward = None, None
 
         oldX, oldY = self.crawlingRobot.getRobotPosition()
 
@@ -257,7 +257,7 @@ class CrawlingRobot:
                 return math.sqrt(xOld * xOld + yOld * yOld) - math.sqrt(x * x + y * y)
             return (xOld - yOld * (x - xOld) / (y - yOld)) - math.sqrt(x * x + y * y)
         else:
-            if yOld  >= 0:
+            if yOld >= 0:
                 return 0.0
             return -(x - y * (xOld - x) / (yOld - y)) + math.sqrt(xOld * xOld + yOld * yOld)
 
