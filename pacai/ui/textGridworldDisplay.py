@@ -99,9 +99,9 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
             elif action == 'west':
                 text[2] = '< ' + text[2] + '  '
             elif action == 'north':
-                text[0] = ' ' * int(maxLen / 2) + '^' +' ' * int(maxLen / 2)
+                text[0] = ' ' * int(maxLen / 2) + '^' + ' ' * int(maxLen / 2)
             elif action == 'south':
-                text[4] = ' ' * int(maxLen / 2) + 'v' +' ' * int(maxLen / 2)
+                text[4] = ' ' * int(maxLen / 2) + 'v' + ' ' * int(maxLen / 2)
 
             newCell = "\n".join(text)
             newRow.append(newCell)

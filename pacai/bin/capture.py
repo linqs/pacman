@@ -837,8 +837,8 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
 
     if numGames > 0:
         scores = [game.state.data.score for game in games]
-        redWinRate = [s > 0 for s in scores].count(True)/ float(len(scores))
-        blueWinRate = [s < 0 for s in scores].count(True)/ float(len(scores))
+        redWinRate = [s > 0 for s in scores].count(True) / float(len(scores))
+        blueWinRate = [s < 0 for s in scores].count(True) / float(len(scores))
         logging.info('Average Score:%s', sum(scores) / float(len(scores)))
         logging.info('Scores:%s', ', '.join([str(score) for score in scores]))
         logging.info('Red Win Rate: %d/%d (%.2f)' % ([s > 0 for s in scores].count(True), len(scores), redWinRate))

@@ -75,7 +75,7 @@ class Configuration:
 
         Actions are movement vectors.
         """
-        x, y= self.pos
+        x, y = self.pos
         dx, dy = vector
         direction = Actions.vectorToDirection(vector)
         if direction == Directions.STOP:
@@ -421,7 +421,7 @@ class GameStateData:
             except TypeError as e:
                 logging.error('TypeError %s' % (e))
 
-        return int((hash(tuple(self.agentStates)) + 13 * hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575)
+        return int((hash(tuple(self.agentStates)) + 13 * hash(self.food) + 113 * hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575)
 
     def __str__(self):
         width, height = self.layout.width, self.layout.height

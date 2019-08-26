@@ -95,10 +95,10 @@ class InfoPane:
         self.redText = graphicsUtils.text(self.toScreen(690, 0), TEAM_COLORS[1], self._blueScoreString(), "Consolas", self.fontSize, "bold")
 
     def _redScoreString(self):
-        return "RED: % 10s "%(self.redTeam[:12])
+        return "RED: % 10s " % (self.redTeam[:12])
 
     def _blueScoreString(self):
-        return "BLUE: % 10s "%(self.blueTeam[:12])
+        return "BLUE: % 10s " % (self.blueTeam[:12])
 
     def updateRedText(self, score):
         graphicsUtils.changeText(self.redText, self._redScoreString())
@@ -335,7 +335,7 @@ class PacmanGraphics:
     def getEndpoints(self, direction, position=(0, 0)):
         x, y = position
         pos = x - int(x) + y - int(y)
-        width = 30 + 80 * math.sin(math.pi* pos)
+        width = 30 + 80 * math.sin(math.pi * pos)
 
         delta = width / 2
         if (direction == 'West'):

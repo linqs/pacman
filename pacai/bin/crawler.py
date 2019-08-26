@@ -304,7 +304,7 @@ class CrawlingRobot:
         # if len(self.positions) == 1: return
 
         steps = (stepCount - self.lastStep)
-        if steps==0:
+        if (steps == 0):
             return
 
         # pos = self.positions[-1]

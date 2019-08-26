@@ -281,7 +281,7 @@ if __name__ == '__main__':
     i = 1
     for a in path:
         curr = curr.result(a)
-        print('After %d move%s: %s' % (i, ("", "s")[i>1], a) + '\n' + str(curr))
+        print('After %d move%s: %s' % (i, ("", "s")[i > 1], a) + '\n' + str(curr))
 
         input('Press return for the next state...')  # wait for key stroke
         i += 1
