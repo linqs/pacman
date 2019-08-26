@@ -774,25 +774,24 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     return createTeamFunc(indices[0], indices[1], isRed, **args)
 
 def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
-        rules = CaptureRules()
-        game = rules.newGame(layout, agents, display, length, False, False)
-        state = game.state
-        display.redTeam = redTeamName
-        display.blueTeam = blueTeamName
-        display.initialize(state.data)
+    rules = CaptureRules()
+    game = rules.newGame(layout, agents, display, length, False, False)
+    state = game.state
+    display.redTeam = redTeamName
+    display.blueTeam = blueTeamName
+    display.initialize(state.data)
 
-        for action in actions:
-            # Execute the action
-            state = state.generateSuccessor(*action)
-            # Change the display
-            display.update(state.data)
-            # Allow for game specific conditions (winning, losing, etc.)
-            rules.process(state, game)
+    for action in actions:
+        # Execute the action
+        state = state.generateSuccessor(*action)
+        # Change the display
+        display.update(state.data)
+        # Allow for game specific conditions (winning, losing, etc.)
+        rules.process(state, game)
 
-        display.finish()
+    display.finish()
 
 def runGames(layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False):
-
     rules = CaptureRules()
     games = []
 
@@ -802,13 +801,13 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
     for i in range(numGames):
         beQuiet = i < numTraining
         if beQuiet:
-                # Suppress output and graphics
-                import textDisplay
-                gameDisplay = textDisplay.NullGraphics()
-                rules.quiet = True
+            # Suppress output and graphics
+            import textDisplay
+            gameDisplay = textDisplay.NullGraphics()
+            rules.quiet = True
         else:
-                gameDisplay = display
-                rules.quiet = False
+            gameDisplay = display
+            rules.quiet = False
         g = rules.newGame(layout, agents, gameDisplay, length, muteAgents, catchExceptions)
         g.run()
 

@@ -120,166 +120,166 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
     print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
 
 def prettyPrintNullValues(gridWorld, currentState = None):
-        grid = gridWorld.grid
-        maxLen = 11
-        newRows = []
+    grid = gridWorld.grid
+    maxLen = 11
+    newRows = []
 
-        for y in range(grid.height):
-            newRow = []
+    for y in range(grid.height):
+        newRow = []
 
-            for x in range(grid.width):
-                state = (x, y)
+        for x in range(grid.width):
+            state = (x, y)
 
-                # value = values[state]
+            # value = values[state]
 
-                action = None
-                # if (policy is not None) and state in policy:
-                #     action = policy[state]
+            action = None
+            # if (policy is not None) and state in policy:
+            #     action = policy[state]
 
-                actions = gridWorld.getPossibleActions(state)
+            actions = gridWorld.getPossibleActions(state)
 
-                if action not in actions and 'exit' in actions:
-                    action = 'exit'
+            if action not in actions and 'exit' in actions:
+                action = 'exit'
 
-                valString = None
-                # if (action == 'exit'):
-                #     valString = border('%.2f' % value)
-                # else:
-                #     valString = '\n\n%.2f\n\n' % value
-                #     valString += ' '*maxLen
+            valString = None
+            # if (action == 'exit'):
+            #     valString = border('%.2f' % value)
+            # else:
+            #     valString = '\n\n%.2f\n\n' % value
+            #     valString += ' '*maxLen
 
-                if grid[x][y] == 'S':
-                    valString = '\n\nS\n\n'
-                    valString += ' ' * maxLen
-                elif grid[x][y] == '#':
-                    valString = '\n#####\n#####\n#####\n'
-                    valString += ' ' * maxLen
-                elif type(grid[x][y]) == float or type(grid[x][y]) == int:
-                    valString = border('%.2f' % float(grid[x][y]))
+            if grid[x][y] == 'S':
+                valString = '\n\nS\n\n'
+                valString += ' ' * maxLen
+            elif grid[x][y] == '#':
+                valString = '\n#####\n#####\n#####\n'
+                valString += ' ' * maxLen
+            elif type(grid[x][y]) == float or type(grid[x][y]) == int:
+                valString = border('%.2f' % float(grid[x][y]))
+            else:
+                valString = border('  ')
+
+            pieces = [valString]
+            text = ("\n".join(pieces)).split('\n')
+
+            if currentState == state:
+                l = len(text[1])
+                if l == 0:
+                    text[1] = '*'
                 else:
-                    valString = border('  ')
+                    text[1] = "|" + ' ' * int((l - 1) / 2 - 1) + '*' + ' ' * int((l) / 2 - 1) + "|"
 
-                pieces = [valString]
-                text = ("\n".join(pieces)).split('\n')
+            if action == 'east':
+                text[2] = '  ' + text[2] + ' >'
+            elif action == 'west':
+                text[2] = '< ' + text[2] + '  '
+            elif action == 'north':
+                text[0] = ' ' * int(maxLen / 2) + '^' + ' ' * int(maxLen / 2)
+            elif action == 'south':
+                text[4] = ' ' * int(maxLen / 2) + 'v' + ' ' * int(maxLen / 2)
 
-                if currentState == state:
-                    l = len(text[1])
-                    if l == 0:
-                        text[1] = '*'
-                    else:
-                        text[1] = "|" + ' ' * int((l - 1) / 2 - 1) + '*' + ' ' * int((l) / 2 - 1) + "|"
+            newCell = "\n".join(text)
+            newRow.append(newCell)
 
-                if action == 'east':
-                    text[2] = '  ' + text[2] + ' >'
-                elif action == 'west':
-                    text[2] = '< ' + text[2] + '  '
-                elif action == 'north':
-                    text[0] = ' ' * int(maxLen / 2) + '^' + ' ' * int(maxLen / 2)
-                elif action == 'south':
-                    text[4] = ' ' * int(maxLen / 2) + 'v' + ' ' * int(maxLen / 2)
+        newRows.append(newRow)
 
-                newCell = "\n".join(text)
-                newRow.append(newCell)
+    numCols = grid.width
 
-            newRows.append(newRow)
+    for rowNum, row in enumerate(newRows):
+        row.insert(0, "\n\n" + str(rowNum))
 
-        numCols = grid.width
+    newRows.reverse()
+    colLabels = [str(colNum) for colNum in range(numCols)]
+    colLabels.insert(0, ' ')
+    finalRows = [colLabels] + newRows
 
-        for rowNum, row in enumerate(newRows):
-            row.insert(0, "\n\n" + str(rowNum))
-
-        newRows.reverse()
-        colLabels = [str(colNum) for colNum in range(numCols)]
-        colLabels.insert(0, ' ')
-        finalRows = [colLabels] + newRows
-
-        print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
+    print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
 
 def prettyPrintQValues(gridWorld, qValues, currentState=None):
-        grid = gridWorld.grid
-        maxLen = 11
-        newRows = []
+    grid = gridWorld.grid
+    maxLen = 11
+    newRows = []
 
-        for y in range(grid.height):
-            newRow = []
+    for y in range(grid.height):
+        newRow = []
 
-            for x in range(grid.width):
-                state = (x, y)
-                actions = gridWorld.getPossibleActions(state)
-                if (actions is None or len(actions) == 0):
-                    actions = [None]
+        for x in range(grid.width):
+            state = (x, y)
+            actions = gridWorld.getPossibleActions(state)
+            if (actions is None or len(actions) == 0):
+                actions = [None]
 
-                bestQ = max([qValues[(state, action)] for action in actions])
-                bestActions = [action for action in actions if qValues[(state, action)] == bestQ]
+            bestQ = max([qValues[(state, action)] for action in actions])
+            bestActions = [action for action in actions if qValues[(state, action)] == bestQ]
 
-                # display cell
-                qStrings = dict([(action, "%.2f" % qValues[(state, action)]) for action in actions])
-                northString = ('north' in qStrings and qStrings['north']) or ' '
-                southString = ('south' in qStrings and qStrings['south']) or ' '
-                eastString = ('east' in qStrings and qStrings['east']) or ' '
-                westString = ('west' in qStrings and qStrings['west']) or ' '
-                exitString = ('exit' in qStrings and qStrings['exit']) or ' '
+            # display cell
+            qStrings = dict([(action, "%.2f" % qValues[(state, action)]) for action in actions])
+            northString = ('north' in qStrings and qStrings['north']) or ' '
+            southString = ('south' in qStrings and qStrings['south']) or ' '
+            eastString = ('east' in qStrings and qStrings['east']) or ' '
+            westString = ('west' in qStrings and qStrings['west']) or ' '
+            exitString = ('exit' in qStrings and qStrings['exit']) or ' '
 
-                eastLen = len(eastString)
-                westLen = len(westString)
+            eastLen = len(eastString)
+            westLen = len(westString)
 
-                if eastLen < westLen:
-                    eastString = ' ' * (westLen - eastLen) + eastString
+            if eastLen < westLen:
+                eastString = ' ' * (westLen - eastLen) + eastString
 
-                if westLen < eastLen:
-                    westString = westString + ' ' * (eastLen - westLen)
+            if westLen < eastLen:
+                westString = westString + ' ' * (eastLen - westLen)
 
-                if 'north' in bestActions:
-                    northString = '/' + northString + '\\'
+            if 'north' in bestActions:
+                northString = '/' + northString + '\\'
 
-                if 'south' in bestActions:
-                    southString = '\\' + southString + '/'
+            if 'south' in bestActions:
+                southString = '\\' + southString + '/'
 
-                if 'east' in bestActions:
-                    eastString = '' + eastString + '>'
-                else:
-                    eastString = '' + eastString + ' '
+            if 'east' in bestActions:
+                eastString = '' + eastString + '>'
+            else:
+                eastString = '' + eastString + ' '
 
-                if 'west' in bestActions:
-                    westString = '<' + westString + ''
-                else:
-                    westString = ' ' + westString + ''
+            if 'west' in bestActions:
+                westString = '<' + westString + ''
+            else:
+                westString = ' ' + westString + ''
 
-                if 'exit' in bestActions:
-                    exitString = '[ ' + exitString + ' ]'
+            if 'exit' in bestActions:
+                exitString = '[ ' + exitString + ' ]'
 
 
-                ewString = westString + "     " + eastString
-                if state == currentState:
-                    ewString = westString + "  *  " + eastString
+            ewString = westString + "     " + eastString
+            if state == currentState:
+                ewString = westString + "  *  " + eastString
 
-                if state == gridWorld.getStartState():
-                    ewString = westString + "  S  " + eastString
+            if state == gridWorld.getStartState():
+                ewString = westString + "  S  " + eastString
 
-                if state == currentState and state == gridWorld.getStartState():
-                    ewString = westString + " S:* " + eastString
+            if state == currentState and state == gridWorld.getStartState():
+                ewString = westString + " S:* " + eastString
 
-                text = [northString, "\n" + exitString, ewString, ' ' * maxLen + "\n", southString]
+            text = [northString, "\n" + exitString, ewString, ' ' * maxLen + "\n", southString]
 
-                if grid[x][y] == '#':
-                    text = ['', '\n#####\n#####\n#####', '']
+            if grid[x][y] == '#':
+                text = ['', '\n#####\n#####\n#####', '']
 
-                newCell = "\n".join(text)
-                newRow.append(newCell)
+            newCell = "\n".join(text)
+            newRow.append(newCell)
 
-            newRows.append(newRow)
+        newRows.append(newRow)
 
-        numCols = grid.width
+    numCols = grid.width
 
-        for rowNum, row in enumerate(newRows):
-            row.insert(0, "\n\n\n" + str(rowNum))
+    for rowNum, row in enumerate(newRows):
+        row.insert(0, "\n\n\n" + str(rowNum))
 
-        newRows.reverse()
-        colLabels = [str(colNum) for colNum in range(numCols)]
-        colLabels.insert(0, ' ')
-        finalRows = [colLabels] + newRows
+    newRows.reverse()
+    colLabels = [str(colNum) for colNum in range(numCols)]
+    colLabels.insert(0, ' ')
+    finalRows = [colLabels] + newRows
 
-        print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
+    print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
 
 def border(text):
     length = len(text)

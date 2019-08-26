@@ -89,12 +89,12 @@ class PriorityQueue(object):
         self.heap = []
 
     def push(self, item, priority):
-            pair = (priority, item)
-            heapq.heappush(self.heap, pair)
+        pair = (priority, item)
+        heapq.heappush(self.heap, pair)
 
     def pop(self):
-            (priority, item) = heapq.heappop(self.heap)
-            return item
+        (priority, item) = heapq.heappop(self.heap)
+        return item
 
     def isEmpty(self):
         return len(self.heap) == 0

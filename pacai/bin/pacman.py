@@ -623,23 +623,23 @@ def readCommand(argv):
     return args
 
 def replayGame(layout, actions, display):
-        import pacmanAgents
+    import pacmanAgents
 
-        rules = ClassicGameRules()
-        agents = [GreedyAgent(0)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
-        game = rules.newGame(layout, agents[0], agents[1:], display)
-        state = game.state
-        display.initialize(state.data)
+    rules = ClassicGameRules()
+    agents = [GreedyAgent(0)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
+    game = rules.newGame(layout, agents[0], agents[1:], display)
+    state = game.state
+    display.initialize(state.data)
 
-        for action in actions:
-            # Execute the action
-            state = state.generateSuccessor(*action)
-            # Change the display
-            display.update(state.data)
-            # Allow for game specific conditions (winning, losing, etc.)
-            rules.process(state, game)
+    for action in actions:
+        # Execute the action
+        state = state.generateSuccessor(*action)
+        # Change the display
+        display.update(state.data)
+        # Allow for game specific conditions (winning, losing, etc.)
+        rules.process(state, game)
 
-        display.finish()
+    display.finish()
 
 def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, catchExceptions=False, timeout=30):
     import __main__
@@ -651,13 +651,13 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
     for i in range(numGames):
         beQuiet = i < numTraining
         if beQuiet:
-                # Suppress output and graphics
-                import pacai.ui.textDisplay
-                gameDisplay = pacai.ui.textDisplay.NullGraphics()
-                rules.quiet = True
+            # Suppress output and graphics
+            import pacai.ui.textDisplay
+            gameDisplay = pacai.ui.textDisplay.NullGraphics()
+            rules.quiet = True
         else:
-                gameDisplay = display
-                rules.quiet = False
+            gameDisplay = display
+            rules.quiet = False
 
         game = rules.newGame(layout, pacman, ghosts, gameDisplay, beQuiet, catchExceptions)
         game.run()

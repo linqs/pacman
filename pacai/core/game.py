@@ -237,7 +237,7 @@ class Grid:
     def _unpackInt(self, packed, size):
         bools = []
         if packed < 0:
-                raise ValueError('must be a positive integer')
+            raise ValueError('must be a positive integer')
 
         for i in range(size):
             n = 2 ** (self.CELLS_PER_INT - i - 1)

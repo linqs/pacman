@@ -237,11 +237,12 @@ class PacmanGraphics:
             distx = []
             dist.append(distx)
             for y in range(walls.height):
-                    (screen_x, screen_y) = self.to_screen((x, y))
-                    block = graphicsUtils.square(
-                            (screen_x, screen_y), 0.5 * self.gridSize,
-                            color = BACKGROUND_COLOR, filled = 1, behind=2)
-                    distx.append(block)
+                (screen_x, screen_y) = self.to_screen((x, y))
+                block = graphicsUtils.square(
+                        (screen_x, screen_y), 0.5 * self.gridSize,
+                        color = BACKGROUND_COLOR, filled = 1, behind=2)
+                distx.append(block)
+
         self.distributionImages = dist
 
     def drawStaticObjects(self, state):
