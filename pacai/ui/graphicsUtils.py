@@ -251,7 +251,7 @@ _got_release = None
 
 def _keypress(event):
     global _got_release
-    #remap_arrows(event)
+    # remap_arrows(event)
     _keysdown[event.keysym] = 1
     _keyswaiting[event.keysym] = 1
     # print(event.char, event.keycode)
@@ -259,7 +259,7 @@ def _keypress(event):
 
 def _keyrelease(event):
     global _got_release
-    #remap_arrows(event)
+    # remap_arrows(event)
 
     try:
         del _keysdown[event.keysym]

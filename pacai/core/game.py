@@ -420,7 +420,7 @@ class GameStateData:
                 int(hash(state))
             except TypeError as e:
                 logging.error('TypeError %s' % (e))
-                #hash(state)
+
         return int((hash(tuple(self.agentStates)) + 13 * hash(self.food) + 113* hash(tuple(self.capsules)) + 7 * hash(self.score)) % 1048575)
 
     def __str__(self):
@@ -663,7 +663,7 @@ class Game:
                             self._agentCrash(agentIndex, quiet=True)
 
                     self.totalAgentTimes[agentIndex] += move_time
-                    #print "Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex])
+                    # print "Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex])
                     if self.totalAgentTimes[agentIndex] > self.rules.getMaxTotalTime(agentIndex):
                         logging.warning('Agent %d ran out of time! (time: %1.2f)' % (agentIndex, self.totalAgentTimes[agentIndex]))
                         self.agentTimeout = True
@@ -692,8 +692,8 @@ class Game:
 
             # Change the display
             self.display.update(self.state.data)
-            ###idx = agentIndex - agentIndex % 2 + 1
-            ###self.display.update(self.state.makeObservation(idx).data)
+            # idx = agentIndex - agentIndex % 2 + 1
+            # self.display.update(self.state.makeObservation(idx).data)
 
             # Allow for game specific conditions (winning, losing, etc.)
             self.rules.process(self.state, self)

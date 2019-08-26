@@ -536,7 +536,7 @@ class AgentRules:
                     continue
 
                 if manhattanDistance(ghostPosition, agentState.getPosition()) <= COLLISION_TOLERANCE:
-                    #award points to the other team for killing Pacmen
+                    # Award points to the other team for killing Pacmen.
                     if otherAgentState.scaredTimer <= 0:
                         score = KILL_POINTS
                         if state.isOnRedTeam(agentIndex):
@@ -564,7 +564,7 @@ class AgentRules:
                     continue
 
                 if manhattanDistance(pacPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
-                    #award points to the other team for killing Pacmen
+                    # Award points to the other team for killing Pacmen.
                     if agentState.scaredTimer <= 0:
                         score = KILL_POINTS
                         if not state.isOnRedTeam(agentIndex):

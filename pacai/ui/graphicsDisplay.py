@@ -47,7 +47,6 @@ GHOST_VEC_COLORS = list(map(graphicsUtils.colorToVector, GHOST_COLORS))
 
 PACMAN_COLOR = graphicsUtils.formatColor(255.0 / 255.0, 255.0 / 255.0, 61.0 / 255)
 PACMAN_SCALE = 0.5
-#pacman_speed = 0.25
 
 # Food
 FOOD_COLOR = graphicsUtils.formatColor(1, 1, 1)
@@ -466,7 +465,6 @@ class PacmanGraphics:
 
     def to_screen(self, point):
         (x, y) = point
-        #y = self.height - y
         x = (x + 1) * self.gridSize
         y = (self.height - y) * self.gridSize
 
@@ -475,7 +473,6 @@ class PacmanGraphics:
     # Fixes some TK issue with off - center circles
     def to_screen2(self, point):
         (x, y) = point
-        #y = self.height - y
         x = (x + 1) * self.gridSize
         y = (self.height - y) * self.gridSize
 
