@@ -226,10 +226,9 @@ class Counter(dict):
         """
 
         sortedItems = list(self.items())
-        compare = lambda x, y: sign(y[1] - x[1])
-        sortedItems.sort(cmp=compare)
+        sortedItems.sort(key = lambda item: item[1], reverse = True)
 
-        return [x[0] for x in sortedItems]
+        return [item[0] for item in sortedItems]
 
     def totalCount(self):
         """

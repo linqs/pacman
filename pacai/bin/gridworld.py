@@ -513,15 +513,12 @@ if __name__ == '__main__':
     if opts.agent == 'value':
         a = pacai.student.valueIterationAgents.ValueIterationAgent(0, mdp, opts.discount, opts.iters)
     elif opts.agent == 'q':
-        #env.getPossibleActions, opts.discount, opts.learningRate, opts.epsilon
-        #simulationFn = lambda agent, state: simulation.GridworldSimulation(agent, state, mdp)
         gridWorldEnv = GridworldEnvironment(mdp)
-        actionFn = lambda state: mdp.getPossibleActions(state)
         qLearnOpts = {
             'gamma': opts.discount,
             'alpha': opts.learningRate,
             'epsilon': opts.epsilon,
-            'actionFn': actionFn
+            'actionFn': lambda state: mdp.getPossibleActions(state),
         }
         a = pacai.student.qlearningAgents.QLearningAgent(0, **qLearnOpts)
     elif opts.agent == 'random':
@@ -564,7 +561,7 @@ if __name__ == '__main__':
         display.displayQValues(a, message = 'Q-VALUES AFTER ' + str(opts.iters) + ' ITERATIONS')
         display.pause()
 
-    # FIGURE OUT WHAT TO DISPLAY EACH TIME STEP (IF ANYTHING)
+    # Figure out what to display each time step (if anything).
     displayCallback = lambda x: None
     if not opts.quiet:
         if (opts.manual and opts.agent is None):
