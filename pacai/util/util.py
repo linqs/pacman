@@ -382,20 +382,26 @@ def normalize(vectorOrCounter):
     if type(vectorOrCounter) == type(normalizedCounter):
         counter = vectorOrCounter
         total = float(counter.totalCount())
-        if total == 0: return counter
+        if total == 0:
+            return counter
+
         for key in list(counter.keys()):
             value = counter[key]
             normalizedCounter[key] = value / total
+
         return normalizedCounter
     else:
         vector = vectorOrCounter
         s = float(sum(vector))
-        if s == 0: return vector
+        if s == 0:
+            return vector
+
         return [el / s for el in vector]
 
 def nSample(distribution, values, n):
     if sum(distribution) != 1:
         distribution = normalize(distribution)
+
     rand = [random.random() for i in range(n)]
     rand.sort()
     samples = []

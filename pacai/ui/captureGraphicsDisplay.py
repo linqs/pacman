@@ -128,12 +128,17 @@ class InfoPane:
 
     def setTeam(self, isBlue):
         text = "RED TEAM"
-        if isBlue: text = "BLUE TEAM"
+        if isBlue:
+            text = "BLUE TEAM"
+
         self.teamText = graphicsUtils.text(self.toScreen(300, 0), self.textColor, text, "Times", self.fontSize, "bold")
 
     def updateGhostDistances(self, distances):
-        if len(distances) == 0: return
-        if 'ghostDistanceText' not in dir(self): self.initializeGhostDistances(distances)
+        if len(distances) == 0:
+            return
+
+        if 'ghostDistanceText' not in dir(self):
+            self.initializeGhostDistances(distances)
         else:
             for i, d in enumerate(distances):
                 graphicsUtils.changeText(self.ghostDistanceText[i], d)
@@ -262,7 +267,9 @@ class PacmanGraphics:
             Changes an image from a ghost to a pacman or vis versa (for capture)
         """
         prevState, prevImage = self.agentImages[agentIndex]
-        for item in prevImage: graphicsUtils.remove_from_screen(item)
+        for item in prevImage:
+            graphicsUtils.remove_from_screen(item)
+
         if newState.isPacman:
             image = self.drawPacman(newState, agentIndex)
             self.agentImages[agentIndex] = (newState, image)
@@ -480,8 +487,11 @@ class PacmanGraphics:
     def drawWalls(self, wallMatrix):
         wallColor = WALL_COLOR
         for xNum, x in enumerate(wallMatrix):
-            if self.capture and (xNum * 2) < wallMatrix.width: wallColor = TEAM_COLORS[0]
-            if self.capture and (xNum * 2) >= wallMatrix.width: wallColor = TEAM_COLORS[1]
+            if self.capture and (xNum * 2) < wallMatrix.width:
+                wallColor = TEAM_COLORS[0]
+
+            if self.capture and (xNum * 2) >= wallMatrix.width:
+                wallColor = TEAM_COLORS[1]
 
             for yNum, cell in enumerate(x):
                 if cell:  # There's a wall here
@@ -574,8 +584,12 @@ class PacmanGraphics:
         foodImages = []
         color = FOOD_COLOR
         for xNum, x in enumerate(foodMatrix):
-            if self.capture and (xNum * 2) <= foodMatrix.width: color = TEAM_COLORS[0]
-            if self.capture and (xNum * 2) > foodMatrix.width: color = TEAM_COLORS[1]
+            if self.capture and (xNum * 2) <= foodMatrix.width:
+                color = TEAM_COLORS[0]
+
+            if self.capture and (xNum * 2) > foodMatrix.width:
+                color = TEAM_COLORS[1]
+
             imageRow = []
             foodImages.append(imageRow)
             for yNum, cell in enumerate(x):
@@ -665,7 +679,9 @@ class PacmanGraphics:
                 # Fog of war
                 color = [0.0, 0.0, 0.0]
                 colors = GHOST_VEC_COLORS[1:]  # With Pacman
-                if self.capture: colors = GHOST_VEC_COLORS
+                if self.capture:
+                    colors = GHOST_VEC_COLORS
+
                 for weight, gcolor in zip(weights, colors):
                     color = [min(1.0, c + 0.95 * g * weight ** .3) for c, g in zip(color, gcolor)]
                 graphicsUtils.changeColor(image, graphicsUtils.formatColor(*color))
@@ -735,8 +751,13 @@ import os
 def saveFrame():
     "Saves the current graphical output as a postscript file"
     global SAVE_POSTSCRIPT, FRAME_NUMBER, POSTSCRIPT_OUTPUT_DIR
-    if not SAVE_POSTSCRIPT: return
-    if not os.path.exists(POSTSCRIPT_OUTPUT_DIR): os.mkdir(POSTSCRIPT_OUTPUT_DIR)
+
+    if not SAVE_POSTSCRIPT:
+        return
+
+    if not os.path.exists(POSTSCRIPT_OUTPUT_DIR):
+        os.mkdir(POSTSCRIPT_OUTPUT_DIR)
+
     name = os.path.join(POSTSCRIPT_OUTPUT_DIR, 'frame_%08d.ps' % FRAME_NUMBER)
     FRAME_NUMBER += 1
     graphicsUtils.writePostscript(name)  # writes the current canvas

@@ -130,7 +130,9 @@ class Grid:
     The __str__ method constructs an output that is oriented like a pacman board.
     """
     def __init__(self, width, height, initialValue=False, bitRepresentation=None):
-        if initialValue not in [False, True]: raise Exception('Grids can only contain booleans')
+        if initialValue not in [False, True]:
+            raise Exception('Grids can only contain booleans')
+
         self.CELLS_PER_INT = 30
 
         self.width = width
@@ -189,7 +191,9 @@ class Grid:
         list = []
         for x in range(self.width):
             for y in range(self.height):
-                if self[x][y] == key: list.append((x, y))
+                if self[x][y] == key:
+                    list.append((x, y))
+
         return list
 
     def packBits(self):
@@ -223,7 +227,9 @@ class Grid:
         cell = 0
         for packed in bits:
             for bit in self._unpackInt(packed, self.CELLS_PER_INT):
-                if cell == self.width * self.height: break
+                if cell == self.width * self.height:
+                    break
+
                 x, y = self._cellIndexToPosition(cell)
                 self[x][y] = bit
                 cell += 1
@@ -312,7 +318,9 @@ class Actions:
             dx, dy = vec
             next_y = y_int + dy
             next_x = x_int + dx
-            if not walls[next_x][next_y]: possible.append(dir)
+
+            if not walls[next_x][next_y]:
+                possible.append(dir)
 
         return possible
 
@@ -325,10 +333,16 @@ class Actions:
         for dir, vec in Actions._directionsAsList:
             dx, dy = vec
             next_x = x_int + dx
-            if next_x < 0 or next_x == walls.width: continue
+            if next_x < 0 or next_x == walls.width:
+                continue
+
             next_y = y_int + dy
-            if next_y < 0 or next_y == walls.height: continue
-            if not walls[next_x][next_y]: neighbors.append((next_x, next_y))
+            if next_y < 0 or next_y == walls.height:
+                continue
+
+            if not walls[next_x][next_y]:
+                neighbors.append((next_x, next_y))
+
         return neighbors
     getLegalNeighbors = staticmethod(getLegalNeighbors)
 
@@ -515,7 +529,9 @@ class Game:
 
     def _agentCrash(self, agentIndex, quiet=False):
         "Helper method for handling agent crashes"
-        if not quiet: traceback.print_exc()
+        if not quiet:
+            traceback.print_exc()
+
         self.gameOver = True
         self.agentCrashed = True
         self.rules.agentCrash(self, agentIndex)
@@ -524,7 +540,9 @@ class Game:
     OLD_STDERR = None
 
     def mute(self):
-        if not self.muteAgents: return
+        if not self.muteAgents:
+            return
+
         global OLD_STDOUT, OLD_STDERR
         import io
         OLD_STDOUT = sys.stdout
@@ -533,7 +551,9 @@ class Game:
         sys.stderr = io.StringIO()
 
     def unmute(self):
-        if not self.muteAgents: return
+        if not self.muteAgents:
+            return
+
         global OLD_STDOUT, OLD_STDERR
         sys.stdout.close()
         sys.stderr.close()
@@ -691,7 +711,9 @@ class Game:
                 agent.final(self.state)
                 self.unmute()
             except Exception as data:
-                if not self.catchExceptions: raise
+                if not self.catchExceptions:
+                    raise
+
                 self.unmute()
                 logging.warning('Exception %s' % data)
                 self._agentCrash(agent.index)

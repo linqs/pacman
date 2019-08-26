@@ -223,7 +223,7 @@ class GameState:
         return self.data.capsules
 
     #############################################
-    #                         Helper methods:                             #
+    #       Helper methods                      #
     # You shouldn't need to call these directly #
     #############################################
 
@@ -277,7 +277,9 @@ class GameState:
             for teammate in team:
                 if manhattanDistance(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
                     seen = True
-            if not seen: state.data.agentStates[enemy].configuration = None
+
+            if not seen:
+                state.data.agentStates[enemy].configuration = None
         return state
 
     def __eq__(self, other):
@@ -325,7 +327,8 @@ def halfGrid(grid, red):
 
     for y in range(grid.height):
         for x in xrange:
-            if grid[x][y]: halfgrid[x][y] = True
+            if grid[x][y]:
+                halfgrid[x][y] = True
 
     return halfgrid
 
@@ -333,8 +336,11 @@ def halfList(l, grid, red):
     halfway = int(grid.width / 2)
     newList = []
     for x, y in l:
-        if red and x <= halfway: newList.append((x, y))
-        elif not red and x > halfway: newList.append((x, y))
+        if red and x <= halfway:
+            newList.append((x, y))
+        elif not red and x > halfway:
+            newList.append((x, y))
+
     return newList
 
 # THE HIDDEN SECRETS OF PACMAN
@@ -475,7 +481,8 @@ class AgentRules:
         # Eat food
         if state.data.food[x][y]:
             score = -1
-            if isRed: score = 1
+            if isRed:
+                score = 1
             state.data.scoreChange += score
 
             state.data.food = state.data.food.copy()
@@ -485,15 +492,21 @@ class AgentRules:
                 state.data._win = True
 
         # Eat capsule
-        if isRed: myCapsules = state.getBlueCapsules()
-        else: myCapsules = state.getRedCapsules()
-        if(position in myCapsules):
+        if isRed:
+            myCapsules = state.getBlueCapsules()
+        else:
+            myCapsules = state.getRedCapsules()
+
+        if (position in myCapsules):
             state.data.capsules.remove(position)
             state.data._capsuleEaten = position
 
             # Reset all ghosts' scared timers
-            if isRed: otherTeam = state.getBlueTeamIndices()
-            else: otherTeam = state.getRedTeamIndices()
+            if isRed:
+                otherTeam = state.getBlueTeamIndices()
+            else:
+                otherTeam = state.getRedTeamIndices()
+
             for index in otherTeam:
                 state.data.agentStates[index].scaredTimer = SCARED_TIME
 
@@ -692,7 +705,9 @@ def readCommand(argv):
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
-        if not val: continue
+        if not val:
+            continue
+
         if numKeyboardAgents == 0:
             agent = keyboard.WASDKeyboardAgent(index)
         elif numKeyboardAgents == 1:
@@ -796,7 +811,9 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
                 rules.quiet = False
         g = rules.newGame(layout, agents, gameDisplay, length, muteAgents, catchExceptions)
         g.run()
-        if not beQuiet: games.append(g)
+
+        if not beQuiet:
+            games.append(g)
 
         g.record = None
         if record:
