@@ -43,7 +43,6 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.alpha = float(alpha)
         self.discountRate = float(gamma)
 
-
     ############################
     # Override These Functions #
     ############################

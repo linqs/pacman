@@ -248,7 +248,6 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
             if 'exit' in bestActions:
                 exitString = '[ ' + exitString + ' ]'
 
-
             ewString = westString + "     " + eastString
             if state == currentState:
                 ewString = westString + "  *  " + eastString

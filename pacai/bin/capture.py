@@ -448,7 +448,6 @@ class AgentRules:
         return possibleActions
     filterForAllowedActions = staticmethod(filterForAllowedActions)
 
-
     def applyAction(state, action, agentIndex):
         """
         Edits the state to reflect the results of the action.
@@ -671,7 +670,6 @@ def readCommand(argv):
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
         import __main__
         __main__.__dict__['_display'] = args['display']
-
 
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue

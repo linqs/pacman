@@ -655,7 +655,6 @@ class PacmanGraphics:
             for cell in self.expandedCells:
                 graphicsUtils.remove_from_screen(cell)
 
-
     def updateDistributions(self, distributions):
         "Draws an agent's belief distributions"
         if (self.distributionImages is None):
