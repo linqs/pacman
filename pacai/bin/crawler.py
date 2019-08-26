@@ -111,13 +111,13 @@ class CrawlingRobotEnvironment(pacai.core.environment.Environment):
         Resets the Environment to the initial state
         """
 
-        ## Initialize the state to be the middle
-        ## value for each parameter e.g. if there are 13 and 19
-        ## buckets for the arm and hand parameters, then the intial
-        ## state should be (6, 9)
+        # Initialize the state to be the middle
+        # value for each parameter e.g. if there are 13 and 19
+        # buckets for the arm and hand parameters, then the intial
+        # state should be (6, 9)
 
-        ## Also call self.crawlingRobot.setAngles()
-        ## to the initial arm and hand angle
+        # Also call self.crawlingRobot.setAngles()
+        # to the initial arm and hand angle
 
         armState = int(self.nArmStates / 2)
         handState = int(self.nHandStates / 2)
@@ -235,7 +235,7 @@ class CrawlingRobot:
             return math.atan(-y / x)
         return 0.0
 
-    ### You shouldn't need methods below here
+    # You shouldn't need methods below here
 
     def __getCosAndSin(self, angle):
         return math.cos(angle), math.sin(angle)

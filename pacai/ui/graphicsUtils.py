@@ -237,9 +237,9 @@ def line(here, there, color=formatColor(0, 0, 0), width=2):
     x1, y1 = there[0], there[1]
     return _canvas.create_line(x0, y0, x1, y1, fill=color, width=width)
 
-##############################################################################
-### Keypress handling ########################################################
-##############################################################################
+###########################
+#   Keypress handling     #
+###########################
 
 # We bind to key-down and key-up events.
 

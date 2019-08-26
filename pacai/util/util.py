@@ -543,7 +543,7 @@ def pause():
     print("<Press enter/return to continue>")
     input()
 
-## code to handle timeouts
+# Code to handle timeouts.
 import signal
 
 class TimeoutFunctionException(Exception):
