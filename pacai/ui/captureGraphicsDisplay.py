@@ -2,6 +2,7 @@
 
 import io
 import math
+import os
 import time
 
 from pacai.core.game import Directions
@@ -743,7 +744,6 @@ def add(x, y):
 SAVE_POSTSCRIPT = False
 POSTSCRIPT_OUTPUT_DIR = 'frames'
 FRAME_NUMBER = 0
-import os
 
 def saveFrame():
     "Saves the current graphical output as a postscript file"

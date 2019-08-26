@@ -2,6 +2,7 @@ import heapq
 import importlib
 import inspect
 import random
+import signal
 import sys
 
 """
@@ -544,7 +545,6 @@ def pause():
     input()
 
 # Code to handle timeouts.
-import signal
 
 class TimeoutFunctionException(Exception):
     """
