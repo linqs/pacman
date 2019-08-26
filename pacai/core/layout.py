@@ -39,7 +39,7 @@ class Layout(object):
             vis = Grid(self.width, self.height, {Directions.NORTH: set(), Directions.SOUTH: set(), Directions.EAST: set(), Directions.WEST: set(), Directions.STOP: set()})
             for x in range(self.width):
                 for y in range(self.height):
-                    if self.walls[x][y] == False:
+                    if (not self.walls[x][y]):
                         for vec, direction in zip(vecs, dirs):
                             dx, dy = vec
                             nextx, nexty = x + dx, y + dy
