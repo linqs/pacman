@@ -47,8 +47,8 @@ class PositionSearchProblem(SearchProblem):
             self._visitedlist.append(state)
             import __main__
             if '_display' in dir(__main__):
-                if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
-                    __main__._display.drawExpandedCells(self._visitedlist) #@UndefinedVariable
+                if 'drawExpandedCells' in dir(__main__._display):  #@UndefinedVariable
+                    __main__._display.drawExpandedCells(self._visitedlist)  #@UndefinedVariable
 
         return isGoal
 

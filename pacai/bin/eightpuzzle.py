@@ -38,7 +38,7 @@ class EightPuzzleState:
         """
 
         self.cells = []
-        numbers = numbers[:] # Make a copy so as not to cause side-effects.
+        numbers = numbers[:]  # Make a copy so as not to cause side-effects.
         numbers.reverse()
         for row in range(3):
             self.cells.append([])

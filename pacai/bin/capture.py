@@ -53,9 +53,9 @@ from pacai.util.util import manhattanDistance
 from pacai.util.util import nearestPoint
 
 KILL_POINTS = 0
-SONAR_NOISE_RANGE = 13 # Must be odd
+SONAR_NOISE_RANGE = 13  # Must be odd
 SONAR_NOISE_VALUES = [i - int((SONAR_NOISE_RANGE - 1) / 2) for i in range(SONAR_NOISE_RANGE)]
-SIGHT_RANGE = 5 # Manhattan distance
+SIGHT_RANGE = 5  # Manhattan distance
 MIN_FOOD = 2
 
 SCARED_TIME = 40
@@ -340,7 +340,7 @@ def halfList(l, grid, red):
 # THE HIDDEN SECRETS OF PACMAN
 # You shouldn't need to look through the code in this section of the file.
 
-COLLISION_TOLERANCE = 0.7 # How close ghosts must be to Pacman to kill
+COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
 
 class CaptureRules:
     """
@@ -409,19 +409,19 @@ class CaptureRules:
             game.state.data.score = 1
 
     def getMaxTotalTime(self, agentIndex):
-        return 900 # Move limits should prevent this from ever happening
+        return 900  # Move limits should prevent this from ever happening
 
     def getMaxStartupTime(self, agentIndex):
-        return 15 # 15 seconds for registerInitialState
+        return 15  # 15 seconds for registerInitialState
 
     def getMoveWarningTime(self, agentIndex):
-        return 1 # One second per move
+        return 1  # One second per move
 
     def getMoveTimeout(self, agentIndex):
-        return 3 # Three seconds results in instant forfeit
+        return 3  # Three seconds results in instant forfeit
 
     def getMaxTimeWarnings(self, agentIndex):
-        return 2 # Third violation loses the game
+        return 2  # Third violation loses the game
 
 class AgentRules:
     """
@@ -540,7 +540,7 @@ class AgentRules:
                         otherAgentState.isPacman = False
                         otherAgentState.configuration = otherAgentState.start
                         otherAgentState.scaredTimer = 0
-        else: # Agent is a ghost
+        else:  # Agent is a ghost
             for index in otherTeam:
                 otherAgentState = state.data.agentStates[index]
                 if (not otherAgentState.isPacman):
@@ -688,7 +688,7 @@ def readCommand(argv):
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
     logging.debug('\nBlue team %s with %s:' % (options.blue, blueArgs))
     blueAgents = loadAgents(False, options.blue, nokeyboard, blueArgs)
-    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], []) # list of agents
+    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], [])  # list of agents
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
@@ -740,7 +740,7 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
         return [None for i in range(2)]
 
     args = dict()
-    args.update(cmdLineArgs) # Add command line args with priority
+    args.update(cmdLineArgs)  # Add command line args with priority
 
     logging.info('Loading Team:%s', agent_module)
     logging.info('Arguments:%s', args)
@@ -846,7 +846,7 @@ def main(argv):
     argv already has the executable stripped.
     """
     initLogging()
-    options = readCommand(argv) # Get game components based on input
+    options = readCommand(argv)  # Get game components based on input
     return runGames(**options)
 
 if __name__ == '__main__':

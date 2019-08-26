@@ -165,7 +165,7 @@ def polygon(coords, outlineColor, fillColor=None, filled=1, smoothed=1, behind=0
 
     poly = _canvas.create_polygon(c, outline=outlineColor, fill=fillColor, smooth=smoothed, width=width)
     if behind > 0:
-        _canvas.tag_lower(poly, behind) # Higher should be more visible
+        _canvas.tag_lower(poly, behind)  # Higher should be more visible
     return poly
 
 def square(pos, r, color, filled=1, behind=0):
@@ -273,16 +273,20 @@ def remap_arrows(event):
     if event.char in ['a', 's', 'd', 'w']:
         return
 
-    if event.keycode in [37, 101]: # LEFT ARROW (win / x)
+    # LEFT ARROW (win / x)
+    if event.keycode in [37, 101]:
         event.char = 'a'
 
-    if event.keycode in [38, 99]: # UP ARROW
+    # UP ARROW
+    if event.keycode in [38, 99]:
         event.char = 'w'
 
-    if event.keycode in [39, 102]: # RIGHT ARROW
+    # RIGHT ARROW
+    if event.keycode in [39, 102]:
         event.char = 'd'
 
-    if event.keycode in [40, 104]: # DOWN ARROW
+    # DOWN ARROW
+    if event.keycode in [40, 104]:
         event.char = 's'
 
 def _clear_keys(event=None):
@@ -351,7 +355,7 @@ def move_to(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
 
     horiz = True
     newCoords = []
-    current_x, current_y = _canvas.coords(object)[0:2] # first point
+    current_x, current_y = _canvas.coords(object)[0:2]  # first point
     for coord in _canvas.coords(object):
         if horiz:
             inc = x - current_x

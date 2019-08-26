@@ -83,7 +83,7 @@ class InfoPane(object):
         else:
             x = pos
 
-        x = self.gridSize + x # Margin
+        x = self.gridSize + x  # Margin
         y = self.base + y
 
         return (x, y)
@@ -229,7 +229,7 @@ class PacmanGraphics:
         graphicsUtils.refresh()
 
     def drawAgentObjects(self, state):
-        self.agentImages = [] # (agentState, image)
+        self.agentImages = []  # (agentState, image)
         for index, agent in enumerate(state.agentStates):
             if agent.isPacman:
                 image = self.drawPacman(agent, index)
@@ -489,7 +489,7 @@ class PacmanGraphics:
                 wallColor = TEAM_COLORS[1]
 
             for yNum, cell in enumerate(x):
-                if cell: # There's a wall here
+                if cell:  # There's a wall here
                     pos = (xNum, yNum)
                     screen = self.to_screen(pos)
                     screen2 = self.to_screen2(pos)
@@ -602,7 +602,7 @@ class PacmanGraphics:
             imageRow = []
             foodImages.append(imageRow)
             for yNum, cell in enumerate(x):
-                if cell: # There's food here
+                if cell:  # There's food here
                     screen = self.to_screen((xNum, yNum))
                     dot = graphicsUtils.circle(screen, FOOD_SIZE * self.gridSize,
                             outlineColor = color, fillColor = color, width = 1)
@@ -672,7 +672,7 @@ class PacmanGraphics:
 
                 # Fog of war
                 color = [0.0, 0.0, 0.0]
-                colors = GHOST_VEC_COLORS[1:] # With Pacman
+                colors = GHOST_VEC_COLORS[1:]  # With Pacman
                 if self.capture:
                     colors = GHOST_VEC_COLORS
 
@@ -752,4 +752,4 @@ def saveFrame():
 
     name = os.path.join(POSTSCRIPT_OUTPUT_DIR, 'frame_%08d.ps' % FRAME_NUMBER)
     FRAME_NUMBER += 1
-    graphicsUtils.writePostscript(name) # writes the current canvas
+    graphicsUtils.writePostscript(name)  # writes the current canvas

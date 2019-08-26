@@ -17,7 +17,7 @@ class FoodSearchProblem(SearchProblem):
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
         self._expanded = 0
-        self.heuristicInfo = {} # A dictionary for the heuristic to store information
+        self.heuristicInfo = {}  # A dictionary for the heuristic to store information
 
     def startingState(self):
         return self.start

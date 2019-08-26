@@ -17,12 +17,12 @@ PACMAN_OUTLINE_WIDTH = 2
 PACMAN_CAPTURE_OUTLINE_WIDTH = 4
 
 GHOST_COLORS = [
-    graphicsUtils.formatColor(0.9, 0, 0), # Red
-    graphicsUtils.formatColor(0, 0.3, 0.9), # Blue
-    graphicsUtils.formatColor(0.98, 0.41, 0.07), # Orange
-    graphicsUtils.formatColor(0.1, 0.75, 0.7), # Green
-    graphicsUtils.formatColor(1.0, 0.6, 0.0), # Yellow
-    graphicsUtils.formatColor(0.4, 0.13, 0.91), # Purple
+    graphicsUtils.formatColor(0.9, 0, 0),  # Red
+    graphicsUtils.formatColor(0, 0.3, 0.9),  # Blue
+    graphicsUtils.formatColor(0.98, 0.41, 0.07),  # Orange
+    graphicsUtils.formatColor(0.1, 0.75, 0.7),  # Green
+    graphicsUtils.formatColor(1.0, 0.6, 0.0),  # Yellow
+    graphicsUtils.formatColor(0.4, 0.13, 0.91),  # Purple
 ]
 
 TEAM_COLORS = GHOST_COLORS[:2]
@@ -86,7 +86,7 @@ class InfoPane:
         else:
             x = pos
 
-        x = self.gridSize + x # Margin
+        x = self.gridSize + x  # Margin
         y = self.base + y
         return x, y
 
@@ -182,7 +182,7 @@ class PacmanGraphics:
         self.startGraphics(state)
 
         # self.drawDistributions(state)
-        self.distributionImages = None # Initialized lazily
+        self.distributionImages = None  # Initialized lazily
         self.drawStaticObjects(state)
         self.drawAgentObjects(state)
 
@@ -247,7 +247,7 @@ class PacmanGraphics:
         graphicsUtils.refresh()
 
     def drawAgentObjects(self, state):
-        self.agentImages = [] # (agentState, image)
+        self.agentImages = []  # (agentState, image)
         for index, agent in enumerate(state.agentStates):
             if agent.isPacman:
                 image = self.drawPacman(agent, index)
@@ -484,7 +484,7 @@ class PacmanGraphics:
             if self.capture and (xNum * 2) >= wallMatrix.width: wallColor = TEAM_COLORS[1]
 
             for yNum, cell in enumerate(x):
-                if cell: # There's a wall here
+                if cell:  # There's a wall here
                     pos = (xNum, yNum)
                     screen = self.to_screen(pos)
                     screen2 = self.to_screen2(pos)
@@ -579,7 +579,7 @@ class PacmanGraphics:
             imageRow = []
             foodImages.append(imageRow)
             for yNum, cell in enumerate(x):
-                if cell: # There's food here
+                if cell:  # There's food here
                     screen = self.to_screen((xNum, yNum))
                     dot = graphicsUtils.circle(
                             screen, FOOD_SIZE * self.gridSize,
@@ -664,7 +664,7 @@ class PacmanGraphics:
                     pass
                 # Fog of war
                 color = [0.0, 0.0, 0.0]
-                colors = GHOST_VEC_COLORS[1:] # With Pacman
+                colors = GHOST_VEC_COLORS[1:]  # With Pacman
                 if self.capture: colors = GHOST_VEC_COLORS
                 for weight, gcolor in zip(weights, colors):
                     color = [min(1.0, c + 0.95 * g * weight ** .3) for c, g in zip(color, gcolor)]
@@ -687,7 +687,7 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
         self.layout = state.layout
 
         # Draw the rest
-        self.distributionImages = None # initialize lazily
+        self.distributionImages = None  # initialize lazily
         self.drawStaticObjects(state)
         self.drawAgentObjects(state)
 
@@ -739,4 +739,4 @@ def saveFrame():
     if not os.path.exists(POSTSCRIPT_OUTPUT_DIR): os.mkdir(POSTSCRIPT_OUTPUT_DIR)
     name = os.path.join(POSTSCRIPT_OUTPUT_DIR, 'frame_%08d.ps' % FRAME_NUMBER)
     FRAME_NUMBER += 1
-    graphicsUtils.writePostscript(name) # writes the current canvas
+    graphicsUtils.writePostscript(name)  # writes the current canvas

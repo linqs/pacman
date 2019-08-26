@@ -79,7 +79,7 @@ class Configuration:
         dx, dy = vector
         direction = Actions.vectorToDirection(vector)
         if direction == Directions.STOP:
-            direction = self.direction # There is no stop direction
+            direction = self.direction  # There is no stop direction
         return Configuration((x + dx, y + dy), direction)
 
 class AgentState:
@@ -479,8 +479,12 @@ class GameStateData:
         numGhosts = 0
         for isPacman, pos in layout.agentPositions:
             if not isPacman:
-                if numGhosts == numGhostAgents: continue # Max ghosts reached already
-                else: numGhosts += 1
+                # Max ghosts reached already
+                if numGhosts == numGhostAgents:
+                    continue
+                else:
+                    numGhosts += 1
+
             self.agentStates.append(AgentState(Configuration(pos, Directions.STOP), isPacman))
         self._eaten = [False for a in self.agentStates]
 
@@ -545,7 +549,8 @@ class Game:
         self.display.initialize(self.state.data)
         self.numMoves = 0
 
-        ###self.display.initialize(self.state.makeObservation(1).data)
+        # self.display.initialize(self.state.makeObservation(1).data)
+
         # inform learning agents of the game start
         for i in range(len(self.agents)):
             agent = self.agents[i]

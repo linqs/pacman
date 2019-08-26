@@ -65,8 +65,8 @@ class SearchAgent(BaseAgent):
             raise Exception('No search function provided for SearchAgent')
 
         starttime = time.time()
-        problem = self.searchType(state) # Makes a new search problem
-        self.actions = self.searchFunction(problem) # Find a path
+        problem = self.searchType(state)  # Makes a new search problem
+        self.actions = self.searchFunction(problem)  # Find a path
         totalCost = problem.actionsCost(self.actions)
 
         logging.info('Path found with total cost of %d in %.1f seconds' % (totalCost, time.time() - starttime))

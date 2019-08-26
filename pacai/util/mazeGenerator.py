@@ -190,7 +190,7 @@ def make(room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
 
     # Add a wall to the current room
     if depth == 0:
-        wall_slots = [num - 2] # Fix the first wall
+        wall_slots = [num - 2]  # Fix the first wall
     else:
         wall_slots = range(1, num - 1)
 
