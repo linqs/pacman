@@ -64,9 +64,9 @@ def begin_graphics(width = 640, height = 480, color = formatColor(0, 0, 0), titl
         _canvas.pack()
         draw_background()
         _canvas.update()
-    except:
+    except Exception as ex:
         _root_window = None
-        raise
+        raise RuntimeError("Unable to create tkinter canvas.") from ex
 
     # Bind to key-down and key-up events
     _root_window.bind("<KeyPress>", _keypress)
@@ -263,7 +263,7 @@ def _keyrelease(event):
 
     try:
         del _keysdown[event.keysym]
-    except:
+    except Exception as ex:
         pass
 
     _got_release = 1
@@ -350,8 +350,8 @@ def move_to(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     if y is None:
         try:
             x, y = x
-        except:
-            raise Exception('incomprehensible coordinates')
+        except Exception as ex:
+            raise ValueError('Incomprehensible coordinates: ' + str(x)) from ex
 
     horiz = True
     newCoords = []
@@ -377,8 +377,8 @@ def move_by(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     if y is None:
         try:
             x, y = x
-        except:
-            raise Exception('incomprehensible coordinates')
+        except Exception as ex:
+            raise ValueError('Incomprehensible coordinates: ' + str(x)) from ex
 
     horiz = True
     newCoords = []
