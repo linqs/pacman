@@ -88,11 +88,11 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
             text = ("\n".join(pieces)).split('\n')
 
             if currentState == state:
-                l = len(text[1])
-                if l == 0:
+                length = len(text[1])
+                if length == 0:
                     text[1] = '*'
                 else:
-                    text[1] = "|" + ' ' * int((l - 1) / 2 - 1) + ' * ' + ' ' * int((l) / 2 - 1) + "|"
+                    text[1] = "|" + ' ' * int((length - 1) / 2 - 1) + ' * ' + ' ' * int((length) / 2 - 1) + "|"
 
             if action == 'east':
                 text[2] = '  ' + text[2] + ' >'
@@ -163,11 +163,11 @@ def prettyPrintNullValues(gridWorld, currentState = None):
             text = ("\n".join(pieces)).split('\n')
 
             if currentState == state:
-                l = len(text[1])
-                if l == 0:
+                length = len(text[1])
+                if length == 0:
                     text[1] = '*'
                 else:
-                    text[1] = "|" + ' ' * int((l - 1) / 2 - 1) + '*' + ' ' * int((l) / 2 - 1) + "|"
+                    text[1] = "|" + ' ' * int((length - 1) / 2 - 1) + '*' + ' ' * int((length) / 2 - 1) + "|"
 
             if action == 'east':
                 text[2] = '  ' + text[2] + ' >'
