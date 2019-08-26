@@ -15,7 +15,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
 
     def __init__(self, grid):
         # layout
-        if type(grid) == type([]):
+        if (isinstance(grid, list)):
             grid = makeGrid(grid)
 
         self.grid = grid
@@ -55,7 +55,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
             return ()
 
         x, y = state
-        if type(self.grid[x][y]) == int:
+        if isinstance(self.grid[x][y], int):
             return ('exit', )
 
         return ('north', 'west', 'south', 'east')
@@ -89,7 +89,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
 
         x, y = state
         cell = self.grid[x][y]
-        if type(cell) == int or type(cell) == float:
+        if isinstance(cell, int) or isinstance(cell, float):
             return cell
 
         return self.livingReward
@@ -129,7 +129,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
 
         x, y = state
 
-        if type(self.grid[x][y]) == int or type(self.grid[x][y]) == float:
+        if isinstance(self.grid[x][y], int) or isinstance(self.grid[x][y], float):
             termState = self.grid.terminalState
             return [(termState, 1.0)]
 

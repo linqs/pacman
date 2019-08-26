@@ -312,7 +312,7 @@ class GameState:
 
     def isRed(self, configOrPos):
         width = self.data.layout.width
-        if type(configOrPos) == type((0, 0)):
+        if (isinstance(configOrPos, tuple)):
             return configOrPos[0] < int(width / 2)
         else:
             return configOrPos.pos[0] < int(width / 2)
@@ -824,7 +824,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
             }
 
             path = 'replay'
-            if (type(record) == str):
+            if (isinstance(record, str)):
                 path = record
 
             g.record = pickle.dumps(components)
