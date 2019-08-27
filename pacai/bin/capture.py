@@ -362,7 +362,8 @@ class CaptureRules:
         initState.initialize(layout, len(agents))
         starter = random.randint(0, 1)
         logging.info('%s team starts' % ['Red', 'Blue'][starter])
-        game = Game(agents, display, self, startingIndex=starter, muteAgents=muteAgents, catchExceptions=catchExceptions)
+        game = Game(agents, display, self, startingIndex = starter, muteAgents = muteAgents,
+                catchExceptions = catchExceptions)
         game.state = initState
         game.length = length
         game.state.data.timeleft = length
@@ -384,9 +385,13 @@ class CaptureRules:
             game.gameOver = True
             if not game.rules.quiet:
                 if state.getRedFood().count() == MIN_FOOD:
-                    logging.info('The Blue team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
+                    logging.info('The Blue team has captured all but %d of the opponents\' dots.' %
+                            MIN_FOOD)
+
                 if state.getBlueFood().count() == MIN_FOOD:
-                    logging.info('The Red team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
+                    logging.info('The Red team has captured all but %d of the opponents\' dots.' %
+                            MIN_FOOD)
+
                 if state.getBlueFood().count() > MIN_FOOD and state.getRedFood().count() > MIN_FOOD:
                     logging.info('Time is up.')
                     if state.data.score == 0:
@@ -396,7 +401,8 @@ class CaptureRules:
                         if state.data.score < 0:
                             winner = 'Blue'
 
-                        logging.info('The %s team wins by %d points.' % (winner, abs(state.data.score)))
+                        logging.info('The %s team wins by %d points.' %
+                                (winner, abs(state.data.score)))
 
     def getProgress(self, game):
         blue = 1.0 - (game.state.getBlueFood().count() / float(self._initBlueFood))
@@ -472,7 +478,8 @@ class AgentRules:
 
         # Change agent type
         if next == nearest:
-            agentState.isPacman = [state.isOnRedTeam(agentIndex), state.isRed(agentState.configuration)].count(True) == 1
+            teamInfo = [state.isOnRedTeam(agentIndex), state.isRed(agentState.configuration)]
+            agentState.isPacman = teamInfo.count(True) == 1
     applyAction = staticmethod(applyAction)
 
     def consume(position, state, isRed):
@@ -487,7 +494,8 @@ class AgentRules:
             state.data.food = state.data.food.copy()
             state.data.food[x][y] = False
             state.data._foodEaten = position
-            if (isRed and state.getBlueFood().count() == MIN_FOOD) or (not isRed and state.getRedFood().count() == MIN_FOOD):
+            if ((isRed and state.getBlueFood().count() == MIN_FOOD)
+                    or (not isRed and state.getRedFood().count() == MIN_FOOD)):
                 state.data._win = True
 
         # Eat capsule
@@ -530,11 +538,11 @@ class AgentRules:
                 if (otherAgentState.isPacman):
                     continue
 
-                ghostPosition = otherAgentState.getPosition()
-                if (ghostPosition is None):
+                ghostPos = otherAgentState.getPosition()
+                if (ghostPos is None):
                     continue
 
-                if manhattanDistance(ghostPosition, agentState.getPosition()) <= COLLISION_TOLERANCE:
+                if manhattanDistance(ghostPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
                     # Award points to the other team for killing Pacmen.
                     if otherAgentState.scaredTimer <= 0:
                         score = KILL_POINTS
@@ -616,36 +624,60 @@ def readCommand(argv):
     EXAMPLES:    (1) python capture.py
                                     - starts a game with two baseline agents
                             (2) python capture.py --keys0
-                                    - starts a two-player interactive game where the arrow keys control agent 0, and all other agents are baseline agents
+                                    - starts a two-player interactive game
+                                        where the arrow keys control agent 0,
+                                        and all other agents are baseline agents
                             (3) python capture.py -r pacai.core.baselineTeam -b pacai.student.myTeam
-                                    - starts a fully automated game where the red team is a baseline team and blue team is pacai.student.myTeam
+                                    - starts a fully automated game where the red team
+                                        is a baseline team and blue team is pacai.student.myTeam
     """
     parser = optparse.OptionParser(usageStr)
 
     parser.add_option('-r', '--red', help=default('Red team'), default='pacai.core.baselineTeam')
     parser.add_option('-b', '--blue', help=default('Blue team'), default='pacai.core.baselineTeam')
-    parser.add_option('--redOpts', help=default('Options for red team (e.g. first=keys)'), default='')
-    parser.add_option('--blueOpts', help=default('Options for blue team (e.g. first=keys)'), default='')
-    parser.add_option('--keys0', help='Make agent 0 (first red player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('--keys1', help='Make agent 1 (second red player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('--keys2', help='Make agent 2 (first blue player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('--keys3', help='Make agent 3 (second blue player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('-l', '--layout', dest='layout', help=default('the LAYOUT_FILE from which to load the map layout; use RANDOM for a random maze; use RANDOM<seed> to use a specified random seed, e.g., RANDOM23'),
+    parser.add_option('--redOpts', help=default('Options for red team (e.g. first=keys)'),
+            default='')
+    parser.add_option('--blueOpts', help=default('Options for blue team (e.g. first=keys)'),
+            default='')
+    parser.add_option('--keys0', help='Make agent 0 (first red player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('--keys1', help='Make agent 1 (second red player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('--keys2', help='Make agent 2 (first blue player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('--keys3', help='Make agent 3 (second blue player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('-l', '--layout', dest='layout',
+            help=default('the LAYOUT_FILE from which to load the layout; use RANDOM for a random'
+                    + 'maze; use RANDOM<seed> to use a specified random seed, e.g., RANDOM23'),
             metavar='LAYOUT_FILE', default='defaultCapture')
-    parser.add_option('-t', '--textgraphics', action='store_true', dest='textgraphics', help='Display output as text only', default=False)
-    parser.add_option('-q', '--quiet', action='store_true', help='Display minimal output and no graphics', default=False)
-    parser.add_option('-Q', '--super-quiet', action='store_true', dest="super_quiet", help='Same as -q but agent output is also suppressed', default=False)
-    parser.add_option('-z', '--zoom', type='float', dest='zoom', help=default('Zoom in the graphics'), default=1)
-    parser.add_option('-i', '--time', type='int', dest='time', help=default('TIME limit of a game in moves'), default=1200, metavar='TIME')
-    parser.add_option('-n', '--numGames', type='int', help=default('Number of games to play'), default=1)
-    parser.add_option('-f', '--fixRandomSeed', action='store_true', help='Fixes the random seed to always play the same game', default=False)
-    parser.add_option('--record', type='string', dest='record', help='Writes game histories to the named file')
+    parser.add_option('-t', '--textgraphics', action='store_true', dest='textgraphics',
+            help='Display output as text only', default=False)
+    parser.add_option('-q', '--quiet', action='store_true',
+            help='Display minimal output and no graphics', default=False)
+    parser.add_option('-Q', '--super-quiet', action='store_true', dest="super_quiet",
+            help='Same as -q but agent output is also suppressed', default=False)
+    parser.add_option('-z', '--zoom', type='float', dest='zoom',
+            help=default('Zoom in the graphics'), default=1)
+    parser.add_option('-i', '--time', type='int', dest='time',
+            help=default('TIME limit of a game in moves'), default=1200, metavar='TIME')
+    parser.add_option('-n', '--numGames', type='int',
+            help=default('Number of games to play'), default=1)
+    parser.add_option('-f', '--fixRandomSeed', action='store_true',
+            help='Fixes the random seed to always play the same game', default=False)
+    parser.add_option('--record', type='string', dest='record',
+            help='Writes game histories to the named file')
     parser.add_option('--replay', default=None, help='Replays a recorded game file.')
-    parser.add_option('-x', '--numTraining', dest='numTraining', type='int', help=default('How many episodes are training (suppresses output)'), default=0)
-    parser.add_option('-c', '--catchExceptions', action='store_true', default=False, help='Catch exceptions and enforce time limits')
-    parser.add_option('--gif', dest='gif', help=default('Save the game as a gif to the specified path'))
-    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0, help=default('Skip this number of frames between frames of the gif.'))
-    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10, help=default('FPS of the gif.'))
+    parser.add_option('-x', '--numTraining', dest='numTraining', type='int',
+            help=default('How many episodes are training (suppresses output)'), default=0)
+    parser.add_option('-c', '--catchExceptions', action='store_true', default=False,
+            help='Catch exceptions and enforce time limits')
+    parser.add_option('--gif', dest='gif',
+            help=default('Save the game as a gif to the specified path'))
+    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
+            help=default('Skip this number of frames between frames of the gif.'))
+    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10,
+            help=default('FPS of the gif.'))
 
     options, otherjunk = parser.parse_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
@@ -666,8 +698,10 @@ def readCommand(argv):
         import pacai.ui.captureGraphicsDisplay
         # Hack for agents writing to the display
         pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
+        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue,
+                options.zoom, 0, capture=True,
+                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
+                gif_fps = options.gifFPS)
         import __main__
         __main__.__dict__['_display'] = args['display']
 
@@ -789,7 +823,8 @@ def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamNa
 
     display.finish()
 
-def runGames(layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False):
+def runGames(layout, agents, display, length, numGames, record, numTraining,
+        redTeamName, blueTeamName, muteAgents = False, catchExceptions = False):
     rules = CaptureRules()
     games = []
 
@@ -839,9 +874,12 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
         blueWinRate = [s < 0 for s in scores].count(True) / float(len(scores))
         logging.info('Average Score:%s', sum(scores) / float(len(scores)))
         logging.info('Scores:%s', ', '.join([str(score) for score in scores]))
-        logging.info('Red Win Rate: %d/%d (%.2f)' % ([s > 0 for s in scores].count(True), len(scores), redWinRate))
-        logging.info('Blue Win Rate: %d/%d (%.2f)' % ([s < 0 for s in scores].count(True), len(scores), blueWinRate))
-        logging.info('Record: %s', ', '.join([('Blue', 'Tie', 'Red')[max(0, min(2, 1 + s))] for s in scores]))
+        logging.info('Red Win Rate: %d/%d (%.2f)' %
+                ([s > 0 for s in scores].count(True), len(scores), redWinRate))
+        logging.info('Blue Win Rate: %d/%d (%.2f)' %
+                ([s < 0 for s in scores].count(True), len(scores), blueWinRate))
+        logging.info('Record: %s',
+                ', '.join([('Blue', 'Tie', 'Red')[max(0, min(2, 1 + s))] for s in scores]))
 
     return games
 

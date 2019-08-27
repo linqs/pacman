@@ -28,7 +28,8 @@ class ReflexAgent(BaseAgent):
     its alternatives via a state evaluation function.
 
     The code below is provided as a guide.
-    You are welcome to change it in any way you see fit, so long as you don't touch the method headers.
+    You are welcome to change it in any way you see fit,
+    so long as you don't touch the method headers.
     """
 
     def __init__(self, index):

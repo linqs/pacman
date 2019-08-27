@@ -36,14 +36,25 @@ class Layout(object):
             from game import Directions
             vecs = [(-0.5, 0), (0.5, 0), (0, -0.5), (0, 0.5)]
             dirs = [Directions.NORTH, Directions.SOUTH, Directions.WEST, Directions.EAST]
-            vis = Grid(self.width, self.height, {Directions.NORTH: set(), Directions.SOUTH: set(), Directions.EAST: set(), Directions.WEST: set(), Directions.STOP: set()})
+
+            emptyDirections = {
+                Directions.NORTH: set(),
+                Directions.SOUTH: set(),
+                Directions.EAST: set(),
+                Directions.WEST: set(),
+                Directions.STOP: set()
+            }
+
+            vis = Grid(self.width, self.height, emptyDirections)
+
             for x in range(self.width):
                 for y in range(self.height):
                     if (not self.walls[x][y]):
                         for vec, direction in zip(vecs, dirs):
                             dx, dy = vec
                             nextx, nexty = x + dx, y + dy
-                            while (nextx + nexty) != int(nextx) + int(nexty) or not self.walls[int(nextx)][int(nexty)]:
+                            while ((nextx + nexty) != int(nextx) + int(nexty)
+                                    or not self.walls[int(nextx)][int(nexty)]):
                                 vis[x][y][direction].add((nextx, nexty))
                                 nextx, nexty = x + dx, y + dy
             self.visibility = vis
@@ -64,11 +75,23 @@ class Layout(object):
         return (x, y)
 
     def getRandomCorner(self):
-        poses = [(1, 1), (1, self.height - 2), (self.width - 2, 1), (self.width - 2, self.height - 2)]
+        poses = [
+            (1, 1),
+            (1, self.height - 2),
+            (self.width - 2, 1),
+            (self.width - 2, self.height - 2)
+        ]
+
         return random.choice(poses)
 
     def getFurthestCorner(self, pacPos):
-        poses = [(1, 1), (1, self.height - 2), (self.width - 2, 1), (self.width - 2, self.height - 2)]
+        poses = [
+            (1, 1),
+            (1, self.height - 2),
+            (self.width - 2, 1),
+            (self.width - 2, self.height - 2)
+        ]
+
         dist, pos = max([(manhattanDistance(p, pacPos), p) for p in poses])
         return pos
 

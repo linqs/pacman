@@ -401,7 +401,13 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
 
         # EXECUTE ACTION
         nextState, reward = environment.doAction(action)
-        logging.debug('\nStarted in state: ' + str(state) + '\nTook action: ' + str(action) + '\nEnded in state: ' + str(nextState) + '\nGot reward: ' + str(reward) + '\n')
+        logString = ''
+        logString += '\nStarted in state: ' + str(state)
+        logString += '\nTook action: ' + str(action)
+        logString += '\nEnded in state: ' + str(nextState)
+        logString += '\nGot reward: ' + str(reward) + '\n'
+        logging.debug(logString)
+
         # UPDATE LEARNER
         if 'observeTransition' in dir(agent):
             agent.observeTransition(state, action, nextState, reward)
@@ -438,8 +444,9 @@ def parseOptions():
             metavar="K", help='Number of epsiodes of the MDP to run (default %default)')
     optParser.add_option('-g', '--grid', action='store',
             metavar="G", type='string', dest='grid', default="BookGrid",
-            help='Grid to use (case sensitive; options are BookGrid, BridgeGrid, CliffGrid, MazeGrid, default %default)')
-    optParser.add_option('-w', '--windowSize', metavar="X", type='int', dest='gridSize', default=150,
+            help='Grid type: BookGrid, BridgeGrid, CliffGrid, MazeGrid, %default (default)')
+    optParser.add_option('-w', '--windowSize', metavar="X", type='int', dest='gridSize',
+            default=150,
             help='Request a window width of X pixels *per grid cell* (default %default)')
     optParser.add_option('-a', '--agent', action='store', metavar="A",
             type='string', dest='agent', default="random",
@@ -455,7 +462,7 @@ def parseOptions():
             help='Skip display of any learning episodes')
     optParser.add_option('-s', '--speed', action='store', metavar="S", type=float,
             dest='speed', default=1.0,
-            help='Speed of animation, S > 1.0 is faster, 0.0 < S < 1.0 is slower (default %default)')
+            help='Speed of animation, S > 1.0 is faster, 0 < S < 1 is slower (default %default)')
     optParser.add_option('-m', '--manual', action='store_true',
             dest='manual', default=False,
             help='Manually control agent')
@@ -500,7 +507,8 @@ if __name__ == '__main__':
     display = pacai.ui.textGridworldDisplay.TextGridworldDisplay(mdp)
     if not opts.textDisplay:
         import pacai.ui.graphicsGridworldDisplay
-        display = pacai.ui.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
+        display = pacai.ui.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp,
+                opts.gridSize, opts.speed)
     display.start()
 
     ###########################
@@ -511,7 +519,8 @@ if __name__ == '__main__':
     import pacai.student.valueIterationAgents
     a = None
     if opts.agent == 'value':
-        a = pacai.student.valueIterationAgents.ValueIterationAgent(0, mdp, opts.discount, opts.iters)
+        a = pacai.student.valueIterationAgents.ValueIterationAgent(0,
+                mdp, opts.discount, opts.iters)
     elif opts.agent == 'q':
         gridWorldEnv = GridworldEnvironment(mdp)
         qLearnOpts = {
@@ -556,7 +565,8 @@ if __name__ == '__main__':
     if not opts.manual and opts.agent == 'value':
         if opts.valueSteps:
             for i in range(opts.iters):
-                tempAgent = pacai.student.valueIterationAgents.ValueIterationAgent(0, mdp, opts.discount, i)
+                tempAgent = pacai.student.valueIterationAgents.ValueIterationAgent(0,
+                        mdp, opts.discount, i)
                 display.displayValues(tempAgent, message = 'VALUES AFTER ' + str(i) + ' ITERATIONS')
                 display.pause()
 
@@ -598,7 +608,8 @@ if __name__ == '__main__':
         logging.debug('RUNNING ' + str(opts.episodes) + ' EPISODES')
     returns = 0
     for episode in range(1, opts.episodes + 1):
-        returns += runEpisode(a, env, opts.discount, decisionCallback, displayCallback, messageCallback, pauseCallback, episode)
+        returns += runEpisode(a, env, opts.discount, decisionCallback, displayCallback,
+                messageCallback, pauseCallback, episode)
 
     if opts.episodes > 0:
         logging.debug('AVERAGE RETURNS FROM START STATE:' + str((returns + 0.0) / opts.episodes))

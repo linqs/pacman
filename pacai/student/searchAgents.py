@@ -53,7 +53,14 @@ class CornersProblem(SearchProblem):
         cost of expanding to that successor
 
         successors = []
-        for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
+        directions = [
+            game.Directions.NORTH,
+            game.Directions.SOUTH,
+            game.Directions.EAST,
+            game.Directions.WEST
+        ]
+
+        for action in directions:
             Add a successor state to the successor list if the action is legal
             Here's a code snippet for figuring out whether a new position hits a wall:
                x, y = currentPosition
@@ -172,7 +179,8 @@ class ClosestDotSearchAgent(SearchAgent):
             for action in nextPathSegment:
                 legal = currentState.getLegalActions()
                 if action not in legal:
-                    raise Exception('findPathToClosestDot returned an illegal move: %s!\n%s' % (str(action), str(currentState)))
+                    raise Exception('findPathToClosestDot returned an illegal move: %s!\n%s' %
+                            (str(action), str(currentState)))
 
                 currentState = currentState.generateSuccessor(0, action)
 

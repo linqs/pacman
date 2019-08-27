@@ -613,7 +613,8 @@ def qualifiedImport(qualified_name):
     try:
         module = importlib.import_module(module_name)
     except ImportError:
-        raise AttributeError("Unable to locate module (%s) for qualified object (%s)." % (module_name, qualified_name))
+        raise AttributeError("Unable to locate module (%s) for qualified object (%s)." %
+                (module_name, qualified_name))
 
     if (target_name == ''):
         return module

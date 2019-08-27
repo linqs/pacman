@@ -38,7 +38,9 @@ class DirectionalGhost(GhostAgent):
         else:
             bestScore = min(distancesToPacman)
             bestProb = self.prob_attack
-        bestActions = [action for action, distance in zip(legalActions, distancesToPacman) if distance == bestScore]
+
+        zipActions = zip(legalActions, distancesToPacman)
+        bestActions = [action for action, distance in zipActions if distance == bestScore]
 
         # Construct distribution
         dist = util.Counter()

@@ -39,8 +39,11 @@ class PacmanGraphics(object):
         if self.agentCounter == 0:
             self.turn += 1
             if DISPLAY_MOVES:
-                ghosts = [pacai.util.util.nearestPoint(state.getGhostPosition(i)) for i in range(1, numAgents)]
-                print("%4d) P: %-8s" % (self.turn, str(pacai.util.util.nearestPoint(state.getPacmanPosition()))), '| Score: %-5d' % state.score, '| Ghosts:', ghosts)
+                ghosts = [pacai.util.util.nearestPoint(state.getGhostPosition(i))
+                        for i in range(1, numAgents)]
+                print("%4d) P: %-8s | Score: %-5d | Ghosts:" %
+                    (self.turn, str(pacai.util.util.nearestPoint(state.getPacmanPosition())),
+                    state.score, ghosts))
 
             if self.turn % DRAW_EVERY == 0:
                 self.draw(state)

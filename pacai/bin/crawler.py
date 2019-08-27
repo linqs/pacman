@@ -367,7 +367,8 @@ class CrawlingRobot:
         self.groundHeight = 40
         self.groundY = self.totHeight - self.groundHeight
 
-        self.ground = canvas.create_rectangle(0, self.groundY, self.totWidth, self.totHeight, fill='blue')
+        self.ground = canvas.create_rectangle(0, self.groundY, self.totWidth, self.totHeight,
+                fill = 'blue')
 
         # Robot Body
         self.robotWidth = 80

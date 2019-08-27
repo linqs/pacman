@@ -99,36 +99,42 @@ class Application(object):
         self.canvas.grid(row=2, columnspan=10)
 
     def setupAlphaButtonAndLabel(self, win):
-        self.alpha_minus = tkinter.Button(win, text="-", command=(lambda: self.incrementAlpha(self.dec)))
+        self.alpha_minus = tkinter.Button(win, text="-",
+                command=(lambda: self.incrementAlpha(self.dec)))
         self.alpha_minus.grid(row=1, column=3, padx=10)
 
         self.alpha = self.sigmoid(self.al)
         self.alpha_label = tkinter.Label(win, text='Learning Rate: %.3f' % (self.alpha))
         self.alpha_label.grid(row=1, column=4)
 
-        self.alpha_plus = tkinter.Button(win, text="+", command=(lambda: self.incrementAlpha(self.inc)))
+        self.alpha_plus = tkinter.Button(win, text="+",
+                command=(lambda: self.incrementAlpha(self.inc)))
         self.alpha_plus.grid(row=1, column=5, padx=10)
 
     def setUpGammaButtonAndLabel(self, win):
-        self.gamma_minus = tkinter.Button(win, text="-", command=(lambda: self.incrementGamma(self.dec)))
+        self.gamma_minus = tkinter.Button(win, text="-",
+                command=(lambda: self.incrementGamma(self.dec)))
         self.gamma_minus.grid(row=1, column=0, padx=10)
 
         self.gamma = self.sigmoid(self.ga)
         self.gamma_label = tkinter.Label(win, text='Discount: %.3f' % (self.gamma))
         self.gamma_label.grid(row=1, column=1)
 
-        self.gamma_plus = tkinter.Button(win, text="+", command=(lambda: self.incrementGamma(self.inc)))
+        self.gamma_plus = tkinter.Button(win, text="+",
+                command=(lambda: self.incrementGamma(self.inc)))
         self.gamma_plus.grid(row=1, column=2, padx=10)
 
     def setupEpsilonButtonAndLabel(self, win):
-        self.epsilon_minus = tkinter.Button(win, text="-", command=(lambda: self.incrementEpsilon(self.dec)))
+        self.epsilon_minus = tkinter.Button(win, text="-",
+                command=(lambda: self.incrementEpsilon(self.dec)))
         self.epsilon_minus.grid(row=0, column=3)
 
         self.epsilon = self.sigmoid(self.ep)
         self.epsilon_label = tkinter.Label(win, text='Epsilon: %.3f' % (self.epsilon))
         self.epsilon_label.grid(row=0, column=4)
 
-        self.epsilon_plus = tkinter.Button(win, text="+", command=(lambda: self.incrementEpsilon(self.inc)))
+        self.epsilon_plus = tkinter.Button(win, text="+",
+                command=(lambda: self.incrementEpsilon(self.inc)))
         self.epsilon_plus.grid(row=0, column=5)
 
     def setupSpeedButtonAndLabel(self, win):

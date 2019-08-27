@@ -75,7 +75,8 @@ class SimpleExtractor(FeatureExtractor):
         next_x, next_y = int(x + dx), int(y + dy)
 
         # Count the number of ghosts 1-step away.
-        features["#-of-ghosts-1-step-away"] = sum((next_x, next_y) in game.Actions.getLegalNeighbors(g, walls) for g in ghosts)
+        features["#-of-ghosts-1-step-away"] = sum((next_x, next_y) in
+                game.Actions.getLegalNeighbors(g, walls) for g in ghosts)
 
         # If there is no danger of ghosts then add the food feature.
         if not features["#-of-ghosts-1-step-away"] and food[next_x][next_y]:

@@ -8,7 +8,8 @@ Algorithm:
 
 Pacman Details:
  - Players 1 and 3 always start in the bottom left; 2 and 4 in the top right.
- - Food is placed in dead ends and then randomly (though not too close to the pacmen starting positions).
+ - Food is placed in dead ends and then randomly
+    (though not too close to the pacmen starting positions).
 
 Notes:
  - The final map includes a symmetric, flipped copy.
@@ -240,7 +241,12 @@ def add_pacman_stuff(maze, max_food=60, max_capsules=4, toskip=0):
                 if maze.grid[row][col] != EMPTY:
                     continue
 
-                neighbors = (maze.grid[row - 1][col] == EMPTY) + (maze.grid[row][col - 1] == EMPTY) + (maze.grid[row + 1][col] == EMPTY) + (maze.grid[row][col + 1] == EMPTY)
+                neighbors = 0
+                neighbors += (maze.grid[row - 1][col] == EMPTY)
+                neighbors += (maze.grid[row][col - 1] == EMPTY)
+                neighbors += (maze.grid[row + 1][col] == EMPTY)
+                neighbors += (maze.grid[row][col + 1] == EMPTY)
+
                 if neighbors == 1:
                     new_grid[row][col] = FOOD
                     new_grid[maze.r - row - 1][maze.c - col - 1] = FOOD

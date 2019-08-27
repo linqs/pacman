@@ -4,7 +4,7 @@ import math
 import operator
 
 import pacai.bin.gridworld
-import pacai.util.util
+from pacai.util import util
 
 class TextGridworldDisplay(object):
     def __init__(self, gridworld):
@@ -20,7 +20,7 @@ class TextGridworldDisplay(object):
         if (message is not None):
             print(message)
 
-        values = pacai.util.util.Counter()
+        values = util.Counter()
         policy = {}
 
         states = self.gridworld.getStates()
@@ -40,7 +40,7 @@ class TextGridworldDisplay(object):
         if (message is not None):
             print(message)
 
-        qValues = pacai.util.util.Counter()
+        qValues = util.Counter()
 
         states = self.gridworld.getStates()
         for state in states:
@@ -92,7 +92,9 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
                 if length == 0:
                     text[1] = '*'
                 else:
-                    text[1] = "|" + ' ' * int((length - 1) / 2 - 1) + ' * ' + ' ' * int((length) / 2 - 1) + "|"
+                    text[1] = ''
+                    text[1] += "|" + ' ' * int((length - 1) / 2 - 1)
+                    text[1] += ' * ' + ' ' * int((length) / 2 - 1) + "|"
 
             if action == 'east':
                 text[2] = '  ' + text[2] + ' >'
@@ -117,7 +119,8 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
     colLabels.insert(0, ' ')
     finalRows = [colLabels] + newRows
 
-    print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
+    print(indent(finalRows, separateRows=True, delim='|', prefix='|',
+            postfix='|', justify='center', hasHeader=True))
 
 def prettyPrintNullValues(gridWorld, currentState = None):
     grid = gridWorld.grid
@@ -167,7 +170,9 @@ def prettyPrintNullValues(gridWorld, currentState = None):
                 if length == 0:
                     text[1] = '*'
                 else:
-                    text[1] = "|" + ' ' * int((length - 1) / 2 - 1) + '*' + ' ' * int((length) / 2 - 1) + "|"
+                    text[1] = ''
+                    text[1] += "|" + ' ' * int((length - 1) / 2 - 1)
+                    text[1] += '*' + ' ' * int((length) / 2 - 1) + "|"
 
             if action == 'east':
                 text[2] = '  ' + text[2] + ' >'
@@ -193,7 +198,8 @@ def prettyPrintNullValues(gridWorld, currentState = None):
     colLabels.insert(0, ' ')
     finalRows = [colLabels] + newRows
 
-    print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
+    print(indent(finalRows, separateRows=True, delim='|', prefix='|',
+            postfix='|', justify='center', hasHeader=True))
 
 def prettyPrintQValues(gridWorld, qValues, currentState=None):
     grid = gridWorld.grid
@@ -278,11 +284,18 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
     colLabels.insert(0, ' ')
     finalRows = [colLabels] + newRows
 
-    print(indent(finalRows, separateRows=True, delim='|', prefix='|', postfix='|', justify='center', hasHeader=True))
+    print(indent(finalRows, separateRows=True, delim='|', prefix='|',
+            postfix='|', justify='center', hasHeader=True))
 
 def border(text):
     length = len(text)
-    pieces = ['-' * (length + 2), '|' + ' ' * (length + 2) + '|', ' | ' + text + ' | ', '|' + ' ' * (length + 2) + '|', '-' * (length + 2)]
+    pieces = [
+        '-' * (length + 2),
+        '|' + ' ' * (length + 2) + '|',
+        ' | ' + text + ' | ',
+        '|' + ' ' * (length + 2) + '|',
+        '-' * (length + 2)
+    ]
     return '\n'.join(pieces)
 
 # INDENTING CODE
@@ -322,7 +335,8 @@ def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
 
     # get the maximum of each column by the string length of its items
     maxWidths = [max([len(str(item)) for item in column]) for column in columns]
-    rowSeparator = headerChar * (len(prefix) + len(postfix) + sum(maxWidths) + len(delim) * (len(maxWidths) - 1))
+    separatorWidth = len(prefix) + len(postfix) + sum(maxWidths) + len(delim) * (len(maxWidths) - 1)
+    rowSeparator = headerChar * separatorWidth
 
     # select the appropriate justify method
     justify = {'center': str.center, 'right': str.rjust, 'left': str.ljust}[justify.lower()]
@@ -333,7 +347,8 @@ def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
 
     for physicalRows in logicalRows:
         for row in physicalRows:
-            print(prefix + delim.join([justify(str(item), width) for (item, width) in zip(row, maxWidths)]) + postfix, file=output)
+            strColumns = [justify(str(item), width) for (item, width) in zip(row, maxWidths)]
+            print(prefix + delim.join(strColumns) + postfix, file=output)
 
         if separateRows or hasHeader:
             print(rowSeparator, file=output)
@@ -347,7 +362,8 @@ def wrap_always(text, width):
     It doesn't split the text in words.
     """
 
-    return '\n'.join([text[width * i:width * (i + 1)] for i in range(int(math.ceil(1.0 * len(text) / width)))])
+    return '\n'.join([text[width * i:width * (i + 1)]
+            for i in range(int(math.ceil(1.0 * len(text) / width)))])
 
 # TEST OF DISPLAY CODE
 
@@ -356,11 +372,13 @@ if __name__ == '__main__':
     print(grid.getStates())
 
     policy = dict([(state, 'east') for state in grid.getStates()])
-    values = pacai.util.util.Counter(dict([(state, 1000.23) for state in grid.getStates()]))
+    values = util.Counter(dict([(state, 1000.23) for state in grid.getStates()]))
     prettyPrintValues(grid, values, policy, currentState = (0, 0))
 
-    stateCrossActions = [[(state, action) for action in grid.getPossibleActions(state)] for state in grid.getStates()]
+    stateCrossActions = [[(state, action) for action in grid.getPossibleActions(state)]
+            for state in grid.getStates()]
     qStates = functools.reduce(lambda x, y: x + y, stateCrossActions, [])
-    qValues = pacai.util.util.Counter(dict([((state, action), 10.5) for state, action in qStates]))
-    qValues = pacai.util.util.Counter(dict([((state, action), 10.5) for state, action in functools.reduce(lambda x, y: x + y, stateCrossActions, [])]))
+    qValues = util.Counter(dict([((state, action), 10.5) for state, action in qStates]))
+    qValues = util.Counter(dict([((state, action), 10.5)
+            for state, action in functools.reduce(lambda x, y: x + y, stateCrossActions, [])]))
     prettyPrintQValues(grid, qValues, currentState = (0, 0))

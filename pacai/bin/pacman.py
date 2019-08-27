@@ -5,16 +5,19 @@ This file is divided into three sections:
 (i) Your interface to the pacman world:
 Pacman is a complex environment.
 You probably don't want to read through all of the code we wrote to make the game runs correctly.
-This section contains the parts of the code that you will need to understand in order to complete the project.
+This section contains the parts of the code that you will need to understand in order to complete
+the project.
 There is also some code in game.py that you should understand.
 
 (ii) The hidden secrets of pacman:
-This section contains all of the logic code that the pacman environment uses to decide who can move where, who dies when things collide, etc.
+This section contains the logic code that the pacman environment uses to decide who can move where,
+who dies when things collide, etc.
 You shouldn't need to read this section of code, but you can if you want.
 
 (iii) Framework to start a game:
 The final section contains the code for reading the command you use to set up the game,
-then starting up a new game, along with linking in all the external parts (agent functions, graphics).
+then starting up a new game, along with linking in all the external parts
+(agent functions, graphics).
 Check this section out to see all the options available to you.
 
 To play your first game, type 'python -m pacai.bin.pacman' from the command line.
@@ -267,7 +270,8 @@ class ClassicGameRules(object):
     def __init__(self, timeout=30):
         self.timeout = timeout
 
-    def newGame(self, layout, pacmanAgent, ghostAgents, display, quiet=False, catchExceptions=False):
+    def newGame(self, layout, pacmanAgent, ghostAgents, display,
+            quiet = False, catchExceptions = False):
         agents = [pacmanAgent] + ghostAgents[:layout.getNumGhosts()]
         initState = GameState()
         initState.initialize(layout, len(ghostAgents))
@@ -336,7 +340,8 @@ class PacmanRules:
         Returns a list of possible actions.
         """
 
-        return Actions.getPossibleActions(state.getPacmanState().configuration, state.data.layout.walls)
+        return Actions.getPossibleActions(state.getPacmanState().configuration,
+                state.data.layout.walls)
 
     @staticmethod
     def applyAction(state, action):
@@ -533,7 +538,8 @@ def readCommand(argv):
     parser.add_option('-f', '--fixRandomSeed', action='store_true', dest='fixRandomSeed',
             help='Fixes the random seed to always play the same game', default=False)
     parser.add_option('-r', '--recordActions', action='store_true', dest='record',
-            help='Writes game histories to a file (named by the time they were played)', default=False)
+            help='Writes game histories to a file (named by the time they were played)',
+            default=False)
     parser.add_option('--replay', dest='gameToReplay',
             help='A recorded game file (pickle) to replay', default=None)
     parser.add_option('-a', '--agentArgs', dest='agentArgs',
@@ -545,7 +551,8 @@ def readCommand(argv):
     parser.add_option('-c', '--catchExceptions', action='store_true', dest='catchExceptions',
             help='Turns on exception handling and timeouts during games', default=False)
     parser.add_option('--timeout', dest='timeout', type='int',
-            help=default('Maximum length of time an agent can spend computing in a single game'), default=30)
+            help=default('Maximum length of time an agent can spend computing in a single game'),
+            default=30)
     parser.add_option('--gif', dest='gif',
             help=default('Save the game as a gif to the specified path'))
     parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
@@ -599,8 +606,10 @@ def readCommand(argv):
         args['display'] = pacai.ui.textDisplay.PacmanGraphics()
     else:
         import pacai.ui.graphicsDisplay
-        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
+        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom,
+                frameTime = options.frameTime,
+                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
+                gif_fps = options.gifFPS)
 
     args['numGames'] = options.numGames
     args['record'] = options.record
@@ -641,7 +650,8 @@ def replayGame(layout, actions, display):
 
     display.finish()
 
-def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, catchExceptions=False, timeout=30):
+def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0,
+        catchExceptions = False, timeout = 30):
     import __main__
     __main__.__dict__['_display'] = display
 
@@ -668,7 +678,7 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
             import pickle
             import time
 
-            fname = ('recorded-game-%d' % (i + 1)) + '-'.join([str(t) for t in time.localtime()[1:6]])
+            fname = ('recorded-game-%d' % (i)) + '-'.join([str(t) for t in time.localtime()[1:6]])
             components = {'layout': layout, 'actions': game.moveHistory}
             f = file(fname, 'w')
             pickle.dump(components, f)

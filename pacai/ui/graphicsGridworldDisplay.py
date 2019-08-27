@@ -121,7 +121,8 @@ def drawValues(gridworld, values, policy, currentState = None, message = 'State 
                     action = 'exit'
 
                 valString = '%.2f' % value
-                drawSquare(x, y, value, minValue, maxValue, valString, action, False, isExit, isCurrent)
+                drawSquare(x, y, value, minValue, maxValue, valString, action, False,
+                        isExit, isCurrent)
 
     pos = to_screen(((grid.width - 1.0) / 2.0, - 0.8))
     graphicsUtils.text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
@@ -130,7 +131,8 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
     grid = gridworld.grid
     blank()
 
-    stateCrossActions = [[(state, action) for action in gridworld.getPossibleActions(state)] for state in gridworld.getStates()]
+    stateCrossActions = [[(state, action) for action in gridworld.getPossibleActions(state)] for
+            state in gridworld.getStates()]
     qStates = functools.reduce(lambda x, y: x + y, stateCrossActions, [])
     qValueList = [qValues[(state, action)] for state, action in qStates] + [0.0]
     minValue = min(qValueList)
@@ -164,7 +166,8 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
                 action = 'exit'
                 value = q[action]
                 valString = '%.2f' % value
-                drawSquare(x, y, value, minValue, maxValue, valString, action, False, isExit, isCurrent)
+                drawSquare(x, y, value, minValue, maxValue, valString, action, False,
+                        isExit, isCurrent)
             else:
                 drawSquareQ(x, y, q, minValue, maxValue, valStrings, actions, isCurrent)
 
@@ -186,12 +189,14 @@ def drawNullSquare(grid, x, y, isObstacle, isTerminal, isCurrent):
 
     if isTerminal and not isObstacle:
         square((screen_x, screen_y), 0.4 * GRID_SIZE, color = EDGE_COLOR, filled = 0, width = 2)
-        graphicsUtils.text((screen_x, screen_y), TEXT_COLOR, str(grid[x][y]), "Courier", -24, "bold", "c")
+        graphicsUtils.text((screen_x, screen_y), TEXT_COLOR, str(grid[x][y]),
+                "Courier", -24, "bold", "c")
 
     text_color = TEXT_COLOR
 
     if not isObstacle and isCurrent:
-        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR, fillColor=LOCATION_COLOR)
+        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR,
+                fillColor = LOCATION_COLOR)
 
     # if not isObstacle:
     #     graphicsUtils.text((screen_x, screen_y), text_color, valStr, "Courier", 24, "bold", "c")
@@ -210,18 +215,39 @@ def drawSquare(x, y, val, min, max, valStr, action, isObstacle, isTerminal, isCu
         square((screen_x, screen_y), 0.4 * GRID_SIZE, color = EDGE_COLOR, filled = 0, width = 2)
 
     if action == 'north':
-        graphicsUtils.polygon([(screen_x, screen_y - 0.45 * GRID_SIZE), (screen_x + 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE), (screen_x - 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        coords = [
+            (screen_x, screen_y - 0.45 * GRID_SIZE),
+            (screen_x + 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE),
+            (screen_x - 0.05 * GRID_SIZE, screen_y - 0.40 * GRID_SIZE)
+        ]
+        graphicsUtils.polygon(coords, EDGE_COLOR, filled = 1, smoothed = False)
     elif action == 'south':
-        graphicsUtils.polygon([(screen_x, screen_y + 0.45 * GRID_SIZE), (screen_x + 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE), (screen_x - 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        coords = [
+            (screen_x, screen_y + 0.45 * GRID_SIZE),
+            (screen_x + 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE),
+            (screen_x - 0.05 * GRID_SIZE, screen_y + 0.40 * GRID_SIZE)
+        ]
+        graphicsUtils.polygon(coords, EDGE_COLOR, filled = 1, smoothed = False)
     elif action == 'west':
-        graphicsUtils.polygon([(screen_x - 0.45 * GRID_SIZE, screen_y), (screen_x - 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE), (screen_x - 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        coords = [
+            (screen_x - 0.45 * GRID_SIZE, screen_y),
+            (screen_x - 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE),
+            (screen_x - 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)
+        ]
+        graphicsUtils.polygon(coords, EDGE_COLOR, filled = 1, smoothed = False)
     elif action == 'east':
-        graphicsUtils.polygon([(screen_x + 0.45 * GRID_SIZE, screen_y), (screen_x + 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE), (screen_x + 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)], EDGE_COLOR, filled = 1, smoothed = False)
+        coords = [
+            (screen_x + 0.45 * GRID_SIZE, screen_y),
+            (screen_x + 0.40 * GRID_SIZE, screen_y + 0.05 * GRID_SIZE),
+            (screen_x + 0.40 * GRID_SIZE, screen_y - 0.05 * GRID_SIZE)
+        ]
+        graphicsUtils.polygon(coords, EDGE_COLOR, filled = 1, smoothed = False)
 
     text_color = TEXT_COLOR
 
     if not isObstacle and isCurrent:
-        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, outlineColor=LOCATION_COLOR, fillColor=LOCATION_COLOR)
+        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE,
+                outlineColor = LOCATION_COLOR, fillColor = LOCATION_COLOR)
 
     if not isObstacle:
         graphicsUtils.text((screen_x, screen_y), text_color, valStr, "Courier", -30, "bold", "c")
@@ -262,7 +288,8 @@ def drawSquareQ(x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
     graphicsUtils.line(nw, se, color = EDGE_COLOR)
 
     if isCurrent:
-        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR, fillColor=LOCATION_COLOR)
+        graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR,
+                fillColor = LOCATION_COLOR)
 
     for action in actions:
         text_color = TEXT_COLOR
@@ -304,7 +331,14 @@ def square(pos, size, color, filled, width):
     x, y = pos
     dx, dy = size, size
 
-    return graphicsUtils.polygon([(x - dx, y - dy), (x - dx, y + dy), (x + dx, y + dy), (x + dx, y - dy)], outlineColor=color, fillColor=color, filled=filled, width=width, smoothed=False)
+    coords = [
+        (x - dx, y - dy),
+        (x - dx, y + dy),
+        (x + dx, y + dy),
+        (x + dx, y - dy)
+    ]
+    return graphicsUtils.polygon(coords, outlineColor = color, fillColor = color,
+            filled = filled, width = width, smoothed = False)
 
 def to_screen(point):
     (gamex, gamey) = point
