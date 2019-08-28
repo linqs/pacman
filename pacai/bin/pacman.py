@@ -30,7 +30,6 @@ import optparse
 import pickle
 import random
 import sys
-import time
 
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost

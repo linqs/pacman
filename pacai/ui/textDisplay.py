@@ -2,7 +2,6 @@ import time
 
 DRAW_EVERY = 1
 SLEEP_TIME = 0  # This can be overwritten by __init__
-DISPLAY_MOVES = False
 QUIET = False  # Supresses output
 
 class NullGraphics(object):
@@ -38,12 +37,6 @@ class PacmanGraphics(object):
         self.agentCounter = (self.agentCounter + 1) % numAgents
         if self.agentCounter == 0:
             self.turn += 1
-            if DISPLAY_MOVES:
-                ghosts = [pacai.util.util.nearestPoint(state.getGhostPosition(i))
-                        for i in range(1, numAgents)]
-                print("%4d) P: %-8s | Score: %-5d | Ghosts:" %
-                    (self.turn, str(pacai.util.util.nearestPoint(state.getPacmanPosition())),
-                    state.score, ghosts))
 
             if self.turn % DRAW_EVERY == 0:
                 self.draw(state)
