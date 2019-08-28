@@ -1,10 +1,6 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.util import util
 
-# Force the extractors into scope for util.lookup().
-# TODO(eriq): I hate util.lookup(), get rid of it and this import.
-from pacai.util import featureExtractors
-
 class QLearningAgent(ReinforcementAgent):
     """
     Q-Learning Agent
@@ -118,9 +114,9 @@ class ApproximateQAgent(PacmanQAgent):
     DESCRIPTION: <Write something here so we know what you did.>
     """
 
-    def __init__(self, index, extractor = 'IdentityExtractor', **args):
+    def __init__(self, index, extractor = 'pacai.util.featureExtractors.IdentityExtractor', **args):
         super().__init__(index, **args)
-        self.featExtractor = util.lookup()()
+        self.featExtractor = util.qualifiedImport(extractor)
 
         # You might want to initialize weights here.
 

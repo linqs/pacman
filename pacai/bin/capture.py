@@ -33,21 +33,16 @@ import optparse
 import pickle
 import random
 import sys
-import time
 import traceback
-import types
 
 import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
-from pacai.core.game import Configuration
-from pacai.core.game import Directions
 from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.game import Grid
-from pacai.core.game import reconstituteGrid
 from pacai.util.logs import initLogging
 from pacai.util.util import manhattanDistance
 from pacai.util.util import nearestPoint

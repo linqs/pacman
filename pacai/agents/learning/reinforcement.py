@@ -3,7 +3,6 @@ import logging
 import time
 
 from pacai.agents.learning.value import ValueEstimationAgent
-from pacai.util import util
 
 class ReinforcementAgent(ValueEstimationAgent):
     """

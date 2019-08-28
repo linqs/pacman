@@ -1,5 +1,3 @@
-import random
-
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Directions
 from pacai.ui import graphicsUtils

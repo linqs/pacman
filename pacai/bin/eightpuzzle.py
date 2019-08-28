@@ -1,4 +1,3 @@
-import logging
 import random
 
 from pacai.core.search import search

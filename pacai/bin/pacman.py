@@ -24,12 +24,13 @@ To play your first game, type 'python -m pacai.bin.pacman' from the command line
 The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).
 Have fun!
 """
+
 import logging
-import os
+import optparse
+import pickle
 import random
 import sys
 import time
-import types
 
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
@@ -502,8 +503,6 @@ def readCommand(argv):
     Processes the command used to run pacman from the command line.
     """
 
-    from optparse import OptionParser
-
     usageStr = """
     USAGE: python pacman.py <options>
     EXAMPLES:
@@ -514,7 +513,7 @@ def readCommand(argv):
             - starts an interactive game on a smaller board, zoomed in
     """
 
-    parser = OptionParser(usageStr)
+    parser = optparse.OptionParser(usageStr)
 
     parser.add_option('-n', '--numGames', dest='numGames', type='int',
             help=default('the number of GAMES to play'), metavar='GAMES', default=1)
@@ -619,7 +618,6 @@ def readCommand(argv):
     # Special case: recorded games don't use the runGames method or args structure
     if options.gameToReplay is not None:
         logging.info('Replaying recorded game %s.' % options.gameToReplay)
-        import pickle
 
         with open(options.gameToReplay) as f:
             recorded = pickle.load(f)
@@ -632,8 +630,6 @@ def readCommand(argv):
     return args
 
 def replayGame(layout, actions, display):
-    import pacmanAgents
-
     rules = ClassicGameRules()
     agents = [GreedyAgent(0)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
     game = rules.newGame(layout, agents[0], agents[1:], display)
@@ -675,9 +671,6 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0,
             games.append(game)
 
         if record:
-            import pickle
-            import time
-
             fname = ('recorded-game-%d' % (i)) + '-'.join([str(t) for t in time.localtime()[1:6]])
             components = {'layout': layout, 'actions': game.moveHistory}
             f = file(fname, 'w')

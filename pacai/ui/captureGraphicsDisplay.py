@@ -3,7 +3,6 @@
 import io
 import math
 import os
-import time
 
 from pacai.core.game import Directions
 from pacai.ui import graphicsUtils

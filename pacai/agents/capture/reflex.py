@@ -1,3 +1,4 @@
+import logging
 import random
 import time
 
@@ -19,10 +20,9 @@ class ReflexCaptureAgent(CaptureAgent):
 
         actions = gameState.getLegalActions(self.index)
 
-        # You can profile your evaluation time by uncommenting these lines
-        # start = time.time()
+        start = time.time()
         values = [self.evaluate(gameState, a) for a in actions]
-        # print('eval time for agent %d: %.4f' % (self.index, time.time() - start))
+        logging.debug('evaluate() time for agent %d: %.4f' % (self.index, time.time() - start))
 
         maxValue = max(values)
         bestActions = [a for a, v in zip(actions, values) if v == maxValue]

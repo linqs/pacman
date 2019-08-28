@@ -1,4 +1,3 @@
-import logging
 import math
 import sys
 import pacai.core.environment
