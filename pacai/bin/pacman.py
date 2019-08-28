@@ -536,9 +536,8 @@ def readCommand(argv):
             help=default('Zoom the size of the graphics window'), default=1.0)
     parser.add_option('-f', '--fixRandomSeed', action='store_true', dest='fixRandomSeed',
             help='Fixes the random seed to always play the same game', default=False)
-    parser.add_option('-r', '--recordActions', action='store_true', dest='record',
-            help='Writes game histories to a file (named by the time they were played)',
-            default=False)
+    parser.add_option('--record', type='string', dest='record',
+            help='Writes game histories to the named file')
     parser.add_option('--replay', dest='gameToReplay',
             help='A recorded game file (pickle) to replay', default=None)
     parser.add_option('-a', '--agentArgs', dest='agentArgs',
@@ -619,8 +618,8 @@ def readCommand(argv):
     if options.gameToReplay is not None:
         logging.info('Replaying recorded game %s.' % options.gameToReplay)
 
-        with open(options.gameToReplay) as f:
-            recorded = pickle.load(f)
+        with open(options.gameToReplay, 'rb') as file:
+            recorded = pickle.load(file)
 
         recorded['display'] = args['display']
         replayGame(**recorded)
@@ -646,7 +645,7 @@ def replayGame(layout, actions, display):
 
     display.finish()
 
-def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0,
+def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraining = 0,
         catchExceptions = False, timeout = 30):
     import __main__
     __main__.__dict__['_display'] = display
@@ -671,11 +670,13 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0,
             games.append(game)
 
         if record:
-            fname = ('recorded-game-%d' % (i)) + '-'.join([str(t) for t in time.localtime()[1:6]])
+            path = 'capture.replay'
+            if (isinstance(record, str)):
+                path = record
+
             components = {'layout': layout, 'actions': game.moveHistory}
-            f = file(fname, 'w')
-            pickle.dump(components, f)
-            f.close()
+            with open(path, 'wb') as file:
+                pickle.dump(components, file)
 
     if (numGames - numTraining) > 0:
         scores = [game.state.getScore() for game in games]
