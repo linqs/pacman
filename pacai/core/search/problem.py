@@ -1,7 +1,5 @@
 import abc
 
-from pacai.util import util
-
 class SearchProblem(abc.ABC):
     """
     This class outlines the structure of a search problem, but doesn't implement

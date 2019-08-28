@@ -1,10 +1,6 @@
-import math
-import random
-import string
 import sys
 import time
 import tkinter
-import types
 
 _Windows = sys.platform == 'win32'  # True if on Win95/98/NT
 
@@ -64,9 +60,9 @@ def begin_graphics(width = 640, height = 480, color = formatColor(0, 0, 0), titl
         _canvas.pack()
         draw_background()
         _canvas.update()
-    except:
+    except Exception as ex:
         _root_window = None
-        raise
+        raise RuntimeError("Unable to create tkinter canvas.") from ex
 
     # Bind to key-down and key-up events
     _root_window.bind("<KeyPress>", _keypress)
@@ -119,7 +115,7 @@ def wait_for_click():
         sleep(0.05)
 
 def draw_background():
-    corners = [(0,0), (0, _canvas_ys), (_canvas_xs, _canvas_ys), (_canvas_xs, 0)]
+    corners = [(0, 0), (0, _canvas_ys), (_canvas_xs, _canvas_ys), (_canvas_xs, 0)]
     polygon(corners, _bg_color, fillColor=_bg_color, filled=True, smoothed=False)
 
 def _destroy_window(event=None):
@@ -163,9 +159,10 @@ def polygon(coords, outlineColor, fillColor=None, filled=1, smoothed=1, behind=0
     if filled == 0:
         fillColor = ""
 
-    poly = _canvas.create_polygon(c, outline=outlineColor, fill=fillColor, smooth=smoothed, width=width)
+    poly = _canvas.create_polygon(c, outline=outlineColor, fill=fillColor,
+            smooth=smoothed, width=width)
     if behind > 0:
-        _canvas.tag_lower(poly, behind) # Higher should be more visible
+        _canvas.tag_lower(poly, behind)  # Higher should be more visible
     return poly
 
 def square(pos, r, color, filled=1, behind=0):
@@ -200,8 +197,8 @@ def moveCircle(id, pos, r, endpoints=None):
     global _canvas_x, _canvas_y
 
     x, y = pos
-    x0, x1 = x - r - 1, x + r
-    y0, y1 = y - r - 1, y + r
+    x0 = x - r - 1
+    y0 = y - r - 1
 
     if (endpoints is None):
         e = [0, 359]
@@ -237,9 +234,9 @@ def line(here, there, color=formatColor(0, 0, 0), width=2):
     x1, y1 = there[0], there[1]
     return _canvas.create_line(x0, y0, x1, y1, fill=color, width=width)
 
-##############################################################################
-### Keypress handling ########################################################
-##############################################################################
+###########################
+#   Keypress handling     #
+###########################
 
 # We bind to key-down and key-up events.
 
@@ -251,7 +248,7 @@ _got_release = None
 
 def _keypress(event):
     global _got_release
-    #remap_arrows(event)
+    # remap_arrows(event)
     _keysdown[event.keysym] = 1
     _keyswaiting[event.keysym] = 1
     # print(event.char, event.keycode)
@@ -259,11 +256,11 @@ def _keypress(event):
 
 def _keyrelease(event):
     global _got_release
-    #remap_arrows(event)
+    # remap_arrows(event)
 
     try:
         del _keysdown[event.keysym]
-    except:
+    except Exception:
         pass
 
     _got_release = 1
@@ -273,16 +270,20 @@ def remap_arrows(event):
     if event.char in ['a', 's', 'd', 'w']:
         return
 
-    if event.keycode in [37, 101]: # LEFT ARROW (win / x)
+    # LEFT ARROW (win / x)
+    if event.keycode in [37, 101]:
         event.char = 'a'
 
-    if event.keycode in [38, 99]: # UP ARROW
+    # UP ARROW
+    if event.keycode in [38, 99]:
         event.char = 'w'
 
-    if event.keycode in [39, 102]: # RIGHT ARROW
+    # RIGHT ARROW
+    if event.keycode in [39, 102]:
         event.char = 'd'
 
-    if event.keycode in [40, 104]: # DOWN ARROW
+    # DOWN ARROW
+    if event.keycode in [40, 104]:
         event.char = 's'
 
 def _clear_keys(event=None):
@@ -346,12 +347,12 @@ def move_to(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     if y is None:
         try:
             x, y = x
-        except:
-            raise Exception('incomprehensible coordinates')
+        except Exception as ex:
+            raise ValueError('Incomprehensible coordinates: ' + str(x)) from ex
 
     horiz = True
     newCoords = []
-    current_x, current_y = _canvas.coords(object)[0:2] # first point
+    current_x, current_y = _canvas.coords(object)[0:2]  # first point
     for coord in _canvas.coords(object):
         if horiz:
             inc = x - current_x
@@ -373,8 +374,8 @@ def move_by(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     if y is None:
         try:
             x, y = x
-        except:
-            raise Exception('incomprehensible coordinates')
+        except Exception as ex:
+            raise ValueError('Incomprehensible coordinates: ' + str(x)) from ex
 
     horiz = True
     newCoords = []
@@ -395,14 +396,16 @@ def writePostscript(filename):
     Write the current canvas to a postscript file.
     """
 
-    _canvas.postscript(file = filename, colormode = 'color', x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
+    _canvas.postscript(file = filename, colormode = 'color', x = 0, y = 0, width = _canvas_xs,
+            height = _canvas_ys)
 
 def getPostscript():
     """
     Get the current canvas as a string that represents the contents of a postscript file.
     """
 
-    return _canvas.postscript(colormode = 'color', x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
+    return _canvas.postscript(colormode = 'color', x = 0, y = 0, width = _canvas_xs,
+            height = _canvas_ys)
 
 ghost_shape = [
     (0, - 0.5),

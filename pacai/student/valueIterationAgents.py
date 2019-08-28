@@ -14,9 +14,9 @@ class ValueIterationAgent(ValueEstimationAgent):
     Methods to Implement:
 
     def getQValue(self, state, action):
-        The q-value of the state action pair(after the indicated number 
+        The q-value of the state action pair(after the indicated number
         of value iteration passes). Note that value iteration does not
-        necessarily create this quantity and you may have to derive it 
+        necessarily create this quantity and you may have to derive it
         on the fly.
 
     def getPolicy(self, state):

@@ -53,7 +53,14 @@ class CornersProblem(SearchProblem):
         cost of expanding to that successor
 
         successors = []
-        for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
+        directions = [
+            game.Directions.NORTH,
+            game.Directions.SOUTH,
+            game.Directions.EAST,
+            game.Directions.WEST
+        ]
+
+        for action in directions:
             Add a successor state to the successor list if the action is legal
             Here's a code snippet for figuring out whether a new position hits a wall:
                x, y = currentPosition
@@ -115,8 +122,9 @@ def cornersHeuristic(state, problem):
     this heuristic to receive full credit.)
     """
 
-    corners = problem.corners  # These are the corner coordinates
-    walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
+    # Useful information.
+    # corners = problem.corners  # These are the corner coordinates
+    # walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     # *** Your Code Here ***
     interrupts.raiseNotDefined()
@@ -172,7 +180,8 @@ class ClosestDotSearchAgent(SearchAgent):
             for action in nextPathSegment:
                 legal = currentState.getLegalActions()
                 if action not in legal:
-                    raise Exception('findPathToClosestDot returned an illegal move: %s!\n%s' % (str(action), str(currentState)))
+                    raise Exception('findPathToClosestDot returned an illegal move: %s!\n%s' %
+                            (str(action), str(currentState)))
 
                 currentState = currentState.generateSuccessor(0, action)
 
@@ -185,10 +194,10 @@ class ClosestDotSearchAgent(SearchAgent):
         """
 
         # Here are some useful elements of the startState
-        startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
-        problem = AnyFoodSearchProblem(gameState)
+        # startPosition = gameState.getPacmanPosition()
+        # food = gameState.getFood()
+        # walls = gameState.getWalls()
+        # problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
         interrupts.raiseNotDefined()

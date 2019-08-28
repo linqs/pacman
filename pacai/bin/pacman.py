@@ -5,28 +5,31 @@ This file is divided into three sections:
 (i) Your interface to the pacman world:
 Pacman is a complex environment.
 You probably don't want to read through all of the code we wrote to make the game runs correctly.
-This section contains the parts of the code that you will need to understand in order to complete the project.
+This section contains the parts of the code that you will need to understand in order to complete
+the project.
 There is also some code in game.py that you should understand.
 
 (ii) The hidden secrets of pacman:
-This section contains all of the logic code that the pacman environment uses to decide who can move where, who dies when things collide, etc.
+This section contains the logic code that the pacman environment uses to decide who can move where,
+who dies when things collide, etc.
 You shouldn't need to read this section of code, but you can if you want.
 
 (iii) Framework to start a game:
 The final section contains the code for reading the command you use to set up the game,
-then starting up a new game, along with linking in all the external parts (agent functions, graphics).
+then starting up a new game, along with linking in all the external parts
+(agent functions, graphics).
 Check this section out to see all the options available to you.
 
 To play your first game, type 'python -m pacai.bin.pacman' from the command line.
 The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).
 Have fun!
 """
+
 import logging
-import os
+import optparse
+import pickle
 import random
 import sys
-import time
-import types
 
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
@@ -145,7 +148,7 @@ class GameState(object):
 
     def getGhostPosition(self, agentIndex):
         if agentIndex == 0:
-            raise Exception('\Pacman\'s index passed to getGhostPosition')
+            raise Exception("'Pacman's index passed to getGhostPosition")
         return self.data.agentStates[agentIndex].getPosition()
 
     def getGhostPositions(self):
@@ -159,7 +162,7 @@ class GameState(object):
 
     def getCapsules(self):
         """
-        Returns a list of positions (x,y) of the remaining capsules.
+        Returns a list of positions (x, y) of the remaining capsules.
         """
 
         return self.data.capsules
@@ -172,7 +175,7 @@ class GameState(object):
         Returns a Grid of boolean food indicator variables.
 
         Grids can be accessed via list notation, so to check
-        if there is food at (x,y), just call
+        if there is food at (x, y), just call
 
         currentFood = state.getFood()
         if currentFood[x][y] == True: ...
@@ -185,7 +188,7 @@ class GameState(object):
         Returns a Grid of boolean wall indicator variables.
 
         Grids can be accessed via list notation, so to check
-        if there is food at (x,y), just call
+        if there is food at (x, y), just call
 
         walls = state.getWalls()
         if walls[x][y] == True: ...
@@ -255,8 +258,8 @@ class GameState(object):
 ############################################################################
 
 SCARED_TIME = 40  # Moves ghosts are scared
-COLLISION_TOLERANCE = 0.7 # How close ghosts must be to Pacman to kill
-TIME_PENALTY = 1 # Number of points lost each round
+COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
+TIME_PENALTY = 1  # Number of points lost each round
 
 class ClassicGameRules(object):
     """
@@ -267,7 +270,8 @@ class ClassicGameRules(object):
     def __init__(self, timeout=30):
         self.timeout = timeout
 
-    def newGame(self, layout, pacmanAgent, ghostAgents, display, quiet=False, catchExceptions=False):
+    def newGame(self, layout, pacmanAgent, ghostAgents, display,
+            quiet = False, catchExceptions = False):
         agents = [pacmanAgent] + ghostAgents[:layout.getNumGhosts()]
         initState = GameState()
         initState.initialize(layout, len(ghostAgents))
@@ -336,7 +340,8 @@ class PacmanRules:
         Returns a list of possible actions.
         """
 
-        return Actions.getPossibleActions(state.getPacmanState().configuration, state.data.layout.walls)
+        return Actions.getPossibleActions(state.getPacmanState().configuration,
+                state.data.layout.walls)
 
     @staticmethod
     def applyAction(state, action):
@@ -497,8 +502,6 @@ def readCommand(argv):
     Processes the command used to run pacman from the command line.
     """
 
-    from optparse import OptionParser
-
     usageStr = """
     USAGE: python pacman.py <options>
     EXAMPLES:
@@ -508,49 +511,51 @@ def readCommand(argv):
             OR python pacman.py -l smallClassic -z 2
             - starts an interactive game on a smaller board, zoomed in
     """
-    parser = OptionParser(usageStr)
+
+    parser = optparse.OptionParser(usageStr)
 
     parser.add_option('-n', '--numGames', dest='numGames', type='int',
-                                        help=default('the number of GAMES to play'), metavar='GAMES', default=1)
+            help=default('the number of GAMES to play'), metavar='GAMES', default=1)
     parser.add_option('-l', '--layout', dest='layout',
-                                        help=default('the LAYOUT_FILE from which to load the map layout'),
-                                        metavar='LAYOUT_FILE', default='mediumClassic')
+            help=default('the LAYOUT_FILE from which to load the map layout'),
+            metavar='LAYOUT_FILE', default='mediumClassic')
     parser.add_option('-p', '--pacman', dest='pacman',
-                                        help=default('the agent TYPE in the pacmanAgents module to use'),
-                                        metavar='TYPE', default='WASDKeyboardAgent')
+            help=default('the agent TYPE in the pacmanAgents module to use'),
+            metavar='TYPE', default='WASDKeyboardAgent')
     parser.add_option('-t', '--textGraphics', action='store_true', dest='textGraphics',
-                                        help='Display output as text only', default=False)
+            help='Display output as text only', default=False)
     parser.add_option('-q', '--quietTextGraphics', action='store_true', dest='quietGraphics',
-                                        help='Generate minimal output and no graphics', default=False)
+            help='Generate minimal output and no graphics', default=False)
     parser.add_option('-g', '--ghosts', dest='ghost',
-                                        help=default('the ghost agent TYPE in the ghostAgents module to use'),
-                                        metavar = 'TYPE', default='RandomGhost')
+            help=default('the ghost agent TYPE in the ghostAgents module to use'),
+            metavar = 'TYPE', default='RandomGhost')
     parser.add_option('-k', '--numghosts', type='int', dest='numGhosts',
-                                        help=default('The maximum number of ghosts to use'), default=4)
+            help=default('The maximum number of ghosts to use'), default=4)
     parser.add_option('-z', '--zoom', type='float', dest='zoom',
-                                        help=default('Zoom the size of the graphics window'), default=1.0)
+            help=default('Zoom the size of the graphics window'), default=1.0)
     parser.add_option('-f', '--fixRandomSeed', action='store_true', dest='fixRandomSeed',
-                                        help='Fixes the random seed to always play the same game', default=False)
-    parser.add_option('-r', '--recordActions', action='store_true', dest='record',
-                                        help='Writes game histories to a file (named by the time they were played)', default=False)
+            help='Fixes the random seed to always play the same game', default=False)
+    parser.add_option('--record', type='string', dest='record',
+            help='Writes game histories to the named file')
     parser.add_option('--replay', dest='gameToReplay',
-                                        help='A recorded game file (pickle) to replay', default=None)
-    parser.add_option('-a','--agentArgs',dest='agentArgs',
-                                        help='Comma separated values sent to agent. e.g. "opt1=val1,opt2,opt3=val3"')
+            help='A recorded game file (pickle) to replay', default=None)
+    parser.add_option('-a', '--agentArgs', dest='agentArgs',
+            help='Comma separated values sent to agent. e.g. "opt1=val1,opt2,opt3=val3"')
     parser.add_option('-x', '--numTraining', dest='numTraining', type='int',
-                                        help=default('How many episodes are training (suppresses output)'), default=0)
+            help=default('How many episodes are training (suppresses output)'), default=0)
     parser.add_option('--frameTime', dest='frameTime', type='float',
-                                        help=default('Time to delay between frames; <0 means keyboard'), default=0.1)
+            help=default('Time to delay between frames; <0 means keyboard'), default=0.1)
     parser.add_option('-c', '--catchExceptions', action='store_true', dest='catchExceptions',
-                                        help='Turns on exception handling and timeouts during games', default=False)
+            help='Turns on exception handling and timeouts during games', default=False)
     parser.add_option('--timeout', dest='timeout', type='int',
-                                        help=default('Maximum length of time an agent can spend computing in a single game'), default=30)
+            help=default('Maximum length of time an agent can spend computing in a single game'),
+            default=30)
     parser.add_option('--gif', dest='gif',
-                                        help=default('Save the game as a gif to the specified path'))
+            help=default('Save the game as a gif to the specified path'))
     parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
-                                        help=default('Skip this number of frames between frames of the gif.'))
+            help=default('Skip this number of frames between frames of the gif.'))
     parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10,
-                                        help=default('FPS of the gif.'))
+            help=default('FPS of the gif.'))
 
     options, otherjunk = parser.parse_args(argv)
     if len(otherjunk) != 0:
@@ -598,8 +603,10 @@ def readCommand(argv):
         args['display'] = pacai.ui.textDisplay.PacmanGraphics()
     else:
         import pacai.ui.graphicsDisplay
-        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
+        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom,
+                frameTime = options.frameTime,
+                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
+                gif_fps = options.gifFPS)
 
     args['numGames'] = options.numGames
     args['record'] = options.record
@@ -609,10 +616,9 @@ def readCommand(argv):
     # Special case: recorded games don't use the runGames method or args structure
     if options.gameToReplay is not None:
         logging.info('Replaying recorded game %s.' % options.gameToReplay)
-        import pickle
 
-        with open(options.gameToReplay) as f:
-            recorded = pickle.load(f)
+        with open(options.gameToReplay, 'rb') as file:
+            recorded = pickle.load(file)
 
         recorded['display'] = args['display']
         replayGame(**recorded)
@@ -622,25 +628,24 @@ def readCommand(argv):
     return args
 
 def replayGame(layout, actions, display):
-        import pacmanAgents
+    rules = ClassicGameRules()
+    agents = [GreedyAgent(0)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
+    game = rules.newGame(layout, agents[0], agents[1:], display)
+    state = game.state
+    display.initialize(state.data)
 
-        rules = ClassicGameRules()
-        agents = [GreedyAgent(0)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
-        game = rules.newGame(layout, agents[0], agents[1:], display)
-        state = game.state
-        display.initialize(state.data)
+    for action in actions:
+        # Execute the action
+        state = state.generateSuccessor(*action)
+        # Change the display
+        display.update(state.data)
+        # Allow for game specific conditions (winning, losing, etc.)
+        rules.process(state, game)
 
-        for action in actions:
-            # Execute the action
-            state = state.generateSuccessor(*action)
-            # Change the display
-            display.update(state.data)
-            # Allow for game specific conditions (winning, losing, etc.)
-            rules.process(state, game)
+    display.finish()
 
-        display.finish()
-
-def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, catchExceptions=False, timeout=30):
+def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraining = 0,
+        catchExceptions = False, timeout = 30):
     import __main__
     __main__.__dict__['_display'] = display
 
@@ -650,13 +655,13 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
     for i in range(numGames):
         beQuiet = i < numTraining
         if beQuiet:
-                # Suppress output and graphics
-                import pacai.ui.textDisplay
-                gameDisplay = pacai.ui.textDisplay.NullGraphics()
-                rules.quiet = True
+            # Suppress output and graphics
+            import pacai.ui.textDisplay
+            gameDisplay = pacai.ui.textDisplay.NullGraphics()
+            rules.quiet = True
         else:
-                gameDisplay = display
-                rules.quiet = False
+            gameDisplay = display
+            rules.quiet = False
 
         game = rules.newGame(layout, pacman, ghosts, gameDisplay, beQuiet, catchExceptions)
         game.run()
@@ -664,14 +669,13 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
             games.append(game)
 
         if record:
-            import pickle
-            import time
+            path = 'capture.replay'
+            if (isinstance(record, str)):
+                path = record
 
-            fname = ('recorded-game-%d' % (i + 1)) + '-'.join([str(t) for t in time.localtime()[1:6]])
             components = {'layout': layout, 'actions': game.moveHistory}
-            f = file(fname, 'w')
-            pickle.dump(components, f)
-            f.close()
+            with open(path, 'wb') as file:
+                pickle.dump(components, file)
 
     if (numGames - numTraining) > 0:
         scores = [game.state.getScore() for game in games]

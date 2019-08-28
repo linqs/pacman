@@ -2,6 +2,10 @@ import inspect
 ## code to handle timeouts
 import signal
 
+def raiseNotDefined():
+    print("Method not implemented: %s" % inspect.stack()[1][3])
+    sys.exit(1)
+
 def pause():
     """
     Pauses the output stream awaiting user feedback.
@@ -9,6 +13,8 @@ def pause():
 
     print("<Press enter/return to continue>")
     input()
+
+# Code to handle timeouts.
 
 class TimeoutFunctionException(Exception):
     """
@@ -37,7 +43,3 @@ class TimeoutFunction:
 
         signal.alarm(0)
         return result
-
-def raiseNotDefined():
-    print("Method not implemented: %s" % inspect.stack()[1][3])
-    sys.exit(1)

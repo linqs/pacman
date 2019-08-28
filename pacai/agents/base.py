@@ -55,7 +55,8 @@ class BaseAgent(abc.ABC):
         this_dir = os.path.dirname(__file__)
 
         BaseAgent._import_agents(os.path.join(this_dir, '*.py'), 'pacai.agents.%s')
-        BaseAgent._import_agents(os.path.join(this_dir, '..', 'student', '*.py'), 'pacai.student.%s')
+        BaseAgent._import_agents(os.path.join(this_dir, '..', 'student', '*.py'),
+                'pacai.student.%s')
 
         # Also check any subpackages of pacai.agents.
         for path in glob.glob(os.path.join(this_dir, '*')):

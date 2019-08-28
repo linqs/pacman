@@ -24,7 +24,7 @@ Capture.py holds the logic for Pacman capture the flag.
 To play your first game, type 'python capture.py' from the command line.
 The keys are
     P1: 'a', 's', 'd', and 'w' to move
-    P2: 'l', ';', ',' and 'p' to move
+    P2: 'l', ';', ',', and 'p' to move
 """
 
 import importlib
@@ -33,29 +33,24 @@ import optparse
 import pickle
 import random
 import sys
-import time
 import traceback
-import types
 
 import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
-from pacai.core.game import Configuration
-from pacai.core.game import Directions
 from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.game import Grid
-from pacai.core.game import reconstituteGrid
 from pacai.util.logs import initLogging
 from pacai.util.distanceCalculator import manhattanDistance
 from pacai.util.distanceCalculator import nearestPoint
 
 KILL_POINTS = 0
-SONAR_NOISE_RANGE = 13 # Must be odd
+SONAR_NOISE_RANGE = 13  # Must be odd
 SONAR_NOISE_VALUES = [i - int((SONAR_NOISE_RANGE - 1) / 2) for i in range(SONAR_NOISE_RANGE)]
-SIGHT_RANGE = 5 # Manhattan distance
+SIGHT_RANGE = 5  # Manhattan distance
 MIN_FOOD = 2
 
 SCARED_TIME = 40
@@ -137,7 +132,7 @@ class GameState:
     def getRedFood(self):
         """
         Returns a matrix of food that corresponds to the food on the red team's side.
-        For the matrix m, m[x][y]=true if there is food in (x,y) that belongs to
+        For the matrix m, m[x][y]=true if there is food in (x, y) that belongs to
         red (meaning red is protecting it, blue is trying to eat it).
         """
         return halfGrid(self.data.food, red = True)
@@ -145,7 +140,7 @@ class GameState:
     def getBlueFood(self):
         """
         Returns a matrix of food that corresponds to the food on the blue team's side.
-        For the matrix m, m[x][y]=true if there is food in (x,y) that belongs to
+        For the matrix m, m[x][y]=true if there is food in (x, y) that belongs to
         blue (meaning blue is protecting it, red is trying to eat it).
         """
         return halfGrid(self.data.food, red = False)
@@ -164,14 +159,14 @@ class GameState:
 
     def hasFood(self, x, y):
         """
-        Returns true if the location (x,y) has food, regardless of
+        Returns true if the location (x, y) has food, regardless of
         whether it's blue team food or red team food.
         """
         return self.data.food[x][y]
 
     def hasWall(self, x, y):
         """
-        Returns true if (x,y) has a wall, false otherwise.
+        Returns true if (x, y) has a wall, false otherwise.
         """
         return self.data.layout.walls[x][y]
 
@@ -200,7 +195,7 @@ class GameState:
         """
         Returns a noisy distance to each agent.
         """
-        if 'agentDistances' in dir(self) :
+        if 'agentDistances' in dir(self):
             return self.agentDistances
         else:
             return None
@@ -218,12 +213,12 @@ class GameState:
 
     def getCapsules(self):
         """
-        Returns a list of positions (x,y) of the remaining capsules.
+        Returns a list of positions (x, y) of the remaining capsules.
         """
         return self.data.capsules
 
     #############################################
-    #                         Helper methods:                             #
+    #       Helper methods                      #
     # You shouldn't need to call these directly #
     #############################################
 
@@ -277,7 +272,9 @@ class GameState:
             for teammate in team:
                 if manhattanDistance(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
                     seen = True
-            if not seen: state.data.agentStates[enemy].configuration = None
+
+            if not seen:
+                state.data.agentStates[enemy].configuration = None
         return state
 
     def __eq__(self, other):
@@ -304,13 +301,13 @@ class GameState:
         """
         self.data.initialize(layout, numAgents)
         positions = [a.configuration for a in self.data.agentStates]
-        self.blueTeam = [i for i,p in enumerate(positions) if not self.isRed(p)]
-        self.redTeam = [i for i,p in enumerate(positions) if self.isRed(p)]
+        self.blueTeam = [i for i, p in enumerate(positions) if not self.isRed(p)]
+        self.redTeam = [i for i, p in enumerate(positions) if self.isRed(p)]
         self.teams = [self.isRed(p) for p in positions]
 
     def isRed(self, configOrPos):
         width = self.data.layout.width
-        if type(configOrPos) == type((0, 0)):
+        if (isinstance(configOrPos, tuple)):
             return configOrPos[0] < int(width / 2)
         else:
             return configOrPos.pos[0] < int(width / 2)
@@ -325,22 +322,26 @@ def halfGrid(grid, red):
 
     for y in range(grid.height):
         for x in xrange:
-            if grid[x][y]: halfgrid[x][y] = True
+            if grid[x][y]:
+                halfgrid[x][y] = True
 
     return halfgrid
 
 def halfList(l, grid, red):
     halfway = int(grid.width / 2)
     newList = []
-    for x,y in l:
-        if red and x <= halfway: newList.append((x,y))
-        elif not red and x > halfway: newList.append((x,y))
+    for x, y in l:
+        if red and x <= halfway:
+            newList.append((x, y))
+        elif not red and x > halfway:
+            newList.append((x, y))
+
     return newList
 
 # THE HIDDEN SECRETS OF PACMAN
 # You shouldn't need to look through the code in this section of the file.
 
-COLLISION_TOLERANCE = 0.7 # How close ghosts must be to Pacman to kill
+COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
 
 class CaptureRules:
     """
@@ -354,9 +355,10 @@ class CaptureRules:
     def newGame(self, layout, agents, display, length, muteAgents, catchExceptions):
         initState = GameState()
         initState.initialize(layout, len(agents))
-        starter = random.randint(0,1)
+        starter = random.randint(0, 1)
         logging.info('%s team starts' % ['Red', 'Blue'][starter])
-        game = Game(agents, display, self, startingIndex=starter, muteAgents=muteAgents, catchExceptions=catchExceptions)
+        game = Game(agents, display, self, startingIndex = starter, muteAgents = muteAgents,
+                catchExceptions = catchExceptions)
         game.state = initState
         game.length = length
         game.state.data.timeleft = length
@@ -378,9 +380,13 @@ class CaptureRules:
             game.gameOver = True
             if not game.rules.quiet:
                 if state.getRedFood().count() == MIN_FOOD:
-                    logging.info('The Blue team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
+                    logging.info('The Blue team has captured all but %d of the opponents\' dots.' %
+                            MIN_FOOD)
+
                 if state.getBlueFood().count() == MIN_FOOD:
-                    logging.info('The Red team has captured all but %d of the opponents\' dots.' % MIN_FOOD)
+                    logging.info('The Red team has captured all but %d of the opponents\' dots.' %
+                            MIN_FOOD)
+
                 if state.getBlueFood().count() > MIN_FOOD and state.getRedFood().count() > MIN_FOOD:
                     logging.info('Time is up.')
                     if state.data.score == 0:
@@ -390,7 +396,8 @@ class CaptureRules:
                         if state.data.score < 0:
                             winner = 'Blue'
 
-                        logging.info('The %s team wins by %d points.' % (winner, abs(state.data.score)))
+                        logging.info('The %s team wins by %d points.' %
+                                (winner, abs(state.data.score)))
 
     def getProgress(self, game):
         blue = 1.0 - (game.state.getBlueFood().count() / float(self._initBlueFood))
@@ -409,19 +416,19 @@ class CaptureRules:
             game.state.data.score = 1
 
     def getMaxTotalTime(self, agentIndex):
-        return 900 # Move limits should prevent this from ever happening
+        return 900  # Move limits should prevent this from ever happening
 
     def getMaxStartupTime(self, agentIndex):
-        return 15 # 15 seconds for registerInitialState
+        return 15  # 15 seconds for registerInitialState
 
     def getMoveWarningTime(self, agentIndex):
-        return 1 # One second per move
+        return 1  # One second per move
 
     def getMoveTimeout(self, agentIndex):
-        return 3 # Three seconds results in instant forfeit
+        return 3  # Three seconds results in instant forfeit
 
     def getMaxTimeWarnings(self, agentIndex):
-        return 2 # Third violation loses the game
+        return 2  # Third violation loses the game
 
 class AgentRules:
     """
@@ -442,7 +449,6 @@ class AgentRules:
         return possibleActions
     filterForAllowedActions = staticmethod(filterForAllowedActions)
 
-
     def applyAction(state, action, agentIndex):
         """
         Edits the state to reflect the results of the action.
@@ -462,38 +468,47 @@ class AgentRules:
         # Eat
         next = agentState.configuration.getPosition()
         nearest = nearestPoint(next)
-        if agentState.isPacman and manhattanDistance(nearest, next) <= 0.9 :
+        if agentState.isPacman and manhattanDistance(nearest, next) <= 0.9:
             AgentRules.consume(nearest, state, state.isOnRedTeam(agentIndex))
 
         # Change agent type
         if next == nearest:
-            agentState.isPacman = [state.isOnRedTeam(agentIndex), state.isRed(agentState.configuration)].count(True) == 1
+            teamInfo = [state.isOnRedTeam(agentIndex), state.isRed(agentState.configuration)]
+            agentState.isPacman = teamInfo.count(True) == 1
     applyAction = staticmethod(applyAction)
 
     def consume(position, state, isRed):
-        x,y = position
+        x, y = position
         # Eat food
         if state.data.food[x][y]:
             score = -1
-            if isRed: score = 1
+            if isRed:
+                score = 1
             state.data.scoreChange += score
 
             state.data.food = state.data.food.copy()
             state.data.food[x][y] = False
             state.data._foodEaten = position
-            if (isRed and state.getBlueFood().count() == MIN_FOOD) or (not isRed and state.getRedFood().count() == MIN_FOOD):
+            if ((isRed and state.getBlueFood().count() == MIN_FOOD)
+                    or (not isRed and state.getRedFood().count() == MIN_FOOD)):
                 state.data._win = True
 
         # Eat capsule
-        if isRed: myCapsules = state.getBlueCapsules()
-        else: myCapsules = state.getRedCapsules()
-        if(position in myCapsules):
+        if isRed:
+            myCapsules = state.getBlueCapsules()
+        else:
+            myCapsules = state.getRedCapsules()
+
+        if (position in myCapsules):
             state.data.capsules.remove(position)
             state.data._capsuleEaten = position
 
             # Reset all ghosts' scared timers
-            if isRed: otherTeam = state.getBlueTeamIndices()
-            else: otherTeam = state.getRedTeamIndices()
+            if isRed:
+                otherTeam = state.getBlueTeamIndices()
+            else:
+                otherTeam = state.getRedTeamIndices()
+
             for index in otherTeam:
                 state.data.agentStates[index].scaredTimer = SCARED_TIME
 
@@ -518,12 +533,12 @@ class AgentRules:
                 if (otherAgentState.isPacman):
                     continue
 
-                ghostPosition = otherAgentState.getPosition()
-                if (ghostPosition is None):
+                ghostPos = otherAgentState.getPosition()
+                if (ghostPos is None):
                     continue
 
-                if manhattanDistance(ghostPosition, agentState.getPosition()) <= COLLISION_TOLERANCE:
-                    #award points to the other team for killing Pacmen
+                if manhattanDistance(ghostPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
+                    # Award points to the other team for killing Pacmen.
                     if otherAgentState.scaredTimer <= 0:
                         score = KILL_POINTS
                         if state.isOnRedTeam(agentIndex):
@@ -540,7 +555,7 @@ class AgentRules:
                         otherAgentState.isPacman = False
                         otherAgentState.configuration = otherAgentState.start
                         otherAgentState.scaredTimer = 0
-        else: # Agent is a ghost
+        else:  # Agent is a ghost
             for index in otherTeam:
                 otherAgentState = state.data.agentStates[index]
                 if (not otherAgentState.isPacman):
@@ -551,7 +566,7 @@ class AgentRules:
                     continue
 
                 if manhattanDistance(pacPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
-                    #award points to the other team for killing Pacmen
+                    # Award points to the other team for killing Pacmen.
                     if agentState.scaredTimer <= 0:
                         score = KILL_POINTS
                         if not state.isOnRedTeam(agentIndex):
@@ -591,7 +606,7 @@ def parseAgentArgs(str):
         if '=' in p:
             key, val = p.split('=')
         else:
-            key,val = p, 1
+            key, val = p, 1
         opts[key] = val
     return opts
 
@@ -604,36 +619,60 @@ def readCommand(argv):
     EXAMPLES:    (1) python capture.py
                                     - starts a game with two baseline agents
                             (2) python capture.py --keys0
-                                    - starts a two-player interactive game where the arrow keys control agent 0, and all other agents are baseline agents
+                                    - starts a two-player interactive game
+                                        where the arrow keys control agent 0,
+                                        and all other agents are baseline agents
                             (3) python capture.py -r pacai.core.baselineTeam -b pacai.student.myTeam
-                                    - starts a fully automated game where the red team is a baseline team and blue team is pacai.student.myTeam
+                                    - starts a fully automated game where the red team
+                                        is a baseline team and blue team is pacai.student.myTeam
     """
     parser = optparse.OptionParser(usageStr)
 
     parser.add_option('-r', '--red', help=default('Red team'), default='pacai.core.baselineTeam')
     parser.add_option('-b', '--blue', help=default('Blue team'), default='pacai.core.baselineTeam')
-    parser.add_option('--redOpts', help=default('Options for red team (e.g. first=keys)'), default='')
-    parser.add_option('--blueOpts', help=default('Options for blue team (e.g. first=keys)'), default='')
-    parser.add_option('--keys0', help='Make agent 0 (first red player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('--keys1', help='Make agent 1 (second red player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('--keys2', help='Make agent 2 (first blue player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('--keys3', help='Make agent 3 (second blue player) a keyboard agent', action='store_true', default=False)
-    parser.add_option('-l', '--layout', dest='layout', help=default('the LAYOUT_FILE from which to load the map layout; use RANDOM for a random maze; use RANDOM<seed> to use a specified random seed, e.g., RANDOM23'),
+    parser.add_option('--redOpts', help=default('Options for red team (e.g. first=keys)'),
+            default='')
+    parser.add_option('--blueOpts', help=default('Options for blue team (e.g. first=keys)'),
+            default='')
+    parser.add_option('--keys0', help='Make agent 0 (first red player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('--keys1', help='Make agent 1 (second red player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('--keys2', help='Make agent 2 (first blue player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('--keys3', help='Make agent 3 (second blue player) a keyboard agent',
+            action='store_true', default=False)
+    parser.add_option('-l', '--layout', dest='layout',
+            help=default('the LAYOUT_FILE from which to load the layout; use RANDOM for a random'
+                    + 'maze; use RANDOM<seed> to use a specified random seed, e.g., RANDOM23'),
             metavar='LAYOUT_FILE', default='defaultCapture')
-    parser.add_option('-t', '--textgraphics', action='store_true', dest='textgraphics', help='Display output as text only', default=False)
-    parser.add_option('-q', '--quiet', action='store_true', help='Display minimal output and no graphics', default=False)
-    parser.add_option('-Q', '--super-quiet', action='store_true', dest="super_quiet", help='Same as -q but agent output is also suppressed', default=False)
-    parser.add_option('-z', '--zoom', type='float', dest='zoom', help=default('Zoom in the graphics'), default=1)
-    parser.add_option('-i', '--time', type='int', dest='time', help=default('TIME limit of a game in moves'), default=1200, metavar='TIME')
-    parser.add_option('-n', '--numGames', type='int', help=default('Number of games to play'), default=1)
-    parser.add_option('-f', '--fixRandomSeed', action='store_true', help='Fixes the random seed to always play the same game', default=False)
-    parser.add_option('--record', type='string', dest='record', help='Writes game histories to the named file')
+    parser.add_option('-t', '--textgraphics', action='store_true', dest='textgraphics',
+            help='Display output as text only', default=False)
+    parser.add_option('-q', '--quiet', action='store_true',
+            help='Display minimal output and no graphics', default=False)
+    parser.add_option('-Q', '--super-quiet', action='store_true', dest="super_quiet",
+            help='Same as -q but agent output is also suppressed', default=False)
+    parser.add_option('-z', '--zoom', type='float', dest='zoom',
+            help=default('Zoom in the graphics'), default=1)
+    parser.add_option('-i', '--time', type='int', dest='time',
+            help=default('TIME limit of a game in moves'), default=1200, metavar='TIME')
+    parser.add_option('-n', '--numGames', type='int',
+            help=default('Number of games to play'), default=1)
+    parser.add_option('-f', '--fixRandomSeed', action='store_true',
+            help='Fixes the random seed to always play the same game', default=False)
+    parser.add_option('--record', type='string', dest='record',
+            help='Writes game histories to the named file')
     parser.add_option('--replay', default=None, help='Replays a recorded game file.')
-    parser.add_option('-x', '--numTraining', dest='numTraining', type='int', help=default('How many episodes are training (suppresses output)'), default=0)
-    parser.add_option('-c', '--catchExceptions', action='store_true', default=False, help='Catch exceptions and enforce time limits')
-    parser.add_option('--gif', dest='gif', help=default('Save the game as a gif to the specified path'))
-    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0, help=default('Skip this number of frames between frames of the gif.'))
-    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10, help=default('FPS of the gif.'))
+    parser.add_option('-x', '--numTraining', dest='numTraining', type='int',
+            help=default('How many episodes are training (suppresses output)'), default=0)
+    parser.add_option('-c', '--catchExceptions', action='store_true', default=False,
+            help='Catch exceptions and enforce time limits')
+    parser.add_option('--gif', dest='gif',
+            help=default('Save the game as a gif to the specified path'))
+    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
+            help=default('Skip this number of frames between frames of the gif.'))
+    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10,
+            help=default('FPS of the gif.'))
 
     options, otherjunk = parser.parse_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
@@ -654,11 +693,12 @@ def readCommand(argv):
         import pacai.ui.captureGraphicsDisplay
         # Hack for agents writing to the display
         pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue, options.zoom, 0, capture=True,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames, gif_fps = options.gifFPS)
+        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue,
+                options.zoom, 0, capture=True,
+                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
+                gif_fps = options.gifFPS)
         import __main__
         __main__.__dict__['_display'] = args['display']
-
 
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue
@@ -688,11 +728,13 @@ def readCommand(argv):
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
     logging.debug('\nBlue team %s with %s:' % (options.blue, blueArgs))
     blueAgents = loadAgents(False, options.blue, nokeyboard, blueArgs)
-    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)],[]) # list of agents
+    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], [])  # list of agents
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
-        if not val: continue
+        if not val:
+            continue
+
         if numKeyboardAgents == 0:
             agent = keyboard.WASDKeyboardAgent(index)
         elif numKeyboardAgents == 1:
@@ -727,7 +769,7 @@ def readCommand(argv):
 
 def randomLayout(seed = None):
     if not seed:
-        seed = random.randint(0,99999999)
+        seed = random.randint(0, 99999999)
     return pacai.util.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
@@ -740,7 +782,7 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
         return [None for i in range(2)]
 
     args = dict()
-    args.update(cmdLineArgs) # Add command line args with priority
+    args.update(cmdLineArgs)  # Add command line args with priority
 
     logging.info('Loading Team:%s', agent_module)
     logging.info('Arguments:%s', args)
@@ -759,25 +801,25 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     return createTeamFunc(indices[0], indices[1], isRed, **args)
 
 def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
-        rules = CaptureRules()
-        game = rules.newGame(layout, agents, display, length, False, False)
-        state = game.state
-        display.redTeam = redTeamName
-        display.blueTeam = blueTeamName
-        display.initialize(state.data)
+    rules = CaptureRules()
+    game = rules.newGame(layout, agents, display, length, False, False)
+    state = game.state
+    display.redTeam = redTeamName
+    display.blueTeam = blueTeamName
+    display.initialize(state.data)
 
-        for action in actions:
-            # Execute the action
-            state = state.generateSuccessor(*action)
-            # Change the display
-            display.update(state.data)
-            # Allow for game specific conditions (winning, losing, etc.)
-            rules.process(state, game)
+    for action in actions:
+        # Execute the action
+        state = state.generateSuccessor(*action)
+        # Change the display
+        display.update(state.data)
+        # Allow for game specific conditions (winning, losing, etc.)
+        rules.process(state, game)
 
-        display.finish()
+    display.finish()
 
-def runGames(layout, agents, display, length, numGames, record, numTraining, redTeamName, blueTeamName, muteAgents=False, catchExceptions=False):
-
+def runGames(layout, agents, display, length, numGames, record, numTraining,
+        redTeamName, blueTeamName, muteAgents = False, catchExceptions = False):
     rules = CaptureRules()
     games = []
 
@@ -787,16 +829,18 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
     for i in range(numGames):
         beQuiet = i < numTraining
         if beQuiet:
-                # Suppress output and graphics
-                import textDisplay
-                gameDisplay = textDisplay.NullGraphics()
-                rules.quiet = True
+            # Suppress output and graphics
+            import textDisplay
+            gameDisplay = textDisplay.NullGraphics()
+            rules.quiet = True
         else:
-                gameDisplay = display
-                rules.quiet = False
+            gameDisplay = display
+            rules.quiet = False
         g = rules.newGame(layout, agents, gameDisplay, length, muteAgents, catchExceptions)
         g.run()
-        if not beQuiet: games.append(g)
+
+        if not beQuiet:
+            games.append(g)
 
         g.record = None
         if record:
@@ -806,11 +850,11 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
                 'actions': g.moveHistory,
                 'length': length,
                 'redTeamName': redTeamName,
-                'blueTeamName':blueTeamName
+                'blueTeamName': blueTeamName
             }
 
             path = 'replay'
-            if (type(record) == str):
+            if (isinstance(record, str)):
                 path = record
 
             g.record = pickle.dumps(components)
@@ -821,13 +865,16 @@ def runGames(layout, agents, display, length, numGames, record, numTraining, red
 
     if numGames > 0:
         scores = [game.state.data.score for game in games]
-        redWinRate = [s > 0 for s in scores].count(True)/ float(len(scores))
-        blueWinRate = [s < 0 for s in scores].count(True)/ float(len(scores))
+        redWinRate = [s > 0 for s in scores].count(True) / float(len(scores))
+        blueWinRate = [s < 0 for s in scores].count(True) / float(len(scores))
         logging.info('Average Score:%s', sum(scores) / float(len(scores)))
         logging.info('Scores:%s', ', '.join([str(score) for score in scores]))
-        logging.info('Red Win Rate: %d/%d (%.2f)' % ([s > 0 for s in scores].count(True), len(scores), redWinRate))
-        logging.info('Blue Win Rate: %d/%d (%.2f)' % ([s < 0 for s in scores].count(True), len(scores), blueWinRate))
-        logging.info('Record: %s', ', '.join([('Blue', 'Tie', 'Red')[max(0, min(2, 1 + s))] for s in scores]))
+        logging.info('Red Win Rate: %d/%d (%.2f)' %
+                ([s > 0 for s in scores].count(True), len(scores), redWinRate))
+        logging.info('Blue Win Rate: %d/%d (%.2f)' %
+                ([s < 0 for s in scores].count(True), len(scores), blueWinRate))
+        logging.info('Record: %s',
+                ', '.join([('Blue', 'Tie', 'Red')[max(0, min(2, 1 + s))] for s in scores]))
 
     return games
 
@@ -846,7 +893,7 @@ def main(argv):
     argv already has the executable stripped.
     """
     initLogging()
-    options = readCommand(argv) # Get game components based on input
+    options = readCommand(argv)  # Get game components based on input
     return runGames(**options)
 
 if __name__ == '__main__':

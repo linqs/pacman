@@ -1,3 +1,5 @@
+import random
+
 from pacai.agents.base import BaseAgent
 from pacai.util import find_modules
 from pacai.util import interrupts
@@ -29,7 +31,8 @@ class ReflexAgent(BaseAgent):
     its alternatives via a state evaluation function.
 
     The code below is provided as a guide.
-    You are welcome to change it in any way you see fit, so long as you don't touch the method headers.
+    You are welcome to change it in any way you see fit,
+    so long as you don't touch the method headers.
     """
 
     def __init__(self, index):
@@ -52,7 +55,7 @@ class ReflexAgent(BaseAgent):
         scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+        chosenIndex = random.choice(bestIndices)  # Pick randomly among the best.
 
         # *** Add more of your code here if you want to ***
 
@@ -76,10 +79,10 @@ class ReflexAgent(BaseAgent):
 
         # Useful information you can extract from a GameState (pacman.py)
         successorGameState = currentGameState.generatePacmanSuccessor(action)
-        newPosition = successorGameState.getPacmanPosition()
-        oldFood = currentGameState.getFood()
-        newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        # newPosition = successorGameState.getPacmanPosition()
+        # oldFood = currentGameState.getFood()
+        # newGhostStates = successorGameState.getGhostStates()
+        # newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         # *** Your Code Here ***
 

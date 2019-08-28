@@ -1,11 +1,8 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
+from pacai.util import featureExtractors
+from pacai.util import containers
 from pacai.util import find_modules
 from pacai.util import interrupts
-from pacai.util import containers
-
-# Force the extractors into scope for find_modules.lookup().
-# TODO(eriq): I hate find_modules.lookup(), get rid of it and this import.
-from pacai.util import featureExtractors
 
 class QLearningAgent(ReinforcementAgent):
     """
@@ -120,9 +117,9 @@ class ApproximateQAgent(PacmanQAgent):
     DESCRIPTION: <Write something here so we know what you did.>
     """
 
-    def __init__(self, index, extractor = 'IdentityExtractor', **args):
+    def __init__(self, index, extractor = 'pacai.util.featureExtractors.IdentityExtractor', **args):
         super().__init__(index, **args)
-        self.featExtractor = find_modules.lookup()()
+        self.featExtractor = find_modules.qualifiedImport(extractor)
 
         # You might want to initialize weights here.
 

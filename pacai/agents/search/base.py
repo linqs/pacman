@@ -21,7 +21,9 @@ class SearchAgent(BaseAgent):
     """
 
     # TODO(eriq): We should pass actual objects instead of strings.
-    def __init__(self, index, fn = 'pacai.core.search.search.dfs', prob = 'pacai.core.search.position.PositionSearchProblem', heuristic = 'pacai.core.search.heuristic.null'):
+    def __init__(self, index, fn = 'pacai.core.search.search.dfs',
+            prob = 'pacai.core.search.position.PositionSearchProblem',
+            heuristic = 'pacai.core.search.heuristic.null'):
         super().__init__(index)
         # Get the search problem type from the name.
         self.searchType = find_modules.qualifiedImport(prob)
@@ -65,11 +67,12 @@ class SearchAgent(BaseAgent):
             raise Exception('No search function provided for SearchAgent')
 
         starttime = time.time()
-        problem = self.searchType(state) # Makes a new search problem
-        self.actions = self.searchFunction(problem) # Find a path
+        problem = self.searchType(state)  # Makes a new search problem
+        self.actions = self.searchFunction(problem)  # Find a path
         totalCost = problem.actionsCost(self.actions)
 
-        logging.info('Path found with total cost of %d in %.1f seconds' % (totalCost, time.time() - starttime))
+        logging.info('Path found with total cost of %d in %.1f seconds' %
+                (totalCost, time.time() - starttime))
         if '_expanded' in dir(problem):
             logging.info('Search nodes expanded: %d' % problem._expanded)
 

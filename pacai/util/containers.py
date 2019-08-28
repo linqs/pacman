@@ -13,7 +13,7 @@ class Stack(object):
     def __init__(self):
         self.list = []
 
-    def push(self,item):
+    def push(self, item):
         """
         Push 'item' onto the stack
         """
@@ -45,12 +45,12 @@ class Queue:
     def __init__(self):
         self.list = []
 
-    def push(self,item):
+    def push(self, item):
         """
         Enqueue the 'item' into the queue
         """
 
-        self.list.insert(0,item)
+        self.list.insert(0, item)
 
     def pop(self):
         """
@@ -86,12 +86,12 @@ class PriorityQueue(object):
         self.heap = []
 
     def push(self, item, priority):
-            pair = (priority, item)
-            heapq.heappush(self.heap, pair)
+        pair = (priority, item)
+        heapq.heappush(self.heap, pair)
 
     def pop(self):
-            (priority, item) = heapq.heappop(self.heap)
-            return item
+        (priority, item) = heapq.heappop(self.heap)
+        return item
 
     def isEmpty(self):
         return len(self.heap) == 0
@@ -181,7 +181,7 @@ class Counter(dict):
         Increments all elements of keys by the same count.
 
         >>> a = Counter()
-        >>> a.incrementAll(['one','two', 'three'], 1)
+        >>> a.incrementAll(['one', 'two', 'three'], 1)
         >>> a['one']
         1
         >>> a['two']
@@ -219,10 +219,9 @@ class Counter(dict):
         """
 
         sortedItems = list(self.items())
-        compare = lambda x, y: sign(y[1] - x[1])
-        sortedItems.sort(cmp=compare)
+        sortedItems.sort(key = lambda item: item[1], reverse = True)
 
-        return [x[0] for x in sortedItems]
+        return [item[0] for item in sortedItems]
 
     def totalCount(self):
         """
@@ -280,7 +279,7 @@ class Counter(dict):
         sum = 0
         x = self
         if len(x) > len(y):
-            x,y = y,x
+            x, y = y, x
         for key in x:
             if key not in y:
                 continue
@@ -371,24 +370,30 @@ def normalize(vectorOrCounter):
     if type(vectorOrCounter) == type(normalizedCounter):
         counter = vectorOrCounter
         total = float(counter.totalCount())
-        if total == 0: return counter
+        if total == 0:
+            return counter
+
         for key in list(counter.keys()):
             value = counter[key]
             normalizedCounter[key] = value / total
+
         return normalizedCounter
     else:
         vector = vectorOrCounter
         s = float(sum(vector))
-        if s == 0: return vector
+        if s == 0:
+            return vector
+
         return [el / s for el in vector]
 
 def nSample(distribution, values, n):
     if sum(distribution) != 1:
         distribution = normalize(distribution)
+
     rand = [random.random() for i in range(n)]
     rand.sort()
     samples = []
-    samplePos, distPos, cdf = 0,0, distribution[0]
+    samplePos, distPos, cdf = 0, 0, distribution[0]
     while samplePos < n:
         if rand[samplePos] < cdf:
             samplePos += 1
@@ -420,7 +425,7 @@ def sample(distribution, values = None):
 
 def sampleFromCounter(ctr):
     items = sorted(list(ctr.items()))
-    return sample([v for k,v in items], [k for k,v in items])
+    return sample([v for k, v in items], [k for k, v in items])
 
 def getProbability(value, distribution, values):
     """

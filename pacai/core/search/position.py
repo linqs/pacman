@@ -10,7 +10,7 @@ class PositionSearchProblem(SearchProblem):
     successor function and cost function. This search problem can be
     used to find paths to a particular point on the pacman board.
 
-    The state space consists of (x,y) positions in a pacman game.
+    The state space consists of (x, y) positions in a pacman game.
 
     Note: this search problem is fully specified; you should NOT change it.
     """
@@ -47,8 +47,8 @@ class PositionSearchProblem(SearchProblem):
             self._visitedlist.append(state)
             import __main__
             if '_display' in dir(__main__):
-                if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
-                    __main__._display.drawExpandedCells(self._visitedlist) #@UndefinedVariable
+                if 'drawExpandedCells' in dir(__main__._display):  # @UndefinedVariable
+                    __main__._display.drawExpandedCells(self._visitedlist)  # @UndefinedVariable
 
         return isGoal
 
@@ -66,7 +66,7 @@ class PositionSearchProblem(SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x,y = state
+            x, y = state
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
@@ -99,6 +99,6 @@ class PositionSearchProblem(SearchProblem):
             x, y = int(x + dx), int(y + dy)
             if self.walls[x][y]:
                 return 999999
-            cost += self.costFn((x,y))
+            cost += self.costFn((x, y))
 
         return cost
