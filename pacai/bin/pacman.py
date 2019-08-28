@@ -148,7 +148,7 @@ class GameState(object):
 
     def getGhostPosition(self, agentIndex):
         if agentIndex == 0:
-            raise Exception('\Pacman\'s index passed to getGhostPosition')
+            raise Exception("'Pacman's index passed to getGhostPosition")
         return self.data.agentStates[agentIndex].getPosition()
 
     def getGhostPositions(self):
