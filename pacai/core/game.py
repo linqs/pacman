@@ -423,13 +423,13 @@ class GameStateData:
             except TypeError as e:
                 logging.error('TypeError %s' % (e))
 
-        hash = 0
-        hash += hash(tuple(self.agentStates))
-        hash += 13 * hash(self.food)
-        hash += 113 * hash(tuple(self.capsules))
-        hash += 7 * hash(self.score)
+        hashCode = 0
+        hashCode += hash(tuple(self.agentStates))
+        hashCode += 13 * hash(self.food)
+        hashCode += 113 * hash(tuple(self.capsules))
+        hashCode += 7 * hash(self.score)
 
-        return int(hash) % 1048575
+        return int(hashCode) % 1048575
 
     def __str__(self):
         width, height = self.layout.width, self.layout.height
