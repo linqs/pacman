@@ -23,7 +23,6 @@ class Application(object):
         self.robotEnvironment = pacai.bin.crawler.CrawlingRobotEnvironment(self.robot)
 
         # Init Agent
-        simulationFn = lambda agent: simulation.SimulationEnvironment(self.robotEnvironment, agent)
         actionFn = lambda state: self.robotEnvironment.getPossibleActions(state)
         self.learner = pacai.student.qlearningAgents.QLearningAgent(0, actionFn=actionFn)
 
@@ -184,7 +183,7 @@ class Application(object):
     def _run_wrapper(self):
         try:
             self.run()
-        except Exception as ex:
+        except Exception:
             self.exit_status = 10
             traceback.print_exc()
             self.win.quit()

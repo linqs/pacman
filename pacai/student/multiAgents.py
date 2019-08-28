@@ -76,10 +76,10 @@ class ReflexAgent(BaseAgent):
 
         # Useful information you can extract from a GameState (pacman.py)
         successorGameState = currentGameState.generatePacmanSuccessor(action)
-        newPosition = successorGameState.getPacmanPosition()
-        oldFood = currentGameState.getFood()
-        newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        # newPosition = successorGameState.getPacmanPosition()
+        # oldFood = currentGameState.getFood()
+        # newGhostStates = successorGameState.getGhostStates()
+        # newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         # *** Your Code Here ***
 

@@ -61,7 +61,7 @@ class GraphicsGridworldDisplay(object):
         graphicsUtils.sleep(0.05 / self.speed)
 
 def setup(gridworld, title = "Gridworld Display", size = 120):
-    global GRID_SIZE, MARGIN, SCREEN_WIDTH, SCREEN_HEIGHT, GRID_HEIGHT
+    global GRID_SIZE, MARGIN, SCREEN_WIDTH, SCREEN_HEIGHT, GRID_HEIGHT, WINDOW_SIZE
 
     grid = gridworld.grid
     WINDOW_SIZE = size
@@ -149,9 +149,6 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
             if (actions is None or len(actions) == 0):
                 actions = [None]
 
-            bestQ = max([qValues[(state, action)] for action in actions])
-            bestActions = [action for action in actions if qValues[(state, action)] == bestQ]
-
             q = pacai.util.util.Counter()
             valStrings = {}
 
@@ -192,14 +189,9 @@ def drawNullSquare(grid, x, y, isObstacle, isTerminal, isCurrent):
         graphicsUtils.text((screen_x, screen_y), TEXT_COLOR, str(grid[x][y]),
                 "Courier", -24, "bold", "c")
 
-    text_color = TEXT_COLOR
-
     if not isObstacle and isCurrent:
         graphicsUtils.circle((screen_x, screen_y), 0.1 * GRID_SIZE, LOCATION_COLOR,
                 fillColor = LOCATION_COLOR)
-
-    # if not isObstacle:
-    #     graphicsUtils.text((screen_x, screen_y), text_color, valStr, "Courier", 24, "bold", "c")
 
 def drawSquare(x, y, val, min, max, valStr, action, isObstacle, isTerminal, isCurrent):
     square_color = getColor(val, min, max)

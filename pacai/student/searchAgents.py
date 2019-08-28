@@ -122,8 +122,9 @@ def cornersHeuristic(state, problem):
     this heuristic to receive full credit.)
     """
 
-    corners = problem.corners  # These are the corner coordinates
-    walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
+    # Useful information.
+    # corners = problem.corners  # These are the corner coordinates
+    # walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     # *** Your Code Here ***
     util.raiseNotDefined()
@@ -193,10 +194,10 @@ class ClosestDotSearchAgent(SearchAgent):
         """
 
         # Here are some useful elements of the startState
-        startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
-        problem = AnyFoodSearchProblem(gameState)
+        # startPosition = gameState.getPacmanPosition()
+        # food = gameState.getFood()
+        # walls = gameState.getWalls()
+        # problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
         util.raiseNotDefined()

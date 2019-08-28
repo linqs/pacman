@@ -347,7 +347,6 @@ class PacmanGraphics:
                 self.frameTime = 0.1
 
         if self.frameTime > 0.01 or self.frameTime < 0:
-            start = time.time()
             fx, fy = self.getPosition(prevPacman)
             px, py = self.getPosition(pacman)
             frames = 4.0
@@ -769,8 +768,6 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
         self.isBlue = isBlue
         PacmanGraphics.startGraphics(self, state)
         # Initialize distribution images
-        walls = state.layout.walls
-        dist = []
         self.layout = state.layout
 
         # Draw the rest

@@ -201,8 +201,8 @@ def moveCircle(id, pos, r, endpoints=None):
     global _canvas_x, _canvas_y
 
     x, y = pos
-    x0, x1 = x - r - 1, x + r
-    y0, y1 = y - r - 1, y + r
+    x0 = x - r - 1
+    y0 = y - r - 1
 
     if (endpoints is None):
         e = [0, 359]
@@ -264,7 +264,7 @@ def _keyrelease(event):
 
     try:
         del _keysdown[event.keysym]
-    except Exception as ex:
+    except Exception:
         pass
 
     _got_release = 1

@@ -367,8 +367,8 @@ class PacmanGraphics:
             keys = graphicsUtils.wait_for_keys()
             if 'q' in keys:
                 self.frameTime = 0.1
+
         if self.frameTime > 0.01 or self.frameTime < 0:
-            start = time.time()
             fx, fy = self.getPosition(prevPacman)
             px, py = self.getPosition(pacman)
             frames = 4.0
@@ -700,7 +700,6 @@ class PacmanGraphics:
                 graphicsUtils.remove_from_screen(cell)
 
     def debugDraw(self, cells, color=[1.0, 0.0, 0.0], clear=False):
-        n = float(len(cells))
         if clear:
             self.clearDebug()
             self.expandedCells = []
@@ -753,8 +752,6 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
         self.isBlue = isBlue
         PacmanGraphics.startGraphics(self, state)
         # Initialize distribution images
-        walls = state.layout.walls
-        dist = []
         self.layout = state.layout
 
         # Draw the rest

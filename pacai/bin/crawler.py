@@ -156,8 +156,6 @@ class CrawlingRobot:
         move the robot arm to 'newArmAngle'
         """
 
-        oldArmAngle = self.armAngle
-
         if newArmAngle > self.maxArmAngle:
             raise Exception('Crawling Robot: Arm Raised too high. Careful!')
 
@@ -172,7 +170,6 @@ class CrawlingRobot:
         # Position and Velocity Sign Post
         self.positions.append(self.getRobotPosition()[0])
 
-        # self.angleSums.append(abs(math.degrees(oldArmAngle) - math.degrees(newArmAngle)))
         if len(self.positions) > 100:
             self.positions.pop(0)
             # self.angleSums.pop(0)
@@ -181,8 +178,6 @@ class CrawlingRobot:
         """
         move the robot hand to 'newArmAngle'
         """
-
-        oldHandAngle = self.handAngle
 
         if newHandAngle > self.maxHandAngle:
             raise Exception('Crawling Robot: Hand Raised too high. Careful!')
@@ -197,7 +192,6 @@ class CrawlingRobot:
 
         # Position and Velocity Sign Post
         self.positions.append(self.getRobotPosition()[0])
-        # self.angleSums.append(abs(math.degrees(oldHandAngle)-math.degrees(newHandAngle)))
 
         if len(self.positions) > 100:
             self.positions.pop(0)
