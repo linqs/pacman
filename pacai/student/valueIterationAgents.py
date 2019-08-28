@@ -9,6 +9,21 @@ class ValueIterationAgent(ValueEstimationAgent):
     (see mdp.py) on initialization and runs value iteration
     for a given number of iterations using the supplied
     discount factor.
+
+    Methods to Implement:
+
+    def getQValue(self, state, action):
+        The q-value of the state action pair(after the indicated number
+        of value iteration passes). Note that value iteration does not
+        necessarily create this quantity and you may have to derive it
+        on the fly.
+
+    def getPolicy(self, state):
+        The policy is the best action in the given state
+        according to the values computed by value iteration.
+        You may break ties any way you see fit.
+        Note that if there are no legal actions, which is the case at the
+        terminal state, you should return None.
     """
 
     def __init__(self, index, mdp, discountRate = 0.9, iters = 100):
@@ -29,7 +44,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discountRate = discountRate
         self.iters = iters
-        self.values = util.Counter() # A Counter is a dict with default 0
+        self.values = util.Counter()  # A Counter is a dict with default 0
 
         """
         Description:
@@ -46,42 +61,6 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
 
         return self.values[state]
-
-    def getQValue(self, state, action):
-        """
-        The q-value of the state action pair
-        (after the indicated number of value iteration passes).
-        Note that value iteration does not
-        necessarily create this quantity and you may have
-        to derive it on the fly.
-        """
-
-        """
-        Description:
-        [Enter a description of what you did here.]
-        """
-
-        """ YOUR CODE HERE """
-        util.raiseNotDefined()
-        """ END CODE """
-
-    def getPolicy(self, state):
-        """
-        The policy is the best action in the given state
-        according to the values computed by value iteration.
-        You may break ties any way you see fit.
-        Note that if there are no legal actions, which is the case at the
-        terminal state, you should return None.
-        """
-
-        """
-        Description:
-        [Enter a description of what you did here.]
-        """
-
-        """ YOUR CODE HERE """
-        util.raiseNotDefined()
-        """ END CODE """
 
     def getAction(self, state):
         """

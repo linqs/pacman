@@ -1,5 +1,3 @@
-import random
-
 from pacai.agents.capture.dummy import DummyAgent
 
 def createTeam(firstIndex, secondIndex, isRed, first = 'DummyAgent', second = 'DummyAgent'):

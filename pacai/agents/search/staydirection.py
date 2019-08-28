@@ -11,11 +11,11 @@ class StayEastSearchAgent(SearchAgent):
     """
 
     def __init__(self, index):
-            super().__init__(index)
+        super().__init__(index)
 
-            self.searchFunction = search.ucs
-            costFn = lambda pos: 0.5 ** pos[0]
-            self.searchType = lambda state: PositionSearchProblem(state, costFn)
+        self.searchFunction = search.ucs
+        costFn = lambda pos: 0.5 ** pos[0]
+        self.searchType = lambda state: PositionSearchProblem(state, costFn)
 
 class StayWestSearchAgent(SearchAgent):
     """
@@ -26,8 +26,8 @@ class StayWestSearchAgent(SearchAgent):
     """
 
     def __init__(self, index):
-            super().__init__(index)
+        super().__init__(index)
 
-            self.searchFunction = search.ucs
-            costFn = lambda pos: 2 ** pos[0]
-            self.searchType = lambda state: PositionSearchProblem(state, costFn)
+        self.searchFunction = search.ucs
+        costFn = lambda pos: 2 ** pos[0]
+        self.searchType = lambda state: PositionSearchProblem(state, costFn)

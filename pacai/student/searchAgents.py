@@ -16,6 +16,7 @@ Look for the lines that say:
 
 Good luck and happy searching!
 """
+import logging
 
 from pacai.core import game
 from pacai.core.search import heuristic
@@ -33,8 +34,42 @@ class CornersProblem(SearchProblem):
 
     See the PositionSearchProblem class for an example of
     a working SearchProblem.
-    """
 
+    Methods to Implement:
+
+    def startingState(self):
+        Returns the start state (in your state space, not the full Pacman state space)
+
+    def isGoal(self, state):
+        Returns whether this search state is a goal state of the problem
+
+    def successorStates(self, state):
+        Returns successor states, the actions they require, and a cost of 1.
+
+        As noted in search.py:
+        For a given state, this should return a list of triples, (successor, action, stepCost),
+        where 'successor' is a successor to the current state, 'action' is the action
+        required to get there, and 'stepCost' is the incremental
+        cost of expanding to that successor
+
+        successors = []
+        directions = [
+            game.Directions.NORTH,
+            game.Directions.SOUTH,
+            game.Directions.EAST,
+            game.Directions.WEST
+        ]
+
+        for action in directions:
+            Add a successor state to the successor list if the action is legal
+            Here's a code snippet for figuring out whether a new position hits a wall:
+               x, y = currentPosition
+               dx, dy = game.Actions.directionToVector(action)
+               nextx, nexty = int(x + dx), int(y + dy)
+               hitsWall = self.walls[nextx][nexty]
+        self._expanded += 1
+        return successors
+    """
     def __init__(self, startingGameState):
         """
         Stores the walls, pacman's starting position and corners.
@@ -48,56 +83,12 @@ class CornersProblem(SearchProblem):
         self.corners = ((1, 1), (1, top), (right, 1), (right, top))
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
-                print('Warning: no food in corner ' + str(corner))
+                logging.warning('Warning: no food in corner ' + str(corner))
 
         self._expanded = 0  # Number of search nodes expanded
 
         # *** Your Code Here ***
         util.raiseNotDefined()
-
-    def startingState(self):
-        """
-        Returns the start state (in your state space, not the full Pacman state space)
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None
-
-    def isGoal(self, state):
-        """
-        Returns whether this search state is a goal state of the problem
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None
-
-    def successorStates(self, state):
-        """
-        Returns successor states, the actions they require, and a cost of 1.
-
-        As noted in search.py:
-        For a given state, this should return a list of triples, (successor, action, stepCost),
-        where 'successor' is a successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
-        """
-
-        successors = []
-        for action in [game.Directions.NORTH, game.Directions.SOUTH, game.Directions.EAST, game.Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x, y = currentPosition
-            #   dx, dy = game.Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            # *** Your Code Here ***
-            util.raiseNotDefined()
-
-        self._expanded += 1
-        return successors
 
     def actionsCost(self, actions):
         """
@@ -105,7 +96,7 @@ class CornersProblem(SearchProblem):
         include an illegal move, return 999999.  This is implemented for you.
         """
 
-        if actions == None:
+        if (actions is None):
             return 999999
 
         x, y = self.startingPosition
@@ -131,8 +122,9 @@ def cornersHeuristic(state, problem):
     this heuristic to receive full credit.)
     """
 
-    corners = problem.corners  # These are the corner coordinates
-    walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
+    # Useful information.
+    # corners = problem.corners  # These are the corner coordinates
+    # walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     # *** Your Code Here ***
     util.raiseNotDefined()
@@ -188,12 +180,13 @@ class ClosestDotSearchAgent(SearchAgent):
             for action in nextPathSegment:
                 legal = currentState.getLegalActions()
                 if action not in legal:
-                    raise Exception('findPathToClosestDot returned an illegal move: %s!\n%s' % (str(action), str(currentState)))
+                    raise Exception('findPathToClosestDot returned an illegal move: %s!\n%s' %
+                            (str(action), str(currentState)))
 
                 currentState = currentState.generateSuccessor(0, action)
 
         self.actionIndex = 0
-        print('Path found with cost %d.' % len(self.actions))
+        logging.info('Path found with cost %d.' % len(self.actions))
 
     def findPathToClosestDot(self, gameState):
         """
@@ -201,10 +194,10 @@ class ClosestDotSearchAgent(SearchAgent):
         """
 
         # Here are some useful elements of the startState
-        startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
-        problem = AnyFoodSearchProblem(gameState)
+        # startPosition = gameState.getPacmanPosition()
+        # food = gameState.getFood()
+        # walls = gameState.getWalls()
+        # problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
         util.raiseNotDefined()
@@ -223,6 +216,12 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 
     You can use this search problem to help you fill in
     the findPathToClosestDot method.
+
+    Methods to Implement:
+
+    def isGoal(self, state):
+        The state is Pacman's position. Fill this in with a goal test
+        that will complete the problem definition.
     """
 
     def __init__(self, gameState):
@@ -241,41 +240,20 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         self._visitedlist = []
         self._expanded = 0
 
-    def isGoal(self, state):
-        """
-        The state is Pacman's position. Fill this in with a goal test
-        that will complete the problem definition.
-        """
-
-        x, y = state
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None
-
 class ApproximateSearchAgent(BaseAgent):
     """
     Implement your contest entry here.  Change anything but the class name.
+
+    Methods to Implement:
+
+    def getAction(self, state):
+        From game.py:
+        The BaseAgent will receive a GameState and must return an action from
+        game.Directions.{North, South, East, West, Stop}
+
+    def registerInitialState(self, state):
+        This method is called before any moves are made.
     """
 
     def __init__(self, index):
         super().__init__(index)
-
-    def registerInitialState(self, state):
-        """
-        This method is called before any moves are made.
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-
-    def getAction(self, state):
-        """
-        From game.py:
-        The BaseAgent will receive a GameState and must return an action from
-        game.Directions.{North, South, East, West, Stop}
-        """
-
-        # *** Your Code Here ***
-        util.raiseNotDefined()
-        return None

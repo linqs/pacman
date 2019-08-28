@@ -2,6 +2,8 @@
 Interfaces for capture agents and agent factories
 """
 
+import abc
+
 from pacai.agents.base import BaseAgent
 from pacai.ui import captureGraphicsDisplay
 from pacai.util import distanceCalculator
@@ -88,7 +90,7 @@ class CaptureAgent(BaseAgent):
 
         return gameState.makeObservation(self.index)
 
-    def debugDraw(self, cells, color, clear=False):
+    def debugDraw(self, cells, color, clear = False):
 
         if self.display and isinstance(self.display, captureGraphicsDisplay.PacmanGraphics):
             if not type(cells) is list:
@@ -119,13 +121,14 @@ class CaptureAgent(BaseAgent):
         else:
             return self.chooseAction(gameState)
 
+    @abc.abstractmethod
     def chooseAction(self, gameState):
         """
         Override this method to make a good agent. It should return a legal action within
         the time limit (otherwise a random legal action will be chosen for you).
         """
 
-        util.raiseNotDefined()
+        pass
 
     #######################
     # Convenience Methods #
@@ -250,14 +253,14 @@ class CaptureAgent(BaseAgent):
 
         dists = []
         for dist in distributions:
-            if dist != None:
+            if (dist is not None):
                 if not isinstance(dist, util.Counter):
                     raise Exception("Wrong type of distribution")
                 dists.append(dist)
             else:
                 dists.append(util.Counter())
 
-        if self.display != None and 'updateDistributions' in dir(self.display):
+        if (self.display is not None and 'updateDistributions' in dir(self.display)):
             self.display.updateDistributions(dists)
         else:
             self._distributions = dists

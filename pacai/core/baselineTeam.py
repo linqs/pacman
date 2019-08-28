@@ -1,6 +1,7 @@
 from pacai.agents.base import BaseAgent
 
-def createTeam(firstIndex, secondIndex, isRed, first = 'OffensiveReflexAgent', second = 'DefensiveReflexAgent'):
+def createTeam(firstIndex, secondIndex, isRed,
+        first = 'OffensiveReflexAgent', second = 'DefensiveReflexAgent'):
     """
     This function should return a list of two agents that will form the
     team, initialized using firstIndex and secondIndex as their agent

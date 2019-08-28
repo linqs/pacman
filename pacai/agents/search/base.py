@@ -1,3 +1,4 @@
+import logging
 import time
 
 from pacai.agents.base import BaseAgent
@@ -20,13 +21,13 @@ class SearchAgent(BaseAgent):
     """
 
     # TODO(eriq): We should pass actual objects instead of strings.
-
-    def __init__(self, index, fn = 'pacai.core.search.search.dfs', prob = 'pacai.core.search.position.PositionSearchProblem', heuristic = 'pacai.core.search.heuristic.null'):
+    def __init__(self, index, fn = 'pacai.core.search.search.dfs',
+            prob = 'pacai.core.search.position.PositionSearchProblem',
+            heuristic = 'pacai.core.search.heuristic.null'):
         super().__init__(index)
-
         # Get the search problem type from the name.
         self.searchType = util.qualifiedImport(prob)
-        print('[SearchAgent] using problem type %s.' % (prob))
+        logging.info('[SearchAgent] using problem type %s.' % (prob))
 
         # Get the search function from the name and heuristic.
         self.searchFunction = self._fetchSearchFunction(fn, heuristic)
@@ -43,12 +44,13 @@ class SearchAgent(BaseAgent):
 
         # Check if the function has a heuristic.
         if 'heuristic' not in function.__code__.co_varnames:
-            print('[SearchAgent] using function %s.' % (functionName))
+            logging.info('[SearchAgent] using function %s.' % (functionName))
             return function
 
         # Fetch the heuristic.
         heuristic = util.qualifiedImport(heuristicName)
-        print('[SearchAgent] using function %s and heuristic %s.' % (functionName, heuristicName))
+        logging.info('[SearchAgent] using function %s and heuristic %s.' %
+                (functionName, heuristicName))
 
         # Bind the heuristic.
         return lambda x: function(x, heuristic = heuristic)
@@ -62,17 +64,18 @@ class SearchAgent(BaseAgent):
         state: a GameState object (pacman.py)
         """
 
-        if self.searchFunction == None:
-            raise Exception("No search function provided for SearchAgent")
+        if (self.searchFunction is None):
+            raise Exception('No search function provided for SearchAgent')
 
         starttime = time.time()
-        problem = self.searchType(state) # Makes a new search problem
-        self.actions = self.searchFunction(problem) # Find a path
+        problem = self.searchType(state)  # Makes a new search problem
+        self.actions = self.searchFunction(problem)  # Find a path
         totalCost = problem.actionsCost(self.actions)
 
-        print('Path found with total cost of %d in %.1f seconds' % (totalCost, time.time() - starttime))
+        logging.info('Path found with total cost of %d in %.1f seconds' %
+                (totalCost, time.time() - starttime))
         if '_expanded' in dir(problem):
-            print('Search nodes expanded: %d' % problem._expanded)
+            logging.info('Search nodes expanded: %d' % problem._expanded)
 
     def getAction(self, state):
         """

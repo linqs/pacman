@@ -1,3 +1,5 @@
+import logging
+
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.search.problem import SearchProblem
@@ -8,11 +10,10 @@ class PositionSearchProblem(SearchProblem):
     successor function and cost function. This search problem can be
     used to find paths to a particular point on the pacman board.
 
-    The state space consists of (x,y) positions in a pacman game.
+    The state space consists of (x, y) positions in a pacman game.
 
     Note: this search problem is fully specified; you should NOT change it.
     """
-
     def __init__(self, gameState, costFn = lambda x: 1, goal=(1, 1), start = None, warn = True):
         """
         Stores the start and goal.
@@ -30,7 +31,7 @@ class PositionSearchProblem(SearchProblem):
         self.costFn = costFn
 
         if (warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal))):
-            print('Warning: this does not look like a regular search maze')
+            logging.warning('This does not look like a regular search maze')
 
         # For display purposes
         self._visited, self._visitedlist, self._expanded = {}, [], 0
@@ -46,8 +47,8 @@ class PositionSearchProblem(SearchProblem):
             self._visitedlist.append(state)
             import __main__
             if '_display' in dir(__main__):
-                if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
-                    __main__._display.drawExpandedCells(self._visitedlist) #@UndefinedVariable
+                if 'drawExpandedCells' in dir(__main__._display):  # @UndefinedVariable
+                    __main__._display.drawExpandedCells(self._visitedlist)  # @UndefinedVariable
 
         return isGoal
 
@@ -65,13 +66,13 @@ class PositionSearchProblem(SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x,y = state
+            x, y = state
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
                 cost = self.costFn(nextState)
-                successors.append( ( nextState, action, cost) )
+                successors.append((nextState, action, cost))
 
         # Bookkeeping for display purposes
         self._expanded += 1
@@ -87,7 +88,7 @@ class PositionSearchProblem(SearchProblem):
         include an illegal move, return 999999
         """
 
-        if actions == None:
+        if (actions is None):
             return 999999
 
         x, y = self.startingState()
@@ -98,6 +99,6 @@ class PositionSearchProblem(SearchProblem):
             x, y = int(x + dx), int(y + dy)
             if self.walls[x][y]:
                 return 999999
-            cost += self.costFn((x,y))
+            cost += self.costFn((x, y))
 
         return cost

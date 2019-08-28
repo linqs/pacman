@@ -8,7 +8,7 @@ class FoodSearchProblem(SearchProblem):
     food (dots) in a Pacman game.
 
     A search state in this problem is a tuple (pacmanPosition, foodGrid) where
-        pacmanPosition: a tuple (x,y) of integers specifying Pacman's position
+        pacmanPosition: a tuple (x, y) of integers specifying Pacman's position
         foodGrid: a Grid (see game.py) of either True or False, specifying remaining food
     """
 
@@ -17,7 +17,7 @@ class FoodSearchProblem(SearchProblem):
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
         self._expanded = 0
-        self.heuristicInfo = {} # A dictionary for the heuristic to store information
+        self.heuristicInfo = {}  # A dictionary for the heuristic to store information
 
     def startingState(self):
         return self.start
@@ -33,7 +33,7 @@ class FoodSearchProblem(SearchProblem):
         successors = []
         self._expanded += 1
         for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x,y = state[0]
+            x, y = state[0]
             dx, dy = Actions.directionToVector(direction)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:

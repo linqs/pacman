@@ -33,7 +33,7 @@ class Distancer(object):
         The getDistance function is the only one you'll need after you create the object.
         """
 
-        if self._distances == None:
+        if (self._distances is None):
             return manhattanDistance(pos1, pos2)
 
         if isInt(pos1) and isInt(pos2):
@@ -60,10 +60,10 @@ class Distancer(object):
         raise Exception("Position not in grid: " + str(key))
 
     def isReadyForMazeDistance(self):
-        return self._distances != None
+        return (self._distances is not None)
 
-def manhattanDistance(x, y ):
-    return abs( x[0] - y[0] ) + abs( x[1] - y[1] )
+def manhattanDistance(x, y):
+    return abs(x[0] - y[0]) + abs(x[1] - y[1])
 
 def isInt(pos):
     x, y = pos
@@ -101,60 +101,60 @@ class DistanceCalculator:
         self.distancer._distances = self.cache[self.layout.walls]
 
 def computeDistances(layout):
-        """
-        Runs UCS to all other positions from each position
-        """
+    """
+    Runs UCS to all other positions from each position
+    """
 
-        distances = {}
-        allNodes = layout.walls.asList(False)
+    distances = {}
+    allNodes = layout.walls.asList(False)
 
-        for source in allNodes:
-            dist = {}
-            closed = {}
+    for source in allNodes:
+        dist = {}
+        closed = {}
 
-            for node in allNodes:
-                dist[node] = sys.maxsize
+        for node in allNodes:
+            dist[node] = sys.maxsize
 
-            queue = util.PriorityQueue()
-            queue.push(source, 0)
-            dist[source] = 0
+        queue = util.PriorityQueue()
+        queue.push(source, 0)
+        dist[source] = 0
 
-            while not queue.isEmpty():
-                node = queue.pop()
-                if node in closed:
+        while not queue.isEmpty():
+            node = queue.pop()
+            if node in closed:
+                continue
+
+            closed[node] = True
+            nodeDist = dist[node]
+            adjacent = []
+            x, y = node
+
+            if not layout.isWall((x, y + 1)):
+                adjacent.append((x, y + 1))
+
+            if not layout.isWall((x, y - 1)):
+                adjacent.append((x, y - 1))
+
+            if not layout.isWall((x + 1, y)):
+                adjacent.append((x + 1, y))
+
+            if not layout.isWall((x - 1, y)):
+                adjacent.append((x - 1, y))
+
+            for other in adjacent:
+                if other not in dist:
                     continue
 
-                closed[node] = True
-                nodeDist = dist[node]
-                adjacent = []
-                x, y = node
+                oldDist = dist[other]
+                newDist = nodeDist + 1
+                if newDist < oldDist:
+                    dist[other] = newDist
+                    queue.push(other, newDist)
 
-                if not layout.isWall((x, y + 1)):
-                    adjacent.append((x, y + 1))
+        for target in allNodes:
+            distances[(target, source)] = dist[target]
 
-                if not layout.isWall((x, y - 1)):
-                    adjacent.append((x, y - 1) )
-
-                if not layout.isWall((x + 1, y)):
-                    adjacent.append((x + 1, y) )
-
-                if not layout.isWall((x - 1, y)):
-                    adjacent.append((x - 1, y))
-
-                for other in adjacent:
-                    if not other in dist:
-                        continue
-
-                    oldDist = dist[other]
-                    newDist = nodeDist + 1
-                    if newDist < oldDist:
-                        dist[other] = newDist
-                        queue.push(other, newDist)
-
-            for target in allNodes:
-                distances[(target, source)] = dist[target]
-
-        return distances
+    return distances
 
 def getDistanceOnGrid(distances, pos1, pos2):
     key = (pos1, pos2)

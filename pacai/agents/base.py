@@ -1,9 +1,11 @@
+import abc
 import glob
+import logging
 import os
 
 from pacai.util import util
 
-class BaseAgent(object):
+class BaseAgent(abc.ABC):
     """
     An agent is something in the pacman world that does something (takes some action).
     Could be a ghost, the player controller Pac-Man, an AI controlling Pac-Man, etc.
@@ -15,13 +17,14 @@ class BaseAgent(object):
     def __init__(self, index = 0):
         self.index = index
 
+    @abc.abstractmethod
     def getAction(self, state):
         """
         The BaseAgent will receive a GameState (from either {pacman, capture, sonar}.py) and
         must return an action from Directions.{North, South, East, West, Stop}
         """
 
-        util.raiseNotDefined()
+        pass
 
     def registerInitialState(self, state):
         """
@@ -51,8 +54,9 @@ class BaseAgent(object):
 
         this_dir = os.path.dirname(__file__)
 
-        BaseAgent._import_agents(os.path.join(this_dir, "*.py"), "pacai.agents.%s")
-        BaseAgent._import_agents(os.path.join(this_dir, '..', 'student', "*.py"), "pacai.student.%s")
+        BaseAgent._import_agents(os.path.join(this_dir, '*.py'), 'pacai.agents.%s')
+        BaseAgent._import_agents(os.path.join(this_dir, '..', 'student', '*.py'),
+                'pacai.student.%s')
 
         # Also check any subpackages of pacai.agents.
         for path in glob.glob(os.path.join(this_dir, '*')):
@@ -63,16 +67,16 @@ class BaseAgent(object):
                 continue
 
             package_name = os.path.basename(path)
-            package_format_string = "pacai.agents.%s.%%s" % (package_name)
+            package_format_string = 'pacai.agents.%s.%%s' % (package_name)
 
-            BaseAgent._import_agents(os.path.join(path, "*.py"), package_format_string)
+            BaseAgent._import_agents(os.path.join(path, '*.py'), package_format_string)
 
         # Now that the agent classes have been loaded, just look for subclasses.
         for subclass in util.getAllDescendents(BaseAgent):
             if (subclass.__name__ == class_name):
                 return subclass(index = index, **args)
 
-        raise LookupError("Could not find an agent with the name: " + class_name)
+        raise LookupError('Could not find an agent with the name: ' + class_name)
 
     def _import_agents(glob_path, package_format_string):
         """
@@ -95,4 +99,4 @@ class BaseAgent(object):
             try:
                 __import__(package_format_string % (module_name))
             except ImportError as ex:
-                print("WARN: Unable to import agent: '%s'. -- %s" % (module_name, str(ex)))
+                logging.warning('Unable to import agent: "%s". -- %s' % (module_name, str(ex)))

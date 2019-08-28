@@ -1,46 +1,41 @@
-import math
-import random
-import string
 import sys
 import time
 import tkinter
-import types
 
 _Windows = sys.platform == 'win32'  # True if on Win95/98/NT
 
-_root_window = None      # The root window for graphics output
-_canvas = None      # The canvas which holds graphics
-_canvas_xs = None      # Size of canvas object
+_root_window = None  # The root window for graphics output
+_canvas = None  # The canvas which holds graphics
+_canvas_xs = None  # Size of canvas object
 _canvas_ys = None
-_canvas_x = None      # Current position on canvas
+_canvas_x = None  # Current position on canvas
 _canvas_y = None
-_canvas_col = None      # Current colour (set to black below)
+_canvas_col = None  # Current colour (set to black below)
 _canvas_tsize = 12
 _canvas_tserifs = 0
 
 def formatColor(r, g, b):
-  return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
+    return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
 
 def colorToVector(color):
-  return [int(x, 16) / 256.0 for x in [color[1:3], color[3:5], color[5:7]]]
+    return [int(x, 16) / 256.0 for x in [color[1:3], color[3:5], color[5:7]]]
 
 if _Windows:
     _canvas_tfonts = ['times new roman', 'lucida console']
 else:
     _canvas_tfonts = ['times', 'lucidasans-24']
-    pass # XXX need defaults here
 
 def sleep(secs):
     global _root_window
-    if _root_window == None:
+
+    if (_root_window is None):
         time.sleep(secs)
     else:
         _root_window.update_idletasks()
         _root_window.after(int(1000 * secs), _root_window.quit)
         _root_window.mainloop()
 
-def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None):
-
+def begin_graphics(width = 640, height = 480, color = formatColor(0, 0, 0), title = None):
     global _root_window, _canvas, _canvas_x, _canvas_y, _canvas_xs, _canvas_ys, _bg_color
 
     # Check for duplicate call
@@ -61,23 +56,23 @@ def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None
 
     # Create the canvas object
     try:
-      _canvas = tkinter.Canvas(_root_window, width=width, height=height)
-      _canvas.pack()
-      draw_background()
-      _canvas.update()
-    except:
-      _root_window = None
-      raise
+        _canvas = tkinter.Canvas(_root_window, width=width, height=height)
+        _canvas.pack()
+        draw_background()
+        _canvas.update()
+    except Exception as ex:
+        _root_window = None
+        raise RuntimeError("Unable to create tkinter canvas.") from ex
 
     # Bind to key-down and key-up events
-    _root_window.bind( "<KeyPress>", _keypress )
-    _root_window.bind( "<KeyRelease>", _keyrelease )
-    _root_window.bind( "<FocusIn>", _clear_keys )
-    _root_window.bind( "<FocusOut>", _clear_keys )
-    _root_window.bind( "<Button-1>", _leftclick )
-    _root_window.bind( "<Button-2>", _rightclick )
-    _root_window.bind( "<Button-3>", _rightclick )
-    _root_window.bind( "<Control-Button-1>", _ctrl_leftclick)
+    _root_window.bind("<KeyPress>", _keypress)
+    _root_window.bind("<KeyRelease>", _keyrelease)
+    _root_window.bind("<FocusIn>", _clear_keys)
+    _root_window.bind("<FocusOut>", _clear_keys)
+    _root_window.bind("<Button-1>", _leftclick)
+    _root_window.bind("<Button-2>", _rightclick)
+    _root_window.bind("<Button-3>", _rightclick)
+    _root_window.bind("<Control-Button-1>", _ctrl_leftclick)
     _clear_keys()
 
 _leftclick_loc = None
@@ -85,38 +80,42 @@ _rightclick_loc = None
 _ctrl_leftclick_loc = None
 
 def _leftclick(event):
-  global _leftclick_loc
-  _leftclick_loc = (event.x, event.y)
+    global _leftclick_loc
+    _leftclick_loc = (event.x, event.y)
 
 def _rightclick(event):
-  global _rightclick_loc
-  _rightclick_loc = (event.x, event.y)
+    global _rightclick_loc
+    _rightclick_loc = (event.x, event.y)
 
 def _ctrl_leftclick(event):
-  global _ctrl_leftclick_loc
-  _ctrl_leftclick_loc = (event.x, event.y)
+    global _ctrl_leftclick_loc
+    _ctrl_leftclick_loc = (event.x, event.y)
 
 def wait_for_click():
-  while True:
-    global _leftclick_loc
-    global _rightclick_loc
-    global _ctrl_leftclick_loc
-    if _leftclick_loc is not None:
-      val = _leftclick_loc
-      _leftclick_loc = None
-      return val, 'left'
-    if _rightclick_loc is not None:
-      val = _rightclick_loc
-      _rightclick_loc = None
-      return val, 'right'
-    if _ctrl_leftclick_loc is not None:
-      val = _ctrl_leftclick_loc
-      _ctrl_leftclick_loc = None
-      return val, 'ctrl_left'
-    sleep(0.05)
+    while True:
+        global _leftclick_loc
+        global _rightclick_loc
+        global _ctrl_leftclick_loc
+
+        if _leftclick_loc is not None:
+            val = _leftclick_loc
+            _leftclick_loc = None
+            return val, 'left'
+
+        if _rightclick_loc is not None:
+            val = _rightclick_loc
+            _rightclick_loc = None
+            return val, 'right'
+
+        if _ctrl_leftclick_loc is not None:
+            val = _ctrl_leftclick_loc
+            _ctrl_leftclick_loc = None
+            return val, 'ctrl_left'
+
+        sleep(0.05)
 
 def draw_background():
-    corners = [(0,0), (0, _canvas_ys), (_canvas_xs, _canvas_ys), (_canvas_xs, 0)]
+    corners = [(0, 0), (0, _canvas_ys), (_canvas_xs, _canvas_ys), (_canvas_xs, 0)]
     polygon(corners, _bg_color, fillColor=_bg_color, filled=True, smoothed=False)
 
 def _destroy_window(event=None):
@@ -128,18 +127,19 @@ def _destroy_window(event=None):
 
 def end_graphics():
     global _root_window, _canvas, _mouse_enabled
+
     try:
-      try:
-        sleep(1)
-        if _root_window is not None:
-          _root_window.destroy()
-      except SystemExit as e:
-        print('Ending graphics raised an exception:', e)
+        try:
+            sleep(1)
+            if _root_window is not None:
+                _root_window.destroy()
+        except SystemExit as e:
+            print('Ending graphics raised an exception:', e)
     finally:
-      _root_window = None
-      _canvas = None
-      _mouse_enabled = 0
-      _clear_keys()
+        _root_window = None
+        _canvas = None
+        _mouse_enabled = 0
+        _clear_keys()
 
 def clear_screen(background=None):
     global _canvas_x, _canvas_y
@@ -148,31 +148,39 @@ def clear_screen(background=None):
     _canvas_x, _canvas_y = 0, _canvas_ys
 
 def polygon(coords, outlineColor, fillColor=None, filled=1, smoothed=1, behind=0, width=1):
-  c = []
-  for coord in coords:
-    c.append(coord[0])
-    c.append(coord[1])
-  if fillColor == None: fillColor = outlineColor
-  if filled == 0: fillColor = ""
-  poly = _canvas.create_polygon(c, outline=outlineColor, fill=fillColor, smooth=smoothed, width=width)
-  if behind > 0:
-    _canvas.tag_lower(poly, behind) # Higher should be more visible
-  return poly
+    c = []
+    for coord in coords:
+        c.append(coord[0])
+        c.append(coord[1])
+
+    if (fillColor is None):
+        fillColor = outlineColor
+
+    if filled == 0:
+        fillColor = ""
+
+    poly = _canvas.create_polygon(c, outline=outlineColor, fill=fillColor,
+            smooth=smoothed, width=width)
+    if behind > 0:
+        _canvas.tag_lower(poly, behind)  # Higher should be more visible
+    return poly
 
 def square(pos, r, color, filled=1, behind=0):
-  x, y = pos
-  coords = [(x - r, y - r), (x + r, y - r), (x + r, y + r), (x - r, y + r)]
-  return polygon(coords, color, color, filled, 0, behind=behind)
+    x, y = pos
+    coords = [(x - r, y - r), (x + r, y - r), (x + r, y + r), (x - r, y + r)]
+    return polygon(coords, color, color, filled, 0, behind=behind)
 
 def circle(pos, r, outlineColor, fillColor, endpoints=None, style='pieslice', width=2):
     x, y = pos
     x0, x1 = x - r - 1, x + r
     y0, y1 = y - r - 1, y + r
-    if endpoints == None:
-      e = [0, 359]
+    if (endpoints is None):
+        e = [0, 359]
     else:
-      e = list(endpoints)
-    while e[0] > e[1]: e[1] = e[1] + 360
+        e = list(endpoints)
+
+    while e[0] > e[1]:
+        e[1] = e[1] + 360
 
     return _canvas.create_arc(x0, y0, x1, y1, outline=outlineColor, fill=fillColor,
                               extent=e[1] - e[0], start=e[0], style=style, width=width)
@@ -183,21 +191,22 @@ def image(pos, file="../../blueghost.gif"):
     return _canvas.create_image(x, y, image = tkinter.PhotoImage(file=file), anchor = tkinter.NW)
 
 def refresh():
-      _canvas.update_idletasks()
+    _canvas.update_idletasks()
 
 def moveCircle(id, pos, r, endpoints=None):
     global _canvas_x, _canvas_y
 
     x, y = pos
-#    x0, x1 = x - r, x + r + 1
-#    y0, y1 = y - r, y + r + 1
-    x0, x1 = x - r - 1, x + r
-    y0, y1 = y - r - 1, y + r
-    if endpoints == None:
-      e = [0, 359]
+    x0 = x - r - 1
+    y0 = y - r - 1
+
+    if (endpoints is None):
+        e = [0, 359]
     else:
-      e = list(endpoints)
-    while e[0] > e[1]: e[1] = e[1] + 360
+        e = list(endpoints)
+
+    while e[0] > e[1]:
+        e[1] = e[1] + 360
 
     edit(id, ('start', e[0]), ('extent', e[1] - e[0]))
     move_to(id, x0, y0)
@@ -207,26 +216,27 @@ def edit(id, *args):
 
 def text(pos, color, contents, font='Helvetica', size=12, style='normal', anchor="nw"):
     global _canvas_x, _canvas_y
+
     x, y = pos
     font = (font, str(size), style)
     return _canvas.create_text(x, y, fill=color, text=contents, font=font, anchor=anchor)
 
 def changeText(id, newText, font=None, size=12, style='normal'):
-  _canvas.itemconfigure(id, text=newText)
-  if font is not None:
-    _canvas.itemconfigure(id, font=(font, '-%d' % size, style))
+    _canvas.itemconfigure(id, text=newText)
+    if font is not None:
+        _canvas.itemconfigure(id, font=(font, '-%d' % size, style))
 
 def changeColor(id, newColor):
-  _canvas.itemconfigure(id, fill=newColor)
+    _canvas.itemconfigure(id, fill=newColor)
 
 def line(here, there, color=formatColor(0, 0, 0), width=2):
-  x0, y0 = here[0], here[1]
-  x1, y1 = there[0], there[1]
-  return _canvas.create_line(x0, y0, x1, y1, fill=color, width=width)
+    x0, y0 = here[0], here[1]
+    x1, y1 = there[0], there[1]
+    return _canvas.create_line(x0, y0, x1, y1, fill=color, width=width)
 
-##############################################################################
-### Keypress handling ########################################################
-##############################################################################
+###########################
+#   Keypress handling     #
+###########################
 
 # We bind to key-down and key-up events.
 
@@ -238,7 +248,7 @@ _got_release = None
 
 def _keypress(event):
     global _got_release
-    #remap_arrows(event)
+    # remap_arrows(event)
     _keysdown[event.keysym] = 1
     _keyswaiting[event.keysym] = 1
     # print(event.char, event.keycode)
@@ -246,47 +256,62 @@ def _keypress(event):
 
 def _keyrelease(event):
     global _got_release
-    #remap_arrows(event)
+    # remap_arrows(event)
+
     try:
-      del _keysdown[event.keysym]
-    except:
-      pass
+        del _keysdown[event.keysym]
+    except Exception:
+        pass
+
     _got_release = 1
 
 def remap_arrows(event):
     # TURN ARROW PRESSES INTO LETTERS (SHOULD BE IN KEYBOARD AGENT)
     if event.char in ['a', 's', 'd', 'w']:
-      return
-    if event.keycode in [37, 101]: # LEFT ARROW (win / x)
-      event.char = 'a'
-    if event.keycode in [38, 99]: # UP ARROW
-      event.char = 'w'
-    if event.keycode in [39, 102]: # RIGHT ARROW
-      event.char = 'd'
-    if event.keycode in [40, 104]: # DOWN ARROW
-      event.char = 's'
+        return
+
+    # LEFT ARROW (win / x)
+    if event.keycode in [37, 101]:
+        event.char = 'a'
+
+    # UP ARROW
+    if event.keycode in [38, 99]:
+        event.char = 'w'
+
+    # RIGHT ARROW
+    if event.keycode in [39, 102]:
+        event.char = 'd'
+
+    # DOWN ARROW
+    if event.keycode in [40, 104]:
+        event.char = 's'
 
 def _clear_keys(event=None):
     global _keysdown, _got_release, _keyswaiting
+
     _keysdown = {}
     _keyswaiting = {}
     _got_release = None
 
 def keys_pressed(d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     global _root_window
+
     if (d_o_e is None):
         d_o_e = _root_window.tk.dooneevent
 
     d_o_e(d_w)
     if _got_release:
-      d_o_e(d_w)
+        d_o_e(d_w)
+
     return list(_keysdown.keys())
 
 def keys_waiting():
-  global _keyswaiting
-  keys = list(_keyswaiting.keys())
-  _keyswaiting = {}
-  return keys
+    global _keyswaiting
+
+    keys = list(_keyswaiting.keys())
+    _keyswaiting = {}
+
+    return keys
 
 # Block for a list of keys...
 
@@ -299,6 +324,7 @@ def wait_for_keys():
 
 def remove_from_screen(x, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     global _root_window
+
     if (d_o_e is None):
         d_o_e = _root_window.tk.dooneevent
 
@@ -309,72 +335,77 @@ def _adjust_coords(coord_list, x, y):
     for i in range(0, len(coord_list), 2):
         coord_list[i] = coord_list[i] + x
         coord_list[i + 1] = coord_list[i + 1] + y
+
     return coord_list
 
 def move_to(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     global _root_window
+
     if (d_o_e is None):
         d_o_e = _root_window.tk.dooneevent
 
     if y is None:
         try:
             x, y = x
-        except:
-            raise Exception('incomprehensible coordinates')
+        except Exception as ex:
+            raise ValueError('Incomprehensible coordinates: ' + str(x)) from ex
 
     horiz = True
     newCoords = []
-    current_x, current_y = _canvas.coords(object)[0:2] # first point
-    for coord in  _canvas.coords(object):
-      if horiz:
-        inc = x - current_x
-      else:
-        inc = y - current_y
-      horiz = not horiz
+    current_x, current_y = _canvas.coords(object)[0:2]  # first point
+    for coord in _canvas.coords(object):
+        if horiz:
+            inc = x - current_x
+        else:
+            inc = y - current_y
 
-      newCoords.append(coord + inc)
+        horiz = not horiz
+        newCoords.append(coord + inc)
 
     _canvas.coords(object, *newCoords)
     d_o_e(d_w)
 
 def move_by(object, x, y=None, d_o_e=None, d_w=tkinter._tkinter.DONT_WAIT):
     global _root_window
+
     if (d_o_e is None):
         d_o_e = _root_window.tk.dooneevent
 
     if y is None:
         try:
             x, y = x
-        except:
-            raise Exception('incomprehensible coordinates')
+        except Exception as ex:
+            raise ValueError('Incomprehensible coordinates: ' + str(x)) from ex
 
     horiz = True
     newCoords = []
-    for coord in  _canvas.coords(object):
-      if horiz:
-        inc = x
-      else:
-        inc = y
-      horiz = not horiz
+    for coord in _canvas.coords(object):
+        if horiz:
+            inc = x
+        else:
+            inc = y
 
-      newCoords.append(coord + inc)
+        horiz = not horiz
+        newCoords.append(coord + inc)
 
     _canvas.coords(object, *newCoords)
     d_o_e(d_w)
 
 def writePostscript(filename):
-  """
-  Write the current canvas to a postscript file.
-  """
+    """
+    Write the current canvas to a postscript file.
+    """
 
-  _canvas.postscript(file = filename, colormode = 'color', x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
+    _canvas.postscript(file = filename, colormode = 'color', x = 0, y = 0, width = _canvas_xs,
+            height = _canvas_ys)
 
 def getPostscript():
-  """
-  Get the current canvas as a string that represents the contents of a postscript file.
-  """
+    """
+    Get the current canvas as a string that represents the contents of a postscript file.
+    """
 
-  return _canvas.postscript(colormode = 'color', x = 0, y = 0, width = _canvas_xs, height = _canvas_ys)
+    return _canvas.postscript(colormode = 'color', x = 0, y = 0, width = _canvas_xs,
+            height = _canvas_ys)
 
 ghost_shape = [
     (0, - 0.5),
@@ -388,13 +419,13 @@ ghost_shape = [
     (- 0.75, - 0.75),
     (- 0.5, - 0.5),
     (- 0.25, - 0.75)
-  ]
+]
 
 if __name__ == '__main__':
-  begin_graphics()
-  clear_screen()
-  ghost_shape = [(x * 10 + 20, y * 10 + 20) for x, y in ghost_shape]
-  g = polygon(ghost_shape, formatColor(1, 1, 1))
-  move_to(g, (50, 50))
-  circle((150, 150), 20, formatColor(0.7, 0.3, 0.0), endpoints=[15, - 15])
-  sleep(2)
+    begin_graphics()
+    clear_screen()
+    ghost_shape = [(x * 10 + 20, y * 10 + 20) for x, y in ghost_shape]
+    g = polygon(ghost_shape, formatColor(1, 1, 1))
+    move_to(g, (50, 50))
+    circle((150, 150), 20, formatColor(0.7, 0.3, 0.0), endpoints=[15, - 15])
+    sleep(2)

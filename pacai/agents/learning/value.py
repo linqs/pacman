@@ -1,5 +1,6 @@
+import abc
+
 from pacai.agents.base import BaseAgent
-from pacai.util import util
 
 class ValueEstimationAgent(BaseAgent):
     """
@@ -38,13 +39,15 @@ class ValueEstimationAgent(BaseAgent):
     # Override These Functions #
     ############################
 
+    @abc.abstractmethod
     def getQValue(self, state, action):
         """
         Should return Q(state,action)
         """
 
-        util.raiseNotDefined()
+        pass
 
+    @abc.abstractmethod
     def getValue(self, state):
         """
         What is the value of this state under the best action?
@@ -53,8 +56,9 @@ class ValueEstimationAgent(BaseAgent):
         V(s) = max_{a in actions} Q(s,a)
         """
 
-        util.raiseNotDefined()
+        pass
 
+    @abc.abstractmethod
     def getPolicy(self, state):
         """
         What is the best action to take in the state. Note that because
@@ -67,12 +71,13 @@ class ValueEstimationAgent(BaseAgent):
         it doesn't matter which is selected.
         """
 
-        util.raiseNotDefined()
+        pass
 
+    @abc.abstractmethod
     def getAction(self, state):
         """
         state: can call state.getLegalActions()
         Choose an action and return it.
         """
 
-        util.raiseNotDefined()
+        pass

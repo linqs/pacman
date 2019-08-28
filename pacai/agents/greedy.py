@@ -9,12 +9,12 @@ class GreedyAgent(BaseAgent):
         super().__init__(index)
 
         self.evaluationFunction = util.qualifiedImport(evalFn)
-        assert self.evaluationFunction != None
+        assert (self.evaluationFunction is not None)
 
     def getAction(self, state):
         # Generate candidate actions
         legal = state.getLegalPacmanActions()
-        if Directions.STOP in legal:
+        if (Directions.STOP in legal):
             legal.remove(Directions.STOP)
 
         successors = [(state.generateSuccessor(0, action), action) for action in legal]

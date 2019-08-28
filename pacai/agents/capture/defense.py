@@ -26,7 +26,7 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
 
         # Computes distance to invaders we can see.
         enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-        invaders = [a for a in enemies if a.isPacman and a.getPosition() != None]
+        invaders = [a for a in enemies if a.isPacman and a.getPosition() is not None]
         features['numInvaders'] = len(invaders)
 
         if len(invaders) > 0:
