@@ -525,7 +525,8 @@ class PacmanGraphics:
                 wallColor = TEAM_COLORS[1]
 
             for yNum, cell in enumerate(x):
-                if cell:  # There's a wall here
+                # Skip of there is no wall here.
+                if (not cell):
                     continue
 
                 pos = (xNum, yNum)
