@@ -1,28 +1,8 @@
 import random
 
 from pacai.agents.base import BaseAgent
+from pacai.agents.search.multiagent import MultiAgentSearchAgent
 from pacai.util import util
-
-class MultiAgentSearchAgent(BaseAgent):
-    """
-    This class provides some common elements to all of your multi-agent searchers.
-    Any methods defined here will be available to the
-    MinimaxPacmanAgent, AlphaBetaPacmanAgent & ExpectimaxPacmanAgent.
-
-    You *do not* need to make any changes here, but you can if you want to
-    add functionality to all your adversarial search agents.
-    Please do not remove anything, however.
-
-    Note: this is an abstract class: one that should not be instantiated.
-    It's only partially specified, and designed to be extended.
-    Agent is another abstract class.
-    """
-
-    def __init__(self, index, evalFn = 'pacai.core.eval.score', depth = '2'):
-        super().__init__(index)
-
-        self.evaluationFunction = util.qualifiedImport(evalFn)
-        self.treeDepth = int(depth)
 
 class ReflexAgent(BaseAgent):
     """
@@ -175,8 +155,3 @@ class ContestAgent(MultiAgentSearchAgent):
 
     def __init__(self, index):
         super().__init__(index)
-
-
-# Abbreviation
-# TODO(eriq): Get rid of this abbreviation
-better = betterEvaluationFunction
