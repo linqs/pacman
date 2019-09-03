@@ -49,7 +49,8 @@ class SearchAgent(BaseAgent):
 
         # Fetch the heuristic.
         heuristic = find_modules.qualifiedImport(heuristicName)
-        logging.info('[SearchAgent] using function %s and heuristic %s.' % (functionName, heuristicName))
+        logging.info('[SearchAgent] using function %s and heuristic %s.' %
+            (functionName, heuristicName))
 
         # Bind the heuristic.
         return lambda x: function(x, heuristic = heuristic)

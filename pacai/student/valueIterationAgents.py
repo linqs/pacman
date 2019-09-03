@@ -45,7 +45,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discountRate = discountRate
         self.iters = iters
-        self.values = counter.Counter() # A Counter is a dict with default 0
+        self.values = counter.Counter()  # A Counter is a dict with default 0
 
         """
         Description:

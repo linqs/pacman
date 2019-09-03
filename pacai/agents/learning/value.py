@@ -1,7 +1,6 @@
 import abc
 
 from pacai.agents.base import BaseAgent
-from pacai.util import counter
 
 class ValueEstimationAgent(BaseAgent):
     """
