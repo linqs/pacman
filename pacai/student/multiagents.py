@@ -109,7 +109,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def __init__(self, index):
         super().__init__(index)
 
-
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
     Your expectimax agent (question 4)
