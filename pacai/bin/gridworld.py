@@ -4,7 +4,7 @@ import random
 import sys
 import pacai.core.environment
 import pacai.core.mdp
-import pacai.util.containers
+import pacai.util.counter
 
 from pacai.util.logs import initLogging
 
@@ -164,7 +164,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
         return successors
 
     def __aggregate(self, statesAndProbs):
-        counter = pacai.util.containers.Counter()
+        counter = pacai.util.counter.Counter()
         for state, prob in statesAndProbs:
             counter[state] += prob
 

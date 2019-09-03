@@ -4,7 +4,7 @@ import math
 import operator
 
 import pacai.bin.gridworld
-import pacai.util.containers
+import pacai.util.counter
 
 class TextGridworldDisplay(object):
     def __init__(self, gridworld):
@@ -20,7 +20,7 @@ class TextGridworldDisplay(object):
         if (message is not None):
             print(message)
 
-        values = pacai.util.containers.Counter()
+        values = pacai.util.counter.Counter()
         policy = {}
 
         states = self.gridworld.getStates()
@@ -40,7 +40,7 @@ class TextGridworldDisplay(object):
         if (message is not None):
             print(message)
 
-        qValues = pacai.util.containers.Counter()
+        qValues = pacai.util.counter.Counter()
 
         states = self.gridworld.getStates()
         for state in states:
@@ -372,12 +372,12 @@ if __name__ == '__main__':
     print(grid.getStates())
 
     policy = dict([(state, 'east') for state in grid.getStates()])
-    values = pacai.util.containers.Counter(dict([(state, 1000.23) for state in grid.getStates()]))
+    values = pacai.util.counter.Counter(dict([(state, 1000.23) for state in grid.getStates()]))
     prettyPrintValues(grid, values, policy, currentState = (0, 0))
 
     stateCrossActions = [[(state, action) for action in grid.getPossibleActions(state)]
             for state in grid.getStates()]
     qStates = functools.reduce(lambda x, y: x + y, stateCrossActions, [])
-    qValues = pacai.util.containers.Counter(dict([((state, action), 10.5) for state, action in qStates]))
-    qValues = pacai.util.containers.Counter(dict([((state, action), 10.5) for state, action in functools.reduce(lambda x, y: x + y, stateCrossActions, [])]))
+    qValues = pacai.util.counter.Counter(dict([((state, action), 10.5) for state, action in qStates]))
+    qValues = pacai.util.counter.Counter(dict([((state, action), 10.5) for state, action in functools.reduce(lambda x, y: x + y, stateCrossActions, [])]))
     prettyPrintQValues(grid, qValues, currentState = (0, 0))

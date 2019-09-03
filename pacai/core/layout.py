@@ -3,7 +3,7 @@ import random
 from functools import reduce
 
 from pacai.core.game import Grid
-from pacai.util.distanceCalculator import manhattanDistance
+from pacai.core.distance import manhattan
 
 VISIBILITY_MATRIX_CACHE = {}
 
@@ -92,7 +92,7 @@ class Layout(object):
             (self.width - 2, self.height - 2)
         ]
 
-        dist, pos = max([(manhattanDistance(p, pacPos), p) for p in poses])
+        dist, pos = max([(manhattan(p, pacPos), p) for p in poses])
         return pos
 
     def isVisibleFrom(self, ghostPos, pacPos, pacDirection):

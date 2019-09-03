@@ -1,6 +1,6 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.util import featureExtractors
-from pacai.util import containers
+from pacai.util import prob
 from pacai.util import find_modules
 from pacai.util import interrupts
 
@@ -41,7 +41,7 @@ class QLearningAgent(ReinforcementAgent):
         no legal actions, which is the case at the terminal state, you
         should choose None as the action.
 
-        HINT: You might want to use containers.flipCoin(prob)
+        HINT: You might want to use prob.flipCoin(prob)
         HINT: To pick randomly from a list, use random.choice(list)
 
     def update(self, state, action, nextState, reward):

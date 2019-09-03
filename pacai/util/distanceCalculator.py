@@ -12,7 +12,7 @@ distancer.getDistance((1, 1), (10, 10))
 
 import sys
 
-from pacai.util import containers
+from pacai.util import priority_queue
 
 DEFAULT_DISTANCE = 10000
 
@@ -115,7 +115,7 @@ def computeDistances(layout):
         for node in allNodes:
             dist[node] = sys.maxsize
 
-        queue = containers.PriorityQueue()
+        queue = priority_queue.PriorityQueue()
         queue.push(source, 0)
         dist[source] = 0
 
@@ -162,14 +162,3 @@ def getDistanceOnGrid(distances, pos1, pos2):
         return distances[key]
 
     return 100000
-
-def nearestPoint(pos):
-    """
-    Finds the nearest grid point to a position (discretizes).
-    """
-
-    (current_row, current_col) = pos
-
-    grid_row = int(current_row + 0.5)
-    grid_col = int(current_col + 0.5)
-    return (grid_row, grid_col)

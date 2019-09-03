@@ -1,5 +1,5 @@
 from pacai.agents.learning.value import ValueEstimationAgent
-from pacai.util import containers
+from pacai.util import counter
 from pacai.util import interrupts
 
 class ValueIterationAgent(ValueEstimationAgent):
@@ -45,7 +45,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discountRate = discountRate
         self.iters = iters
-        self.values = containers.Counter() # A Counter is a dict with default 0
+        self.values = counter.Counter() # A Counter is a dict with default 0
 
         """
         Description:

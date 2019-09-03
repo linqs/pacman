@@ -56,3 +56,12 @@ def qualifiedImport(qualified_name):
         return module
 
     return getattr(module, target_name)
+
+def getAllDescendents(classObject):
+    descendents = set()
+
+    for childClass in classObject.__subclasses__():
+        descendents.add(childClass)
+        descendents |= getAllDescendents(childClass)
+
+    return descendents

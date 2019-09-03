@@ -1,7 +1,7 @@
 from pacai.agents.ghost.base import GhostAgent
 from pacai.core.game import Actions
-from pacai.util import distanceCalculator
-from pacai.util import containers
+from pacai.core import distance
+from pacai.util import counter
 
 class DirectionalGhost(GhostAgent):
     """
@@ -30,7 +30,7 @@ class DirectionalGhost(GhostAgent):
         pacmanPosition = state.getPacmanPosition()
 
         # Select best actions given the state
-        distancesToPacman = [distanceCalculator.manhattanDistance(pos, pacmanPosition) for pos in newPositions]
+        distancesToPacman = [distance.manhattan(pos, pacmanPosition) for pos in newPositions]
         if isScared:
             bestScore = max(distancesToPacman)
             bestProb = self.prob_scaredFlee
@@ -42,7 +42,7 @@ class DirectionalGhost(GhostAgent):
         bestActions = [action for action, distance in zipActions if distance == bestScore]
 
         # Construct distribution
-        dist = containers.Counter()
+        dist = counter.Counter()
 
         for a in bestActions:
             dist[a] = float(bestProb) / len(bestActions)
