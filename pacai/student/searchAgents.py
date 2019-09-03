@@ -16,6 +16,7 @@ Look for the lines that say:
 
 Good luck and happy searching!
 """
+
 import logging
 
 from pacai.core import game

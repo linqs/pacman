@@ -1,6 +1,7 @@
 import random
 
 from pacai.agents.base import BaseAgent
+<<<<<<< HEAD:pacai/student/multiAgents.py
 from pacai.util import find_modules
 from pacai.util import interrupts
 
@@ -25,6 +26,11 @@ class MultiAgentSearchAgent(BaseAgent):
         self.evaluationFunction = find_modules.qualifiedImport(evalFn)
         self.treeDepth = int(depth)
 
+=======
+from pacai.agents.search.multiagent import MultiAgentSearchAgent
+from pacai.util import util
+
+>>>>>>> 790e7f1ad06043f150bde9023844eaa7626fe9c3:pacai/student/multiagents.py
 class ReflexAgent(BaseAgent):
     """
     A reflex agent chooses an action at each choice point by examining
@@ -130,7 +136,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def __init__(self, index):
         super().__init__(index)
 
-
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
     Your expectimax agent (question 4)
@@ -176,8 +181,3 @@ class ContestAgent(MultiAgentSearchAgent):
 
     def __init__(self, index):
         super().__init__(index)
-
-
-# Abbreviation
-# TODO(eriq): Get rid of this abbreviation
-better = betterEvaluationFunction

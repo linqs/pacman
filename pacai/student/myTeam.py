@@ -1,6 +1,8 @@
-from pacai.agents.capture.dummy import DummyAgent
+from pacai.util import util
 
-def createTeam(firstIndex, secondIndex, isRed, first = 'DummyAgent', second = 'DummyAgent'):
+def createTeam(firstIndex, secondIndex, isRed,
+        first = 'pacai.agents.capture.dummy.DummyAgent',
+        second = 'pacai.agents.capture.dummy.DummyAgent'):
     """
     This function should return a list of two agents that will form the
     team, initialized using firstIndex and secondIndex as their agent
@@ -16,5 +18,11 @@ def createTeam(firstIndex, secondIndex, isRed, first = 'DummyAgent', second = 'D
     behavior is what you want for the nightly contest.
     """
 
-    # The following line is an example only; feel free to change it.
-    return [DummyAgent(firstIndex), DummyAgent(secondIndex)]
+    # The following is an example only; feel free to change it.
+    firstAgent = util.qualifiedImport(first)
+    secondAgent = util.qualifiedImport(second)
+
+    return [
+        firstAgent(firstIndex),
+        secondAgent(secondIndex),
+    ]
