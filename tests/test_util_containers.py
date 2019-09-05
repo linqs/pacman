@@ -11,47 +11,48 @@ and the Priority Queue.
 """
 class UtilTest(unittest.TestCase):
     def test_queue(self):
-        q = queue.Queue()
-        self.assertTrue(q.isEmpty())
+        testQueue = queue.Queue()
+        self.assertTrue(testQueue.isEmpty())
 
         val_list = [x for x in range(1, 10)]
         for val in val_list:
-            q.push(val)
-        self.assertFalse(q.isEmpty())
-        self.assertEquals(len(val_list), len(q))
+            testQueue.push(val)
+        self.assertFalse(testQueue.isEmpty())
+        self.assertEquals(len(val_list), len(testQueue))
 
         # Test Queue for FIFO functionality.
         for val in val_list:
-            self.assertEqual(val, q.pop())
+            self.assertEqual(val, testQueue.pop())
 
     def test_stack(self):
-        intStack = stack.Stack()
-        self.assertTrue(intStack.isEmpty())
+        testStack = stack.Stack()
+        self.assertTrue(testStack.isEmpty())
 
         val_list = [x for x in range(1, 10)]
         for val in val_list:
-            intStack.push(val)
-        self.assertFalse(intStack.isEmpty())
-        self.assertEquals(len(val_list), len(intStack))
+            testStack.push(val)
+        self.assertFalse(testStack.isEmpty())
+        self.assertEquals(len(val_list), len(testStack))
 
         # Test Stack for LIFO functionality.
         for val in reversed(val_list):
-            self.assertEqual(val, intStack.pop())
+            self.assertEqual(val, testStack.pop())
 
     def test_priority_queue(self):
-        priQ = priority_queue.PriorityQueue()
-        self.assertTrue(priQ.isEmpty())
+        testPriorityQueue = priority_queue.PriorityQueue()
+        self.assertTrue(testPriorityQueue.isEmpty())
 
-        # List of values with a priority number that correspondes to the position in the list.
+        # List of values with a priority number that correspondes to
+        # the position in the list.
         val_list = [(x, -x) for x in range(1, 10)]
         for val, pri in val_list:
-            priQ.push(val, pri)
-        self.assertFalse(priQ.isEmpty())
-        self.assertEquals(len(val_list), len(priQ))
+            testPriorityQueue.push(val, pri)
+        self.assertFalse(testPriorityQueue.isEmpty())
+        self.assertEquals(len(val_list), len(testPriorityQueue))
 
         # Test Min Queue for priority functionality.
         for val, pri in reversed(val_list):
-            self.assertEqual(val, priQ.pop())
+            self.assertEqual(val, testPriorityQueue.pop())
 
 if __name__ == '__main__':
     unittest.main()
