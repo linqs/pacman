@@ -24,7 +24,7 @@ class _FirstFoodSearchProblem(SearchProblem):
 
     # Goal state is where the current position is at the same location as food
     def isGoal(self, state):
-        return if self._foodGrid[state[0]][state[1]] == True else False
+        return if self._foodGrid[state[0]][state[1]]: True else False
 
     def successorStates(self, state):
 
