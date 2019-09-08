@@ -3,6 +3,8 @@
 import abc
 
 from pacai.core import game
+from pacai.core.search import firstFood
+from pacai.student import search
 from pacai.util import counter
 
 class FeatureExtractor(abc.ABC):
@@ -29,26 +31,13 @@ def closestFood(pos, food, walls):
     worked on in the search project; here its all in one place
     """
 
-    fringe = [(pos[0], pos[1], 0)]
-    expanded = set()
+    x1, y1 = pos
 
-    while fringe:
-        pos_x, pos_y, dist = fringe.pop(0)
-        if (pos_x, pos_y) in expanded:
-            continue
+    walls = gameState.getWalls()
+    assert not walls[x1][y1], 'position1 is a wall: ' + position1
 
-        expanded.add((pos_x, pos_y))
-        # If we find a food at this location then exit.
-        if food[pos_x][pos_y]:
-            return dist
-
-        # Otherwise spread out from the location to its neighbours.
-        nbrs = game.Actions.getLegalNeighbors((pos_x, pos_y), walls)
-        for nbr_x, nbr_y in nbrs:
-            fringe.append((nbr_x, nbr_y, dist + 1))
-
-    # No food found.
-    return None
+    prob = firstFood._FirstFoodSearch(pos, food, walls)
+    return len(search.bfs(prob))
 
 class SimpleExtractor(FeatureExtractor):
     """
