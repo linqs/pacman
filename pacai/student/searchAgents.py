@@ -25,7 +25,7 @@ from pacai.core.search.position import PositionSearchProblem
 from pacai.core.search.problem import SearchProblem
 from pacai.agents.base import BaseAgent
 from pacai.agents.search.base import SearchAgent
-from pacai.util import interrupts
+from pacai.util import util
 
 class CornersProblem(SearchProblem):
     """
@@ -89,7 +89,7 @@ class CornersProblem(SearchProblem):
         self._expanded = 0  # Number of search nodes expanded
 
         # *** Your Code Here ***
-        interrupts.raiseNotDefined()
+        util.raiseNotDefined()
 
     def actionsCost(self, actions):
         """
@@ -128,7 +128,7 @@ def cornersHeuristic(state, problem):
     # walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     # *** Your Code Here ***
-    interrupts.raiseNotDefined()
+    util.raiseNotDefined()
     return 0  # Default to trivial solution
 
 def foodHeuristic(state, problem):
@@ -159,7 +159,7 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
 
     # *** Your Code Here ***
-    interrupts.raiseNotDefined()
+    util.raiseNotDefined()
     return heuristic.null(state, problem)  # Default to the null heuristic.
 
 class ClosestDotSearchAgent(SearchAgent):
@@ -201,7 +201,7 @@ class ClosestDotSearchAgent(SearchAgent):
         # problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
-        interrupts.raiseNotDefined()
+        util.raiseNotDefined()
         return None
 
 class AnyFoodSearchProblem(PositionSearchProblem):

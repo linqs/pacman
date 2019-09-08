@@ -2,7 +2,7 @@ import random
 
 from pacai.agents.base import BaseAgent
 from pacai.agents.search.multiagent import MultiAgentSearchAgent
-from pacai.util import interrupts
+from pacai.util import util
 
 class ReflexAgent(BaseAgent):
     """
@@ -134,7 +134,7 @@ def betterEvaluationFunction(currentGameState):
     """
 
     # *** Your Code Here ***
-    interrupts.raiseNotDefined()
+    util.raiseNotDefined()
 
 class ContestAgent(MultiAgentSearchAgent):
     """

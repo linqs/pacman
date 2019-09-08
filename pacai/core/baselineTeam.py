@@ -1,4 +1,4 @@
-from pacai.util import find_modules
+from pacai.util import reflection
 
 def createTeam(firstIndex, secondIndex, isRed,
         first = 'pacai.agents.capture.offense.OffensiveReflexAgent',
@@ -18,8 +18,8 @@ def createTeam(firstIndex, secondIndex, isRed,
     behavior is what you want for the nightly contest.
     """
 
-    firstAgent = find_modules.qualifiedImport(first)
-    secondAgent = find_modules.qualifiedImport(second)
+    firstAgent = reflection.qualifiedImport(first)
+    secondAgent = reflection.qualifiedImport(second)
 
     return [
         firstAgent(firstIndex),

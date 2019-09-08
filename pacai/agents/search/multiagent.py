@@ -1,5 +1,5 @@
 from pacai.agents.base import BaseAgent
-from pacai.util import find_modules
+from pacai.util import reflection
 
 class MultiAgentSearchAgent(BaseAgent):
     """
@@ -15,5 +15,5 @@ class MultiAgentSearchAgent(BaseAgent):
     def __init__(self, index, evalFn = 'pacai.core.eval.score', depth = '2'):
         super().__init__(index)
 
-        self.evaluationFunction = find_modules.qualifiedImport(evalFn)
+        self.evaluationFunction = reflection.qualifiedImport(evalFn)
         self.treeDepth = int(depth)

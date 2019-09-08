@@ -2,10 +2,10 @@ import logging
 import optparse
 import random
 import sys
+
 import pacai.core.environment
 import pacai.core.mdp
 import pacai.util.counter
-
 from pacai.util.logs import initLogging
 
 class Gridworld(pacai.core.mdp.MarkovDecisionProcess):

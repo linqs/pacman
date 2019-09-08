@@ -1,6 +1,6 @@
 import unittest
 
-from pacai.util import priority_queue
+from pacai.util import priorityQueue
 from pacai.util import queue
 from pacai.util import stack
 
@@ -39,7 +39,7 @@ class UtilTest(unittest.TestCase):
             self.assertEqual(val, testStack.pop())
 
     def test_priority_queue(self):
-        testPriorityQueue = priority_queue.PriorityQueue()
+        testPriorityQueue = priorityQueue.PriorityQueue()
         self.assertTrue(testPriorityQueue.isEmpty())
 
         # List of values with a priority number that correspondes to

@@ -1,8 +1,8 @@
 import math
 import sys
+
 import pacai.core.environment
 import pacai.ui.graphicsCrawlerDisplay
-
 from pacai.util.logs import initLogging
 
 class CrawlingRobotEnvironment(pacai.core.environment.Environment):

@@ -1,6 +1,6 @@
 from pacai.agents.learning.value import ValueEstimationAgent
 from pacai.util import counter
-from pacai.util import interrupts
+from pacai.util import util
 
 class ValueIterationAgent(ValueEstimationAgent):
     """
@@ -53,7 +53,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
 
         """ YOUR CODE HERE """
-        interrupts.raiseNotDefined()
+        util.raiseNotDefined()
         """ END CODE """
 
     def getValue(self, state):

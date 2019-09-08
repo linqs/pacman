@@ -1,6 +1,6 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
-from pacai.util import find_modules
-from pacai.util import interrupts
+from pacai.util import reflection
+from pacai.util import util
 
 class QLearningAgent(ReinforcementAgent):
     """
@@ -117,7 +117,7 @@ class ApproximateQAgent(PacmanQAgent):
 
     def __init__(self, index, extractor = 'pacai.util.featureExtractors.IdentityExtractor', **args):
         super().__init__(index, **args)
-        self.featExtractor = find_modules.qualifiedImport(extractor)
+        self.featExtractor = reflection.qualifiedImport(extractor)
 
         # You might want to initialize weights here.
 
@@ -132,4 +132,4 @@ class ApproximateQAgent(PacmanQAgent):
         # Did we finish training?
         if self.episodesSoFar == self.numTraining:
             # You might want to print your weights here for debugging.
-            interrupts.raiseNotDefined()
+            util.raiseNotDefined()

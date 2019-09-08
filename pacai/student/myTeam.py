@@ -1,4 +1,4 @@
-from pacai.util import util
+from pacai.util import reflection
 
 def createTeam(firstIndex, secondIndex, isRed,
         first = 'pacai.agents.capture.dummy.DummyAgent',
@@ -19,8 +19,8 @@ def createTeam(firstIndex, secondIndex, isRed,
     """
 
     # The following is an example only; feel free to change it.
-    firstAgent = util.qualifiedImport(first)
-    secondAgent = util.qualifiedImport(second)
+    firstAgent = reflection.qualifiedImport(first)
+    secondAgent = reflection.qualifiedImport(second)
 
     return [
         firstAgent(firstIndex),
