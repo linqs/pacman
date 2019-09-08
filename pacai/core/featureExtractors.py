@@ -33,8 +33,7 @@ def closestFood(pos, food, walls):
 
     x1, y1 = pos
 
-    walls = gameState.getWalls()
-    assert not walls[x1][y1], 'position1 is a wall: ' + position1
+    assert not walls[x1][y1], 'pos is a wall: ' + pos
 
     prob = firstFood._FirstFoodSearch(pos, food, walls)
     return len(search.bfs(prob))

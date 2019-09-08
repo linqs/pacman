@@ -9,7 +9,7 @@ class _FirstFoodSearchProblem(SearchProblem):
     from an initial position on the map.
 
     Search State: a tuple (x,y) representing the current position in the
-    search 
+    search
     """
 
     # Search problem requires the initial position to search from, the food
@@ -24,10 +24,10 @@ class _FirstFoodSearchProblem(SearchProblem):
 
     # Goal state is where the current position is at the same location as food
     def isGoal(self, state):
-        return self._foodGrid[state[0]][state[1]] == True
+        return if self._foodGrid[state[0]][state[1]] == True else False
 
     def successorStates(self, state):
-        
+
         successors = []
         for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             x, y = state
@@ -38,7 +38,7 @@ class _FirstFoodSearchProblem(SearchProblem):
         return successors
 
     def actionsCost(self, actions):
-        
+
         x, y = self._start
         cost = 0
         for action in actions:
