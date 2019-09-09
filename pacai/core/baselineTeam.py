@@ -1,7 +1,8 @@
-from pacai.agents.base import BaseAgent
+from pacai.util import util
 
 def createTeam(firstIndex, secondIndex, isRed,
-        first = 'OffensiveReflexAgent', second = 'DefensiveReflexAgent'):
+        first = 'pacai.agents.capture.offense.OffensiveReflexAgent',
+        second = 'pacai.agents.capture.defense.DefensiveReflexAgent'):
     """
     This function should return a list of two agents that will form the
     team, initialized using firstIndex and secondIndex as their agent
@@ -17,4 +18,10 @@ def createTeam(firstIndex, secondIndex, isRed,
     behavior is what you want for the nightly contest.
     """
 
-    return [BaseAgent.loadAgent(first, firstIndex), BaseAgent.loadAgent(second, secondIndex)]
+    firstAgent = util.qualifiedImport(first)
+    secondAgent = util.qualifiedImport(second)
+
+    return [
+        firstAgent(firstIndex),
+        secondAgent(secondIndex),
+    ]
