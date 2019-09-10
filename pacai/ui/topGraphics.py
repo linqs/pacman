@@ -1,3 +1,5 @@
+from pacai.ui import graphicsUtils
+from pacai.ui import graphicsConstants
 from abc import ABC, abstractmethod
 
 class Pane(ABC):
@@ -7,7 +9,7 @@ class Pane(ABC):
 
     @abstractmethod
     def updateScore(self, score):
-    	pass
+        pass
 
     def toScreen(self, pos, y = None):
         """
