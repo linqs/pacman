@@ -7,8 +7,9 @@ import os
 from pacai.core.game import Directions
 from pacai.ui import graphicsUtils
 from pacai.ui import graphicsConstants
+from pacai.ui.topGraphics import Pane
 
-class InfoPane(object):
+class InfoPane(Pane):
     def __init__(self, layout, gridSize):
         self.gridSize = gridSize
         self.width = (layout.width) * gridSize
@@ -18,76 +19,12 @@ class InfoPane(object):
         self.textColor = graphicsConstants.PACMAN_COLOR
         self.drawPane()
 
-    def toScreen(self, pos, y = None):
-        """
-        Translates a point relative from the bottom left of the info pane.
-        """
-        if (y is None):
-            x, y = pos
-        else:
-            x = pos
-
-        x = self.gridSize + x  # Margin
-        y = self.base + y
-
-        return (x, y)
-
     def drawPane(self):
         self.scoreText = graphicsUtils.text(self.toScreen(0, 0), self.textColor,
                 "SCORE:    0", "Times", self.fontSize, "bold")
 
-    def initializeGhostDistances(self, distances):
-        self.ghostDistanceText = []
-
-        size = 20
-        if self.width < 240:
-            size = 12
-        if self.width < 160:
-            size = 10
-
-        for i, d in enumerate(distances):
-            t = graphicsUtils.text(self.toScreen(self.width / 2 + self.width / 8 * i, 0),
-                    graphicsConstants.GHOST_COLORS[i + 1], d, "Times", size, "bold")
-            self.ghostDistanceText.append(t)
-
     def updateScore(self, score):
         graphicsUtils.changeText(self.scoreText, "SCORE: % 4d" % score)
-
-    def setTeam(self, isBlue):
-        text = "RED TEAM"
-        if isBlue:
-            text = "BLUE TEAM"
-
-        self.teamText = graphicsUtils.text(self.toScreen(300, 0), self.textColor,
-                text, "Times", self.fontSize, "bold")
-
-    def updateGhostDistances(self, distances):
-        if len(distances) == 0:
-            return
-
-        if 'ghostDistanceText' not in dir(self):
-            self.initializeGhostDistances(distances)
-        else:
-            for i, d in enumerate(distances):
-                graphicsUtils.changeText(self.ghostDistanceText[i], d)
-
-    def drawGhost(self):
-        pass
-
-    def drawPacman(self):
-        pass
-
-    def drawWarning(self):
-        pass
-
-    def clearIcon(self):
-        pass
-
-    def updateMessage(self, message):
-        pass
-
-    def clearMessage(self):
-        pass
 
 class PacmanGraphics:
     def __init__(self, zoom = 1.0, frameTime = 0.0, capture = False,
