@@ -3,7 +3,7 @@
 import abc
 
 from pacai.core import game
-from pacai.core.search import firstFood
+from pacai.core.search import _ClosestFoodSearchProblem
 from pacai.student import search
 from pacai.util import counter
 
@@ -25,7 +25,7 @@ class IdentityExtractor(FeatureExtractor):
 
         return feats
 
-def closestFood(pos, food, walls):
+def _closestFood(pos, food, walls):
     """
     closestFood -- this is similar to the function that we have
     worked on in the search project; here its all in one place
@@ -35,7 +35,7 @@ def closestFood(pos, food, walls):
 
     assert not walls[x1][y1], 'pos is a wall: ' + pos
 
-    prob = firstFood._FirstFoodSearch(pos, food, walls)
+    prob = _ClosestFoodSearchProblem(pos, food, walls)
     return len(search.bfs(prob))
 
 class SimpleExtractor(FeatureExtractor):
@@ -70,7 +70,7 @@ class SimpleExtractor(FeatureExtractor):
         if not features["#-of-ghosts-1-step-away"] and food[next_x][next_y]:
             features["eats-food"] = 1.0
 
-        dist = closestFood((next_x, next_y), food, walls)
+        dist = _closestFood((next_x, next_y), food, walls)
         if dist is not None:
             # Make the distance a number less than one otherwise the update will diverge wildly.
             features["closest-food"] = float(dist) / (walls.width * walls.height)
