@@ -3,7 +3,6 @@ import functools
 from pacai.ui import graphicsUtils
 from pacai.util import counter
 
-
 BACKGROUND_COLOR = graphicsUtils.formatColor(0, 0, 0)
 EDGE_COLOR = graphicsUtils.formatColor(1, 1, 1)
 OBSTACLE_COLOR = graphicsUtils.formatColor(0.5, 0.5, 0.5)
