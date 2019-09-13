@@ -7,7 +7,7 @@ import abc
 from pacai.agents.base import BaseAgent
 from pacai.ui import captureGraphicsDisplay
 from pacai.util import counter
-from pacai.util import distanceCalculator
+from pacai.core import distanceCalculator
 from pacai.util import util
 
 class CaptureAgent(BaseAgent):
