@@ -36,10 +36,10 @@ import time
 import traceback
 import types
 
+import pacai.agents.keyboardAgents
 import pacai.core.layout
 import pacai.util.mazeGenerator
 
-from pacai.agents import keyboard
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Actions
 from pacai.core.game import Configuration
@@ -52,17 +52,10 @@ from pacai.util.util import manhattanDistance
 from pacai.util.util import nearestPoint
 
 KILL_POINTS = 0
-SONAR_NOISE_RANGE = 13 # Must be odd
-SONAR_NOISE_VALUES = [i - int((SONAR_NOISE_RANGE - 1) / 2) for i in range(SONAR_NOISE_RANGE)]
-SIGHT_RANGE = 5 # Manhattan distance
 MIN_FOOD = 2
-
 SCARED_TIME = 40
 
 FIXED_SEED = 140188
-
-def noisyDistance(pos1, pos2):
-    return int(manhattanDistance(pos1, pos2) + random.choice(SONAR_NOISE_VALUES))
 
 ###################################################
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
@@ -197,19 +190,12 @@ class GameState:
 
     def getAgentDistances(self):
         """
-        Returns a noisy distance to each agent.
+        Returns the distance to each agent.
         """
         if 'agentDistances' in dir(self) :
             return self.agentDistances
         else:
             return None
-
-    def getDistanceProb(self, trueDistance, noisyDistance):
-        "Returns the probability of a noisy distance given the true distance"
-        if noisyDistance - trueDistance in SONAR_NOISE_VALUES:
-            return 1.0/SONAR_NOISE_RANGE
-        else:
-            return 0
 
     def getInitialAgentPosition(self, agentIndex):
         "Returns the initial position of an agent."
@@ -256,27 +242,10 @@ class GameState:
     def makeObservation(self, index):
         state = self.deepCopy()
 
-        # Adds the sonar signal
         pos = state.getAgentPosition(index)
         n = state.getNumAgents()
-        distances = [noisyDistance(pos, state.getAgentPosition(i)) for i in range(n)]
+        distances = [int(manhattanDistance(pos, state.getAgentPosition(i))) for i in range(n)]
         state.agentDistances = distances
-
-        # Remove states of distant opponents
-        if index in self.blueTeam:
-            team = self.blueTeam
-            otherTeam = self.redTeam
-        else:
-            otherTeam = self.blueTeam
-            team = self.redTeam
-
-        for enemy in otherTeam:
-            seen = False
-            enemyPos = state.getAgentPosition(enemy)
-            for teammate in team:
-                if manhattanDistance(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
-                    seen = True
-            if not seen: state.data.agentStates[enemy].configuration = None
         return state
 
     def __eq__( self, other ):
@@ -682,9 +651,9 @@ def readCommand( argv ):
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
         if not val: continue
         if numKeyboardAgents == 0:
-            agent = keyboard.WASDKeyboardAgent(index)
+            agent = pacai.agents.keyboardAgents.KeyboardAgent(index)
         elif numKeyboardAgents == 1:
-            agent = keyboard.IJKLKeyboardAgent(index)
+            agent = pacai.agents.keyboardAgents.KeyboardAgent2(index)
         else:
             raise Exception('Max of two keyboard agents supported')
         numKeyboardAgents += 1
