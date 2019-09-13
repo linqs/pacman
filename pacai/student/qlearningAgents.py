@@ -1,4 +1,5 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
+from pacai.util import reflection
 from pacai.util import util
 
 class QLearningAgent(ReinforcementAgent):
@@ -38,7 +39,7 @@ class QLearningAgent(ReinforcementAgent):
         no legal actions, which is the case at the terminal state, you
         should choose None as the action.
 
-        HINT: You might want to use util.flipCoin(prob)
+        HINT: You might want to use pacai.util.probability.flipCoin(probability)
         HINT: To pick randomly from a list, use random.choice(list)
 
     def update(self, state, action, nextState, reward):
@@ -116,7 +117,7 @@ class ApproximateQAgent(PacmanQAgent):
 
     def __init__(self, index, extractor = 'pacai.util.featureExtractors.IdentityExtractor', **args):
         super().__init__(index, **args)
-        self.featExtractor = util.qualifiedImport(extractor)
+        self.featExtractor = reflection.qualifiedImport(extractor)
 
         # You might want to initialize weights here.
 

@@ -12,7 +12,8 @@ distancer.getDistance((1, 1), (10, 10))
 
 import sys
 
-from pacai.util import util
+from pacai.core.distance import manhattan
+from pacai.util import priorityQueue
 
 DEFAULT_DISTANCE = 10000
 
@@ -34,7 +35,7 @@ class Distancer(object):
         """
 
         if (self._distances is None):
-            return manhattanDistance(pos1, pos2)
+            return manhattan(pos1, pos2)
 
         if isInt(pos1) and isInt(pos2):
             return self.getDistanceOnGrid(pos1, pos2)
@@ -61,9 +62,6 @@ class Distancer(object):
 
     def isReadyForMazeDistance(self):
         return (self._distances is not None)
-
-def manhattanDistance(x, y):
-    return abs(x[0] - y[0]) + abs(x[1] - y[1])
 
 def isInt(pos):
     x, y = pos
@@ -115,7 +113,7 @@ def computeDistances(layout):
         for node in allNodes:
             dist[node] = sys.maxsize
 
-        queue = util.PriorityQueue()
+        queue = priorityQueue.PriorityQueue()
         queue.push(source, 0)
         dist[source] = 0
 

@@ -3,7 +3,7 @@ import glob
 import logging
 import os
 
-from pacai.util import util
+from pacai.util import reflection
 
 class BaseAgent(abc.ABC):
     """
@@ -72,7 +72,7 @@ class BaseAgent(abc.ABC):
             BaseAgent._import_agents(os.path.join(path, '*.py'), package_format_string)
 
         # Now that the agent classes have been loaded, just look for subclasses.
-        for subclass in util.getAllDescendents(BaseAgent):
+        for subclass in reflection.getAllDescendents(BaseAgent):
             if (subclass.__name__ == class_name):
                 return subclass(index = index, **args)
 
