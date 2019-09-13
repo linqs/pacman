@@ -1,9 +1,8 @@
-
 """
 Queue container useful for implementing SearchAgents
 """
 
-class Queue:
+class Queue(object):
     """
     A container with a first-in-first-out (FIFO) queuing policy.
     """

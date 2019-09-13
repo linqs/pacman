@@ -3,7 +3,7 @@ import signal
 import sys
 
 """
-Functions useful for various course projects
+Functions that could be used for various course projects.
 """
 
 def nearestPoint(pos):

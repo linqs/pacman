@@ -380,5 +380,5 @@ if __name__ == '__main__':
     qStates = functools.reduce(lambda x, y: x + y, stateCrossActions, [])
     qValues = counter.Counter(dict([((state, action), 10.5) for state, action in qStates]))
     qValues = counter.Counter(dict([((state, action), 10.5)
-        for state, action in functools.reduce(lambda x, y: x + y, stateCrossActions, [])]))
+            for state, action in functools.reduce(lambda x, y: x + y, stateCrossActions, [])]))
     prettyPrintQValues(grid, qValues, currentState = (0, 0))
