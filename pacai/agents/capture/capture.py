@@ -242,7 +242,7 @@ class CaptureAgent(BaseAgent):
         Overlays a distribution over positions onto the pacman board that represents
         an agent's beliefs about the positions of each agent.
 
-        The arg distributions is a tuple or list of counters.Counter objects, where the i'th
+        The arg distributions is a tuple or list of counter.Counter objects, where the i'th
         Counter has keys that are board positions (x,y) and values that encode the probability
         that agent i is at (x,y).
 

@@ -144,6 +144,7 @@ class Counter(dict):
         >>> a * b
         14
         """
+
         sum = 0
         x = self
         if len(x) > len(y):
@@ -194,6 +195,7 @@ class Counter(dict):
                 addend[key] = self[key] + y[key]
             else:
                 addend[key] = self[key]
+
         for key in y:
             if key in self:
                 continue

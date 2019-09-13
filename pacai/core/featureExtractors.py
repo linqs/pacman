@@ -28,19 +28,6 @@ class IdentityExtractor(FeatureExtractor):
 
         return feats
 
-def _closestFood(pos, food, walls):
-    """
-    closestFood -- this is similar to the function that we have
-    worked on in the search project; here its all in one place
-    """
-
-    x1, y1 = pos
-
-    assert not walls[x1][y1]
-
-    prob = _ClosestFoodSearchProblem(pos, food, walls)
-    return len(search.bfs(prob))
-
 class SimpleExtractor(FeatureExtractor):
     """
     Returns simple features for a basic reflex Pacman:
@@ -81,8 +68,20 @@ class SimpleExtractor(FeatureExtractor):
         features.divideAll(10.0)
         return features
 
-class _ClosestFoodSearchProblem(SearchProblem):
+def _closestFood(pos, food, walls):
+    """
+    closestFood -- this is similar to the function that we have
+    worked on in the search project; here its all in one place
+    """
 
+    x1, y1 = pos
+
+    assert not walls[x1][y1]
+
+    prob = _ClosestFoodSearchProblem(pos, food, walls)
+    return len(search.bfs(prob))
+
+class _ClosestFoodSearchProblem(SearchProblem):
     """
     A private search problem associated with finding the closest food
     from an initial position on the map.
