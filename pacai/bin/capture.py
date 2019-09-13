@@ -1,6 +1,5 @@
 """
 Capture.py holds the logic for Pacman capture the flag.
-
     (i) Your interface to the pacman world:
                     Pacman is a complex environment. You probably don't want to
                     read through all of the code we wrote to make the game runs
@@ -8,19 +7,16 @@ Capture.py holds the logic for Pacman capture the flag.
                     that you will need to understand in order to complete the
                     project. There is also some code in game.py that you should
                     understand.
-
     (ii) The hidden secrets of pacman:
                     This section contains all of the logic code that the pacman
                     environment uses to decide who can move where, who dies when
                     things collide, etc. You shouldn't need to read this section
                     of code, but you can if you want.
-
     (iii) Framework to start a game:
                     The final section contains the code for reading the command
                     you use to set up the game, then starting up a new game, along with
                     linking in all the external parts (agent functions, graphics).
                     Check this section out to see all the options available to you.
-
 To play your first game, type 'python capture.py' from the command line.
 The keys are
     P1: 'a', 's', 'd', and 'w' to move
@@ -40,7 +36,7 @@ import pacai.agents.keyboardAgents
 import pacai.core.layout
 import pacai.util.mazeGenerator
 
-from pacai.agents.base import BaseAgent
+from pacai.agents.agent import Agent
 from pacai.core.game import Actions
 from pacai.core.game import Configuration
 from pacai.core.game import Directions
@@ -53,6 +49,7 @@ from pacai.util.util import nearestPoint
 
 KILL_POINTS = 0
 MIN_FOOD = 2
+
 SCARED_TIME = 40
 
 FIXED_SEED = 140188
@@ -65,10 +62,8 @@ class GameState:
     """
     A GameState specifies the full game state, including the food, capsules,
     agent configurations and score changes.
-
     GameStates are used by the Game object to capture the actual state of the game and
     can be used by agents to reason about the game.
-
     Much of the information in a GameState is stored in a GameStateData object.
     We strongly suggest that you access that data via the accessor methods below rather
     than referring to the GameStateData object directly.
@@ -190,7 +185,7 @@ class GameState:
 
     def getAgentDistances(self):
         """
-        Returns the distance to each agent.
+        Returns a noisy distance to each agent.
         """
         if 'agentDistances' in dir(self) :
             return self.agentDistances
@@ -242,9 +237,10 @@ class GameState:
     def makeObservation(self, index):
         state = self.deepCopy()
 
+        # Adds the sonar signal
         pos = state.getAgentPosition(index)
         n = state.getNumAgents()
-        distances = [int(manhattanDistance(pos, state.getAgentPosition(i))) for i in range(n)]
+        distances = [noisyDistance(pos, state.getAgentPosition(i)) for i in range(n)]
         state.agentDistances = distances
         return state
 
@@ -756,9 +752,10 @@ def runGames( layout, agents, display, length, numGames, record, numTraining, re
 
         g.record = None
         if record:
+            import time, pickle, game
             components = {
                 'layout': layout,
-                'agents': [BaseAgent(i) for i in range(len(agents))],
+                'agents': [game.Agent() for a in agents],
                 'actions': g.moveHistory,
                 'length': length,
                 'redTeamName': redTeamName,
@@ -792,13 +789,9 @@ def main(argv):
     """
     The main function called when pacman.py is run
     from the command line:
-
     > python capture.py
-
     See the usage string for more details.
-
     > python capture.py --help
-
     argv already has the executable stripped.
     """
 
