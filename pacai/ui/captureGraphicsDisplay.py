@@ -4,19 +4,14 @@ import os
 
 from pacai.ui import graphicsUtils
 from pacai.ui import graphicsConstants
-from pacai.ui.topGraphics import absPane
-from pacai.ui.topGraphics import absPacmanGraphics
+from pacai.ui.pacmanDisplay import AbstractPane
+from pacai.ui.pacmanDisplay import AbstractPacmanGraphics
 
-class InfoPane(absPane):
+class CaptureInfoPane(AbstractPane):
     def __init__(self, layout, gridSize, redTeam, blueTeam):
-        self.gridSize = gridSize
-        self.width = (layout.width) * gridSize
-        self.base = (layout.height + 1) * gridSize
-        self.height = graphicsConstants.INFO_PANE_HEIGHT
-        self.fontSize = 24
-        self.textColor = graphicsConstants.PACMAN_COLOR
         self.redTeam = redTeam
         self.blueTeam = blueTeam
+        super().__init__(layout, gridSize)
         self.drawPane()
 
     def drawPane(self):
@@ -45,25 +40,12 @@ class InfoPane(absPane):
     def updateScore(self, score, timeleft):
         graphicsUtils.changeText(self.scoreText, self._infoString(score, timeleft))
 
-class PacmanGraphics(absPacmanGraphics):
+class CapturePacmanGraphics(AbstractPacmanGraphics):
     def __init__(self, redTeam, blueTeam, zoom=1.0, frameTime=0.0, capture=False,
             gif = None, gif_skip_frames = 0, gif_fps = 10):
-        self.expandedCells = []
-        self.have_window = 0
-        self.currentGhostImages = {}
-        self.pacmanImage = None
-        self.zoom = zoom
-        self.gridSize = graphicsConstants.DEFAULT_GRID_SIZE * zoom
-        self.capture = capture
-        self.frameTime = frameTime
+        super().__init__(zoom, frameTime, capture, gif, gif_skip_frames, gif_fps)
         self.redTeam = redTeam
         self.blueTeam = blueTeam
-
-        self.gif_path = gif
-        self.gif_skip_frames = gif_skip_frames
-        self.gif_fps = gif_fps
-        self.frame = 0
-        self.frame_images = []
 
     # implemented abstract method.
     def startGraphics(self, state):
@@ -72,7 +54,7 @@ class PacmanGraphics(absPacmanGraphics):
         self.width = layout.width
         self.height = layout.height
         self.make_window(self.width, self.height)
-        self.infoPane = InfoPane(layout, self.gridSize, self.redTeam, self.blueTeam)
+        self.infoPane = CaptureInfoPane(layout, self.gridSize, self.redTeam, self.blueTeam)
         self.currentState = layout
 
     # Implemented abstract method.
@@ -122,40 +104,6 @@ class PacmanGraphics(absPacmanGraphics):
             self.expandedCells.append(block)
             if self.frameTime < 0:
                 graphicsUtils.refresh()
-
-class FirstPersonPacmanGraphics(PacmanGraphics):
-    def __init__(self, zoom = 1.0, showGhosts = True, capture = False, frameTime=0):
-        PacmanGraphics.__init__(self, zoom, frameTime=frameTime)
-        self.showGhosts = showGhosts
-        self.capture = capture
-
-    def initialize(self, state, isBlue = False):
-
-        self.isBlue = isBlue
-        PacmanGraphics.startGraphics(self, state)
-        # Initialize distribution images
-        self.layout = state.layout
-
-        # Draw the rest
-        self.distributionImages = None  # initialize lazily
-        self.drawStaticObjects(state)
-        self.drawAgentObjects(state)
-
-        # Information
-        self.previousState = state
-
-    def getGhostColor(self, ghost, ghostIndex):
-        return graphicsConstants.GHOST_COLORS[ghostIndex]
-
-    def getPosition(self, ghostState):
-        if not self.showGhosts and not ghostState.isPacman and ghostState.getPosition()[1] > 1:
-            return (-1000, -1000)
-        else:
-            return PacmanGraphics.getPosition(self, ghostState)
-
-def add(x, y):
-    return (x[0] + y[0], x[1] + y[1])
-
 
 # Saving graphical output
 # -----------------------

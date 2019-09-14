@@ -693,7 +693,8 @@ def readCommand(argv):
         import pacai.ui.captureGraphicsDisplay
         # Hack for agents writing to the display
         pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue,
+        args['display'] = pacai.ui.captureGraphicsDisplay.CapturePacmanGraphics(options.red,
+                options.blue,
                 options.zoom, 0, capture=True,
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames,
                 gif_fps = options.gifFPS)
