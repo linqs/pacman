@@ -77,9 +77,21 @@ class GameState:
     than referring to the GameStateData object directly.
     """
 
-    ####################################################
-    # Accessor methods: use these to access state data #
-    ####################################################
+    def __init__(self, prevState = None):
+        """
+        Generates a new state by copying information from its predecessor.
+        """
+        if (prevState is not None):  # Initial state
+            self.data = GameStateData(prevState.data)
+            self.blueTeam = prevState.blueTeam
+            self.redTeam = prevState.redTeam
+            self.data.timeleft = prevState.data.timeleft
+
+            self.teams = prevState.teams
+            self.agentDistances = prevState.agentDistances
+        else:
+            self.data = GameStateData()
+            self.agentDistances = []
 
     def getLegalActions(self, agentIndex=0):
         """
@@ -98,36 +110,36 @@ class GameState:
         # Find appropriate rules for the agent
         AgentRules.applyAction(state, action, agentIndex)
         AgentRules.checkDeath(state, agentIndex)
-        AgentRules.decrementTimer(state.data.agentStates[agentIndex])
+        AgentRules.decrementTimer(state.data._agentStates[agentIndex])
 
         # Book keeping
-        state.data._agentMoved = agentIndex
-        state.data.score += state.data.scoreChange
+        state.data._lastAgentMoved = agentIndex
+        state.data._score += state.data._scoreChange
         state.data.timeleft = self.data.timeleft - 1
         return state
 
     def getAgentState(self, index):
-        return self.data.agentStates[index]
+        return self.data._agentStates[index]
 
     def getAgentPosition(self, index):
         """
         Returns a location tuple if the agent with the given index is observable;
         if the agent is unobservable, returns None.
         """
-        agentState = self.data.agentStates[index]
+        agentState = self.data._agentStates[index]
         ret = agentState.getPosition()
         if ret:
             return tuple(int(x) for x in ret)
         return ret
 
     def getNumAgents(self):
-        return len(self.data.agentStates)
+        return len(self.data._agentStates)
 
     def getScore(self):
         """
         Returns a number corresponding to the current score.
         """
-        return self.data.score
+        return self.data._score
 
     def getRedFood(self):
         """
@@ -135,7 +147,7 @@ class GameState:
         For the matrix m, m[x][y]=true if there is food in (x, y) that belongs to
         red (meaning red is protecting it, blue is trying to eat it).
         """
-        return halfGrid(self.data.food, red = True)
+        return halfGrid(self.data._food, red = True)
 
     def getBlueFood(self):
         """
@@ -143,32 +155,32 @@ class GameState:
         For the matrix m, m[x][y]=true if there is food in (x, y) that belongs to
         blue (meaning blue is protecting it, red is trying to eat it).
         """
-        return halfGrid(self.data.food, red = False)
+        return halfGrid(self.data._food, red = False)
 
     def getRedCapsules(self):
-        return halfList(self.data.capsules, self.data.food, red = True)
+        return halfList(self.data._capsules, self.data._food, red = True)
 
     def getBlueCapsules(self):
-        return halfList(self.data.capsules, self.data.food, red = False)
+        return halfList(self.data._capsules, self.data._food, red = False)
 
     def getWalls(self):
         """
         Just like getFood but for walls
         """
-        return self.data.layout.walls
+        return self.data._layout.walls
 
     def hasFood(self, x, y):
         """
         Returns true if the location (x, y) has food, regardless of
         whether it's blue team food or red team food.
         """
-        return self.data.food[x][y]
+        return self.data._food[x][y]
 
     def hasWall(self, x, y):
         """
         Returns true if (x, y) has a wall, false otherwise.
         """
-        return self.data.layout.walls[x][y]
+        return self.data._layout.walls[x][y]
 
     def isOver(self):
         return self.data._win
@@ -209,34 +221,13 @@ class GameState:
 
     def getInitialAgentPosition(self, agentIndex):
         "Returns the initial position of an agent."
-        return self.data.layout.agentPositions[agentIndex][1]
+        return self.data._layout.agentPositions[agentIndex][1]
 
     def getCapsules(self):
         """
         Returns a list of positions (x, y) of the remaining capsules.
         """
-        return self.data.capsules
-
-    #############################################
-    #       Helper methods                      #
-    # You shouldn't need to call these directly #
-    #############################################
-
-    def __init__(self, prevState = None):
-        """
-        Generates a new state by copying information from its predecessor.
-        """
-        if (prevState is not None):  # Initial state
-            self.data = GameStateData(prevState.data)
-            self.blueTeam = prevState.blueTeam
-            self.redTeam = prevState.redTeam
-            self.data.timeleft = prevState.data.timeleft
-
-            self.teams = prevState.teams
-            self.agentDistances = prevState.agentDistances
-        else:
-            self.data = GameStateData()
-            self.agentDistances = []
+        return self.data._capsules
 
     def deepCopy(self):
         state = GameState(self)
@@ -247,34 +238,6 @@ class GameState:
         state.redTeam = self.redTeam[:]
         state.teams = self.teams[:]
         state.agentDistances = self.agentDistances[:]
-        return state
-
-    def makeObservation(self, index):
-        state = self.deepCopy()
-
-        # Adds the sonar signal
-        pos = state.getAgentPosition(index)
-        n = state.getNumAgents()
-        distances = [noisyDistance(pos, state.getAgentPosition(i)) for i in range(n)]
-        state.agentDistances = distances
-
-        # Remove states of distant opponents
-        if index in self.blueTeam:
-            team = self.blueTeam
-            otherTeam = self.redTeam
-        else:
-            otherTeam = self.blueTeam
-            team = self.redTeam
-
-        for enemy in otherTeam:
-            seen = False
-            enemyPos = state.getAgentPosition(enemy)
-            for teammate in team:
-                if manhattan(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
-                    seen = True
-
-            if not seen:
-                state.data.agentStates[enemy].configuration = None
         return state
 
     def __eq__(self, other):
@@ -300,13 +263,13 @@ class GameState:
         Creates an initial game state from a layout array (see layout.py).
         """
         self.data.initialize(layout, numAgents)
-        positions = [a.configuration for a in self.data.agentStates]
+        positions = [a.configuration for a in self.data._agentStates]
         self.blueTeam = [i for i, p in enumerate(positions) if not self.isRed(p)]
         self.redTeam = [i for i, p in enumerate(positions) if self.isRed(p)]
         self.teams = [self.isRed(p) for p in positions]
 
     def isRed(self, configOrPos):
-        width = self.data.layout.width
+        width = self.data._layout.width
         if (isinstance(configOrPos, tuple)):
             return configOrPos[0] < int(width / 2)
         else:
@@ -389,15 +352,15 @@ class CaptureRules:
 
                 if state.getBlueFood().count() > MIN_FOOD and state.getRedFood().count() > MIN_FOOD:
                     logging.info('Time is up.')
-                    if state.data.score == 0:
+                    if state.data._score == 0:
                         logging.info('Tie game!')
                     else:
                         winner = 'Red'
-                        if state.data.score < 0:
+                        if state.data._score < 0:
                             winner = 'Blue'
 
                         logging.info('The %s team wins by %d points.' %
-                                (winner, abs(state.data.score)))
+                                (winner, abs(state.data._score)))
 
     def getProgress(self, game):
         blue = 1.0 - (game.state.getBlueFood().count() / float(self._initBlueFood))
@@ -410,10 +373,10 @@ class CaptureRules:
     def agentCrash(self, game, agentIndex):
         if agentIndex % 2 == 0:
             logging.error("Red agent crashed")
-            game.state.data.score = -1
+            game.state.data._score = -1
         else:
             logging.error("Blue agent crashed")
-            game.state.data.score = 1
+            game.state.data._score = 1
 
     def getMaxTotalTime(self, agentIndex):
         return 900  # Move limits should prevent this from ever happening
@@ -441,7 +404,7 @@ class AgentRules:
         """
         agentState = state.getAgentState(agentIndex)
         conf = agentState.configuration
-        possibleActions = Actions.getPossibleActions(conf, state.data.layout.walls)
+        possibleActions = Actions.getPossibleActions(conf, state.data._layout.walls)
         return AgentRules.filterForAllowedActions(agentState, possibleActions)
     getLegalActions = staticmethod(getLegalActions)
 
@@ -458,7 +421,7 @@ class AgentRules:
             raise Exception('Illegal action ' + str(action))
 
         # Update Configuration
-        agentState = state.data.agentStates[agentIndex]
+        agentState = state.data._agentStates[agentIndex]
         speed = 1.0
         # if agentState.isPacman: speed = 0.5
         vector = Actions.directionToVector(action, speed)
@@ -480,14 +443,14 @@ class AgentRules:
     def consume(position, state, isRed):
         x, y = position
         # Eat food
-        if state.data.food[x][y]:
+        if state.data._food[x][y]:
             score = -1
             if isRed:
                 score = 1
-            state.data.scoreChange += score
+            state.data._scoreChange += score
 
-            state.data.food = state.data.food.copy()
-            state.data.food[x][y] = False
+            state.data._food = state.data._food.copy()
+            state.data._food[x][y] = False
             state.data._foodEaten = position
             if ((isRed and state.getBlueFood().count() == MIN_FOOD)
                     or (not isRed and state.getRedFood().count() == MIN_FOOD)):
@@ -500,7 +463,7 @@ class AgentRules:
             myCapsules = state.getRedCapsules()
 
         if (position in myCapsules):
-            state.data.capsules.remove(position)
+            state.data._capsules.remove(position)
             state.data._capsuleEaten = position
 
             # Reset all ghosts' scared timers
@@ -510,7 +473,7 @@ class AgentRules:
                 otherTeam = state.getRedTeamIndices()
 
             for index in otherTeam:
-                state.data.agentStates[index].scaredTimer = SCARED_TIME
+                state.data._agentStates[index].scaredTimer = SCARED_TIME
 
     consume = staticmethod(consume)
 
@@ -522,14 +485,14 @@ class AgentRules:
     decrementTimer = staticmethod(decrementTimer)
 
     def checkDeath(state, agentIndex):
-        agentState = state.data.agentStates[agentIndex]
+        agentState = state.data._agentStates[agentIndex]
         if state.isOnRedTeam(agentIndex):
             otherTeam = state.getBlueTeamIndices()
         else:
             otherTeam = state.getRedTeamIndices()
         if agentState.isPacman:
             for index in otherTeam:
-                otherAgentState = state.data.agentStates[index]
+                otherAgentState = state.data._agentStates[index]
                 if (otherAgentState.isPacman):
                     continue
 
@@ -543,7 +506,7 @@ class AgentRules:
                         score = KILL_POINTS
                         if state.isOnRedTeam(agentIndex):
                             score = -score
-                        state.data.scoreChange += score
+                        state.data._scoreChange += score
                         agentState.isPacman = False
                         agentState.configuration = agentState.start
                         agentState.scaredTimer = 0
@@ -551,13 +514,13 @@ class AgentRules:
                         score = KILL_POINTS
                         if state.isOnRedTeam(agentIndex):
                             score = -score
-                        state.data.scoreChange += score
+                        state.data._scoreChange += score
                         otherAgentState.isPacman = False
                         otherAgentState.configuration = otherAgentState.start
                         otherAgentState.scaredTimer = 0
         else:  # Agent is a ghost
             for index in otherTeam:
-                otherAgentState = state.data.agentStates[index]
+                otherAgentState = state.data._agentStates[index]
                 if (not otherAgentState.isPacman):
                     continue
 
@@ -571,7 +534,7 @@ class AgentRules:
                         score = KILL_POINTS
                         if not state.isOnRedTeam(agentIndex):
                             score = -score
-                        state.data.scoreChange += score
+                        state.data._scoreChange += score
                         otherAgentState.isPacman = False
                         otherAgentState.configuration = otherAgentState.start
                         otherAgentState.scaredTimer = 0
@@ -579,7 +542,7 @@ class AgentRules:
                         score = KILL_POINTS
                         if state.isOnRedTeam(agentIndex):
                             score = -score
-                        state.data.scoreChange += score
+                        state.data._scoreChange += score
                         agentState.isPacman = False
                         agentState.configuration = agentState.start
                         agentState.scaredTimer = 0
@@ -864,7 +827,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
             logging.info("Game recorded to: '%s'." % (path))
 
     if numGames > 0:
-        scores = [game.state.data.score for game in games]
+        scores = [game.state.data._score for game in games]
         redWinRate = [s > 0 for s in scores].count(True) / float(len(scores))
         blueWinRate = [s < 0 for s in scores].count(True) / float(len(scores))
         logging.info('Average Score:%s', sum(scores) / float(len(scores)))

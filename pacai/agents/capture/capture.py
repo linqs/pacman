@@ -64,7 +64,7 @@ class CaptureAgent(BaseAgent):
         """
 
         self.red = gameState.isOnRedTeam(self.index)
-        self.distancer = distanceCalculator.Distancer(gameState.data.layout)
+        self.distancer = distanceCalculator.Distancer(gameState.getInitialLayout())
 
         # Comment this out to forgo maze distance computation and use manhattan distances
         self.distancer.getMazeDistances()
@@ -83,13 +83,6 @@ class CaptureAgent(BaseAgent):
         """
 
         self.agentsOnTeam = agentsOnTeam
-
-    def observationFunction(self, gameState):
-        """
-        Changing this won't affect pacclient.py, but will affect capture.py
-        """
-
-        return gameState.makeObservation(self.index)
 
     def debugDraw(self, cells, color, clear = False):
 

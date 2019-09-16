@@ -253,13 +253,6 @@ class Grid:
                 bools.append(False)
         return bools
 
-def reconstituteGrid(bitRep):
-    if (not isinstance(bitRep, tuple)):
-        return bitRep
-
-    width, height = bitRep[:2]
-    return Grid(width, height, bitRepresentation= bitRep[2:])
-
 ####################################
 # Parts you shouldn't have to read #
 ####################################
@@ -358,163 +351,6 @@ class Actions:
         return (x + dx, y + dy)
     getSuccessor = staticmethod(getSuccessor)
 
-class GameStateData:
-    """
-
-    """
-    def __init__(self, prevState = None):
-        """
-        Generates a new data packet by copying information from its predecessor.
-        """
-        if prevState is not None:
-            self.food = prevState.food.shallowCopy()
-            self.capsules = prevState.capsules[:]
-            self.agentStates = self.copyAgentStates(prevState.agentStates)
-            self.layout = prevState.layout
-            self._eaten = prevState._eaten
-            self.score = prevState.score
-        self._foodEaten = None
-        self._capsuleEaten = None
-        self._agentMoved = None
-        self._lose = False
-        self._win = False
-        self.scoreChange = 0
-
-    def deepCopy(self):
-        state = GameStateData(self)
-        state.food = self.food.deepCopy()
-        state.layout = self.layout.deepCopy()
-        state._agentMoved = self._agentMoved
-        state._foodEaten = self._foodEaten
-        state._capsuleEaten = self._capsuleEaten
-        return state
-
-    def copyAgentStates(self, agentStates):
-        copiedStates = []
-        for agentState in agentStates:
-            copiedStates.append(agentState.copy())
-        return copiedStates
-
-    def __eq__(self, other):
-        """
-        Allows two states to be compared.
-        """
-        if (other is None):
-            return False
-
-        # TODO Check for type of other
-        if (not self.agentStates == other.agentStates):
-            return False
-
-        if (not self.food == other.food):
-            return False
-
-        if (not self.capsules == other.capsules):
-            return False
-
-        if (not self.score == other.score):
-            return False
-
-        return True
-
-    def __hash__(self):
-        """
-        Allows states to be keys of dictionaries.
-        """
-        for i, state in enumerate(self.agentStates):
-            try:
-                int(hash(state))
-            except TypeError as e:
-                logging.error('TypeError %s' % (e))
-
-        hashCode = 0
-        hashCode += hash(tuple(self.agentStates))
-        hashCode += 13 * hash(self.food)
-        hashCode += 113 * hash(tuple(self.capsules))
-        hashCode += 7 * hash(self.score)
-
-        return int(hashCode) % 1048575
-
-    def __str__(self):
-        width, height = self.layout.width, self.layout.height
-        map = Grid(width, height)
-        if (isinstance(self.food, tuple)):
-            self.food = reconstituteGrid(self.food)
-
-        for x in range(width):
-            for y in range(height):
-                food, walls = self.food, self.layout.walls
-                map[x][y] = self._foodWallStr(food[x][y], walls[x][y])
-
-        for agentState in self.agentStates:
-            if (agentState is None):
-                continue
-
-            if (agentState.configuration is None):
-                continue
-
-            x, y = [int(i) for i in util.nearestPoint(agentState.configuration.pos)]
-            agent_dir = agentState.configuration.direction
-            if (agentState.isPacman):
-                map[x][y] = self._pacStr(agent_dir)
-            else:
-                map[x][y] = self._ghostStr(agent_dir)
-
-        for x, y in self.capsules:
-            map[x][y] = 'o'
-
-        return str(map) + ('\nScore: %d\n' % self.score)
-
-    def _foodWallStr(self, hasFood, hasWall):
-        if hasFood:
-            return '.'
-        elif hasWall:
-            return '%'
-        else:
-            return ' '
-
-    def _pacStr(self, dir):
-        if dir == Directions.NORTH:
-            return 'v'
-        if dir == Directions.SOUTH:
-            return '^'
-        if dir == Directions.WEST:
-            return '>'
-        return '<'
-
-    def _ghostStr(self, dir):
-        return 'G'
-        if dir == Directions.NORTH:
-            return 'M'
-        if dir == Directions.SOUTH:
-            return 'W'
-        if dir == Directions.WEST:
-            return '3'
-        return 'E'
-
-    def initialize(self, layout, numGhostAgents):
-        """
-        Creates an initial game state from a layout array (see layout.py).
-        """
-        self.food = layout.food.copy()
-        self.capsules = layout.capsules[:]
-        self.layout = layout
-        self.score = 0
-        self.scoreChange = 0
-
-        self.agentStates = []
-        numGhosts = 0
-        for isPacman, pos in layout.agentPositions:
-            if not isPacman:
-                # Max ghosts reached already
-                if numGhosts == numGhostAgents:
-                    continue
-                else:
-                    numGhosts += 1
-
-            self.agentStates.append(AgentState(Configuration(pos, Directions.STOP), isPacman))
-        self._eaten = [False for a in self.agentStates]
-
 class Game:
     """
     The Game manages the control flow, soliciting actions from agents.
@@ -579,10 +415,8 @@ class Game:
         """
         Main control loop for game play.
         """
-        self.display.initialize(self.state.data)
+        self.display.initialize(self.state)
         self.numMoves = 0
-
-        # self.display.initialize(self.state.makeObservation(1).data)
 
         # inform learning agents of the game start
         for i in range(len(self.agents)):
@@ -601,7 +435,7 @@ class Game:
                             int(self.rules.getMaxStartupTime(i)))
                     try:
                         start_time = time.time()
-                        timed_func(self.state.deepCopy())
+                        timed_func(self.state)
                         time_taken = time.time() - start_time
                         self.totalAgentTimes[i] += time_taken
                     except util.TimeoutFunctionException:
@@ -615,7 +449,7 @@ class Game:
                     self._agentCrash(i, quiet=True)
                     return
             else:
-                agent.registerInitialState(self.state.deepCopy())
+                agent.registerInitialState(self.state)
             self.unmute()
 
         agentIndex = self.startingIndex
@@ -627,7 +461,7 @@ class Game:
             move_time = 0
             skip_action = False
 
-            # Generate an observation of the state
+            # Observe the state.
             self.mute()
             if self.catchExceptions:
                 try:
@@ -635,9 +469,10 @@ class Game:
                             int(self.rules.getMoveTimeout(agentIndex)))
                     try:
                         start_time = time.time()
-                        observation = timed_func(self.state.deepCopy())
+                        timed_func(self.state)
                     except util.TimeoutFunctionException:
                         skip_action = True
+
                     move_time += time.time() - start_time
                     self.unmute()
                 except Exception:
@@ -645,7 +480,7 @@ class Game:
                     self._agentCrash(agentIndex, quiet=True)
                     return
             else:
-                observation = agent.observationFunction(self.state.deepCopy())
+                agent.observationFunction(self.state)
             self.unmute()
 
             # Solicit an action
@@ -659,7 +494,7 @@ class Game:
                         start_time = time.time()
                         if skip_action:
                             raise util.TimeoutFunctionException()
-                        action = timed_func(observation)
+                        action = timed_func(self.state)
                     except util.TimeoutFunctionException:
                         logging.warning('Agent %d timed out on a single move!' % agentIndex)
                         self.agentTimeout = True
@@ -695,7 +530,7 @@ class Game:
                     self._agentCrash(agentIndex)
                     return
             else:
-                action = agent.getAction(observation)
+                action = agent.getAction(self.state)
 
             self.unmute()
 
@@ -711,9 +546,7 @@ class Game:
                 self.state = self.state.generateSuccessor(agentIndex, action)
 
             # Change the display
-            self.display.update(self.state.data)
-            # idx = agentIndex - agentIndex % 2 + 1
-            # self.display.update(self.state.makeObservation(idx).data)
+            self.display.update(self.state)
 
             # Allow for game specific conditions (winning, losing, etc.)
             self.rules.process(self.state, self)
