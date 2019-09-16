@@ -34,6 +34,7 @@ import sys
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
 from pacai.agents.greedy import GreedyAgent
+from pacai.core.distance import manhattan
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.game import Game
@@ -41,7 +42,6 @@ from pacai.core.game import GameStateData
 from pacai.core.layout import getLayout
 from pacai.util.logs import initLogging
 from pacai.util.util import nearestPoint
-from pacai.util.util import manhattanDistance
 
 FIXED_SEED = 140188
 
@@ -362,7 +362,7 @@ class PacmanRules:
         # Eat
         next = pacmanState.configuration.getPosition()
         nearest = nearestPoint(next)
-        if manhattanDistance(nearest, next) <= 0.5:
+        if manhattan(nearest, next) <= 0.5:
             # Remove food
             PacmanRules.consume(nearest, state)
 
@@ -469,7 +469,7 @@ class GhostRules:
 
     @staticmethod
     def canKill(pacmanPosition, ghostPosition):
-        return manhattanDistance(ghostPosition, pacmanPosition) <= COLLISION_TOLERANCE
+        return manhattan(ghostPosition, pacmanPosition) <= COLLISION_TOLERANCE
 
     @staticmethod
     def placeGhost(state, ghostState):

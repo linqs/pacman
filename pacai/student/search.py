@@ -2,7 +2,7 @@
 In this file, you will implement generic search algorithms which are called by Pacman agents.
 """
 
-import pacai.util.util
+from pacai.util import util
 
 # Called by search.depthFirstSearch.
 def depthFirstSearch(problem):
@@ -21,7 +21,7 @@ def depthFirstSearch(problem):
     """
 
     # *** Your Code Here ***
-    pacai.util.util.raiseNotDefined()
+    util.raiseNotDefined()
 
 # Called by search.breadthFirstSearch.
 def breadthFirstSearch(problem):
@@ -29,7 +29,7 @@ def breadthFirstSearch(problem):
     Search the shallowest nodes in the search tree first. [p 81]
     """
     # *** Your Code Here ***
-    pacai.util.util.raiseNotDefined()
+    util.raiseNotDefined()
 
 # Called by search.uniformCostSearch.
 def uniformCostSearch(problem):
@@ -38,7 +38,7 @@ def uniformCostSearch(problem):
     """
 
     # *** Your Code Here ***
-    pacai.util.util.raiseNotDefined()
+    util.raiseNotDefined()
 
 # Called by search.aStarSearch.
 def aStarSearch(problem, heuristic):
@@ -47,4 +47,4 @@ def aStarSearch(problem, heuristic):
     """
 
     # *** Your Code Here ***
-    pacai.util.util.raiseNotDefined()
+    util.raiseNotDefined()

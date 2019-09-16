@@ -39,12 +39,12 @@ import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
 from pacai.agents.base import BaseAgent
+from pacai.core.distance import manhattan
 from pacai.core.game import Actions
 from pacai.core.game import Game
 from pacai.core.game import GameStateData
 from pacai.core.game import Grid
 from pacai.util.logs import initLogging
-from pacai.util.util import manhattanDistance
 from pacai.util.util import nearestPoint
 
 KILL_POINTS = 0
@@ -58,7 +58,7 @@ SCARED_TIME = 40
 FIXED_SEED = 140188
 
 def noisyDistance(pos1, pos2):
-    return int(manhattanDistance(pos1, pos2) + random.choice(SONAR_NOISE_VALUES))
+    return int(manhattan(pos1, pos2) + random.choice(SONAR_NOISE_VALUES))
 
 ###################################################
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
@@ -270,7 +270,7 @@ class GameState:
             seen = False
             enemyPos = state.getAgentPosition(enemy)
             for teammate in team:
-                if manhattanDistance(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
+                if manhattan(enemyPos, state.getAgentPosition(teammate)) <= SIGHT_RANGE:
                     seen = True
 
             if not seen:
@@ -468,7 +468,7 @@ class AgentRules:
         # Eat
         next = agentState.configuration.getPosition()
         nearest = nearestPoint(next)
-        if agentState.isPacman and manhattanDistance(nearest, next) <= 0.9:
+        if agentState.isPacman and manhattan(nearest, next) <= 0.9:
             AgentRules.consume(nearest, state, state.isOnRedTeam(agentIndex))
 
         # Change agent type
@@ -537,7 +537,7 @@ class AgentRules:
                 if (ghostPos is None):
                     continue
 
-                if manhattanDistance(ghostPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
+                if manhattan(ghostPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
                     # Award points to the other team for killing Pacmen.
                     if otherAgentState.scaredTimer <= 0:
                         score = KILL_POINTS
@@ -565,7 +565,7 @@ class AgentRules:
                 if (pacPos is None):
                     continue
 
-                if manhattanDistance(pacPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
+                if manhattan(pacPos, agentState.getPosition()) <= COLLISION_TOLERANCE:
                     # Award points to the other team for killing Pacmen.
                     if agentState.scaredTimer <= 0:
                         score = KILL_POINTS
