@@ -38,7 +38,6 @@ import traceback
 import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
-from pacai.agents.base import BaseAgent
 from pacai.core.distance import manhattan
 from pacai.core.game import Actions
 from pacai.core.game import Game
