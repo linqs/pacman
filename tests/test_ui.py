@@ -12,7 +12,7 @@ class UITest(unittest.TestCase):
             return
 
         args = [
-            'xvfb-run',
+            'xvfb-run', '-a',
             '-w', '0.01',
             'python3',
             '-m', 'pacai.bin.pacman',
@@ -28,7 +28,7 @@ class UITest(unittest.TestCase):
             return
 
         args = [
-            'xvfb-run',
+            'xvfb-run', '-a',
             '-w', '0.01',
             'python3',
             '-m', 'pacai.bin.capture',
