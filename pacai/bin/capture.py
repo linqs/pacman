@@ -706,18 +706,6 @@ def readCommand(argv):
     if options.fixRandomSeed:
         random.seed(FIXED_SEED)
 
-    # Special case: recorded games don't use the runGames method or args structure
-    if (options.replay is not None):
-        logging.info('Replaying recorded game %s.' % options.replay)
-
-        recorded = None
-        with open(options.replay, 'rb') as file:
-            recorded = pickle.load(file)
-
-        recorded['display'] = args['display']
-        replayGame(**recorded)
-        sys.exit(0)
-
     # Choose a pacman agent
     redArgs, blueArgs = parseAgentArgs(options.redOpts), parseAgentArgs(options.blueOpts)
     if options.numTraining > 0:
@@ -764,6 +752,7 @@ def readCommand(argv):
     args['numTraining'] = options.numTraining
     args['record'] = options.record
     args['catchExceptions'] = options.catchExceptions
+    args['replay'] = options.replay
 
     return args
 
@@ -819,7 +808,7 @@ def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamNa
     display.finish()
 
 def runGames(layout, agents, display, length, numGames, record, numTraining,
-        redTeamName, blueTeamName, muteAgents = False, catchExceptions = False):
+        redTeamName, blueTeamName, muteAgents = False, catchExceptions = False, **kwargs):
     rules = CaptureRules()
     games = []
 
@@ -846,7 +835,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
         if record:
             components = {
                 'layout': layout,
-                'agents': [BaseAgent(i) for i in range(len(agents))],
+                'agents': agents,
                 'actions': g.moveHistory,
                 'length': length,
                 'redTeamName': redTeamName,
@@ -893,7 +882,23 @@ def main(argv):
     argv already has the executable stripped.
     """
     initLogging()
-    options = readCommand(argv)  # Get game components based on input
+
+    # Get game components based on input
+    options = readCommand(argv)
+
+    # Special case: recorded games don't use the runGames method.
+    if (options['replay'] is not None):
+        logging.info('Replaying recorded game %s.' % options['replay'])
+
+        recorded = None
+        with open(options['replay'], 'rb') as file:
+            recorded = pickle.load(file)
+
+        recorded['display'] = options['display']
+        replayGame(**recorded)
+
+        return
+
     return runGames(**options)
 
 if __name__ == '__main__':
