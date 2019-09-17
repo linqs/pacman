@@ -6,7 +6,7 @@ This file contains a Distancer object which computes and
 caches the shortest path between any two points in a given maze.
 
 Example:
-distancer = Distancer(gameState.data.layout)
+distancer = Distancer(gameState.getInitialLayout())
 distancer.getDistance((1, 1), (10, 10))
 """
 

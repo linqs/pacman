@@ -12,6 +12,10 @@ class BaseAgent(abc.ABC):
 
     An agent must define the getAction method,
     but may also override any of the other methods.
+
+    Note that methods that take in a state should assume that they own a shallow copy of the state.
+    So the state should not be modified and a deep copy should be made of any information
+    they want to keep.
     """
 
     def __init__(self, index = 0):
@@ -38,7 +42,7 @@ class BaseAgent(abc.ABC):
         Make an observation on the state of the game.
         """
 
-        return state.deepCopy()
+        pass
 
     def final(self, state):
         """

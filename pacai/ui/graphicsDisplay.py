@@ -201,7 +201,7 @@ class PacmanGraphics:
         imageio.mimwrite(self.gif_path, images, fps = self.gif_fps, subrectangles = True)
 
     def startGraphics(self, state):
-        self.layout = state.layout
+        self.layout = state.getInitialLayout()
         layout = self.layout
         self.width = layout.width
         self.height = layout.height
@@ -210,7 +210,7 @@ class PacmanGraphics:
         self.currentState = layout
 
     def drawDistributions(self, state):
-        walls = state.layout.walls
+        walls = state.getWalls()
         dist = []
         for x in range(walls.width):
             distx = []
@@ -234,8 +234,8 @@ class PacmanGraphics:
 
     def drawAgentObjects(self, state):
         self.agentImages = []  # (agentState, image)
-        for index, agent in enumerate(state.agentStates):
-            if agent.isPacman:
+        for index, agent in enumerate(state.getAgentStates()):
+            if agent.isPacman():
                 image = self.drawPacman(agent, index)
                 self.agentImages.append((agent, image))
             else:
@@ -251,7 +251,7 @@ class PacmanGraphics:
         for item in prevImage:
             graphicsUtils.remove_from_screen(item)
 
-        if newState.isPacman:
+        if newState.isPacman():
             image = self.drawPacman(newState, agentIndex)
             self.agentImages[agentIndex] = (newState, image)
         else:
@@ -262,26 +262,26 @@ class PacmanGraphics:
     def update(self, newState):
         self.frame += 1
 
-        agentIndex = newState._agentMoved
-        agentState = newState.agentStates[agentIndex]
+        agentIndex = newState.getLastAgentMoved()
+        agentState = newState.getAgentState(agentIndex)
 
-        if (self.agentImages[agentIndex][0].isPacman != agentState.isPacman):
+        if (self.agentImages[agentIndex][0].isPacman() != agentState.isPacman()):
             self.swapImages(agentIndex, agentState)
 
         prevState, prevImage = self.agentImages[agentIndex]
-        if agentState.isPacman:
+        if agentState.isPacman():
             self.animatePacman(agentState, prevState, prevImage)
         else:
             self.moveGhost(agentState, agentIndex, prevState, prevImage)
         self.agentImages[agentIndex] = (agentState, prevImage)
 
-        if newState._foodEaten is not None:
-            self.removeFood(newState._foodEaten, self.food)
+        if (newState.getLastFoodEaten() is not None):
+            self.removeFood(newState.getLastFoodEaten(), self.food)
 
-        if newState._capsuleEaten is not None:
-            self.removeCapsule(newState._capsuleEaten, self.capsules)
+        if (newState.getLastCapsuleEaten() is not None):
+            self.removeCapsule(newState.getLastCapsuleEaten(), self.capsules)
 
-        self.infoPane.updateScore(newState.score)
+        self.infoPane.updateScore(newState.getScore())
         if 'ghostDistances' in dir(newState):
             self.infoPane.updateGhostDistances(newState.ghostDistances)
 
@@ -767,7 +767,7 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
         self.isBlue = isBlue
         PacmanGraphics.startGraphics(self, state)
         # Initialize distribution images
-        self.layout = state.layout
+        self.layout = state.getInitialLayout()
 
         # Draw the rest
         self.distributionImages = None  # initialize lazily
@@ -794,7 +794,7 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
         return GHOST_COLORS[ghostIndex]
 
     def getPosition(self, ghostState):
-        if not self.showGhosts and not ghostState.isPacman and ghostState.getPosition()[1] > 1:
+        if not self.showGhosts and not ghostState.isPacman() and ghostState.getPosition()[1] > 1:
             return (-1000, -1000)
         else:
             return PacmanGraphics.getPosition(self, ghostState)
