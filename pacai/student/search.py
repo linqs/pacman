@@ -19,7 +19,7 @@ def depthFirstSearch(problem):
     """
 
     # *** Your Code Here ***
-    raise NotImplementedError("depthFirstSearch")
+    raise NotImplementedError()
 
 # Called by search.breadthFirstSearch.
 def breadthFirstSearch(problem):
@@ -27,7 +27,7 @@ def breadthFirstSearch(problem):
     Search the shallowest nodes in the search tree first. [p 81]
     """
     # *** Your Code Here ***
-    raise NotImplementedError("breadthFirstSearch")
+    raise NotImplementedError()
 
 # Called by search.uniformCostSearch.
 def uniformCostSearch(problem):
@@ -36,7 +36,7 @@ def uniformCostSearch(problem):
     """
 
     # *** Your Code Here ***
-    raise NotImplementedError("uniformCostSearch")
+    raise NotImplementedError()
 
 # Called by search.aStarSearch.
 def aStarSearch(problem, heuristic):
@@ -45,4 +45,4 @@ def aStarSearch(problem, heuristic):
     """
 
     # *** Your Code Here ***
-    raise NotImplementedError("aStarSearch")
+    raise NotImplementedError()

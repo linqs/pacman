@@ -52,7 +52,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
 
         """ YOUR CODE HERE """
-        raise NotImplementedError("ValueIterationAgent")
+        raise NotImplementedError()
         """ END CODE """
 
     def getValue(self, state):

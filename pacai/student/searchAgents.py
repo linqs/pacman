@@ -88,7 +88,7 @@ class CornersProblem(SearchProblem):
         self._expanded = 0  # Number of search nodes expanded
 
         # *** Your Code Here ***
-        raise NotImplementedError("CornersProblem")
+        raise NotImplementedError()
 
     def actionsCost(self, actions):
         """
@@ -198,8 +198,7 @@ class ClosestDotSearchAgent(SearchAgent):
         # problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
-        raise NotImplementedError("findPathToClosestDot")
-        return None
+        raise NotImplementedError()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
