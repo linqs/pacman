@@ -509,18 +509,7 @@ def readCommand(argv):
     args['record'] = options.record
     args['catchExceptions'] = options.catchExceptions
     args['timeout'] = options.timeout
-
-    # Special case: recorded games don't use the runGames method or args structure
-    if options.gameToReplay is not None:
-        logging.info('Replaying recorded game %s.' % options.gameToReplay)
-
-        with open(options.gameToReplay, 'rb') as file:
-            recorded = pickle.load(file)
-
-        recorded['display'] = args['display']
-        replayGame(**recorded)
-
-        sys.exit(0)
+    args['gameToReplay'] = options.gameToReplay
 
     return args
 
@@ -548,7 +537,7 @@ def replayGame(layout, actions, display):
     display.finish()
 
 def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraining = 0,
-        catchExceptions = False, timeout = 30):
+        catchExceptions = False, timeout = 30, **kwargs):
     import __main__
     __main__.__dict__['_display'] = display
 
@@ -605,7 +594,23 @@ def main(argv):
     argv already has the executable stripped.
     """
     initLogging()
-    args = readCommand(argv)  # Get game components based on input
+
+    # Get game components based on input
+    args = readCommand(argv)
+
+    # Special case: recorded games don't use the runGames method.
+    if (args['gameToReplay'] is not None):
+        logging.info('Replaying recorded game %s.' % args['gameToReplay'])
+
+        recorded = None
+        with open(args['gameToReplay'], 'rb') as file:
+            recorded = pickle.load(file)
+
+        recorded['display'] = args['display']
+        replayGame(**recorded)
+
+        return
+
     return runGames(**args)
 
 if __name__ == '__main__':
