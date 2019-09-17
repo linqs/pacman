@@ -259,7 +259,7 @@ class PacmanGraphics:
     def drawAgentObjects(self, state):
         self.agentImages = []  # (agentState, image)
         for index, agent in enumerate(state.getAgentStates()):
-            if agent.isPacman:
+            if agent.isPacman():
                 image = self.drawPacman(agent, index)
                 self.agentImages.append((agent, image))
             else:
@@ -275,7 +275,7 @@ class PacmanGraphics:
         for item in prevImage:
             graphicsUtils.remove_from_screen(item)
 
-        if newState.isPacman:
+        if newState.isPacman():
             image = self.drawPacman(newState, agentIndex)
             self.agentImages[agentIndex] = (newState, image)
         else:
@@ -289,11 +289,11 @@ class PacmanGraphics:
         agentIndex = newState.getLastAgentMoved()
         agentState = newState.getAgentState(agentIndex)
 
-        if (self.agentImages[agentIndex][0].isPacman != agentState.isPacman):
+        if (self.agentImages[agentIndex][0].isPacman() != agentState.isPacman()):
             self.swapImages(agentIndex, agentState)
 
         prevState, prevImage = self.agentImages[agentIndex]
-        if (agentState.isPacman):
+        if (agentState.isPacman()):
             self.animatePacman(agentState, prevState, prevImage)
         else:
             self.moveGhost(agentState, agentIndex, prevState, prevImage)
@@ -305,7 +305,7 @@ class PacmanGraphics:
         if (newState.getLastCapsuleEaten() is not None):
             self.removeCapsule(newState.getLastCapsuleEaten(), self.capsules)
 
-        self.infoPane.updateScore(newState.getScore(), newState.timeleft)
+        self.infoPane.updateScore(newState.getScore(), newState.getTimeleft())
         if ('ghostDistances' in dir(newState)):
             self.infoPane.updateGhostDistances(newState.ghostDistances)
 
@@ -781,7 +781,7 @@ class FirstPersonPacmanGraphics(PacmanGraphics):
         return GHOST_COLORS[ghostIndex]
 
     def getPosition(self, ghostState):
-        if not self.showGhosts and not ghostState.isPacman and ghostState.getPosition()[1] > 1:
+        if not self.showGhosts and not ghostState.isPacman() and ghostState.getPosition()[1] > 1:
             return (-1000, -1000)
         else:
             return PacmanGraphics.getPosition(self, ghostState)

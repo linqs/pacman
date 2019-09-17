@@ -93,13 +93,16 @@ class AgentState:
     """
 
     def __init__(self, startConfiguration, isPacman):
+        # Save the starting configuration for later use.
         self.start = startConfiguration
+        self._startIsPacman = isPacman
+
         self.configuration = startConfiguration
-        self.isPacman = isPacman
+        self._isPacman = isPacman
         self.scaredTimer = 0
 
     def __str__(self):
-        if self.isPacman:
+        if self._isPacman:
             return 'Pacman: ' + str(self.configuration)
         else:
             return 'Ghost: ' + str(self.configuration)
@@ -113,9 +116,12 @@ class AgentState:
         return hash(hash(self.configuration) + 13 * hash(self.scaredTimer))
 
     def copy(self):
-        state = AgentState(self.start, self.isPacman)
+        state = AgentState(self.start, self._startIsPacman)
+
+        state._isPacman = self._isPacman
         state.configuration = self.configuration
         state.scaredTimer = self.scaredTimer
+
         return state
 
     def getPosition(self):
@@ -125,6 +131,37 @@ class AgentState:
 
     def getDirection(self):
         return self.configuration.getDirection()
+
+    def isPacman(self):
+        return self._isPacman
+
+    def isGhost(self):
+        return not self.isPacman()
+
+    def isScared(self):
+        return self.scaredTimer > 0
+
+    def isScaredGhost(self):
+        return self.isGhost() and self.isScared()
+
+    def isBraveGhost(self):
+        """
+        A ghost that is not scared.
+        """
+
+        return self.isGhost() and not self.isScared()
+
+    def setIsPacman(self, isPacman):
+        self._isPacman = isPacman
+
+    def respawn(self):
+        """
+        This agent was killed, respawn it at the start as a pacman.
+        """
+
+        self.configuration = self.start
+        self._isPacman = self._startIsPacman
+        self.scaredTimer = 0
 
 class Grid:
     """

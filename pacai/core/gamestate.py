@@ -37,7 +37,8 @@ class AbstractGameState(abc.ABC):
 
         self._agentStates = []
         for (isPacman, position) in layout.agentPositions:
-            self._agentStates.append(game.AgentState(game.Configuration(position, game.Directions.STOP), isPacman))
+            config = game.Configuration(position, game.Directions.STOP)
+            self._agentStates.append(game.AgentState(config, isPacman))
 
         self._score = 0
 
@@ -67,7 +68,7 @@ class AbstractGameState(abc.ABC):
         """
 
         if (not self.hasCapsule(x, y)):
-            return
+            return False
 
         if (not self._capsulesCopied):
             self._capsules = self._capsules.copy()
@@ -76,13 +77,15 @@ class AbstractGameState(abc.ABC):
         self._capsules.remove((x, y))
         self._lastCapsuleEaten = (x, y)
 
+        return True
+
     def eatFood(self, x, y):
         """
         Mark the food at the given location as eaten.
         """
 
         if (not self.hasFood(x, y)):
-            return
+            return False
 
         if (not self._foodCopied):
             self._food = self._food.copy()
@@ -90,6 +93,8 @@ class AbstractGameState(abc.ABC):
 
         self._food[x][y] = False
         self._lastFoodEaten = (x, y)
+
+        return True
 
     def endGame(self, win):
         self._gameover = True
@@ -216,6 +221,9 @@ class AbstractGameState(abc.ABC):
 
     def isWin(self):
         return self.isOver() and self._win
+
+    def setScore(self, score):
+        self._score = score
 
     def _initSuccessor(self):
         """

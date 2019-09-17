@@ -38,9 +38,9 @@ from pacai.core.distance import manhattan
 from pacai.core.game import Actions
 from pacai.core.game import Directions
 from pacai.core.game import Game
+from pacai.core.gamestate import AbstractGameState
 from pacai.core.layout import getLayout
 from pacai.util.logs import initLogging
-from pacai.core.state import AbstractGameState
 from pacai.util.util import nearestPoint
 
 FIXED_SEED = 140188
@@ -135,7 +135,7 @@ class PacmanGameState(AbstractGameState):
 
     def _applySuccessorAction(self, agentIndex, action):
         """
-        Apply the action the the context state (self).
+        Apply the action to the context state (self).
         """
 
         # Let the agent's logic deal with its action's effects on the board.
@@ -149,12 +149,12 @@ class PacmanGameState(AbstractGameState):
             # Penalty for waiting around.
             self.addScore(-TIME_PENALTY)
         else:
-            GhostRules.decrementTimer(self._agentStates[agentIndex])
+            GhostRules.decrementTimer(self.getAgentState(agentIndex))
 
         # Resolve multi-agent effects.
         GhostRules.checkDeath(self, agentIndex)
 
-        # Book keeping
+        # Book keeping.
         self._lastAgentMoved = agentIndex
 
 class ClassicGameRules(object):
@@ -257,9 +257,9 @@ class PacmanRules:
         pacmanState.configuration = pacmanState.configuration.generateSuccessor(vector)
 
         # Eat
-        next = pacmanState.configuration.getPosition()
-        nearest = nearestPoint(next)
-        if (manhattan(nearest, next) <= 0.5):
+        nextPosition = pacmanState.configuration.getPosition()
+        nearest = nearestPoint(nextPosition)
+        if (manhattan(nearest, nextPosition) <= 0.5):
             # Remove food
             PacmanRules.consume(nearest, state)
 
@@ -526,7 +526,11 @@ def readCommand(argv):
 
 def replayGame(layout, actions, display):
     rules = ClassicGameRules()
-    agents = [GreedyAgent(PACMAN_AGENT_INDEX)] + [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
+
+    agents = []
+    agents.append(GreedyAgent(PACMAN_AGENT_INDEX))
+    agents += [RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
+
     game = rules.newGame(layout, agents[PACMAN_AGENT_INDEX], agents[1:], display)
     state = game.state
     display.initialize(state)
