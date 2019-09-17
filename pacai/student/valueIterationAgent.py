@@ -53,7 +53,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
 
         """ YOUR CODE HERE """
-        util.raiseNotDefined()
+        raise NotImplementedError
         """ END CODE """
 
     def getValue(self, state):

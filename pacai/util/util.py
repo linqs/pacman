@@ -53,10 +53,6 @@ def matrixAsList(matrix, value = True):
 
     return cells
 
-def raiseNotDefined():
-    print("Method not implemented: %s" % inspect.stack()[1][3])
-    sys.exit(1)
-
 # Code to handle timeouts.
 class TimeoutFunctionException(Exception):
     """

@@ -134,7 +134,7 @@ def betterEvaluationFunction(currentGameState):
     """
 
     # *** Your Code Here ***
-    util.raiseNotDefined()
+    return currentGameState.getScore()
 
 class ContestAgent(MultiAgentSearchAgent):
     """

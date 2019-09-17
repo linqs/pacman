@@ -132,4 +132,5 @@ class ApproximateQAgent(PacmanQAgent):
         # Did we finish training?
         if self.episodesSoFar == self.numTraining:
             # You might want to print your weights here for debugging.
-            util.raiseNotDefined()
+            # *** Your Code Here ***
+            raise NotImplementedError
