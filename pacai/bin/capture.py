@@ -266,14 +266,11 @@ class CaptureRules:
     and how the game starts and ends.
     """
 
-    def __init__(self, quiet = False):
-        self.quiet = quiet
-
-    def newGame(self, layout, agents, display, length, muteAgents, catchExceptions):
+    def newGame(self, layout, agents, display, length, catchExceptions):
         initState = CaptureGameState(layout, length)
         starter = random.randint(0, 1)
         logging.info('%s team starts' % ['Red', 'Blue'][starter])
-        game = Game(agents, display, self, startingIndex = starter, muteAgents = muteAgents,
+        game = Game(agents, display, self, startingIndex = starter,
                 catchExceptions = catchExceptions)
         game.state = initState
         game.length = length
@@ -550,8 +547,6 @@ def readCommand(argv):
             help='Display output as text only', default=False)
     parser.add_option('-q', '--quiet', action='store_true',
             help='Display minimal output and no graphics', default=False)
-    parser.add_option('-Q', '--super-quiet', action='store_true', dest="super_quiet",
-            help='Same as -q but agent output is also suppressed', default=False)
     parser.add_option('-z', '--zoom', type='float', dest='zoom',
             help=default('Zoom in the graphics'), default=1)
     parser.add_option('-i', '--time', type='int', dest='time',
@@ -585,10 +580,6 @@ def readCommand(argv):
     elif options.quiet:
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.NullGraphics()
-    elif options.super_quiet:
-        import pacai.ui.textDisplay
-        args['display'] = pacai.ui.textDisplay.NullGraphics()
-        args['muteAgents'] = True
     else:
         import pacai.ui.captureGraphicsDisplay
         # Hack for agents writing to the display
@@ -691,7 +682,7 @@ def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
 
 def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
     rules = CaptureRules()
-    game = rules.newGame(layout, agents, display, length, False, False)
+    game = rules.newGame(layout, agents, display, length, False)
     state = game.state
     display.redTeam = redTeamName
     display.blueTeam = blueTeamName
@@ -708,7 +699,7 @@ def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamNa
     display.finish()
 
 def runGames(layout, agents, display, length, numGames, record, numTraining,
-        redTeamName, blueTeamName, muteAgents = False, catchExceptions = False, **kwargs):
+        redTeamName, blueTeamName, catchExceptions = False, **kwargs):
     rules = CaptureRules()
     games = []
 
@@ -716,19 +707,18 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
         logging.info('Playing %d training games' % numTraining)
 
     for i in range(numGames):
-        beQuiet = i < numTraining
+        beQuiet = (i < numTraining)
         if beQuiet:
             # Suppress output and graphics
             import textDisplay
             gameDisplay = textDisplay.NullGraphics()
-            rules.quiet = True
         else:
             gameDisplay = display
-            rules.quiet = False
-        g = rules.newGame(layout, agents, gameDisplay, length, muteAgents, catchExceptions)
+
+        g = rules.newGame(layout, agents, gameDisplay, length, catchExceptions)
         g.run()
 
-        if not beQuiet:
+        if (not beQuiet):
             games.append(g)
 
         g.record = None
@@ -752,7 +742,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
 
             logging.info("Game recorded to: '%s'." % (path))
 
-    if numGames > 0:
+    if (numGames > 0):
         scores = [game.state.getScore() for game in games]
         redWinRate = [s > 0 for s in scores].count(True) / float(len(scores))
         blueWinRate = [s < 0 for s in scores].count(True) / float(len(scores))

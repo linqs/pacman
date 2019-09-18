@@ -166,15 +166,13 @@ class ClassicGameRules(object):
     def __init__(self, timeout = 30):
         self.timeout = timeout
 
-    def newGame(self, layout, pacmanAgent, ghostAgents, display,
-            quiet = False, catchExceptions = False):
+    def newGame(self, layout, pacmanAgent, ghostAgents, display, catchExceptions = False):
         agents = [pacmanAgent] + ghostAgents[:layout.getNumGhosts()]
         initState = PacmanGameState(layout)
         game = Game(agents, display, self, catchExceptions = catchExceptions)
         game.state = initState
 
         self._initialFoodCount = initState.getNumFood()
-        self.quiet = quiet
 
         return game
 
@@ -189,15 +187,11 @@ class ClassicGameRules(object):
             self.lose(state, game)
 
     def win(self, state, game):
-        if (not self.quiet):
-            logging.info('Pacman emerges victorious! Score: %d' % state.getScore())
-
+        logging.info('Pacman emerges victorious! Score: %d' % state.getScore())
         game.gameOver = True
 
     def lose(self, state, game):
-        if (not self.quiet):
-            logging.info('Pacman died! Score: %d' % state.getScore())
-
+        logging.info('Pacman died! Score: %d' % state.getScore())
         game.gameOver = True
 
     def getProgress(self, game):
@@ -545,23 +539,21 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
     games = []
 
     for i in range(numGames):
-        beQuiet = i < numTraining
+        beQuiet = (i < numTraining)
         if beQuiet:
             # Suppress output and graphics
             import pacai.ui.textDisplay
             gameDisplay = pacai.ui.textDisplay.NullGraphics()
-            rules.quiet = True
         else:
             gameDisplay = display
-            rules.quiet = False
 
-        game = rules.newGame(layout, pacman, ghosts, gameDisplay, beQuiet, catchExceptions)
+        game = rules.newGame(layout, pacman, ghosts, gameDisplay, catchExceptions)
         game.run()
-        if not beQuiet:
+        if (not beQuiet):
             games.append(game)
 
-        if record:
-            path = 'capture.replay'
+        if (record):
+            path = 'pacman.replay'
             if (isinstance(record, str)):
                 path = record
 
