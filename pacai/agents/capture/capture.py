@@ -6,7 +6,8 @@ import abc
 
 from pacai.agents.base import BaseAgent
 from pacai.ui import captureGraphicsDisplay
-from pacai.util import distanceCalculator
+from pacai.util import counter
+from pacai.core import distanceCalculator
 from pacai.util import util
 
 class CaptureAgent(BaseAgent):
@@ -63,7 +64,7 @@ class CaptureAgent(BaseAgent):
         """
 
         self.red = gameState.isOnRedTeam(self.index)
-        self.distancer = distanceCalculator.Distancer(gameState.data.layout)
+        self.distancer = distanceCalculator.Distancer(gameState.getInitialLayout())
 
         # Comment this out to forgo maze distance computation and use manhattan distances
         self.distancer.getMazeDistances()
@@ -82,13 +83,6 @@ class CaptureAgent(BaseAgent):
         """
 
         self.agentsOnTeam = agentsOnTeam
-
-    def observationFunction(self, gameState):
-        """
-        Changing this won't affect pacclient.py, but will affect capture.py
-        """
-
-        return gameState.makeObservation(self.index)
 
     def debugDraw(self, cells, color, clear = False):
 
@@ -241,7 +235,7 @@ class CaptureAgent(BaseAgent):
         Overlays a distribution over positions onto the pacman board that represents
         an agent's beliefs about the positions of each agent.
 
-        The arg distributions is a tuple or list of util.Counter objects, where the i'th
+        The arg distributions is a tuple or list of counter.Counter objects, where the i'th
         Counter has keys that are board positions (x,y) and values that encode the probability
         that agent i is at (x,y).
 
@@ -254,11 +248,11 @@ class CaptureAgent(BaseAgent):
         dists = []
         for dist in distributions:
             if (dist is not None):
-                if not isinstance(dist, util.Counter):
+                if not isinstance(dist, counter.Counter):
                     raise Exception("Wrong type of distribution")
                 dists.append(dist)
             else:
-                dists.append(util.Counter())
+                dists.append(counter.Counter())
 
         if (self.display is not None and 'updateDistributions' in dir(self.display)):
             self.display.updateDistributions(dists)

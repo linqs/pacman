@@ -147,8 +147,6 @@ class ReinforcementAgent(ValueEstimationAgent):
             reward = state.getScore() - self.lastState.getScore()
             self.observeTransition(self.lastState, self.lastAction, state, reward)
 
-        return state
-
     def registerInitialState(self, state):
         self.startEpisode()
         if self.episodesSoFar == 0:

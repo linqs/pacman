@@ -2,13 +2,13 @@ import random
 
 from pacai.agents.base import BaseAgent
 from pacai.core.game import Directions
-from pacai.util import util
+from pacai.util import reflection
 
 class GreedyAgent(BaseAgent):
     def __init__(self, index, evalFn = "pacai.core.eval.score"):
         super().__init__(index)
 
-        self.evaluationFunction = util.qualifiedImport(evalFn)
+        self.evaluationFunction = reflection.qualifiedImport(evalFn)
         assert (self.evaluationFunction is not None)
 
     def getAction(self, state):

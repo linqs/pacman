@@ -3,7 +3,7 @@ import glob
 import logging
 import os
 
-from pacai.util import util
+from pacai.util import reflection
 
 class BaseAgent(abc.ABC):
     """
@@ -12,6 +12,10 @@ class BaseAgent(abc.ABC):
 
     An agent must define the getAction method,
     but may also override any of the other methods.
+
+    Note that methods that take in a state should assume that they own a shallow copy of the state.
+    So the state should not be modified and a deep copy should be made of any information
+    they want to keep.
     """
 
     def __init__(self, index = 0):
@@ -38,7 +42,7 @@ class BaseAgent(abc.ABC):
         Make an observation on the state of the game.
         """
 
-        return state.deepCopy()
+        pass
 
     def final(self, state):
         """
@@ -72,7 +76,7 @@ class BaseAgent(abc.ABC):
             BaseAgent._import_agents(os.path.join(path, '*.py'), package_format_string)
 
         # Now that the agent classes have been loaded, just look for subclasses.
-        for subclass in util.getAllDescendents(BaseAgent):
+        for subclass in reflection.getAllDescendents(BaseAgent):
             if (subclass.__name__ == class_name):
                 return subclass(index = index, **args)
 

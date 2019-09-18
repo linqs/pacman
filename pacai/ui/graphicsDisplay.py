@@ -24,7 +24,7 @@ class PacmanGraphics(AbstractPacmanGraphics):
         super().__init__(zoom, frameTime, capture, gif, gif_skip_frames, gif_fps)
 
     def startGraphics(self, state):
-        self.layout = state.layout
+        self.layout = state.getInitialLayout()
         layout = self.layout
         self.width = layout.width
         self.height = layout.height
@@ -35,26 +35,26 @@ class PacmanGraphics(AbstractPacmanGraphics):
     def update(self, newState):
         self.frame += 1
 
-        agentIndex = newState._agentMoved
-        agentState = newState.agentStates[agentIndex]
+        agentIndex = newState.getLastAgentMoved()
+        agentState = newState.getAgentState(agentIndex)
 
-        if (self.agentImages[agentIndex][0].isPacman != agentState.isPacman):
+        if (self.agentImages[agentIndex][0].isPacman() != agentState.isPacman()):
             self.swapImages(agentIndex, agentState)
 
         prevState, prevImage = self.agentImages[agentIndex]
-        if agentState.isPacman:
+        if agentState.isPacman():
             self.animatePacman(agentState, prevState, prevImage)
         else:
             self.moveGhost(agentState, agentIndex, prevState, prevImage)
         self.agentImages[agentIndex] = (agentState, prevImage)
 
-        if newState._foodEaten is not None:
-            self.removeFood(newState._foodEaten, self.food)
+        if (newState.getLastFoodEaten() is not None):
+            self.removeFood(newState.getLastFoodEaten(), self.food)
 
-        if newState._capsuleEaten is not None:
-            self.removeCapsule(newState._capsuleEaten, self.capsules)
+        if (newState.getLastCapsuleEaten() is not None):
+            self.removeCapsule(newState.getLastCapsuleEaten(), self.capsules)
 
-        self.infoPane.updateScore(newState.score)
+        self.infoPane.updateScore(newState.getScore())
         if 'ghostDistances' in dir(newState):
             self.infoPane.updateGhostDistances(newState.ghostDistances)
 
