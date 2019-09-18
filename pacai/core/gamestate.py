@@ -236,7 +236,7 @@ class AbstractGameState(abc.ABC):
 
         # Leave food and capsules as a shallow copy, but mark them to be copied on write.
         successor._foodCopied = False
-        successor._capsuleCopied = False
+        successor._capsulesCopied = False
 
         # Agent states need to be deep copied.
         successor._agentStates = [agentState.copy() for agentState in self._agentStates]
