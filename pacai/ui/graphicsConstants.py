@@ -1,5 +1,12 @@
 from pacai.ui import graphicsUtils
 
+DEFAULT_ZOOM = 1.0
+DEFAULT_FRAME_TIME = 0.0
+DEFAULT_GIF_FRAME_SKIP = 0
+DEFAULT_GIF_FPS = 10
+DEFAULT_CAPTURE_ARG = False
+DEFAULT_GIF_ARG = None
+DEFAULT_PANE_FONT_SIZE = 24
 DEFAULT_GRID_SIZE = 30.0
 INFO_PANE_HEIGHT = 35
 BACKGROUND_COLOR = graphicsUtils.formatColor(0, 0, 0)
@@ -58,3 +65,11 @@ CAPSULE_SIZE = 0.25
 
 # Drawing walls
 WALL_RADIUS = 0.15
+
+# Fonts and Text Modifiers
+TIMES_FONT = "Times"
+TEXT_MOD_BOLD = "bold"
+
+# Teams
+TEAM_BLUE = "BLUE TEAM"
+TEAM_RED = "RED TEAM"
