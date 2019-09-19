@@ -54,9 +54,9 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
     maxLen = 11
     newRows = []
 
-    for y in range(grid.getHeight()):
+    for y in range(grid.height):
         newRow = []
-        for x in range(grid.getWidth()):
+        for x in range(grid.width):
             state = (x, y)
             value = values[state]
             action = None
@@ -109,7 +109,7 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
 
         newRows.append(newRow)
 
-    numCols = grid.getWidth()
+    numCols = grid.width
     for rowNum, row in enumerate(newRows):
         row.insert(0, "\n\n" + str(rowNum))
 
@@ -126,10 +126,10 @@ def prettyPrintNullValues(gridWorld, currentState = None):
     maxLen = 11
     newRows = []
 
-    for y in range(grid.getHeight()):
+    for y in range(grid.height):
         newRow = []
 
-        for x in range(grid.getWidth()):
+        for x in range(grid.width):
             state = (x, y)
 
             # value = values[state]
@@ -187,7 +187,7 @@ def prettyPrintNullValues(gridWorld, currentState = None):
 
         newRows.append(newRow)
 
-    numCols = grid.getWidth()
+    numCols = grid.width
 
     for rowNum, row in enumerate(newRows):
         row.insert(0, "\n\n" + str(rowNum))
@@ -205,10 +205,10 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
     maxLen = 11
     newRows = []
 
-    for y in range(grid.getHeight()):
+    for y in range(grid.height):
         newRow = []
 
-        for x in range(grid.getWidth()):
+        for x in range(grid.width):
             state = (x, y)
             actions = gridWorld.getPossibleActions(state)
             if (actions is None or len(actions) == 0):
@@ -273,7 +273,7 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
 
         newRows.append(newRow)
 
-    numCols = grid.getWidth()
+    numCols = grid.width
 
     for rowNum, row in enumerate(newRows):
         row.insert(0, "\n\n\n" + str(rowNum))
@@ -324,13 +324,13 @@ def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
     # closure for breaking logical rows to physical, using wrapfunc
     def rowWrapper(row):
         newRows = [wrapfunc(item).split('\n') for item in row]
-        return [[substr or '' for substr in item] for item in list(*newRows)]
+        return [[substr or '' for substr in item] for item in list(newRows)]
 
     # break each logical row into one or more physical ones
     logicalRows = [rowWrapper(row) for row in rows]
 
     # columns of physical rows
-    columns = list(*functools.reduce(operator.add, logicalRows))
+    columns = list(functools.reduce(operator.add, logicalRows))
 
     # get the maximum of each column by the string length of its items
     maxWidths = [max([len(str(item)) for item in column]) for column in columns]
@@ -363,8 +363,6 @@ def wrap_always(text, width):
 
     return '\n'.join([text[width * i:width * (i + 1)]
             for i in range(int(math.ceil(1.0 * len(text) / width)))])
-
-# TEST OF DISPLAY CODE
 
 if __name__ == '__main__':
     grid = pacai.bin.gridworld.getCliffGrid2()
