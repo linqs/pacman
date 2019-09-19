@@ -2,7 +2,7 @@ import os
 import random
 
 from pacai.core.distance import manhattan
-from pacai.core.game import Grid
+from pacai.core.grid import Grid
 
 # By default, the layout directory is adjacent to this file.
 DEFAULT_LAYOUT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'layouts')

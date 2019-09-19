@@ -41,8 +41,8 @@ from pacai.agents import keyboard
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 from pacai.core.game import Game
-from pacai.core.game import Grid
 from pacai.core.gamestate import AbstractGameState
+from pacai.core.grid import Grid
 from pacai.util.logs import initLogging
 from pacai.util.util import nearestPoint
 
