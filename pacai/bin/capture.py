@@ -51,9 +51,6 @@ COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
 KILL_POINTS = 0
 FOOD_POINTS = 1  # Points for eating food.
 
-SONAR_NOISE_RANGE = 13  # Must be odd
-SONAR_NOISE_VALUES = [i - int((SONAR_NOISE_RANGE - 1) / 2) for i in range(SONAR_NOISE_RANGE)]
-SIGHT_RANGE = 5  # Manhattan distance
 MIN_FOOD = 2
 
 SCARED_TIME = 40

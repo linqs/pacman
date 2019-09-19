@@ -721,29 +721,6 @@ class PacmanGraphics:
             for cell in self.expandedCells:
                 graphicsUtils.remove_from_screen(cell)
 
-    def updateDistributions(self, distributions):
-        # Draws an agent's belief distributions
-        if (self.distributionImages is None):
-            self.drawDistributions(self.previousState)
-
-        for x in range(len(self.distributionImages)):
-            for y in range(len(self.distributionImages[0])):
-                image = self.distributionImages[x][y]
-                weights = [dist[(x, y)] for dist in distributions]
-
-                if sum(weights) != 0:
-                    pass
-                # Fog of war
-                color = [0.0, 0.0, 0.0]
-                colors = GHOST_VEC_COLORS[1:]  # With Pacman
-                if self.capture:
-                    colors = GHOST_VEC_COLORS
-
-                for weight, gcolor in zip(weights, colors):
-                    color = [min(1.0, c + 0.95 * g * weight ** .3) for c, g in zip(color, gcolor)]
-                graphicsUtils.changeColor(image, graphicsUtils.formatColor(*color))
-        graphicsUtils.refresh()
-
 class FirstPersonPacmanGraphics(PacmanGraphics):
     def __init__(self, zoom = 1.0, showGhosts = True, capture = False, frameTime=0):
         PacmanGraphics.__init__(self, zoom, frameTime=frameTime)
