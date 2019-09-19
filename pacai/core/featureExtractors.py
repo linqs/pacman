@@ -62,7 +62,7 @@ class SimpleExtractor(FeatureExtractor):
         dist = _closestFood((next_x, next_y), food, walls)
         if dist is not None:
             # Make the distance a number less than one otherwise the update will diverge wildly.
-            features["closest-food"] = float(dist) / (walls.width * walls.height)
+            features["closest-food"] = float(dist) / (walls.getWidth() * walls.getHeight())
 
         features.divideAll(10.0)
         return features

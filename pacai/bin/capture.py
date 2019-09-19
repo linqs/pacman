@@ -100,11 +100,11 @@ class CaptureGameState(AbstractGameState):
             else:
                 self._blueCapsules.append(capsule)
 
-        self._redFood = Grid(self._food.width, self._food.height, initialValue = False)
-        self._blueFood = Grid(self._food.width, self._food.height, initialValue = False)
+        self._redFood = Grid(self._food.getWidth(), self._food.getHeight(), initialValue = False)
+        self._blueFood = Grid(self._food.getWidth(), self._food.getHeight(), initialValue = False)
 
-        for x in range(self._food.width):
-            for y in range(self._food.height):
+        for x in range(self._food.getWidth()):
+            for y in range(self._food.getHeight()):
                 if (not self._food[x][y]):
                     continue
 

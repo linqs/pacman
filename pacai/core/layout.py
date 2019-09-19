@@ -15,8 +15,8 @@ class Layout(object):
     def __init__(self, layoutText):
         self.width = len(layoutText[0])
         self.height = len(layoutText)
-        self.walls = Grid(self.width, self.height, False)
-        self.food = Grid(self.width, self.height, False)
+        self.walls = Grid(self.width, self.height, initialValue = False)
+        self.food = Grid(self.width, self.height, initialValue = False)
         self.capsules = []
         self.agentPositions = []
         self.numGhosts = 0

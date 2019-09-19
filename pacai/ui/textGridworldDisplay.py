@@ -49,15 +49,14 @@ class TextGridworldDisplay(object):
 
         prettyPrintQValues(self.gridworld, qValues, currentState)
 
-
 def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
     grid = gridWorld.grid
     maxLen = 11
     newRows = []
 
-    for y in range(grid.height):
+    for y in range(grid.getHeight()):
         newRow = []
-        for x in range(grid.width):
+        for x in range(grid.getWidth()):
             state = (x, y)
             value = values[state]
             action = None
@@ -110,7 +109,7 @@ def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
 
         newRows.append(newRow)
 
-    numCols = grid.width
+    numCols = grid.getWidth()
     for rowNum, row in enumerate(newRows):
         row.insert(0, "\n\n" + str(rowNum))
 
@@ -127,10 +126,10 @@ def prettyPrintNullValues(gridWorld, currentState = None):
     maxLen = 11
     newRows = []
 
-    for y in range(grid.height):
+    for y in range(grid.getHeight()):
         newRow = []
 
-        for x in range(grid.width):
+        for x in range(grid.getWidth()):
             state = (x, y)
 
             # value = values[state]
@@ -188,7 +187,7 @@ def prettyPrintNullValues(gridWorld, currentState = None):
 
         newRows.append(newRow)
 
-    numCols = grid.width
+    numCols = grid.getWidth()
 
     for rowNum, row in enumerate(newRows):
         row.insert(0, "\n\n" + str(rowNum))
@@ -206,10 +205,10 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
     maxLen = 11
     newRows = []
 
-    for y in range(grid.height):
+    for y in range(grid.getHeight()):
         newRow = []
 
-        for x in range(grid.width):
+        for x in range(grid.getWidth()):
             state = (x, y)
             actions = gridWorld.getPossibleActions(state)
             if (actions is None or len(actions) == 0):
@@ -274,7 +273,7 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
 
         newRows.append(newRow)
 
-    numCols = grid.width
+    numCols = grid.getWidth()
 
     for rowNum, row in enumerate(newRows):
         row.insert(0, "\n\n\n" + str(rowNum))

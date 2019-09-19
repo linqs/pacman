@@ -237,10 +237,10 @@ class PacmanGraphics:
     def drawDistributions(self, state):
         walls = state.getWalls()
         dist = []
-        for x in range(walls.width):
+        for x in range(walls.getWidth()):
             distx = []
             dist.append(distx)
-            for y in range(walls.height):
+            for y in range(walls.getHeight()):
                 (screen_x, screen_y) = self.to_screen((x, y))
                 block = graphicsUtils.square(
                     (screen_x, screen_y), 0.5 * self.gridSize,
@@ -518,10 +518,10 @@ class PacmanGraphics:
     def drawWalls(self, wallMatrix):
         wallColor = WALL_COLOR
         for xNum, x in enumerate(wallMatrix):
-            if self.capture and (xNum * 2) < wallMatrix.width:
+            if self.capture and (xNum * 2) < wallMatrix.getWidth():
                 wallColor = TEAM_COLORS[0]
 
-            if self.capture and (xNum * 2) >= wallMatrix.width:
+            if self.capture and (xNum * 2) >= wallMatrix.getWidth():
                 wallColor = TEAM_COLORS[1]
 
             for yNum, cell in enumerate(x):
@@ -630,26 +630,29 @@ class PacmanGraphics:
                             add(screen, (-1 * wallSize, self.gridSize * (0.5))), wallColor)
 
     def isWall(self, x, y, walls):
-        if x < 0 or y < 0:
+        if (x < 0 or y < 0):
             return False
-        if x >= walls.width or y >= walls.height:
+
+        if (x >= walls.getWidth() or y >= walls.getHeight()):
             return False
+
         return walls[x][y]
 
     def drawFood(self, foodMatrix):
         foodImages = []
         color = FOOD_COLOR
         for xNum, x in enumerate(foodMatrix):
-            if self.capture and (xNum * 2) <= foodMatrix.width:
+            if (self.capture and (xNum * 2) <= foodMatrix.getWidth()):
                 color = TEAM_COLORS[0]
 
-            if self.capture and (xNum * 2) > foodMatrix.width:
+            if (self.capture and (xNum * 2) > foodMatrix.getWidth()):
                 color = TEAM_COLORS[1]
 
             imageRow = []
             foodImages.append(imageRow)
             for yNum, cell in enumerate(x):
-                if cell:  # There's food here
+                # There's food here
+                if (cell):
                     screen = self.to_screen((xNum, yNum))
                     dot = graphicsUtils.circle(
                         screen, FOOD_SIZE * self.gridSize,

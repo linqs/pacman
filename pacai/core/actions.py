@@ -79,11 +79,11 @@ class Actions:
         for dir, vec in Actions._directionsAsList:
             dx, dy = vec
             next_x = x_int + dx
-            if (next_x < 0 or next_x == walls.width):
+            if (next_x < 0 or next_x == walls.getWidth()):
                 continue
 
             next_y = y_int + dy
-            if (next_y < 0 or next_y == walls.height):
+            if (next_y < 0 or next_y == walls.getHeight()):
                 continue
 
             if (not walls[next_x][next_y]):
