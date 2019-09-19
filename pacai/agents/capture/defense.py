@@ -1,5 +1,5 @@
 from pacai.agents.capture.reflex import ReflexCaptureAgent
-from pacai.core.game import Directions
+from pacai.core.directions import Directions
 from pacai.util import counter
 
 class DefensiveReflexAgent(ReflexCaptureAgent):

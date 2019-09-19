@@ -4,7 +4,7 @@ import io
 import math
 import os
 
-from pacai.core.game import Directions
+from pacai.core.directions import Directions
 from pacai.ui import graphicsUtils
 
 DEFAULT_GRID_SIZE = 30.0

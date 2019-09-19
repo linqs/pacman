@@ -34,9 +34,9 @@ import sys
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
 from pacai.agents.greedy import GreedyAgent
+from pacai.core.actions import Actions
+from pacai.core.directions import Directions
 from pacai.core.distance import manhattan
-from pacai.core.game import Actions
-from pacai.core.game import Directions
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.layout import getLayout

@@ -1,4 +1,4 @@
-from pacai.core.game import Directions
+from pacai.core.directions import Directions
 from pacai.student import search
 
 def tinyMazeSearch(problem):

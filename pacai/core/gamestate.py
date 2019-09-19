@@ -1,7 +1,9 @@
 import abc
 import copy
 
-from pacai.core import game
+from pacai.core.directions import Directions
+from pacai.core.game import AgentState
+from pacai.core.game import Configuration
 
 INITIAL_HASH_VALUE = 17
 HASH_MULTIPLIER = 37
@@ -37,8 +39,8 @@ class AbstractGameState(abc.ABC):
 
         self._agentStates = []
         for (isPacman, position) in layout.agentPositions:
-            config = game.Configuration(position, game.Directions.STOP)
-            self._agentStates.append(game.AgentState(config, isPacman))
+            config = Configuration(position, Directions.STOP)
+            self._agentStates.append(AgentState(config, isPacman))
 
         self._score = 0
 

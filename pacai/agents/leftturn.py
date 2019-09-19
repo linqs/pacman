@@ -1,5 +1,5 @@
 from pacai.agents.base import BaseAgent
-from pacai.core.game import Directions
+from pacai.core.directions import Directions
 
 class LeftTurnAgent(BaseAgent):
     """

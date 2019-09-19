@@ -1,5 +1,5 @@
 from pacai.agents.ghost.base import GhostAgent
-from pacai.core.game import Actions
+from pacai.core.actions import Actions
 from pacai.core import distance
 from pacai.util import counter
 

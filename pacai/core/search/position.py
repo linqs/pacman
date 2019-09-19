@@ -1,7 +1,7 @@
 import logging
 
-from pacai.core.game import Actions
-from pacai.core.game import Directions
+from pacai.core.actions import Actions
+from pacai.core.directions import Directions
 from pacai.core.search.problem import SearchProblem
 
 class PositionSearchProblem(SearchProblem):
