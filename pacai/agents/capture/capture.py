@@ -229,32 +229,3 @@ class CaptureAgent(BaseAgent):
         """
 
         return self.observationHistory[-1]
-
-    def displayDistributionsOverPositions(self, distributions):
-        """
-        Overlays a distribution over positions onto the pacman board that represents
-        an agent's beliefs about the positions of each agent.
-
-        The arg distributions is a tuple or list of counter.Counter objects, where the i'th
-        Counter has keys that are board positions (x,y) and values that encode the probability
-        that agent i is at (x,y).
-
-        If some elements are None, then they will be ignored.
-        If a Counter is passed to this function, it will be displayed.
-        This is helpful for figuring out if your agent is doing inference correctly,
-        and does not affect gameplay.
-        """
-
-        dists = []
-        for dist in distributions:
-            if (dist is not None):
-                if not isinstance(dist, counter.Counter):
-                    raise Exception("Wrong type of distribution")
-                dists.append(dist)
-            else:
-                dists.append(counter.Counter())
-
-        if (self.display is not None and 'updateDistributions' in dir(self.display)):
-            self.display.updateDistributions(dists)
-        else:
-            self._distributions = dists
