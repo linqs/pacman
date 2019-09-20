@@ -25,8 +25,8 @@ The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).
 Have fun!
 """
 
+import argparse
 import logging
-import optparse
 import pickle
 import random
 import sys
@@ -371,9 +371,6 @@ class GhostRules:
 # FRAMEWORK TO START A GAME #
 #############################
 
-def default(str):
-    return str + ' [Default: %default]'
-
 def parseAgentArgs(str):
     if (str is None):
         return {}
@@ -394,64 +391,103 @@ def readCommand(argv):
     Processes the command used to run pacman from the command line.
     """
 
-    usageStr = """
+    usageString = """
     USAGE: python pacman.py <options>
     EXAMPLES:
-        (1) python pacman.py
+        (1) python -m pacai.bin.pacman
             - starts an interactive game
-        (2) python pacman.py --layout smallClassic --zoom 2
-            OR python pacman.py -l smallClassic -z 2
+        (2) python -m pacai.bin.pacman --layout smallClassic --zoom 2
+            OR python -m pacai.bin.pacman -l smallClassic -z 2
             - starts an interactive game on a smaller board, zoomed in
     """
 
-    parser = optparse.OptionParser(usageStr)
+    parser = argparse.ArgumentParser(description=usageString)
 
-    parser.add_option('-n', '--numGames', dest='numGames', type='int',
-            help=default('the number of GAMES to play'), metavar='GAMES', default=1)
-    parser.add_option('-l', '--layout', dest='layout',
-            help=default('the LAYOUT_FILE from which to load the map layout'),
-            metavar='LAYOUT_FILE', default='mediumClassic')
-    parser.add_option('-p', '--pacman', dest='pacman',
-            help=default('the agent TYPE in the pacmanAgents module to use'),
-            metavar='TYPE', default='WASDKeyboardAgent')
-    parser.add_option('-t', '--textGraphics', action='store_true', dest='textGraphics',
-            help='Display output as text only', default=False)
-    parser.add_option('-q', '--quietTextGraphics', action='store_true', dest='quietGraphics',
-            help='Generate minimal output and no graphics', default=False)
-    parser.add_option('-g', '--ghosts', dest='ghost',
-            help=default('the ghost agent TYPE in the ghostAgents module to use'),
-            metavar = 'TYPE', default='RandomGhost')
-    parser.add_option('-k', '--numghosts', type='int', dest='numGhosts',
-            help=default('The maximum number of ghosts to use'), default=4)
-    parser.add_option('-z', '--zoom', type='float', dest='zoom',
-            help=default('Zoom the size of the graphics window'), default=1.0)
-    parser.add_option('-f', '--fixRandomSeed', action='store_true', dest='fixRandomSeed',
-            help='Fixes the random seed to always play the same game', default=False)
-    parser.add_option('--record', type='string', dest='record',
-            help='Writes game histories to the named file')
-    parser.add_option('--replay', dest='gameToReplay',
-            help='A recorded game file (pickle) to replay', default=None)
-    parser.add_option('-a', '--agentArgs', dest='agentArgs',
-            help='Comma separated values sent to agent. e.g. "opt1=val1,opt2,opt3=val3"')
-    parser.add_option('-x', '--numTraining', dest='numTraining', type='int',
-            help=default('How many episodes are training (suppresses output)'), default=0)
-    parser.add_option('--frameTime', dest='frameTime', type='float',
-            help=default('Time to delay between frames; <0 means keyboard'), default=0.1)
-    parser.add_option('-c', '--catchExceptions', action='store_true', dest='catchExceptions',
-            help='Turns on exception handling and timeouts during games', default=False)
-    parser.add_option('--timeout', dest='timeout', type='int',
-            help=default('Maximum length of time an agent can spend computing in a single game'),
-            default=30)
-    parser.add_option('--gif', dest='gif',
-            help=default('Save the game as a gif to the specified path'))
-    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
-            help=default('Skip this number of frames between frames of the gif.'))
-    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10,
-            help=default('FPS of the gif.'))
+    # pacman.py arguments
+    parser.add_argument('-p', '--pacman', dest='pacman',
+            action='store', type=str, default='WASDKeyboardAgent',
+            help='Use the specified pacmanAgent module for pacman (default: %(default)s)')
 
-    options, otherjunk = parser.parse_args(argv)
-    if len(otherjunk) != 0:
-        raise Exception('Command line input not understood: ' + str(otherjunk))
+    parser.add_argument('-g', '--ghosts', dest='ghost',
+            action='store', type=str, default='RandomGhost',
+            help='Use the specified ghostAgent module for the ghosts (default: %(default)s)')
+
+    parser.add_argument('-k', '--num-ghosts', dest='numGhosts',
+            action='store', type=int, default=4,
+            help='Set the maximum number of ghosts (default: %(default)s)')
+
+    parser.add_argument('-a', '--agent-args', dest='agentArgs',
+            action='store', type=str, default=None,
+            help='Comma separated arguments to be passed to agents (e.g. "opt1=val1,opt2")'
+                + '(default: %(default)s)')
+
+    parser.add_argument('--frame-time', dest='frameTime',
+            action='store', type=float, default=0.1,
+            help='Time to delay between frames, less than zero means keyboard agent'
+                + '(default: %(default)s)')
+
+    parser.add_argument('--timeout', dest='timeout',
+            action='store', type=int, default=30,
+            help='Maximum time limit (seconds) an agent can spend computing per game'
+                + '(default: %(default)s)')
+
+    # General arguments
+    parser.add_argument('-n', '--num-games', dest='numGames',
+            action='store', type=int, default=1,
+            help='Play the specified number of games (default: %(default)s)')
+
+    parser.add_argument('-l', '--layout', dest='layout',
+            action='store', type=str, default='mediumClassic',
+            help='Use the specified map layout (default: %(default)s)')
+
+    parser.add_argument('-t', '--text-graphics', dest='textGraphics',
+            action='store_true', default=False,
+            help='Display output as text only (default: %(default)s)')
+
+    parser.add_argument('-u', '--null-text-graphics', dest='nullGraphics',
+            action='store_true', default=False,
+            help='Generate minimal output and no graphics (default: %(default)s)')
+
+    parser.add_argument('-z', '--zoom', dest='zoom',
+            action='store', type=float, default=1.0,
+            help='Zoom the size of the graphics window (default: %(default)s)')
+
+    parser.add_argument('-f', '--fix-random-seed', dest='fixRandomSeed',
+            action='store_true', default=False,
+            help='Fixes the random seed to always play the same game (default: %(default)s)')
+
+    parser.add_argument('--record', dest='record',
+            action='store', type=str, default=None,
+            help='Writes the moves of a game to the named pickle file (default: %(default)s)')
+
+    parser.add_argument('--replay', dest='replay',
+            action='store', type=str, default=None,
+            help='Load a recorded pickle game file to replay (default: %(default)s)')
+
+    parser.add_argument('-x', '--num-training', dest='numTraining',
+            action='store', type=int, default=0,
+            help='Set how many episodes of training (suppresses output) (default: %(default)s)')
+
+    parser.add_argument('-c', '--catch-exceptions', dest='catchExceptions',
+            action='store_true', default=False,
+            help='Turns on exception handling and timeouts during games (default: %(default)s)')
+
+    parser.add_argument('--gif', dest='gif',
+            action='store_true', default=False,
+            help='Save the game as a gif to the specified path (default: %(default)s)')
+
+    parser.add_argument('--gif-skip-frames', dest='gifSkipFrames',
+            action='store', type=int, default=0,
+            help='Skip this number of frames between frames of the gif (default: %(default)s)')
+
+    parser.add_argument('--gif-fps', dest='gifFPS',
+            action='store', type=float, default=10.0,
+            help='FPS of the gif (default: %(default)s)')
+
+    options, otherjunk = parser.parse_known_args(argv)
+    assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
+    #if len(otherjunk) != 0:
+    #    raise Exception('Command line input not understood: ' + str(otherjunk))
     args = dict()
 
     # Fix the random seed
@@ -465,7 +501,7 @@ def readCommand(argv):
 
     # TODO(eriq): There are multiple keyboard agents.
     # Choose a Pacman agent
-    noKeyboard = (options.gameToReplay is None and (options.textGraphics or options.quietGraphics))
+    noKeyboard = (options.replay is None and (options.textGraphics or options.nullGraphics))
     if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
         raise Exception('Keyboard agents require graphics.')
 
@@ -486,7 +522,7 @@ def readCommand(argv):
     args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
 
     # Choose a display format
-    if options.quietGraphics:
+    if options.nullGraphics:
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.NullGraphics()
     elif options.textGraphics:
@@ -504,7 +540,7 @@ def readCommand(argv):
     args['record'] = options.record
     args['catchExceptions'] = options.catchExceptions
     args['timeout'] = options.timeout
-    args['gameToReplay'] = options.gameToReplay
+    args['gameToReplay'] = options.replay
 
     return args
 
