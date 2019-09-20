@@ -4,28 +4,26 @@ import os
 
 from pacai.ui import graphicsUtils
 from pacai.ui import graphicsConstants
-from pacai.ui.topGraphics import absPane
-from pacai.ui.topGraphics import absPacmanGraphics
+from pacai.ui.pacmanDisplay import AbstractPane
+from pacai.ui.pacmanDisplay import AbstractPacmanGraphics
 
-class InfoPane(absPane):
+class CaptureInfoPane(AbstractPane):
     def __init__(self, layout, gridSize, redTeam, blueTeam):
-        self.gridSize = gridSize
-        self.width = (layout.width) * gridSize
-        self.base = (layout.height + 1) * gridSize
-        self.height = graphicsConstants.INFO_PANE_HEIGHT
-        self.fontSize = 24
-        self.textColor = graphicsConstants.PACMAN_COLOR
         self.redTeam = redTeam
         self.blueTeam = blueTeam
+        super().__init__(layout, gridSize)
         self.drawPane()
 
     def drawPane(self):
         self.scoreText = graphicsUtils.text(self.toScreen(0, 0), self.textColor,
-                self._infoString(0, 1200), "Consolas", self.fontSize, "bold")
+                self._infoString(0, 1200), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+            graphicsConstants.TEXT_MOD_BOLD)
         self.redText = graphicsUtils.text(self.toScreen(230, 0), graphicsConstants.TEAM_COLORS[0],
-                self._redScoreString(), "Consolas", self.fontSize, "bold")
+                self._redScoreString(), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+            graphicsConstants.TEXT_MOD_BOLD)
         self.redText = graphicsUtils.text(self.toScreen(690, 0), graphicsConstants.TEAM_COLORS[1],
-                self._blueScoreString(), "Consolas", self.fontSize, "bold")
+                self._blueScoreString(), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+            graphicsConstants.TEXT_MOD_BOLD)
 
     def _redScoreString(self):
         return "RED: % 10s " % (self.redTeam[:12])
@@ -45,60 +43,50 @@ class InfoPane(absPane):
     def updateScore(self, score, timeleft):
         graphicsUtils.changeText(self.scoreText, self._infoString(score, timeleft))
 
-class PacmanGraphics(absPacmanGraphics):
-    def __init__(self, redTeam, blueTeam, zoom=1.0, frameTime=0.0, capture=False,
-            gif = None, gif_skip_frames = 0, gif_fps = 10):
-        self.expandedCells = []
-        self.have_window = 0
-        self.currentGhostImages = {}
-        self.pacmanImage = None
-        self.zoom = zoom
-        self.gridSize = graphicsConstants.DEFAULT_GRID_SIZE * zoom
-        self.capture = capture
-        self.frameTime = frameTime
+class CapturePacmanGraphics(AbstractPacmanGraphics):
+    def __init__(self, redTeam, blueTeam, zoom=graphicsConstants.DEFAULT_ZOOM,
+                frameTime = graphicsConstants.DEFAULT_FRAME_TIME,
+                capture = graphicsConstants.DEFAULT_CAPTURE_ARG,
+                gif = graphicsConstants.DEFAULT_GIF_ARG,
+                gifSkipFrames = graphicsConstants.DEFAULT_GIF_FRAME_SKIP,
+                gifFps = graphicsConstants.DEFAULT_GIF_FPS):
+        super().__init__(zoom, frameTime, capture, gif, gifSkipFrames, gifFps)
         self.redTeam = redTeam
         self.blueTeam = blueTeam
 
-        self.gif_path = gif
-        self.gif_skip_frames = gif_skip_frames
-        self.gif_fps = gif_fps
-        self.frame = 0
-        self.frame_images = []
-
     # implemented abstract method.
     def startGraphics(self, state):
-        self.layout = state.layout
+        self.layout = state.getInitialLayout()
         layout = self.layout
         self.width = layout.width
         self.height = layout.height
         self.make_window(self.width, self.height)
-        self.infoPane = InfoPane(layout, self.gridSize, self.redTeam, self.blueTeam)
+        self.infoPane = CaptureInfoPane(layout, self.gridSize, self.redTeam, self.blueTeam)
         self.currentState = layout
 
-    # Implemented abstract method.
     def update(self, newState):
         self.frame += 1
 
-        agentIndex = newState._agentMoved
-        agentState = newState.agentStates[agentIndex]
+        agentIndex = newState.getLastAgentMoved()
+        agentState = newState.getAgentState(agentIndex)
 
-        if (self.agentImages[agentIndex][0].isPacman != agentState.isPacman):
+        if (self.agentImages[agentIndex][0].isPacman() != agentState.isPacman()):
             self.swapImages(agentIndex, agentState)
 
         prevState, prevImage = self.agentImages[agentIndex]
-        if (agentState.isPacman):
+        if (agentState.isPacman()):
             self.animatePacman(agentState, prevState, prevImage)
         else:
             self.moveGhost(agentState, agentIndex, prevState, prevImage)
         self.agentImages[agentIndex] = (agentState, prevImage)
 
-        if (newState._foodEaten is not None):
-            self.removeFood(newState._foodEaten, self.food)
+        if (newState.getLastFoodEaten() is not None):
+            self.removeFood(newState.getLastFoodEaten(), self.food)
 
-        if (newState._capsuleEaten is not None):
-            self.removeCapsule(newState._capsuleEaten, self.capsules)
+        if (newState.getLastCapsuleEaten() is not None):
+            self.removeCapsule(newState.getLastCapsuleEaten(), self.capsules)
 
-        self.infoPane.updateScore(newState.score, newState.timeleft)
+        self.infoPane.updateScore(newState.getScore(), newState.getTimeleft())
         if ('ghostDistances' in dir(newState)):
             self.infoPane.updateGhostDistances(newState.ghostDistances)
 
@@ -122,40 +110,6 @@ class PacmanGraphics(absPacmanGraphics):
             self.expandedCells.append(block)
             if self.frameTime < 0:
                 graphicsUtils.refresh()
-
-class FirstPersonPacmanGraphics(PacmanGraphics):
-    def __init__(self, zoom = 1.0, showGhosts = True, capture = False, frameTime=0):
-        PacmanGraphics.__init__(self, zoom, frameTime=frameTime)
-        self.showGhosts = showGhosts
-        self.capture = capture
-
-    def initialize(self, state, isBlue = False):
-
-        self.isBlue = isBlue
-        PacmanGraphics.startGraphics(self, state)
-        # Initialize distribution images
-        self.layout = state.layout
-
-        # Draw the rest
-        self.distributionImages = None  # initialize lazily
-        self.drawStaticObjects(state)
-        self.drawAgentObjects(state)
-
-        # Information
-        self.previousState = state
-
-    def getGhostColor(self, ghost, ghostIndex):
-        return graphicsConstants.GHOST_COLORS[ghostIndex]
-
-    def getPosition(self, ghostState):
-        if not self.showGhosts and not ghostState.isPacman and ghostState.getPosition()[1] > 1:
-            return (-1000, -1000)
-        else:
-            return PacmanGraphics.getPosition(self, ghostState)
-
-def add(x, y):
-    return (x[0] + y[0], x[1] + y[1])
-
 
 # Saving graphical output
 # -----------------------

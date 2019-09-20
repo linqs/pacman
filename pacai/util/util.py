@@ -1,6 +1,4 @@
-import inspect
 import signal
-import sys
 
 """
 Functions that could be used for various course projects.
@@ -52,10 +50,6 @@ def matrixAsList(matrix, value = True):
                 cells.append((row, col))
 
     return cells
-
-def raiseNotDefined():
-    print("Method not implemented: %s" % inspect.stack()[1][3])
-    sys.exit(1)
 
 # Code to handle timeouts.
 class TimeoutFunctionException(Exception):
