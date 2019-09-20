@@ -5,11 +5,9 @@ from pacai.util import queue
 from pacai.util import stack
 
 """
-This is a test class to assess the functionality of the data structures
-defined in util.py. The data structures to be tested are the Queue, Stack,
-and the Priority Queue.
+This is a test class to assess the functionality of the data structures defined in util.py.
 """
-class UtilTest(unittest.TestCase):
+class UtilContainersTest(unittest.TestCase):
     def test_queue(self):
         testQueue = queue.Queue()
         self.assertTrue(testQueue.isEmpty())

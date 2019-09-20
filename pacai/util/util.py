@@ -1,27 +1,9 @@
 """
-Functions that could be used for various course projects.
+Various utility functions.
 """
 
-def nearestPoint(pos):
-    """
-    Finds the nearest grid point to a position (discretizes).
-    """
-
-    (current_row, current_col) = pos
-
-    grid_row = int(current_row + 0.5)
-    grid_col = int(current_col + 0.5)
-    return (grid_row, grid_col)
-
-def sign(x):
-    """
-    Returns 1 or -1 depending on the sign of x
-    """
-
-    if (x >= 0):
-        return 1
-    else:
-        return -1
+INITIAL_HASH_VALUE = 17
+HASH_MULTIPLIER = 37
 
 def arrayInvert(array):
     """
@@ -35,6 +17,18 @@ def arrayInvert(array):
 
     return result
 
+def buildHash(*args):
+    """
+    Build a hash from different components.
+    """
+
+    hashCode = INITIAL_HASH_VALUE
+
+    for arg in args:
+        hashCode = hashCode * HASH_MULTIPLIER + hash(arg)
+
+    return int(hashCode)
+
 def matrixAsList(matrix, value = True):
     """
     Turns a matrix into a list of coordinates matching the specified value
@@ -44,7 +38,29 @@ def matrixAsList(matrix, value = True):
     cells = []
     for row in range(rows):
         for col in range(cols):
-            if matrix[row][col] == value:
+            if (matrix[row][col] == value):
                 cells.append((row, col))
 
     return cells
+
+def nearestPoint(pos):
+    """
+    Finds the nearest grid point to a position (discretizes).
+    """
+
+    (current_row, current_col) = pos
+
+    grid_row = int(current_row + 0.5)
+    grid_col = int(current_col + 0.5)
+
+    return (grid_row, grid_col)
+
+def sign(x):
+    """
+    Returns 1 or -1 depending on the sign of x
+    """
+
+    if (x >= 0):
+        return 1
+    else:
+        return -1

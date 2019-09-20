@@ -4,9 +4,7 @@ import copy
 from pacai.core.directions import Directions
 from pacai.core.game import AgentState
 from pacai.core.game import Configuration
-
-INITIAL_HASH_VALUE = 17
-HASH_MULTIPLIER = 37
+from pacai.util import util
 
 class AbstractGameState(abc.ABC):
     """
@@ -272,15 +270,5 @@ class AbstractGameState(abc.ABC):
                 and self._layout == other._layout)
 
     def __hash__(self):
-        hashCode = INITIAL_HASH_VALUE
-
-        hashCode = hashCode * HASH_MULTIPLIER + self._score
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._gameover)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._win)
-
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._capsules)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._food)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._agentStates)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._layout)
-
-        return int(hashCode)
+        return util.buildHash(self._score, self._gameover, self._win, self._capsules,
+                self._food, self._agentStates, self._layout)
