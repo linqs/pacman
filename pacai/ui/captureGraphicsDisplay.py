@@ -16,11 +16,14 @@ class CaptureInfoPane(AbstractPane):
 
     def drawPane(self):
         self.scoreText = graphicsUtils.text(self.toScreen(0, 0), self.textColor,
-                self._infoString(0, 1200), "Consolas", self.fontSize, "bold")
+                self._infoString(0, 1200), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+            graphicsConstants.TEXT_MOD_BOLD)
         self.redText = graphicsUtils.text(self.toScreen(230, 0), graphicsConstants.TEAM_COLORS[0],
-                self._redScoreString(), "Consolas", self.fontSize, "bold")
+                self._redScoreString(), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+            graphicsConstants.TEXT_MOD_BOLD)
         self.redText = graphicsUtils.text(self.toScreen(690, 0), graphicsConstants.TEAM_COLORS[1],
-                self._blueScoreString(), "Consolas", self.fontSize, "bold")
+                self._blueScoreString(), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+            graphicsConstants.TEXT_MOD_BOLD)
 
     def _redScoreString(self):
         return "RED: % 10s " % (self.redTeam[:12])
@@ -41,9 +44,13 @@ class CaptureInfoPane(AbstractPane):
         graphicsUtils.changeText(self.scoreText, self._infoString(score, timeleft))
 
 class CapturePacmanGraphics(AbstractPacmanGraphics):
-    def __init__(self, redTeam, blueTeam, zoom=1.0, frameTime=0.0, capture=False,
-            gif = None, gif_skip_frames = 0, gif_fps = 10):
-        super().__init__(zoom, frameTime, capture, gif, gif_skip_frames, gif_fps)
+    def __init__(self, redTeam, blueTeam, zoom=graphicsConstants.DEFAULT_ZOOM,
+                frameTime = graphicsConstants.DEFAULT_FRAME_TIME,
+                capture = graphicsConstants.DEFAULT_CAPTURE_ARG,
+                gif = graphicsConstants.DEFAULT_GIF_ARG,
+                gifSkipFrames = graphicsConstants.DEFAULT_GIF_FRAME_SKIP,
+                gifFps = graphicsConstants.DEFAULT_GIF_FPS):
+        super().__init__(zoom, frameTime, capture, gif, gifSkipFrames, gifFps)
         self.redTeam = redTeam
         self.blueTeam = blueTeam
 

@@ -587,8 +587,8 @@ def readCommand(argv):
         args['display'] = pacai.ui.captureGraphicsDisplay.CapturePacmanGraphics(options.red,
                 options.blue,
                 options.zoom, 0, capture=True,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
-                gif_fps = options.gifFPS)
+                gif = options.gif, gifSkipFrames = options.gifSkipFrames,
+                gifFps = options.gifFPS)
         import __main__
         __main__.__dict__['_display'] = args['display']
 

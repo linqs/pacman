@@ -42,7 +42,7 @@ class AbstractPane(ABC):
     def initializeGhostDistances(self, distances):
         self.ghostDistanceText = []
 
-        size = 20
+        size = graphicsConstants.DEFAULT_TEXT_SIZE
         if self.width < 240:
             size = 12
         if self.width < 160:
@@ -69,8 +69,8 @@ class AbstractPane(ABC):
         if 'ghostDistanceText' not in dir(self):
             self.initializeGhostDistances(distances)
         else:
-            for i, d in enumerate(distances):
-                graphicsUtils.changeText(self.ghostDistanceText[i], d)
+            for index, ghostDistance in enumerate(distances):
+                graphicsUtils.changeText(self.ghostDistanceText[index], ghostDistance)
 
     def drawGhost(self):
         pass
