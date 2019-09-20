@@ -470,8 +470,8 @@ def main(argv):
         }
         a = QLearningAgent(0, **qLearnOpts)
     elif (opts.agent == 'random'):
-        # # No reason to use the random agent without episodes
-        if opts.episodes == 0:
+        # No reason to use the random agent without episodes.
+        if (opts.episodes == 0):
             opts.episodes = 10
 
         class RandomMDPAgent:
@@ -493,16 +493,16 @@ def main(argv):
 
         a = RandomMDPAgent()
     else:
-        if not opts.manual:
+        if (not opts.manual):
             raise 'Unknown agent type: ' + opts.agent
 
     ###########################
     # RUN EPISODES
     ###########################
 
-    # DISPLAY Q/V VALUES BEFORE SIMULATION OF EPISODES
-    if not opts.manual and opts.agent == 'value':
-        if opts.valueSteps:
+    # Display q/v values before simulation of episodes.
+    if (not opts.manual and opts.agent == 'value'):
+        if (opts.valueSteps):
             for i in range(opts.iters):
                 tempAgent = ValueIterationAgent(0, mdp, opts.discount, i)
                 display.displayValues(tempAgent, message = 'VALUES AFTER ' + str(i) + ' ITERATIONS')
@@ -515,45 +515,46 @@ def main(argv):
 
     # Figure out what to display each time step (if anything).
     displayCallback = lambda x: None
-    if not opts.quiet:
+    if (not opts.quiet):
         if (opts.manual and opts.agent is None):
             displayCallback = lambda state: display.displayNullValues(state)
         else:
-            if opts.agent == 'random':
+            if (opts.agent == 'random'):
                 displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
-            elif opts.agent == 'value':
+            elif (opts.agent == 'value'):
                 displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
-            elif opts.agent == 'q':
+            elif (opts.agent == 'q'):
                 displayCallback = lambda state: display.displayQValues(a, state, 'CURRENT Q-VALUES')
 
     messageCallback = lambda x: print(x)
-    if opts.quiet:
+    if (opts.quiet):
         messageCallback = lambda x: None
 
     # FIGURE OUT WHETHER TO WAIT FOR A KEY PRESS AFTER EACH TIME STEP
     pauseCallback = lambda: None
-    if opts.pause:
+    if (opts.pause):
         pauseCallback = lambda: display.pause()
 
-    # FIGURE OUT WHETHER THE USER WANTS MANUAL CONTROL (FOR DEBUGGING AND DEMOS)
-    if opts.manual:
+    # Figure out whether the user wants manual control (for debugging and demos).
+    if (opts.manual):
         decisionCallback = lambda state: getUserAction(state, mdp.getPossibleActions)
     else:
         decisionCallback = a.getAction
 
-    # RUN EPISODES
-    if opts.episodes > 0:
+    # Run episodes.
+    if (opts.episodes > 0):
         logging.debug('RUNNING ' + str(opts.episodes) + ' EPISODES')
+
     returns = 0
     for episode in range(1, opts.episodes + 1):
         returns += runEpisode(a, env, opts.discount, decisionCallback, displayCallback,
                 messageCallback, pauseCallback, episode)
 
-    if opts.episodes > 0:
+    if (opts.episodes > 0):
         logging.debug('AVERAGE RETURNS FROM START STATE:' + str((returns + 0.0) / opts.episodes))
 
-    # DISPLAY POST-LEARNING VALUES / Q-VALUES
-    if opts.agent == 'q' and not opts.manual:
+    # Display post-learning values / q-values.
+    if (opts.agent == 'q' and not opts.manual):
         display.displayQValues(a, message = 'Q-VALUES AFTER ' + str(opts.episodes) + ' EPISODES')
         display.pause()
         display.displayValues(a, message = 'VALUES AFTER ' + str(opts.episodes) + ' EPISODES')
