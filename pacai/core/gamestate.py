@@ -1,15 +1,14 @@
 import abc
 import copy
 
+from pacai.core.agentstate import AgentState
 from pacai.core.directions import Directions
-from pacai.core.game import AgentState
-from pacai.core.game import Configuration
 from pacai.util import util
 
 class AbstractGameState(abc.ABC):
     """
     A GameState specifies the full game state, including the food, capsules,
-    agent configurations, and score changes.
+    agents, and score.
 
     GameStates are used by the Game object to capture the actual state of the game and
     can be used by agents to reason about the game.
@@ -37,8 +36,7 @@ class AbstractGameState(abc.ABC):
 
         self._agentStates = []
         for (isPacman, position) in layout.agentPositions:
-            config = Configuration(position, Directions.STOP)
-            self._agentStates.append(AgentState(config, isPacman))
+            self._agentStates.append(AgentState(position, Directions.STOP, isPacman))
 
         self._score = 0
 

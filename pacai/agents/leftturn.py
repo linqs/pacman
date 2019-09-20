@@ -11,7 +11,7 @@ class LeftTurnAgent(BaseAgent):
 
     def getAction(self, state):
         legal = state.getLegalPacmanActions()
-        current = state.getPacmanState().configuration.direction
+        current = state.getPacmanState().getDirection()
         if current == Directions.STOP:
             current = Directions.NORTH
 

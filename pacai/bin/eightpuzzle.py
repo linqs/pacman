@@ -32,8 +32,7 @@ class EightPuzzleState:
         | 6 | 7 | 8 |
         ------------
 
-        The configuration of the puzzle is stored in a 2-dimensional
-        list (a list of lists) 'cells'.
+        The state of the puzzle is stored in a 2-dimensional list (a list of lists) 'cells'.
         """
 
         self.cells = []
@@ -142,8 +141,7 @@ class EightPuzzleState:
     # Utilities for comparison and display
     def __eq__(self, other):
         """
-        Overloads '==' such that two eightPuzzles with the same configuration
-        are equal.
+        Overloads '==' such that two eightPuzzles with the same state are equal.
 
         >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]) == \
             EightPuzzleState([1, 0, 2, 3, 4, 5, 6, 7, 8]).result('left')

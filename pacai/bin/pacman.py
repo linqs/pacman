@@ -232,7 +232,9 @@ class PacmanRules:
         Returns a list of possible actions.
         """
 
-        return Actions.getPossibleActions(state.getPacmanState().configuration, state.getWalls())
+        agentState = state.getPacmanState()
+        return Actions.getPossibleActions(agentState.getPosition(), agentState.getDirection(),
+                state.getWalls())
 
     @staticmethod
     def applyAction(state, action):
@@ -246,12 +248,12 @@ class PacmanRules:
 
         pacmanState = state.getPacmanState()
 
-        # Update Configuration
+        # Update position.
         vector = Actions.directionToVector(action, PacmanRules.PACMAN_SPEED)
-        pacmanState.configuration = pacmanState.configuration.generateSuccessor(vector)
+        pacmanState.updatePosition(vector)
 
-        # Eat
-        nextPosition = pacmanState.configuration.getPosition()
+        # Eat.
+        nextPosition = pacmanState.getPosition()
         nearest = nearestPoint(nextPosition)
         if (manhattan(nearest, nextPosition) <= 0.5):
             # Remove food
@@ -275,7 +277,7 @@ class PacmanRules:
 
             # Reset all ghosts' scared timers.
             for ghostState in state.getGhostStates():
-                ghostState.scaredTimer = SCARED_TIME
+                ghostState.setScaredTimer(SCARED_TIME)
 
 class GhostRules:
     """
@@ -291,9 +293,10 @@ class GhostRules:
         reach a dead end, but can turn 90 degrees at intersections.
         """
 
-        conf = state.getGhostState(ghostIndex).configuration
-        possibleActions = Actions.getPossibleActions(conf, state.getWalls())
-        reverse = Actions.reverseDirection(conf.direction)
+        agentState = state.getGhostState(ghostIndex)
+        possibleActions = Actions.getPossibleActions(agentState.getPosition(),
+                agentState.getDirection(), state.getWalls())
+        reverse = Actions.reverseDirection(agentState.getDirection())
 
         if (Directions.STOP in possibleActions):
             possibleActions.remove(Directions.STOP)
@@ -311,18 +314,21 @@ class GhostRules:
 
         ghostState = state.getGhostState(ghostIndex)
         speed = GhostRules.GHOST_SPEED
-        if (ghostState.scaredTimer > 0):
+        if (ghostState.isScared()):
             speed /= 2.0
 
         vector = Actions.directionToVector(action, speed)
-        ghostState.configuration = ghostState.configuration.generateSuccessor(vector)
+        ghostState.updatePosition(vector)
 
     @staticmethod
-    def decrementTimer(ghostState):
-        timer = ghostState.scaredTimer
-        if (timer == 1):
-            ghostState.configuration.pos = nearestPoint(ghostState.configuration.pos)
-        ghostState.scaredTimer = max(0, timer - 1)
+    def decrementTimer(agentState):
+        if (not agentState.isScared()):
+            return
+
+        agentState.decrementScaredTimer()
+        if (not agentState.isScared()):
+            # If the ghost is done being scared, snap it to the closest point.
+            agentState.snapToNearestPoint()
 
     @staticmethod
     def checkDeath(state, agentIndex):
@@ -333,7 +339,7 @@ class GhostRules:
             # See if a ghost can kill pacman.
             for index in state.getGhostIndexes():
                 ghostState = state.getGhostState(index)
-                ghostPosition = ghostState.configuration.getPosition()
+                ghostPosition = ghostState.getPosition()
 
                 if (GhostRules.canKill(pacmanPosition, ghostPosition)):
                     GhostRules.collide(state, ghostState, index)
@@ -342,17 +348,16 @@ class GhostRules:
         else:
             # A ghost just moved.
             ghostState = state.getGhostState(agentIndex)
-            ghostPosition = ghostState.configuration.getPosition()
+            ghostPosition = ghostState.getPosition()
             if (GhostRules.canKill(pacmanPosition, ghostPosition)):
                 GhostRules.collide(state, ghostState, agentIndex)
 
     @staticmethod
     def collide(state, ghostState, agentIndex):
-        if (ghostState.scaredTimer > 0):
+        if (ghostState.isScared()):
             # Pacman ate a ghost.
             state.addScore(GHOST_POINTS)
-            GhostRules.placeGhost(state, ghostState)
-            ghostState.scaredTimer = 0
+            ghostState.respawn()
         elif (not state.isOver()):
             # A ghost ate pacman.
             state.addScore(LOSE_POINTS)
@@ -361,10 +366,6 @@ class GhostRules:
     @staticmethod
     def canKill(pacmanPosition, ghostPosition):
         return manhattan(ghostPosition, pacmanPosition) <= COLLISION_TOLERANCE
-
-    @staticmethod
-    def placeGhost(state, ghostState):
-        ghostState.configuration = ghostState.start
 
 #############################
 # FRAMEWORK TO START A GAME #

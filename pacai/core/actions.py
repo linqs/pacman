@@ -51,15 +51,15 @@ class Actions:
         return (dx * speed, dy * speed)
 
     @staticmethod
-    def getPossibleActions(config, walls):
-        possible = []
-        x, y = config.pos
+    def getPossibleActions(position, direction, walls):
+        x, y = position
         x_int, y_int = int(x + 0.5), int(y + 0.5)
 
         # In between grid points, all agents must continue straight.
         if (abs(x - x_int) + abs(y - y_int) > Actions.TOLERANCE):
-            return [config.getDirection()]
+            return [direction]
 
+        possible = []
         for dir, vec in Actions._directionsAsList:
             dx, dy = vec
             next_y = y_int + dy

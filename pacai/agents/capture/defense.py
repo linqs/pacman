@@ -36,7 +36,7 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
         if action == Directions.STOP:
             features['stop'] = 1
 
-        rev = Directions.REVERSE[gameState.getAgentState(self.index).configuration.direction]
+        rev = Directions.REVERSE[gameState.getAgentState(self.index).getDirection()]
         if action == rev:
             features['reverse'] = 1
 

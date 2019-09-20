@@ -4,7 +4,6 @@ import io
 import math
 import os
 
-from pacai.core.directions import Directions
 from pacai.ui import graphicsUtils
 
 DEFAULT_GRID_SIZE = 30.0
@@ -364,7 +363,7 @@ class PacmanGraphics:
         graphicsUtils.refresh()
 
     def getGhostColor(self, ghost, ghostIndex):
-        if ghost.scaredTimer > 0:
+        if (ghost.isScared()):
             return SCARED_COLOR
         else:
             return GHOST_COLORS[ghostIndex]
@@ -483,7 +482,7 @@ class PacmanGraphics:
             graphicsUtils.move_by(ghostImagePart, delta)
         graphicsUtils.refresh()
 
-        if ghost.scaredTimer > 0:
+        if (ghost.isScared()):
             color = SCARED_COLOR
         else:
             color = GHOST_COLORS[ghostIndex]
@@ -493,15 +492,10 @@ class PacmanGraphics:
         graphicsUtils.refresh()
 
     def getPosition(self, agentState):
-        if (agentState.configuration is None):
-            return (-1000, -1000)
-
         return agentState.getPosition()
 
     def getDirection(self, agentState):
-        if (agentState.configuration is None):
-            return Directions.STOP
-        return agentState.configuration.getDirection()
+        return agentState.getDirection()
 
     def finish(self):
         # Get the last frame.

@@ -80,7 +80,7 @@ class CaptureGameState(AbstractGameState):
 
         for agentIndex in range(self.getNumAgents()):
             agentState = self.getAgentState(agentIndex)
-            agentIsRed = self.isOnRedSide(agentState.configuration.getPosition())
+            agentIsRed = self.isOnRedSide(agentState.getPosition())
 
             self._teams.append(agentIsRed)
 
@@ -372,8 +372,9 @@ class AgentRules:
         Returns a list of possible actions.
         """
 
-        agentConfig = state.getAgentState(agentIndex).configuration
-        return Actions.getPossibleActions(agentConfig, state.getWalls())
+        agentState = state.getAgentState(agentIndex)
+        return Actions.getPossibleActions(agentState.getPosition(), agentState.getDirection(),
+                state.getWalls())
 
     @staticmethod
     def applyAction(state, action, agentIndex):
@@ -387,12 +388,12 @@ class AgentRules:
 
         agentState = state.getAgentState(agentIndex)
 
-        # Update Configuration
+        # Update position.
         vector = Actions.directionToVector(action, AgentRules.AGENT_SPEED)
-        agentState.configuration = agentState.configuration.generateSuccessor(vector)
+        agentState.updatePosition(vector)
 
-        # Eat
-        nextPosition = agentState.configuration.getPosition()
+        # Eat.
+        nextPosition = agentState.getPosition()
         nearest = nearestPoint(nextPosition)
         if (agentState.isPacman() and manhattan(nearest, nextPosition) <= 0.9):
             AgentRules.consume(nearest, state, state.isOnRedTeam(agentIndex))
@@ -400,7 +401,7 @@ class AgentRules:
         # Potentially change agent type.
         if (nextPosition == nearest):
             # Agents are pacmen when they are not on their own side.
-            position = agentState.configuration.getPosition()
+            position = agentState.getPosition()
             agentState.setIsPacman(state.isOnRedTeam(agentIndex) != state.isOnRedSide(position))
 
     @staticmethod
@@ -444,13 +445,17 @@ class AgentRules:
                 otherTeam = state.getRedTeamIndices()
 
             for agentIndex in otherTeam:
-                state.getAgentState(agentIndex).scaredTimer = SCARED_TIME
+                state.getAgentState(agentIndex).setScaredTimer(SCARED_TIME)
 
     @staticmethod
     def decrementTimer(agentState):
-        agentState.scaredTimer = max(0, agentState.scaredTimer - 1)
-        if (agentState.scaredTimer == 0):
-            agentState.configuration.pos = nearestPoint(agentState.configuration.pos)
+        if (not agentState.isScared()):
+            return
+
+        agentState.decrementScaredTimer()
+        if (not agentState.isScared()):
+            # If the ghost is done being scared, snap it to the closest point.
+            agentState.snapToNearestPoint()
 
     @staticmethod
     def checkDeath(state, agentIndex):

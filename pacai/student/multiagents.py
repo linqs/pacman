@@ -60,7 +60,7 @@ class ReflexAgent(BaseAgent):
         # newPosition = successorGameState.getPacmanPosition()
         # oldFood = currentGameState.getFood()
         # newGhostStates = successorGameState.getGhostStates()
-        # newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        # newScaredTimes = [ghostState.getScaredTimer() for ghostState in newGhostStates]
 
         # *** Your Code Here ***
 
