@@ -1,5 +1,5 @@
 from pacai.agents.base import BaseAgent
-from pacai.core.game import Directions
+from pacai.core.directions import Directions
 
 class GoWestAgent(BaseAgent):
     """
@@ -14,7 +14,7 @@ class GoWestAgent(BaseAgent):
         The agent receives a GameState (defined in pacman.py).
         """
 
-        if Directions.WEST in state.getLegalPacmanActions():
+        if (Directions.WEST in state.getLegalPacmanActions()):
             return Directions.WEST
         else:
             return Directions.STOP

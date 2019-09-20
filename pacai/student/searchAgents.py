@@ -19,7 +19,7 @@ Good luck and happy searching!
 
 import logging
 
-from pacai.core import game
+from pacai.core.actions import Actions
 from pacai.core.search import heuristic
 from pacai.core.search.position import PositionSearchProblem
 from pacai.core.search.problem import SearchProblem
@@ -54,17 +54,17 @@ class CornersProblem(SearchProblem):
 
         successors = []
         directions = [
-            game.Directions.NORTH,
-            game.Directions.SOUTH,
-            game.Directions.EAST,
-            game.Directions.WEST
+            Directions.NORTH,
+            Directions.SOUTH,
+            Directions.EAST,
+            Directions.WEST
         ]
 
         for action in directions:
             Add a successor state to the successor list if the action is legal
             Here's a code snippet for figuring out whether a new position hits a wall:
                x, y = currentPosition
-               dx, dy = game.Actions.directionToVector(action)
+               dx, dy = Actions.directionToVector(action)
                nextx, nexty = int(x + dx), int(y + dy)
                hitsWall = self.walls[nextx][nexty]
         self._expanded += 1
@@ -77,8 +77,8 @@ class CornersProblem(SearchProblem):
 
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
-        top = self.walls.height - 2
-        right = self.walls.width - 2
+        top = self.walls.getHeight() - 2
+        right = self.walls.getWidth() - 2
 
         self.corners = ((1, 1), (1, top), (right, 1), (right, top))
         for corner in self.corners:
@@ -101,7 +101,7 @@ class CornersProblem(SearchProblem):
 
         x, y = self.startingPosition
         for action in actions:
-            dx, dy = game.Actions.directionToVector(action)
+            dx, dy = Actions.directionToVector(action)
             x, y = int(x + dx), int(y + dy)
             if self.walls[x][y]:
                 return 999999
@@ -124,7 +124,7 @@ def cornersHeuristic(state, problem):
 
     # Useful information.
     # corners = problem.corners  # These are the corner coordinates
-    # walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
+    # walls = problem.walls  # These are the walls of the maze, as a Grid.
 
     # *** Your Code Here ***
     return heuristic.null(state, problem)  # Default to trivial solution
@@ -142,7 +142,7 @@ def foodHeuristic(state, problem):
     inadmissible or inconsistent heuristics may find optimal solutions, so be careful.
 
     The state is a tuple (pacmanPosition, foodGrid) where foodGrid is a
-    Grid (see game.py) of either True or False. You can call foodGrid.asList()
+    Grid of either True or False. You can call foodGrid.asList()
     to get a list of food coordinates instead.
 
     If you want access to info like walls, capsules, etc., you can query the problem.
@@ -244,9 +244,8 @@ class ApproximateSearchAgent(BaseAgent):
     Methods to Implement:
 
     def getAction(self, state):
-        From game.py:
         The BaseAgent will receive a GameState and must return an action from
-        game.Directions.{North, South, East, West, Stop}
+        Directions.{North, South, East, West, Stop}
 
     def registerInitialState(self, state):
         This method is called before any moves are made.

@@ -23,7 +23,7 @@ class ReflexAgent(BaseAgent):
         getAction chooses among the best options according to the evaluation function.
 
         Just like in the previous project, getAction takes a GameState and returns
-        some game.Directions.X for some X in the set {North, South, West, East, Stop}
+        some Directions.X for some X in the set {North, South, West, East, Stop}
         """
 
         # Collect legal moves and successor states
@@ -60,7 +60,7 @@ class ReflexAgent(BaseAgent):
         # newPosition = successorGameState.getPacmanPosition()
         # oldFood = currentGameState.getFood()
         # newGhostStates = successorGameState.getGhostStates()
-        # newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        # newScaredTimes = [ghostState.getScaredTimer() for ghostState in newGhostStates]
 
         # *** Your Code Here ***
 
@@ -76,7 +76,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns a list of legal actions for an agent
         agentIndex=0 means Pacman, ghosts are >= 1
 
-    game.Directions.STOP:
+    Directions.STOP:
         The stop direction, which is always legal
 
     gameState.generateSuccessor(agentIndex, action):

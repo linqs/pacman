@@ -1,5 +1,5 @@
 from pacai.agents.capture.reflex import ReflexCaptureAgent
-from pacai.core.game import Directions
+from pacai.core.directions import Directions
 from pacai.util import counter
 
 class DefensiveReflexAgent(ReflexCaptureAgent):
@@ -36,7 +36,7 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
         if action == Directions.STOP:
             features['stop'] = 1
 
-        rev = Directions.REVERSE[gameState.getAgentState(self.index).configuration.direction]
+        rev = Directions.REVERSE[gameState.getAgentState(self.index).getDirection()]
         if action == rev:
             features['reverse'] = 1
 

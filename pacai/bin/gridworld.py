@@ -3,12 +3,15 @@ import optparse
 import random
 import sys
 
-import pacai.core.environment
-import pacai.core.mdp
-import pacai.util.counter
+from pacai.core.environment import Environment
+from pacai.core.mdp import MarkovDecisionProcess
+from pacai.student.qlearningAgents import QLearningAgent
+from pacai.student.valueIterationAgent import ValueIterationAgent
+from pacai.ui import graphicsUtils
+from pacai.util.counter import Counter
 from pacai.util.logs import initLogging
 
-class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
+class Gridworld(MarkovDecisionProcess):
     """
     Gridworld
     """
@@ -164,7 +167,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
         return successors
 
     def __aggregate(self, statesAndProbs):
-        counter = pacai.util.counter.Counter()
+        counter = Counter()
         for state, prob in statesAndProbs:
             counter[state] += prob
 
@@ -183,7 +186,7 @@ class Gridworld(pacai.core.mdp.MarkovDecisionProcess):
 
         return self.grid[x][y] != '#'
 
-class GridworldEnvironment(pacai.core.environment.Environment):
+class GridworldEnvironment(Environment):
     def __init__(self, gridWorld):
         self.gridWorld = gridWorld
         self.reset()
@@ -275,64 +278,6 @@ def makeGrid(gridString):
 
     return grid
 
-def getCliffGrid():
-    grid = [
-        [' ', ' ', ' ', ' ', ' '],
-        ['S', ' ', ' ', ' ', 10],
-        [-100, -100, -100, -100, -100]
-    ]
-
-    return Gridworld(makeGrid(grid))
-
-def getCliffGrid2():
-    grid = [
-        [' ', ' ', ' ', ' ', ' '],
-        [8, 'S', ' ', ' ', 10],
-        [-100, -100, -100, -100, -100]
-    ]
-
-    return Gridworld(grid)
-
-def getDiscountGrid():
-    grid = [
-        [' ', ' ', ' ', ' ', ' '],
-        [' ', '#', ' ', ' ', ' '],
-        [' ', '#', 1, '#', 10],
-        ['S', ' ', ' ', ' ', ' '],
-        [-10, -10, -10, -10, -10]
-    ]
-
-    return Gridworld(grid)
-
-def getBridgeGrid():
-    grid = [
-        ['#', -100, -100, -100, -100, -100, '#'],
-        [1, 'S', ' ', ' ', ' ', ' ', 10],
-        ['#', -100, -100, -100, -100, -100, '#']
-    ]
-
-    return Gridworld(grid)
-
-def getBookGrid():
-    grid = [
-        [' ', ' ', ' ', +1],
-        [' ', '#', ' ', -1],
-        ['S', ' ', ' ', ' ']
-    ]
-
-    return Gridworld(grid)
-
-def getMazeGrid():
-    grid = [
-        [' ', ' ', ' ', +1],
-        ['#', '#', ' ', '#'],
-        [' ', '#', ' ', ' '],
-        [' ', '#', '#', ' '],
-        ['S', ' ', ' ', ' ']
-    ]
-
-    return Gridworld(grid)
-
 def getUserAction(state, actionFunction):
     """
     Get an action from the user (rather than the agent).
@@ -340,11 +285,10 @@ def getUserAction(state, actionFunction):
     Used for debugging and lecture demos.
     """
 
-    import pacai.ui.graphicsUtils
     action = None
 
     while True:
-        keys = pacai.ui.graphicsUtils.wait_for_keys()
+        keys = graphicsUtils.wait_for_keys()
 
         if ('Up' in keys):
             action = 'north'
@@ -409,7 +353,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
         logging.debug(logString)
 
         # UPDATE LEARNER
-        if 'observeTransition' in dir(agent):
+        if ('observeTransition' in dir(agent)):
             agent.observeTransition(state, action, nextState, reward)
 
         returns += reward * totalDiscount
@@ -418,7 +362,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
     if 'stopEpisode' in dir(agent):
         agent.stopEpisode()
 
-def parseOptions():
+def parseOptions(argv):
     optParser = optparse.OptionParser()
 
     optParser.add_option('-d', '--discount', action='store',
@@ -469,7 +413,7 @@ def parseOptions():
     optParser.add_option('-v', '--valueSteps', action='store_true', default=False,
             help='Display each step of value iteration')
 
-    opts, args = optParser.parse_args()
+    opts, args = optParser.parse_args(argv)
 
     if opts.manual and opts.agent != 'q':
         logging.info('## Disabling Agents in Manual Mode (-m) ##')
@@ -484,20 +428,19 @@ def parseOptions():
 
     return opts
 
-if __name__ == '__main__':
+def main(argv):
     initLogging()
-    opts = parseOptions()
+
+    opts = parseOptions(argv)
 
     ###########################
     # GET THE GRIDWORLD
     ###########################
 
-    import pacai.bin.gridworld
-    mdpFunction = getattr(pacai.bin.gridworld, 'get' + opts.grid)
-    mdp = mdpFunction()
+    mdp = _getGridWorld(opts.grid)
     mdp.setLivingReward(opts.livingReward)
     mdp.setNoise(opts.noise)
-    env = pacai.bin.gridworld.GridworldEnvironment(mdp)
+    env = GridworldEnvironment(mdp)
 
     ###########################
     # GET THE DISPLAY ADAPTER
@@ -515,24 +458,20 @@ if __name__ == '__main__':
     # GET THE AGENT
     ###########################
 
-    import pacai.student.qlearningAgents
-    import pacai.student.valueIterationAgents
     a = None
-    if opts.agent == 'value':
-        a = pacai.student.valueIterationAgents.ValueIterationAgent(0,
-                mdp, opts.discount, opts.iters)
-    elif opts.agent == 'q':
-        gridWorldEnv = GridworldEnvironment(mdp)
+    if (opts.agent == 'value'):
+        a = ValueIterationAgent(0, mdp, opts.discount, opts.iters)
+    elif (opts.agent == 'q'):
         qLearnOpts = {
             'gamma': opts.discount,
             'alpha': opts.learningRate,
             'epsilon': opts.epsilon,
             'actionFn': lambda state: mdp.getPossibleActions(state),
         }
-        a = pacai.student.qlearningAgents.QLearningAgent(0, **qLearnOpts)
-    elif opts.agent == 'random':
-        # # No reason to use the random agent without episodes
-        if opts.episodes == 0:
+        a = QLearningAgent(0, **qLearnOpts)
+    elif (opts.agent == 'random'):
+        # No reason to use the random agent without episodes.
+        if (opts.episodes == 0):
             opts.episodes = 10
 
         class RandomMDPAgent:
@@ -554,19 +493,18 @@ if __name__ == '__main__':
 
         a = RandomMDPAgent()
     else:
-        if not opts.manual:
+        if (not opts.manual):
             raise 'Unknown agent type: ' + opts.agent
 
     ###########################
     # RUN EPISODES
     ###########################
 
-    # DISPLAY Q/V VALUES BEFORE SIMULATION OF EPISODES
-    if not opts.manual and opts.agent == 'value':
-        if opts.valueSteps:
+    # Display q/v values before simulation of episodes.
+    if (not opts.manual and opts.agent == 'value'):
+        if (opts.valueSteps):
             for i in range(opts.iters):
-                tempAgent = pacai.student.valueIterationAgents.ValueIterationAgent(0,
-                        mdp, opts.discount, i)
+                tempAgent = ValueIterationAgent(0, mdp, opts.discount, i)
                 display.displayValues(tempAgent, message = 'VALUES AFTER ' + str(i) + ' ITERATIONS')
                 display.pause()
 
@@ -577,46 +515,111 @@ if __name__ == '__main__':
 
     # Figure out what to display each time step (if anything).
     displayCallback = lambda x: None
-    if not opts.quiet:
+    if (not opts.quiet):
         if (opts.manual and opts.agent is None):
             displayCallback = lambda state: display.displayNullValues(state)
         else:
-            if opts.agent == 'random':
+            if (opts.agent == 'random'):
                 displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
-            elif opts.agent == 'value':
+            elif (opts.agent == 'value'):
                 displayCallback = lambda state: display.displayValues(a, state, 'CURRENT VALUES')
-            elif opts.agent == 'q':
+            elif (opts.agent == 'q'):
                 displayCallback = lambda state: display.displayQValues(a, state, 'CURRENT Q-VALUES')
 
     messageCallback = lambda x: print(x)
-    if opts.quiet:
+    if (opts.quiet):
         messageCallback = lambda x: None
 
     # FIGURE OUT WHETHER TO WAIT FOR A KEY PRESS AFTER EACH TIME STEP
     pauseCallback = lambda: None
-    if opts.pause:
+    if (opts.pause):
         pauseCallback = lambda: display.pause()
 
-    # FIGURE OUT WHETHER THE USER WANTS MANUAL CONTROL (FOR DEBUGGING AND DEMOS)
-    if opts.manual:
+    # Figure out whether the user wants manual control (for debugging and demos).
+    if (opts.manual):
         decisionCallback = lambda state: getUserAction(state, mdp.getPossibleActions)
     else:
         decisionCallback = a.getAction
 
-    # RUN EPISODES
-    if opts.episodes > 0:
+    # Run episodes.
+    if (opts.episodes > 0):
         logging.debug('RUNNING ' + str(opts.episodes) + ' EPISODES')
+
     returns = 0
     for episode in range(1, opts.episodes + 1):
         returns += runEpisode(a, env, opts.discount, decisionCallback, displayCallback,
                 messageCallback, pauseCallback, episode)
 
-    if opts.episodes > 0:
+    if (opts.episodes > 0):
         logging.debug('AVERAGE RETURNS FROM START STATE:' + str((returns + 0.0) / opts.episodes))
 
-    # DISPLAY POST-LEARNING VALUES / Q-VALUES
-    if opts.agent == 'q' and not opts.manual:
+    # Display post-learning values / q-values.
+    if (opts.agent == 'q' and not opts.manual):
         display.displayQValues(a, message = 'Q-VALUES AFTER ' + str(opts.episodes) + ' EPISODES')
         display.pause()
         display.displayValues(a, message = 'VALUES AFTER ' + str(opts.episodes) + ' EPISODES')
         display.pause()
+
+def _getGridWorld(name):
+    name = name.lower()
+
+    grid = None
+    if (name == 'bookgrid'):
+        grid = BOOK_GRID
+    elif (name == 'bridgegrid'):
+        grid = BRIDGE_GRID
+    elif (name == 'cliffgrid'):
+        grid = CLIFF_GRID
+    elif (name == 'cliff2grid'):
+        grid = CLIFF2_GRID
+    elif (name == 'discountgrid'):
+        grid = DISCOUNT_GRID
+    elif (name == 'mazegrid'):
+        grid = MAZE_GRID
+    else:
+        raise ValueError("Unknown grid name: '%s'." % (name))
+
+    return Gridworld(grid)
+
+BOOK_GRID = [
+    [' ', ' ', ' ', +1],
+    [' ', '#', ' ', -1],
+    ['S', ' ', ' ', ' '],
+]
+
+BRIDGE_GRID = [
+    ['#', -100, -100, -100, -100, -100, '#'],
+    [1, 'S', ' ', ' ', ' ', ' ', 10],
+    ['#', -100, -100, -100, -100, -100, '#'],
+]
+
+CLIFF_GRID = [
+    [' ', ' ', ' ', ' ', ' '],
+    ['S', ' ', ' ', ' ', 10],
+    [-100, -100, -100, -100, -100],
+]
+
+CLIFF2_GRID = [
+    [' ', ' ', ' ', ' ', ' '],
+    [8, 'S', ' ', ' ', 10],
+    [-100, -100, -100, -100, -100],
+]
+
+DISCOUNT_GRID = [
+    [' ', ' ', ' ', ' ', ' '],
+    [' ', '#', ' ', ' ', ' '],
+    [' ', '#', 1, '#', 10],
+    ['S', ' ', ' ', ' ', ' '],
+    [-10, -10, -10, -10, -10],
+]
+
+MAZE_GRID = [
+    [' ', ' ', ' ', +1],
+    ['#', '#', ' ', '#'],
+    [' ', '#', ' ', ' '],
+    [' ', '#', '#', ' '],
+    ['S', ' ', ' ', ' '],
+]
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

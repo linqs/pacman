@@ -5,7 +5,7 @@ from abc import ABC
 from abc import abstractmethod
 from pacai.ui import graphicsUtils
 from pacai.ui import graphicsConstants
-from pacai.core.game import Directions
+from pacai.core.directions import Directions
 
 class AbstractPane(ABC):
 
@@ -161,10 +161,10 @@ class AbstractPacmanGraphics(ABC):
     def drawDistributions(self, state):
         walls = state.getWalls()
         dist = []
-        for x in range(walls.width):
+        for x in range(walls.getWidth):
             distx = []
             dist.append(distx)
-            for y in range(walls.height):
+            for y in range(walls.getHeight):
                 screen_x, screen_y = self.to_screen((x, y))
                 block = graphicsUtils.square(screen_x, screen_y, 0.5 * self.gridSize,
                     color = graphicsConstants.BACKGROUND_COLOR, filled = 1, behind = 2)
@@ -280,7 +280,7 @@ class AbstractPacmanGraphics(ABC):
         graphicsUtils.refresh()
 
     def getGhostColor(self, ghost, ghostIndex):
-        if ghost.scaredTimer > 0:
+        if ghost.isScared():
             return graphicsConstants.SCARED_COLOR
         else:
             return graphicsConstants.GHOST_COLORS[ghostIndex]
@@ -292,8 +292,7 @@ class AbstractPacmanGraphics(ABC):
         ghostSize = self.gridSize * graphicsConstants.GHOST_SIZE
         coords = []
         for x, y in graphicsConstants.GHOST_SHAPE:
-            coords.append((x * ghostSize + screen_x,
-                    y * ghostSize + screen_y))
+            coords.append((x * ghostSize + screen_x, y * ghostSize + screen_y))
 
         colour = self.getGhostColor(ghost, agentIndex)
         body = graphicsUtils.polygon(coords, colour, filled = 1)
@@ -386,7 +385,7 @@ class AbstractPacmanGraphics(ABC):
             graphicsUtils.move_by(ghostImagePart, delta)
         graphicsUtils.refresh()
 
-        if ghost.scaredTimer > 0:
+        if (ghost.isScared()):
             color = graphicsConstants.SCARED_COLOR
         else:
             color = graphicsConstants.GHOST_COLORS[ghostIndex]
@@ -396,15 +395,10 @@ class AbstractPacmanGraphics(ABC):
         graphicsUtils.refresh()
 
     def getPosition(self, agentState):
-        if agentState.configuration is None:
-            return (-1000, -1000)
-
         return agentState.getPosition()
 
     def getDirection(self, agentState):
-        if agentState.configuration is None:
-            return Directions.STOP
-        return agentState.configuration.getDirection()
+        return agentState.getDirection()
 
     def finish(self):
         # Get the last frame.
@@ -432,15 +426,15 @@ class AbstractPacmanGraphics(ABC):
     def drawWalls(self, wallMatrix):
         wallColor = graphicsConstants.WALL_COLOR
         for xNum, x in enumerate(wallMatrix):
-            if self.capture and (xNum * 2) < wallMatrix.width:
+            if self.capture and (xNum * 2) < wallMatrix.getWidth():
                 wallColor = graphicsConstants.TEAM_COLORS[0]
 
-            if self.capture and (xNum * 2) >= wallMatrix.width:
+            if self.capture and (xNum * 2) >= wallMatrix.getWidth():
                 wallColor = graphicsConstants.TEAM_COLORS[1]
 
             for yNum, cell in enumerate(x):
+                # Skip if there is no wall here.
                 if not cell:
-                    # There's no wall here.
                     continue
 
                 pos = xNum, yNum
@@ -563,7 +557,7 @@ class AbstractPacmanGraphics(ABC):
         if x < 0 or y < 0:
             return False
 
-        if x >= walls.width or y >= walls.height:
+        if x >= walls.getWidth() or y >= walls.getHeight():
             return False
 
         return walls[x][y]
@@ -572,10 +566,10 @@ class AbstractPacmanGraphics(ABC):
         foodImages = []
         color = graphicsConstants.FOOD_COLOR
         for xNum, x in enumerate(foodMatrix):
-            if self.capture and (xNum * 2) <= foodMatrix.width:
+            if self.capture and (xNum * 2) <= foodMatrix.getWidth():
                 color = graphicsConstants.TEAM_COLORS[0]
 
-            if self.capture and (xNum * 2) > foodMatrix.width:
+            if self.capture and (xNum * 2) > foodMatrix.getWidth():
                 color = graphicsConstants.TEAM_COLORS[1]
 
             imageRow = []
@@ -594,7 +588,7 @@ class AbstractPacmanGraphics(ABC):
     def drawCapsules(self, capsules):
         capsuleImages = {}
         for capsule in capsules:
-            (screen_x, screen_y) = self.to_screen(capsule)
+            screen_x, screen_y = self.to_screen(capsule)
             dot = graphicsUtils.circle((screen_x, screen_y),
                     graphicsConstants.CAPSULE_SIZE * self.gridSize,
                     outlineColor = graphicsConstants.CAPSULE_COLOR,

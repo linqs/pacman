@@ -1,11 +1,8 @@
 import os
 import random
-from functools import reduce
 
 from pacai.core.distance import manhattan
-from pacai.core.game import Grid
-
-VISIBILITY_MATRIX_CACHE = {}
+from pacai.core.grid import Grid
 
 # By default, the layout directory is adjacent to this file.
 DEFAULT_LAYOUT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'layouts')
@@ -18,49 +15,16 @@ class Layout(object):
     def __init__(self, layoutText):
         self.width = len(layoutText[0])
         self.height = len(layoutText)
-        self.walls = Grid(self.width, self.height, False)
-        self.food = Grid(self.width, self.height, False)
+        self.walls = Grid(self.width, self.height, initialValue = False)
+        self.food = Grid(self.width, self.height, initialValue = False)
         self.capsules = []
         self.agentPositions = []
         self.numGhosts = 0
         self.processLayoutText(layoutText)
         self.layoutText = layoutText
-        # self.initializeVisibilityMatrix()
 
     def getNumGhosts(self):
         return self.numGhosts
-
-    def initializeVisibilityMatrix(self):
-        global VISIBILITY_MATRIX_CACHE
-        if reduce(str.__add__, self.layoutText) not in VISIBILITY_MATRIX_CACHE:
-            from game import Directions
-            vecs = [(-0.5, 0), (0.5, 0), (0, -0.5), (0, 0.5)]
-            dirs = [Directions.NORTH, Directions.SOUTH, Directions.WEST, Directions.EAST]
-
-            emptyDirections = {
-                Directions.NORTH: set(),
-                Directions.SOUTH: set(),
-                Directions.EAST: set(),
-                Directions.WEST: set(),
-                Directions.STOP: set()
-            }
-
-            vis = Grid(self.width, self.height, emptyDirections)
-
-            for x in range(self.width):
-                for y in range(self.height):
-                    if (not self.walls[x][y]):
-                        for vec, direction in zip(vecs, dirs):
-                            dx, dy = vec
-                            nextx, nexty = x + dx, y + dy
-                            while ((nextx + nexty) != int(nextx) + int(nexty)
-                                    or not self.walls[int(nextx)][int(nexty)]):
-                                vis[x][y][direction].add((nextx, nexty))
-                                nextx, nexty = x + dx, y + dy
-            self.visibility = vis
-            VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layoutText)] = vis
-        else:
-            self.visibility = VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layoutText)]
 
     def isWall(self, pos):
         x, col = pos

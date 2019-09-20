@@ -38,11 +38,11 @@ import traceback
 import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
+from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
-from pacai.core.game import Actions
 from pacai.core.game import Game
-from pacai.core.game import Grid
 from pacai.core.gamestate import AbstractGameState
+from pacai.core.grid import Grid
 from pacai.util.logs import initLogging
 from pacai.util.util import nearestPoint
 
@@ -51,9 +51,6 @@ COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
 KILL_POINTS = 0
 FOOD_POINTS = 1  # Points for eating food.
 
-SONAR_NOISE_RANGE = 13  # Must be odd
-SONAR_NOISE_VALUES = [i - int((SONAR_NOISE_RANGE - 1) / 2) for i in range(SONAR_NOISE_RANGE)]
-SIGHT_RANGE = 5  # Manhattan distance
 MIN_FOOD = 2
 
 SCARED_TIME = 40
@@ -80,7 +77,7 @@ class CaptureGameState(AbstractGameState):
 
         for agentIndex in range(self.getNumAgents()):
             agentState = self.getAgentState(agentIndex)
-            agentIsRed = self.isOnRedSide(agentState.configuration.getPosition())
+            agentIsRed = self.isOnRedSide(agentState.getPosition())
 
             self._teams.append(agentIsRed)
 
@@ -100,11 +97,11 @@ class CaptureGameState(AbstractGameState):
             else:
                 self._blueCapsules.append(capsule)
 
-        self._redFood = Grid(self._food.width, self._food.height, initialValue = False)
-        self._blueFood = Grid(self._food.width, self._food.height, initialValue = False)
+        self._redFood = Grid(self._food.getWidth(), self._food.getHeight(), initialValue = False)
+        self._blueFood = Grid(self._food.getWidth(), self._food.getHeight(), initialValue = False)
 
-        for x in range(self._food.width):
-            for y in range(self._food.height):
+        for x in range(self._food.getWidth()):
+            for y in range(self._food.getHeight()):
                 if (not self._food[x][y]):
                     continue
 
@@ -372,8 +369,9 @@ class AgentRules:
         Returns a list of possible actions.
         """
 
-        agentConfig = state.getAgentState(agentIndex).configuration
-        return Actions.getPossibleActions(agentConfig, state.getWalls())
+        agentState = state.getAgentState(agentIndex)
+        return Actions.getPossibleActions(agentState.getPosition(), agentState.getDirection(),
+                state.getWalls())
 
     @staticmethod
     def applyAction(state, action, agentIndex):
@@ -387,12 +385,12 @@ class AgentRules:
 
         agentState = state.getAgentState(agentIndex)
 
-        # Update Configuration
+        # Update position.
         vector = Actions.directionToVector(action, AgentRules.AGENT_SPEED)
-        agentState.configuration = agentState.configuration.generateSuccessor(vector)
+        agentState.updatePosition(vector)
 
-        # Eat
-        nextPosition = agentState.configuration.getPosition()
+        # Eat.
+        nextPosition = agentState.getPosition()
         nearest = nearestPoint(nextPosition)
         if (agentState.isPacman() and manhattan(nearest, nextPosition) <= 0.9):
             AgentRules.consume(nearest, state, state.isOnRedTeam(agentIndex))
@@ -400,7 +398,7 @@ class AgentRules:
         # Potentially change agent type.
         if (nextPosition == nearest):
             # Agents are pacmen when they are not on their own side.
-            position = agentState.configuration.getPosition()
+            position = agentState.getPosition()
             agentState.setIsPacman(state.isOnRedTeam(agentIndex) != state.isOnRedSide(position))
 
     @staticmethod
@@ -444,13 +442,17 @@ class AgentRules:
                 otherTeam = state.getRedTeamIndices()
 
             for agentIndex in otherTeam:
-                state.getAgentState(agentIndex).scaredTimer = SCARED_TIME
+                state.getAgentState(agentIndex).setScaredTimer(SCARED_TIME)
 
     @staticmethod
     def decrementTimer(agentState):
-        agentState.scaredTimer = max(0, agentState.scaredTimer - 1)
-        if (agentState.scaredTimer == 0):
-            agentState.configuration.pos = nearestPoint(agentState.configuration.pos)
+        if (not agentState.isScared()):
+            return
+
+        agentState.decrementScaredTimer()
+        if (not agentState.isScared()):
+            # If the ghost is done being scared, snap it to the closest point.
+            agentState.snapToNearestPoint()
 
     @staticmethod
     def checkDeath(state, agentIndex):

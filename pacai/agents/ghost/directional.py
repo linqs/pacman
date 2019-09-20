@@ -1,5 +1,5 @@
 from pacai.agents.ghost.base import GhostAgent
-from pacai.core.game import Actions
+from pacai.core.actions import Actions
 from pacai.core import distance
 from pacai.util import counter
 
@@ -19,7 +19,7 @@ class DirectionalGhost(GhostAgent):
         ghostState = state.getGhostState(self.index)
         legalActions = state.getLegalActions(self.index)
         pos = state.getGhostPosition(self.index)
-        isScared = ghostState.scaredTimer > 0
+        isScared = ghostState.isScared()
 
         speed = 1
         if isScared:

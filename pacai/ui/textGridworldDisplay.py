@@ -49,7 +49,6 @@ class TextGridworldDisplay(object):
 
         prettyPrintQValues(self.gridworld, qValues, currentState)
 
-
 def prettyPrintValues(gridWorld, values, policy=None, currentState = None):
     grid = gridWorld.grid
     maxLen = 11
@@ -325,13 +324,13 @@ def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
     # closure for breaking logical rows to physical, using wrapfunc
     def rowWrapper(row):
         newRows = [wrapfunc(item).split('\n') for item in row]
-        return [[substr or '' for substr in item] for item in list(*newRows)]
+        return [[substr or '' for substr in item] for item in list(newRows)]
 
     # break each logical row into one or more physical ones
     logicalRows = [rowWrapper(row) for row in rows]
 
     # columns of physical rows
-    columns = list(*functools.reduce(operator.add, logicalRows))
+    columns = list(functools.reduce(operator.add, logicalRows))
 
     # get the maximum of each column by the string length of its items
     maxWidths = [max([len(str(item)) for item in column]) for column in columns]
@@ -364,8 +363,6 @@ def wrap_always(text, width):
 
     return '\n'.join([text[width * i:width * (i + 1)]
             for i in range(int(math.ceil(1.0 * len(text) / width)))])
-
-# TEST OF DISPLAY CODE
 
 if __name__ == '__main__':
     grid = pacai.bin.gridworld.getCliffGrid2()

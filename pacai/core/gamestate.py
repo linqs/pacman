@@ -1,15 +1,14 @@
 import abc
 import copy
 
-from pacai.core import game
-
-INITIAL_HASH_VALUE = 17
-HASH_MULTIPLIER = 37
+from pacai.core.agentstate import AgentState
+from pacai.core.directions import Directions
+from pacai.util import util
 
 class AbstractGameState(abc.ABC):
     """
     A GameState specifies the full game state, including the food, capsules,
-    agent configurations, and score changes.
+    agents, and score.
 
     GameStates are used by the Game object to capture the actual state of the game and
     can be used by agents to reason about the game.
@@ -37,8 +36,7 @@ class AbstractGameState(abc.ABC):
 
         self._agentStates = []
         for (isPacman, position) in layout.agentPositions:
-            config = game.Configuration(position, game.Directions.STOP)
-            self._agentStates.append(game.AgentState(config, isPacman))
+            self._agentStates.append(AgentState(position, Directions.STOP, isPacman))
 
         self._score = 0
 
@@ -270,15 +268,5 @@ class AbstractGameState(abc.ABC):
                 and self._layout == other._layout)
 
     def __hash__(self):
-        hashCode = INITIAL_HASH_VALUE
-
-        hashCode = hashCode * HASH_MULTIPLIER + self._score
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._gameover)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._win)
-
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._capsules)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._food)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._agentStates)
-        hashCode = hashCode * HASH_MULTIPLIER + hash(self._layout)
-
-        return int(hashCode)
+        return util.buildHash(self._score, self._gameover, self._win, self._capsules,
+                self._food, self._agentStates, self._layout)
