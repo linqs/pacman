@@ -68,6 +68,7 @@ CAPSULE_SIZE = 0.25
 WALL_RADIUS = 0.15
 
 # Fonts and Text Modifiers
+DEFAULT_FONT = "Times"
 CONSOLAS_FONT = "Consolas"
 TIMES_FONT = "Times"
 TEXT_MOD_BOLD = "bold"

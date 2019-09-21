@@ -28,7 +28,7 @@ class PacmanGraphics(AbstractPacmanGraphics):
         layout = self.layout
         self.width = layout.width
         self.height = layout.height
-        self.make_window(self.width, self.height)
+        self.makeWindow(self.width, self.height)
         self.infoPane = InfoPane(layout, self.gridSize)
         self.currentState = layout
 
@@ -58,7 +58,7 @@ class PacmanGraphics(AbstractPacmanGraphics):
         if 'ghostDistances' in dir(newState):
             self.infoPane.updateGhostDistances(newState.ghostDistances)
 
-        self.save_frame()
+        self.saveFrame()
 
 # Saving graphical output
 # -----------------------

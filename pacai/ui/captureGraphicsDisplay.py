@@ -16,13 +16,13 @@ class CaptureInfoPane(AbstractPane):
 
     def drawPane(self):
         self.scoreText = graphicsUtils.text(self.toScreen(0, 0), self.textColor,
-                self._infoString(0, 1200), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+                self._infoString(0, 1200), graphicsConstants.DEFAULT_FONT, self.fontSize,
             graphicsConstants.TEXT_MOD_BOLD)
         self.redText = graphicsUtils.text(self.toScreen(230, 0), graphicsConstants.TEAM_COLORS[0],
-                self._redScoreString(), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+                self._redScoreString(), graphicsConstants.DEFAULT_FONT, self.fontSize,
             graphicsConstants.TEXT_MOD_BOLD)
         self.redText = graphicsUtils.text(self.toScreen(690, 0), graphicsConstants.TEAM_COLORS[1],
-                self._blueScoreString(), graphicsConstants.CONSOLAS_FONT, self.fontSize,
+                self._blueScoreString(), graphicsConstants.DEFAULT_FONT, self.fontSize,
             graphicsConstants.TEXT_MOD_BOLD)
 
     def _redScoreString(self):
@@ -60,7 +60,7 @@ class CapturePacmanGraphics(AbstractPacmanGraphics):
         layout = self.layout
         self.width = layout.width
         self.height = layout.height
-        self.make_window(self.width, self.height)
+        self.makeWindow(self.width, self.height)
         self.infoPane = CaptureInfoPane(layout, self.gridSize, self.redTeam, self.blueTeam)
         self.currentState = layout
 
@@ -90,7 +90,7 @@ class CapturePacmanGraphics(AbstractPacmanGraphics):
         if ('ghostDistances' in dir(newState)):
             self.infoPane.updateGhostDistances(newState.ghostDistances)
 
-        self.save_frame()
+        self.saveFrame()
 
     def clearDebug(self):
         if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
@@ -103,7 +103,7 @@ class CapturePacmanGraphics(AbstractPacmanGraphics):
             self.expandedCells = []
 
         for k, cell in enumerate(cells):
-            screenPos = self.to_screen(cell)
+            screenPos = self.toScreen(cell)
             cellColor = graphicsUtils.formatColor(*color)
             block = graphicsUtils.square(screenPos, 0.5 * self.gridSize,
                     color = cellColor, filled = 1, behind = 2)

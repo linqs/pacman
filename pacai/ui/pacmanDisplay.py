@@ -1,11 +1,10 @@
-import math
 import io
+import math
 
 from abc import ABC
 from abc import abstractmethod
-from pacai.ui import graphicsUtils
 from pacai.ui import graphicsConstants
-from pacai.core.directions import Directions
+from pacai.ui import graphicsUtils
 
 class AbstractPane(ABC):
 
@@ -50,7 +49,7 @@ class AbstractPane(ABC):
 
         for i, d in enumerate(distances):
             t = graphicsUtils.text(self.toScreen(self.width / 2 + self.width / 8 * i, 0),
-                    graphicsConstants.GHOST_COLORS[i + 1], d, graphicsConstants.TIMES_FONT, size,
+                    graphicsConstants.GHOST_COLORS[i + 1], d, graphicsConstants.DEFAULT_FONT, size,
                     graphicsConstants.TEXT_MOD_BOLD)
             self.ghostDistanceText.append(t)
 
@@ -60,7 +59,7 @@ class AbstractPane(ABC):
         else:
             text = graphicsConstants.TEAM_RED
         self.teamText = graphicsUtils.text(self.toScreen(300, 0), self.textColor, text,
-                graphicsConstants.TIMES_FONT, self.fontSize, graphicsConstants.TEXT_MOD_BOLD)
+                graphicsConstants.DEFAULT_FONT, self.fontSize, graphicsConstants.TEXT_MOD_BOLD)
 
     def updateGhostDistances(self, distances):
         if len(distances) == 0:
@@ -105,7 +104,7 @@ class AbstractPacmanGraphics(ABC):
             gif = graphicsConstants.DEFAULT_GIF_ARG,
             gifSkipFrames = graphicsConstants.DEFAULT_GIF_FRAME_SKIP,
             gifFPS = graphicsConstants.DEFAULT_GIF_FPS):
-        self.have_window = 0  # Not used anywhere.
+        self.haveWindow = 0  # Not used anywhere.
         self.currentGhostImages = {}  # Not used anywhere.
         self.pacmanImage = None  # Not used anywhere.
         self.zoom = zoom
@@ -132,9 +131,9 @@ class AbstractPacmanGraphics(ABC):
         self.previousState = state
 
         # Get the first frame.
-        self.save_frame(force_save = True)
+        self.saveFrame(forceSave = True)
 
-    def save_frame(self, force_save = False):
+    def saveFrame(self, forceSave = False):
         """
         Save the current frame as an image.
         If we are not going to save the game as a gif, no image will be saved.
@@ -148,7 +147,7 @@ class AbstractPacmanGraphics(ABC):
 
         self.frameImages.append(graphicsUtils.getPostscript())
 
-    def write_gif(self):
+    def writeGif(self):
         if not self.gifPath:
             return
 
@@ -157,19 +156,6 @@ class AbstractPacmanGraphics(ABC):
 
         images = [imageio.imread(io.BytesIO(image.encode())) for image in self.frameImages]
         imageio.mimwrite(self.gifPath, images, fps = self.gifFPS, subrectangles = True)
-
-    def drawDistributions(self, state):
-        walls = state.getWalls()
-        dist = []
-        for x in range(walls.getWidth):
-            distx = []
-            dist.append(distx)
-            for y in range(walls.getHeight):
-                screen_x, screen_y = self.to_screen((x, y))
-                block = graphicsUtils.square(screen_x, screen_y, 0.5 * self.gridSize,
-                    color = graphicsConstants.BACKGROUND_COLOR, filled = 1, behind = 2)
-                distx.append(block)
-        self.distributionImages = dist
 
     def drawStaticObjects(self, state):
         layout = self.layout
@@ -205,7 +191,7 @@ class AbstractPacmanGraphics(ABC):
             self.agentImages[agentIndex] = (newState, image)
         graphicsUtils.refresh()
 
-    def make_window(self, width, height):
+    def makeWindow(self, width, height):
         grid_width = (width - 1) * self.gridSize
         grid_height = (height - 1) * self.gridSize
         screen_width = 2 * self.gridSize + grid_width
@@ -216,7 +202,7 @@ class AbstractPacmanGraphics(ABC):
 
     def drawPacman(self, pacman, index):
         position = self.getPosition(pacman)
-        screen_point = self.to_screen(position)
+        screenPoint = self.toScreen(position)
         endpoints = self.getEndpoints(self.getDirection(pacman))
 
         width = graphicsConstants.PACMAN_OUTLINE_WIDTH
@@ -229,7 +215,7 @@ class AbstractPacmanGraphics(ABC):
             width = graphicsConstants.PACMAN_CAPTURE_OUTLINE_WIDTH
 
         return [graphicsUtils.circle(
-                screen_point, graphicsConstants.PACMAN_SCALE * self.gridSize,
+                screenPoint, graphicsConstants.PACMAN_SCALE * self.gridSize,
                 fillColor = fillColor, outlineColor = outlineColor,
                 endpoints = endpoints, width = width)]
 
@@ -251,7 +237,7 @@ class AbstractPacmanGraphics(ABC):
         return endpoints
 
     def movePacman(self, position, direction, image):
-        screenPosition = self.to_screen(position)
+        screenPosition = self.toScreen(position)
         endpoints = self.getEndpoints(direction, position)
         r = graphicsConstants.PACMAN_SCALE * self.gridSize
         graphicsUtils.moveCircle(image[0], screenPosition, r, endpoints)
@@ -288,11 +274,11 @@ class AbstractPacmanGraphics(ABC):
     def drawGhost(self, ghost, agentIndex):
         pos = self.getPosition(ghost)
         dir = self.getDirection(ghost)
-        screen_x, screen_y = (self.to_screen(pos))
+        screenX, screenY = (self.toScreen(pos))
         ghostSize = self.gridSize * graphicsConstants.GHOST_SIZE
         coords = []
         for x, y in graphicsConstants.GHOST_SHAPE:
-            coords.append((x * ghostSize + screen_x, y * ghostSize + screen_y))
+            coords.append((x * ghostSize + screenX, y * ghostSize + screenY))
 
         colour = self.getGhostColor(ghost, agentIndex)
         body = graphicsUtils.polygon(coords, colour, filled = 1)
@@ -312,23 +298,23 @@ class AbstractPacmanGraphics(ABC):
         if dir == 'West':
             dx = -0.2
 
-        coords = (screen_x + ghostSize * (-0.3 + dx / 1.5),
-                screen_y - ghostSize * (0.3 - dy / 1.5))
+        coords = (screenX + ghostSize * (-0.3 + dx / 1.5),
+                screenY - ghostSize * (0.3 - dy / 1.5))
         leftEye = graphicsUtils.circle(coords, ghostSize * 0.2, graphicsConstants.WHITE,
                 graphicsConstants.WHITE)
 
-        coords = (screen_x + ghostSize * (0.3 + dx / 1.5),
-                screen_y - ghostSize * (0.3 - dy / 1.5))
+        coords = (screenX + ghostSize * (0.3 + dx / 1.5),
+                screenY - ghostSize * (0.3 - dy / 1.5))
         rightEye = graphicsUtils.circle(coords, ghostSize * 0.2, graphicsConstants.WHITE,
                 graphicsConstants.WHITE)
 
-        coords = (screen_x + ghostSize * (-0.3 + dx),
-                screen_y - ghostSize * (0.3 - dy))
+        coords = (screenX + ghostSize * (-0.3 + dx),
+                screenY - ghostSize * (0.3 - dy))
         leftPupil = graphicsUtils.circle(coords, ghostSize * 0.08, graphicsConstants.BLACK,
                 graphicsConstants.BLACK)
 
-        coords = (screen_x + ghostSize * (0.3 + dx),
-                screen_y - ghostSize * (0.3 - dy))
+        coords = (screenX + ghostSize * (0.3 + dx),
+                screenY - ghostSize * (0.3 - dy))
         rightPupil = graphicsUtils.circle(coords, ghostSize * 0.08, graphicsConstants.BLACK,
                 graphicsConstants.BLACK)
 
@@ -342,7 +328,7 @@ class AbstractPacmanGraphics(ABC):
         return ghostImageParts
 
     def moveEyes(self, pos, dir, eyes):
-        screen_x, screen_y = (self.to_screen(pos))
+        screenX, screenY = (self.toScreen(pos))
         dx = 0
         dy = 0
 
@@ -360,26 +346,26 @@ class AbstractPacmanGraphics(ABC):
 
         ghostSize = self.gridSize * graphicsConstants.GHOST_SIZE
 
-        coords = (screen_x + ghostSize * (-0.3 + dx / 1.5),
-                screen_y - ghostSize * (0.3 - dy / 1.5))
+        coords = (screenX + ghostSize * (-0.3 + dx / 1.5),
+                screenY - ghostSize * (0.3 - dy / 1.5))
         graphicsUtils.moveCircle(eyes[0], coords, ghostSize * 0.2)
 
-        coords = (screen_x + ghostSize * (0.3 + dx / 1.5),
-                screen_y - ghostSize * (0.3 - dy / 1.5))
+        coords = (screenX + ghostSize * (0.3 + dx / 1.5),
+                screenY - ghostSize * (0.3 - dy / 1.5))
         graphicsUtils.moveCircle(eyes[1], coords, ghostSize * 0.2)
 
-        coords = (screen_x + ghostSize * (-0.3 + dx),
-                screen_y - ghostSize * (0.3 - dy))
+        coords = (screenX + ghostSize * (-0.3 + dx),
+                screenY - ghostSize * (0.3 - dy))
         graphicsUtils.moveCircle(eyes[2], coords, ghostSize * 0.08)
 
-        coords = (screen_x + ghostSize * (0.3 + dx),
-                screen_y - ghostSize * (0.3 - dy))
+        coords = (screenX + ghostSize * (0.3 + dx),
+                screenY - ghostSize * (0.3 - dy))
         graphicsUtils.moveCircle(eyes[3], coords, ghostSize * 0.08)
 
     def moveGhost(self, ghost, ghostIndex, prevGhost, ghostImageParts):
-        old_x, old_y = self.to_screen(self.getPosition(prevGhost))
-        new_x, new_y = self.to_screen(self.getPosition(ghost))
-        delta = new_x - old_x, new_y - old_y
+        oldX, oldY = self.toScreen(self.getPosition(prevGhost))
+        newX, newY = self.toScreen(self.getPosition(ghost))
+        delta = newX - oldX, newY - oldY
 
         for ghostImagePart in ghostImageParts:
             graphicsUtils.move_by(ghostImagePart, delta)
@@ -402,13 +388,13 @@ class AbstractPacmanGraphics(ABC):
 
     def finish(self):
         # Get the last frame.
-        self.save_frame(force_save = True)
+        self.saveFrame(forceSave = True)
 
         graphicsUtils.end_graphics()
 
-        self.write_gif()
+        self.writeGif()
 
-    def to_screen(self, point):
+    def toScreen(self, point):
         x, y = point
         x = (x + 1) * self.gridSize
         y = (self.height - y) * self.gridSize
@@ -416,7 +402,7 @@ class AbstractPacmanGraphics(ABC):
         return x, y
 
     # Fixes some TK issue with off - center circles
-    def to_screen2(self, point):
+    def toScreen2(self, point):
         x, y = point
         x = (x + 1) * self.gridSize
         y = (self.height - y) * self.gridSize
@@ -438,8 +424,8 @@ class AbstractPacmanGraphics(ABC):
                     continue
 
                 pos = xNum, yNum
-                screen = self.to_screen(pos)
-                screen2 = self.to_screen2(pos)
+                screen = self.toScreen(pos)
+                screen2 = self.toScreen2(pos)
 
                 # draw each quadrant of the square based on adjacent walls
                 wIsWall = self.isWall(xNum - 1, yNum, wallMatrix)
@@ -576,7 +562,7 @@ class AbstractPacmanGraphics(ABC):
             foodImages.append(imageRow)
             for yNum, cell in enumerate(x):
                 if cell:  # There's food here
-                    screen = self.to_screen((xNum, yNum))
+                    screen = self.toScreen((xNum, yNum))
                     dot = graphicsUtils.circle(screen, graphicsConstants.FOOD_SIZE * self.gridSize,
                             outlineColor = color, fillColor = color, width = 1)
                     imageRow.append(dot)
@@ -588,8 +574,8 @@ class AbstractPacmanGraphics(ABC):
     def drawCapsules(self, capsules):
         capsuleImages = {}
         for capsule in capsules:
-            screen_x, screen_y = self.to_screen(capsule)
-            dot = graphicsUtils.circle((screen_x, screen_y),
+            screenX, screenY = self.toScreen(capsule)
+            dot = graphicsUtils.circle((screenX, screenY),
                     graphicsConstants.CAPSULE_SIZE * self.gridSize,
                     outlineColor = graphicsConstants.CAPSULE_COLOR,
                     fillColor = graphicsConstants.CAPSULE_COLOR, width = 1)
@@ -616,8 +602,9 @@ class AbstractPacmanGraphics(ABC):
         self.expandedCells = []
 
         for k, cell in enumerate(cells):
-            screenPos = self.to_screen(cell)
-            cellColor = graphicsUtils.formatColor(*[(n - k) * c * .5 / n + .25 for c in baseColor])
+            screenPos = self.toScreen(cell)
+            cellColor = graphicsUtils.formatColor(
+                *[(n - k) * c * 0.5 / n + 0.25 for c in baseColor])
             block = graphicsUtils.square(screenPos, 0.5 * self.gridSize, color = cellColor,
                     filled = 1, behind = 2)
             self.expandedCells.append(block)
@@ -628,30 +615,6 @@ class AbstractPacmanGraphics(ABC):
         if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
             for cell in self.expandedCells:
                 graphicsUtils.remove_from_screen(cell)
-
-    def updateDistributions(self, distributions):
-        "Draws an agent's belief distributions"
-        if (self.distributionImages is None):
-            self.drawDistributions(self.previousState)
-
-        for x in range(len(self.distributionImages)):
-            for y in range(len(self.distributionImages[0])):
-                image = self.distributionImages[x][y]
-                weights = [dist[(x, y)] for dist in distributions]
-
-                if (sum(weights) != 0):
-                    pass
-
-                # Fog of war
-                color = [0.0, 0.0, 0.0]
-                colors = graphicsConstants.GHOST_VEC_COLORS[1:]  # With Pacman
-                if self.capture:
-                    colors = graphicsConstants.GHOST_VEC_COLORS
-
-                for weight, gcolor in zip(weights, colors):
-                    color = [min(1.0, c + 0.95 * g * weight ** .3) for c, g in zip(color, gcolor)]
-                graphicsUtils.changeColor(image, graphicsUtils.formatColor(*color))
-        graphicsUtils.refresh()
 
     def add(self, x, y):
         return (x[0] + y[0], x[1] + y[1])
