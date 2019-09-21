@@ -378,7 +378,7 @@ def parseOptions(argv):
 
     parser = argparse.ArgumentParser(description=usageString)
 
-    parser.add_argument('-d', '--discount', dest='discount',
+    parser.add_argument('-c', '--discount', dest='discount',
             action='store', type=float, default=0.9,
             help='Discount on future (default %(default)s)')
 
@@ -426,9 +426,17 @@ def parseOptions(argv):
             action='store_true', default=False,
             help='Pause GUI after each time step when running the MDP (default %(default)s)')
 
-    parser.add_argument('-q', '--quiet', dest='quiet',
+    parser.add_argument('-x', '--skip-display', dest='skipDisplay',
             action='store_true', default=False,
             help='Skip display of any learning episodes (default %(default)s)')
+
+    parser.add_argument('-q', '--quiet', dest='quiet',
+            action='store_true', default=False,
+            help='Sets logging level to warning (default: %(default)s)')
+
+    parser.add_argument('-d', '--debug', dest='debug',
+            action='store_true', default=False,
+            help='Sets logging level to debug (default: %(default)s)')
 
     parser.add_argument('-s', '--speed', dest='speed',
             action='store', type=float, default=1.0,
@@ -445,12 +453,23 @@ def parseOptions(argv):
     options, otherjunk = parser.parse_known_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
 
+    # Set the logging level
+    if options.quiet and options.debug:
+        raise Exception("Logging cannont be set to both debug and quiet")
+
+    if options.quiet:
+        initLogging(logging_level = logging.WARNING)
+    elif options.debug:
+        initLogging(logging_level = logging.DEBUG)
+    else:
+        initLogging(logging_level = logging.INFO)
+
     if options.manual and options.agent != 'q':
         logging.info('## Disabling Agents in Manual Mode (-m) ##')
         options.agent = None
 
     # MANAGE CONFLICTS
-    if options.textDisplay or options.quiet:
+    if options.textDisplay or options.skipDisplay:
         options.pause = False
 
     if options.manual:
@@ -459,8 +478,6 @@ def parseOptions(argv):
     return options
 
 def main(argv):
-    initLogging()
-
     opts = parseOptions(argv)
 
     ###########################
@@ -545,7 +562,7 @@ def main(argv):
 
     # Figure out what to display each time step (if anything).
     displayCallback = lambda x: None
-    if (not opts.quiet):
+    if (not opts.skipDisplay):
         if (opts.manual and opts.agent is None):
             displayCallback = lambda state: display.displayNullValues(state)
         else:
@@ -557,7 +574,7 @@ def main(argv):
                 displayCallback = lambda state: display.displayQValues(a, state, 'CURRENT Q-VALUES')
 
     messageCallback = lambda x: print(x)
-    if (opts.quiet):
+    if (opts.skipDisplay):
         messageCallback = lambda x: None
 
     # FIGURE OUT WHETHER TO WAIT FOR A KEY PRESS AFTER EACH TIME STEP

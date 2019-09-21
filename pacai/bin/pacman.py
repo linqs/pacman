@@ -448,6 +448,14 @@ def readCommand(argv):
             action='store_true', default=False,
             help='Generate minimal output and no graphics (default: %(default)s)')
 
+    parser.add_argument('-q', '--quiet', dest='quiet',
+            action='store_true', default=False,
+            help='Sets logging level to warning (default: %(default)s)')
+
+    parser.add_argument('-d', '--debug', dest='debug',
+            action='store_true', default=False,
+            help='Sets logging level to debug (default: %(default)s)')
+
     parser.add_argument('-z', '--zoom', dest='zoom',
             action='store', type=float, default=1.0,
             help='Zoom the size of the graphics window (default: %(default)s)')
@@ -486,9 +494,18 @@ def readCommand(argv):
 
     options, otherjunk = parser.parse_known_args(argv)
     assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
-    #if len(otherjunk) != 0:
-    #    raise Exception('Command line input not understood: ' + str(otherjunk))
     args = dict()
+
+    # Set the logging level
+    if options.quiet and options.debug:
+        raise Exception("Logging cannont be set to both debug and quiet")
+
+    if options.quiet:
+        initLogging(logging_level = logging.WARNING)
+    elif options.debug:
+        initLogging(logging_level = logging.DEBUG)
+    else:
+        initLogging(logging_level = logging.INFO)
 
     # Fix the random seed
     if options.fixRandomSeed:
@@ -622,7 +639,6 @@ def main(argv):
 
     argv already has the executable stripped.
     """
-    initLogging()
 
     # Get game components based on input
     args = readCommand(argv)
