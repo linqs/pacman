@@ -490,9 +490,8 @@ def readCommand(argv):
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.NullGraphics()
     elif options.textGraphics:
-        import pacai.ui.textDisplay
-        pacai.ui.textDisplay.SLEEP_TIME = options.frameTime
-        args['display'] = pacai.ui.textDisplay.PacmanGraphics()
+        from pacai.ui.pacman.text import PacmanTextView
+        args['display'] = PacmanTextView()
     else:
         import pacai.ui.graphicsDisplay
         args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom,
