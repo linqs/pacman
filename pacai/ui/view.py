@@ -3,11 +3,13 @@ import abc
 from PIL import Image
 from PIL import ImageDraw
 
+from pacai.util import util
+
 # TODO(eriq): This should eventually be false.
 DEFAULT_SAVE_FRAMES = True
 DEFAULT_SAVE_EVERY_N_FRAMES = 5
 
-SQUARE_SIZE = 30
+SQUARE_SIZE = 50
 
 GIF_FPS = 10
 GIF_FRAME_DURATION_MS = int(1.0 / GIF_FPS * 1000.0)
@@ -105,7 +107,27 @@ class Frame(object):
     def __init__(self, state):
         self._height = state.getInitialLayout().getHeight()
         self._width = state.getInitialLayout().getWidth()
+
+        # All items on the board are at integral potision.
         self._board = self._buildBoard(state)
+
+        # Agents may not be at integral positions, so they are represented independently.
+        self._agentTokens = self._getAgentTokens(state)
+
+    def getAgents(self):
+        return self._agentTokens
+
+    def getDiscreteAgents(self):
+        """
+        Get the agentTokens, but with interger positions.
+        """
+
+        agentTokens = {}
+
+        for (position, agent) in self._agentTokens.items():
+            agentTokens[util.nearestPoint(position)] = agent
+
+        return agentTokens
 
     def getHeight(self):
         return self._height
@@ -120,8 +142,6 @@ class Frame(object):
         return self._width
 
     def _buildBoard(self, state):
-        agentTokens = self._getAgentTokens(state)
-
         board = self._width * [None]
         for x in range(self._width):
 
@@ -129,15 +149,10 @@ class Frame(object):
             for y in range(self._height):
                 if (state.hasWall(x, y)):
                     items[y] = Frame.WALL
-
-                if (state.hasFood(x, y)):
+                elif (state.hasFood(x, y)):
                     items[y] = Frame.FOOD
-
-                if (state.hasCapsule(x, y)):
+                elif (state.hasCapsule(x, y)):
                     items[y] = Frame.CAPSULE
-
-                if ((x, y) in agentTokens):
-                    items[y] = agentTokens[(x, y)]
 
             board[x] = items
 
@@ -152,7 +167,7 @@ class Frame(object):
 
         for agentIndex in range(state.getNumAgents()):
             agentState = state.getAgentState(agentIndex)
-            position = agentState.getNearestPosition()
+            position = agentState.getPosition()
 
             if (agentState.isPacman()):
                 tokens[position] = Frame.PACMAN_1
@@ -165,22 +180,28 @@ class Frame(object):
 
     def toImage(self):
         image = Image.new('RGB', (self._width * SQUARE_SIZE, self._height * SQUARE_SIZE))
-
         draw = ImageDraw.Draw(image)
 
+        # First, draw the board.
         for x in range(self._width):
             for y in range(self._height):
                 color = self._tokenToColor(self._board[x][y])
-
                 startPoint = self._toImageCoords(x, y)
                 endPoint = self._toImageCoords(x + 1, y - 1)
                 draw.rectangle([startPoint, endPoint], fill = color)
+
+        # Now, overlay the agents.
+        for ((x, y), agentToken) in self._agentTokens.items():
+            color = self._tokenToColor(agentToken)
+            startPoint = self._toImageCoords(x, y)
+            endPoint = self._toImageCoords(x + 1, y - 1)
+            draw.rectangle([startPoint, endPoint], fill = color)
 
         return image
 
     def _toImageCoords(self, x, y):
         # PIL has (0, 0) as the upper-left, while pacai has it as the lower-left.
-        return (x * SQUARE_SIZE, (self._height - 1 - y) * SQUARE_SIZE)
+        return (int(x * SQUARE_SIZE), int((self._height - 1 - y) * SQUARE_SIZE))
 
     def _tokenToColor(self, token):
         if (token == Frame.EMPTY):
