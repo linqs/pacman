@@ -1,4 +1,5 @@
 import abc
+import os
 
 from PIL import Image
 from PIL import ImageDraw
@@ -7,13 +8,16 @@ from pacai.util import util
 
 # TODO(eriq): This should eventually be false.
 DEFAULT_SAVE_FRAMES = True
-DEFAULT_SAVE_EVERY_N_FRAMES = 5
+DEFAULT_SAVE_EVERY_N_FRAMES = 3
 
 SQUARE_SIZE = 50
 
 GIF_FPS = 10
 GIF_FRAME_DURATION_MS = int(1.0 / GIF_FPS * 1000.0)
 GIF_FILENAME = 'test.gif'
+
+# By default, the sprite sheet is adjacent to this file.
+DEFAULT_SPRITE_SHEET = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pacman-sprites.png')
 
 # TODO(eriq): This is specific for the Pacman-style games.
 class AbstractView(abc.ABC):
@@ -29,13 +33,15 @@ class AbstractView(abc.ABC):
         self._frameCount = 0
         self._keyFrames = []
 
+        self._sprites = Frame.loadSpriteSheet(DEFAULT_SPRITE_SHEET)
+
     def finish(self):
         """
         Signal that the game is over and the UI should cleanup.
         """
 
         if (self._saveFrames and len(self._keyFrames) > 0):
-            images = [frame.toImage() for frame in self._keyFrames]
+            images = [frame.toImage(self._sprites) for frame in self._keyFrames]
             images[0].save(GIF_FILENAME, save_all = True, append_images = images,
                     duration = GIF_FRAME_DURATION_MS, loop = 0, optimize = True)
 
@@ -141,6 +147,33 @@ class Frame(object):
     def getWidth(self):
         return self._width
 
+    @staticmethod
+    def loadSpriteSheet(path):
+        spritesheet = Image.open(path)
+
+        sprites = {
+            Frame.PACMAN_1: Frame._cropSprite(spritesheet, 0, 0),
+            Frame.GHOST_1: Frame._cropSprite(spritesheet, 1, 0),
+            Frame.GHOST_2: Frame._cropSprite(spritesheet, 2, 0),
+            Frame.SCARED_GHOST: Frame._cropSprite(spritesheet, 3, 0),
+            Frame.FOOD: Frame._cropSprite(spritesheet, 4, 0),
+            Frame.CAPSULE: Frame._cropSprite(spritesheet, 5, 0),
+        }
+
+        return sprites
+
+    @staticmethod
+    def _cropSprite(spritesheet, row, col):
+        # (left, upper, right, lower)
+        rectangle = (
+            col * SQUARE_SIZE,
+            row * SQUARE_SIZE,
+            (col + 1) * SQUARE_SIZE,
+            (row + 1) * SQUARE_SIZE,
+        )
+
+        return spritesheet.crop(rectangle)
+
     def _buildBoard(self, state):
         board = self._width * [None]
         for x in range(self._width):
@@ -178,26 +211,30 @@ class Frame(object):
 
         return tokens
 
-    def toImage(self):
+    def toImage(self, sprites = {}):
         image = Image.new('RGB', (self._width * SQUARE_SIZE, self._height * SQUARE_SIZE))
         draw = ImageDraw.Draw(image)
 
         # First, draw the board.
         for x in range(self._width):
             for y in range(self._height):
-                color = self._tokenToColor(self._board[x][y])
-                startPoint = self._toImageCoords(x, y)
-                endPoint = self._toImageCoords(x + 1, y - 1)
-                draw.rectangle([startPoint, endPoint], fill = color)
+                self._placeToken(x, y, self._board[x][y], sprites, image, draw)
 
         # Now, overlay the agents.
         for ((x, y), agentToken) in self._agentTokens.items():
-            color = self._tokenToColor(agentToken)
-            startPoint = self._toImageCoords(x, y)
-            endPoint = self._toImageCoords(x + 1, y - 1)
-            draw.rectangle([startPoint, endPoint], fill = color)
+            self._placeToken(x, y, agentToken, sprites, image, draw)
 
         return image
+
+    def _placeToken(self, x, y, token, sprites, image, draw):
+        startPoint = self._toImageCoords(x, y)
+        endPoint = self._toImageCoords(x + 1, y - 1)
+
+        if (token in sprites):
+            image.paste(sprites[token], startPoint, sprites[token])
+        else:
+            color = self._tokenToColor(token)
+            draw.rectangle([startPoint, endPoint], fill = color)
 
     def _toImageCoords(self, x, y):
         # PIL has (0, 0) as the upper-left, while pacai has it as the lower-left.
