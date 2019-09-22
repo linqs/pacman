@@ -31,15 +31,15 @@ class PacmanTextView(AbstractView):
     def _convertToken(self, token):
         if (token == Frame.EMPTY):
             return ' '
-        if (token == Frame.WALL):
+        if (Frame.isWall(token)):
             return '█'
         if (token == Frame.FOOD):
             return '⋅'
         elif (token == Frame.CAPSULE):
             return 'c'
-        elif (token >= Frame.PACMAN_1 and token <= Frame.PACMAN_6):
+        elif (Frame.isPacman(token)):
             return 'P'
-        elif (token >= Frame.GHOST_1 and token <= Frame.GHOST_6):
+        elif (Frame.isGhost(token)):
             return 'G'
         elif (token == Frame.SCARED_GHOST):
             return 'S'

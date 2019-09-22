@@ -17,7 +17,7 @@ GIF_FRAME_DURATION_MS = int(1.0 / GIF_FPS * 1000.0)
 GIF_FILENAME = 'test.gif'
 
 # By default, the sprite sheet is adjacent to this file.
-DEFAULT_SPRITE_SHEET = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pacman-sprites.png')
+DEFAULT_SPRITES = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pacman-sprites.png')
 
 # TODO(eriq): This is specific for the Pacman-style games.
 class AbstractView(abc.ABC):
@@ -33,7 +33,7 @@ class AbstractView(abc.ABC):
         self._frameCount = 0
         self._keyFrames = []
 
-        self._sprites = Frame.loadSpriteSheet(DEFAULT_SPRITE_SHEET)
+        self._sprites = Frame.loadSpriteSheet(DEFAULT_SPRITES)
 
     def finish(self):
         """
@@ -85,11 +85,66 @@ class AbstractView(abc.ABC):
         # TODO(eriq): Deprecated. From old interface.
         pass
 
+# Note: Having this outside of Frame is a bit hacky,
+# but we need to do it to clear up some static cyclic dependencies.
+def _computeWallCode(hasWallN, hasWallE, hasWallS, hasWallW):
+    """
+    Given information about a wall's cardinal neighbors,
+    compute the correct type of wall to use.
+    The computation is similar to POSIX permission bits,
+    all combinations produce unique sums.
+    """
+
+    WALL_BASE = 100
+
+    N_WALL = 1
+    E_WALL = 2
+    S_WALL = 4
+    W_WALL = 8
+
+    code = WALL_BASE
+
+    if (hasWallN):
+        code += N_WALL
+
+    if (hasWallE):
+        code += E_WALL
+
+    if (hasWallS):
+        code += S_WALL
+
+    if (hasWallW):
+        code += W_WALL
+
+    return code
+
 # TODO(eriq): Frames can probably be more effiicent with bit packing.
 class Frame(object):
     """
     A general representation of that can be seen on-screen at a given time.
     """
+
+    # For the walls, we have a different sprite depending on what sides (lines) are present.
+    # An 'X' in the name indicates that a wall is not there.
+    # To get the pacman "tubular" look, adjacent walls will look connected
+    # and not have a line between them.
+    WALL_NESW = _computeWallCode(False, False, False, False)
+    WALL_NESX = _computeWallCode(False, False, False, True)
+    WALL_NEXW = _computeWallCode(False, False, True,  False)
+    WALL_NEXX = _computeWallCode(False, False, True,  True)
+    WALL_NXSW = _computeWallCode(False, True,  False, False)
+    WALL_NXSX = _computeWallCode(False, True,  False, True)
+    WALL_NXXW = _computeWallCode(False, True,  True,  False)
+    WALL_NXXX = _computeWallCode(False, True,  True,  True)
+    WALL_XESW = _computeWallCode(True,  False, False, False)
+    WALL_XESX = _computeWallCode(True,  False, False, True)
+    WALL_XEXW = _computeWallCode(True,  False, True,  False)
+    WALL_XEXX = _computeWallCode(True,  False, True,  True)
+    WALL_XXSW = _computeWallCode(True,  True,  False, False)
+    WALL_XXSX = _computeWallCode(True,  True,  False, True)
+    WALL_XXXW = _computeWallCode(True,  True,  True,  False)
+    WALL_XXXX = _computeWallCode(True,  True,  True,  True)
+
 
     # Token to mark what can occupy different locations.
     EMPTY = 0
@@ -148,6 +203,18 @@ class Frame(object):
         return self._width
 
     @staticmethod
+    def isGhost(token):
+        return token >= Frame.GHOST_1 and token <= Frame.GHOST_6
+
+    @staticmethod
+    def isPacman(token):
+        return token >= Frame.PACMAN_1 and token <= Frame.PACMAN_6
+
+    @staticmethod
+    def isWall(token):
+        return token >= Frame.WALL_NESW and token <= Frame.WALL_XXXX
+
+    @staticmethod
     def loadSpriteSheet(path):
         spritesheet = Image.open(path)
 
@@ -158,6 +225,23 @@ class Frame(object):
             Frame.SCARED_GHOST: Frame._cropSprite(spritesheet, 3, 0),
             Frame.FOOD: Frame._cropSprite(spritesheet, 4, 0),
             Frame.CAPSULE: Frame._cropSprite(spritesheet, 5, 0),
+
+            Frame.WALL_NESW: Frame._cropSprite(spritesheet, 6, 0),
+            Frame.WALL_NESX: Frame._cropSprite(spritesheet, 6, 1),
+            Frame.WALL_NEXW: Frame._cropSprite(spritesheet, 6, 2),
+            Frame.WALL_NEXX: Frame._cropSprite(spritesheet, 6, 3),
+            Frame.WALL_NXSW: Frame._cropSprite(spritesheet, 7, 0),
+            Frame.WALL_NXSX: Frame._cropSprite(spritesheet, 7, 1),
+            Frame.WALL_NXXW: Frame._cropSprite(spritesheet, 7, 2),
+            Frame.WALL_NXXX: Frame._cropSprite(spritesheet, 7, 3),
+            Frame.WALL_XESW: Frame._cropSprite(spritesheet, 8, 0),
+            Frame.WALL_XESX: Frame._cropSprite(spritesheet, 8, 1),
+            Frame.WALL_XEXW: Frame._cropSprite(spritesheet, 8, 2),
+            Frame.WALL_XEXX: Frame._cropSprite(spritesheet, 8, 3),
+            Frame.WALL_XXSW: Frame._cropSprite(spritesheet, 9, 0),
+            Frame.WALL_XXSX: Frame._cropSprite(spritesheet, 9, 1),
+            Frame.WALL_XXXW: Frame._cropSprite(spritesheet, 9, 2),
+            Frame.WALL_XXXX: Frame._cropSprite(spritesheet, 9, 3),
         }
 
         return sprites
@@ -181,7 +265,7 @@ class Frame(object):
             items = self._height * [Frame.EMPTY]
             for y in range(self._height):
                 if (state.hasWall(x, y)):
-                    items[y] = Frame.WALL
+                    items[y] = self._getWallToken(x, y, state)
                 elif (state.hasFood(x, y)):
                     items[y] = Frame.FOOD
                 elif (state.hasCapsule(x, y)):
@@ -190,6 +274,26 @@ class Frame(object):
             board[x] = items
 
         return board
+
+    def _getWallToken(self, x, y, state):
+        hasWallN = False
+        hasWallE = False
+        hasWallS = False
+        hasWallW = False
+
+        if (y != self._height - 1):
+            hasWallN = state.hasWall(x, y + 1)
+
+        if (x != self._width - 1):
+            hasWallE = state.hasWall(x + 1, y)
+
+        if (y != 0):
+            hasWallS = state.hasWall(x, y - 1)
+
+        if (x != 0):
+            hasWallW = state.hasWall(x - 1, y)
+
+        return _computeWallCode(hasWallN, hasWallE, hasWallS, hasWallW)
 
     def _getAgentTokens(self, state):
         """
@@ -243,15 +347,15 @@ class Frame(object):
     def _tokenToColor(self, token):
         if (token == Frame.EMPTY):
             return (0, 0, 0)
-        if (token == Frame.WALL):
+        if (self.isWall(token)):
             return (0, 51, 255)
         if (token == Frame.FOOD):
             return (255, 255, 255)
         elif (token == Frame.CAPSULE):
             return (255, 0, 255)
-        elif (token >= Frame.GHOST_1 and token <= Frame.GHOST_6):
+        elif (self.isGhost(token)):
             return (229, 0, 0)
-        elif (token >= Frame.PACMAN_1 and token <= Frame.PACMAN_6):
+        elif (self.isPacman(token)):
             return (255, 255, 61)
         elif (token == Frame.SCARED_GHOST):
             return (0, 255, 0)
