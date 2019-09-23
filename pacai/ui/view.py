@@ -194,6 +194,30 @@ class Frame(object):
     GHOST_6 = 2600
     GHOST_END = 2700
 
+    # Constants specific to the sprite sheet.
+
+    SPRITE_SHEET_WALLS_ROW = 8
+
+    # The order that the wall sprites appear in the sheet.
+    SPRITE_SHEET_WALL_ORDER = [
+        WALL_NESW,
+        WALL_NESX,
+        WALL_NEXW,
+        WALL_NEXX,
+        WALL_NXSW,
+        WALL_NXSX,
+        WALL_NXXW,
+        WALL_NXXX,
+        WALL_XESW,
+        WALL_XESX,
+        WALL_XEXW,
+        WALL_XEXX,
+        WALL_XXSW,
+        WALL_XXSX,
+        WALL_XXXW,
+        WALL_XXXX,
+    ]
+
     SPRITE_SHEET_AGENT_ORDER = [
         PACMAN_1,
         GHOST_1,
@@ -287,24 +311,13 @@ class Frame(object):
             Frame.FOOD: Frame._cropSprite(spritesheet, 7, 0),
             Frame.CAPSULE: Frame._cropSprite(spritesheet, 7, 1),
             Frame.SCARED_GHOST: Frame._cropSprite(spritesheet, 7, 2),
-
-            Frame.WALL_NESW: Frame._cropSprite(spritesheet, 8, 0),
-            Frame.WALL_NESX: Frame._cropSprite(spritesheet, 8, 1),
-            Frame.WALL_NEXW: Frame._cropSprite(spritesheet, 8, 2),
-            Frame.WALL_NEXX: Frame._cropSprite(spritesheet, 8, 3),
-            Frame.WALL_NXSW: Frame._cropSprite(spritesheet, 9, 0),
-            Frame.WALL_NXSX: Frame._cropSprite(spritesheet, 9, 1),
-            Frame.WALL_NXXW: Frame._cropSprite(spritesheet, 9, 2),
-            Frame.WALL_NXXX: Frame._cropSprite(spritesheet, 9, 3),
-            Frame.WALL_XESW: Frame._cropSprite(spritesheet, 10, 0),
-            Frame.WALL_XESX: Frame._cropSprite(spritesheet, 10, 1),
-            Frame.WALL_XEXW: Frame._cropSprite(spritesheet, 10, 2),
-            Frame.WALL_XEXX: Frame._cropSprite(spritesheet, 10, 3),
-            Frame.WALL_XXSW: Frame._cropSprite(spritesheet, 11, 0),
-            Frame.WALL_XXSX: Frame._cropSprite(spritesheet, 11, 1),
-            Frame.WALL_XXXW: Frame._cropSprite(spritesheet, 11, 2),
-            Frame.WALL_XXXX: Frame._cropSprite(spritesheet, 11, 3),
         }
+
+        # Load all the wall sprites.
+        for wallIndex in range(len(Frame.SPRITE_SHEET_WALL_ORDER)):
+            wallToken = Frame.SPRITE_SHEET_WALL_ORDER[wallIndex]
+            sprite = Frame._cropSprite(spritesheet, Frame.SPRITE_SHEET_WALLS_ROW, wallIndex)
+            sprites[wallToken] = sprite
 
         # Load all the agent animations.
         for agentIndex in range(len(Frame.SPRITE_SHEET_AGENT_ORDER)):
