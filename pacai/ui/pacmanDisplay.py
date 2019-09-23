@@ -456,7 +456,7 @@ class AbstractPacmanGraphics(ABC):
 
                 if nIsWall and eIsWall and not neIsWall:
                     # outer circle
-                    graphicsUtils.circle(self.add(screen2, (2 * wallSize, -1 * wallSize)),
+                    graphicsUtils.circle(self.add(screen2, (2 * wallSize, -1 * wallSize - 3)),
                             wallSize - 1, wallColor, wallColor, (180, 271), 'arc')
                     graphicsUtils.line(self.add(screen, (2 * wallSize - 1, -1 * wallSize)),
                             self.add(screen, (self.gridSize * 0.5 + 1, -1 * wallSize)), wallColor)
