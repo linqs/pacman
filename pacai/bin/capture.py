@@ -27,7 +27,6 @@ The keys are
     P2: 'l', ';', ',', and 'p' to move
 """
 
-import argparse
 import importlib
 import logging
 import pickle
@@ -38,12 +37,14 @@ import traceback
 import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
+from pacai.bin.arguments import loadArgs
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
 from pacai.util.logs import initLogging
+from pacai.util.logs import updateLoggingLevel
 from pacai.util.util import nearestPoint
 
 COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
@@ -524,123 +525,65 @@ def readCommand(argv):
             team is pacai.student.myTeam
     """
 
-    parser = argparse.ArgumentParser(description=usageString)
+    parser = loadArgs(usageString)
 
-    # capture.py arguments
-    parser.add_argument('-r', '--red', dest='red',
-            action='store', type=str, default='pacai.core.baselineTeam',
-            help='Set red team (default: %(default)s)')
-
-    parser.add_argument('-b', '--blue', dest='blue',
-            action='store', type=str, default='pacai.core.baselineTeam',
-            help='Set blue team (default: %(default)s)')
-
-    parser.add_argument('--red-args', dest='redArgs',
-            action='store', type=str, default=None,
-            help='Comma separated arguments to be passed to red team (e.g. "opt1=val1,opt2")'
-                + '(default: %(default)s)')
-
-    parser.add_argument('--blue-args', dest='blueArgs',
-            action='store', type=str, default=None,
-            help='Comma separated arguments to be passed to blue team (e.g. "opt1=val1,opt2")'
-                + '(default: %(default)s)')
-
-    parser.add_argument('--keys0', dest='keys0',
-            action='store_true', default=False,
-            help='Make agent 0 (first red player) a keyboard agent (default: %(default)s)')
-
-    parser.add_argument('--keys1', dest='keys1',
-            action='store_true', default=False,
-            help='Make agent 1 (first blue player) a keyboard agent (default: %(default)s)')
-
-    parser.add_argument('--keys2', dest='keys2',
-            action='store_true', default=False,
-            help='Make agent 2 (second red player) a keyboard agent (default: %(default)s)')
-
-    parser.add_argument('--keys3', dest='keys3',
-            action='store_true', default=False,
-            help='Make agent 3 (second blue player) a keyboard agent (default: %(default)s)')
-
-    parser.add_argument('-m', '--max-moves', dest='maxMoves',
-            action='store', type=int, default=1200,
-            help='Set maximum number of moves in a game (default: %(default)s)')
-
-    # General arguments
-    parser.add_argument('-n', '--num-games', dest='numGames',
-            action='store', type=int, default=1,
-            help='Play the specified number of games (default: %(default)s)')
-
-    parser.add_argument('-l', '--layout', dest='layout',
-            action='store', type=str, default='defaultCapture',
-            help='Use the specified map layout or input RANDOM<seed>'
+    parser.add_argument('-l', '--layout', dest = 'layout',
+            action = 'store', type = str, default = 'defaultCapture',
+            help = 'Use the specified map layout or input RANDOM<seed> '
                 + 'for a random seeded map (i.e. RANDOM23) (default: %(default)s)')
 
-    parser.add_argument('-t', '--text-graphics', dest='textGraphics',
-            action='store_true', default=False,
-            help='Display output as text only (default: %(default)s)')
+    parser.add_argument('-r', '--red', dest = 'red',
+            action = 'store', type = str, default = 'pacai.core.baselineTeam',
+            help = 'Set red team (default: %(default)s)')
 
-    parser.add_argument('-u', '--null-text-graphics', dest='nullGraphics',
-            action='store_true', default=False,
-            help='Generate minimal output and no graphics (default: %(default)s)')
+    parser.add_argument('-b', '--blue', dest = 'blue',
+            action = 'store', type = str, default = 'pacai.core.baselineTeam',
+            help = 'Set blue team (default: %(default)s)')
 
-    parser.add_argument('-q', '--quiet', dest='quiet',
-            action='store_true', default=False,
-            help='Sets logging level to warning (default: %(default)s)')
+    parser.add_argument('--red-args', dest = 'redArgs',
+            action = 'store', type = str, default = None,
+            help = 'Comma separated arguments to be passed to red team (e.g. "opt1=val1,opt2") '
+                + '(default: %(default)s)')
 
-    parser.add_argument('-d', '--debug', dest='debug',
-            action='store_true', default=False,
-            help='Sets logging level to debug (default: %(default)s)')
+    parser.add_argument('--blue-args', dest = 'blueArgs',
+            action = 'store', type = str, default = None,
+            help = 'Comma separated arguments to be passed to blue team (e.g. "opt1=val1,opt2") '
+                + '(default: %(default)s)')
 
-    parser.add_argument('-z', '--zoom', dest='zoom',
-            action='store', type=float, default=1.0,
-            help='Zoom the size of the graphics window (default: %(default)s)')
+    parser.add_argument('--keys0', dest = 'keys0',
+            action = 'store_true', default = False,
+            help = 'Make agent 0 (first red player) a keyboard agent (default: %(default)s)')
 
-    parser.add_argument('-f', '--fix-random-seed', dest='fixRandomSeed',
-            action='store_true', default=False,
-            help='Fixes the random seed to always play the same game (default: %(default)s)')
+    parser.add_argument('--keys1', dest = 'keys1',
+            action = 'store_true', default = False,
+            help = 'Make agent 1 (first blue player) a keyboard agent (default: %(default)s)')
 
-    parser.add_argument('--record', dest='record',
-            action='store', type=str, default=None,
-            help='Writes the moves of a game to the named pickle file (default: %(default)s)')
+    parser.add_argument('--keys2', dest = 'keys2',
+            action = 'store_true', default = False,
+            help = 'Make agent 2 (second red player) a keyboard agent (default: %(default)s)')
 
-    parser.add_argument('--replay', dest='replay',
-            action='store', type=str, default=None,
-            help='Load a recorded pickle game file to replay (default: %(default)s)')
+    parser.add_argument('--keys3', dest = 'keys3',
+            action = 'store_true', default = False,
+            help = 'Make agent 3 (second blue player) a keyboard agent (default: %(default)s)')
 
-    parser.add_argument('-x', '--num-training', dest='numTraining',
-            action='store', type=int, default=0,
-            help='Set how many episodes of training (suppresses output) (default: %(default)s)')
-
-    parser.add_argument('-c', '--catch-exceptions', dest='catchExceptions',
-            action='store_true', default=False,
-            help='Turns on exception handling and timeouts during games (default: %(default)s)')
-
-    parser.add_argument('--gif', dest='gif',
-            action='store_true', default=False,
-            help='Save the game as a gif to the specified path (default: %(default)s)')
-
-    parser.add_argument('--gif-skip-frames', dest='gifSkipFrames',
-            action='store', type=int, default=0,
-            help='Skip this number of frames between frames of the gif (default: %(default)s)')
-
-    parser.add_argument('--gif-fps', dest='gifFPS',
-            action='store', type=float, default=10.0,
-            help='FPS of the gif (default: %(default)s)')
+    parser.add_argument('--max-moves', dest = 'maxMoves',
+            action = 'store', type = int, default = 1200,
+            help = 'Set maximum number of moves in a game (default: %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
-    assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
     args = dict()
+
+    if len(otherjunk) != 0:
+        raise ValueError('Unrecognized options: ' + str(otherjunk))
 
     # Set the logging level
     if options.quiet and options.debug:
-        raise Exception("Logging cannont be set to both debug and quiet")
+        raise ValueError('Logging cannont be set to both debug and quiet')
 
     if options.quiet:
-        initLogging(logging_level = logging.WARNING)
+        updateLoggingLevel(logging.WARNING)
     elif options.debug:
-        initLogging(logging_level = logging.DEBUG)
-    else:
-        initLogging(logging_level = logging.INFO)
+        updateLoggingLevel(logging.DEBUG)
 
     # Choose a display format
     if options.textGraphics:
@@ -688,7 +631,7 @@ def readCommand(argv):
         elif numKeyboardAgents == 1:
             agent = keyboard.IJKLKeyboardAgent(index)
         else:
-            raise Exception('Max of two keyboard agents supported')
+            raise ValueError('Max of two keyboard agents supported')
         numKeyboardAgents += 1
         args['agents'][index] = agent
 
@@ -700,12 +643,12 @@ def readCommand(argv):
 
         args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
-        raise Exception('You must use a capture layout with capture.py')
+        raise ValueError('You must use a capture layout with capture.py')
     else:
         args['layout'] = pacai.core.layout.getLayout(options.layout)
 
     if (args['layout'] is None):
-        raise Exception("The layout " + options.layout + " cannot be found")
+        raise ValueError('The layout ' + options.layout + ' cannot be found')
 
     args['length'] = options.maxMoves
     args['numGames'] = options.numGames
@@ -840,6 +783,8 @@ def main(argv):
 
     argv already has the executable stripped.
     """
+
+    initLogging()
 
     # Get game components based on input
     options = readCommand(argv)

@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import random
 import sys
 
@@ -10,6 +11,7 @@ from pacai.student.valueIterationAgent import ValueIterationAgent
 from pacai.ui import graphicsUtils
 from pacai.util.counter import Counter
 from pacai.util.logs import initLogging
+from pacai.util.logs import updateLoggingLevel
 
 class Gridworld(MarkovDecisionProcess):
     """
@@ -376,93 +378,93 @@ def parseOptions(argv):
             - creats a gridworld with a 0.7 discount factor
     """
 
-    parser = argparse.ArgumentParser(description=usageString)
+    parser = argparse.ArgumentParser(description = usageString, prog = os.path.basename(__file__))
 
-    parser.add_argument('-c', '--discount', dest='discount',
-            action='store', type=float, default=0.9,
-            help='Discount on future (default %(default)s)')
+    parser.add_argument('-c', '--discount', dest = 'discount',
+            action = 'store', type = float, default = 0.9,
+            help = 'Discount on future (default %(default)s)')
 
-    parser.add_argument('-r', '--living-reward', dest='livingReward',
-            action='store', type=float, default=0.0,
-            help='Reward for living for a time step (default %(default)s)')
+    parser.add_argument('-r', '--living-reward', dest = 'livingReward',
+            action = 'store', type = float, default = 0.0,
+            help = 'Reward for living for a time step (default %(default)s)')
 
-    parser.add_argument('-n', '--noise', dest='noise',
-            action='store', type=float, default=0.2,
-            help='How often action results in unintended direction (default %(default)s)')
+    parser.add_argument('-n', '--noise', dest = 'noise',
+            action = 'store', type = float, default = 0.2,
+            help = 'How often action results in unintended direction (default %(default)s)')
 
-    parser.add_argument('-e', '--epsilon', dest='epsilon',
-            action='store', type=float, default=0.3,
-            help='Chance of taking a random action in q-learning (default %(default)s)')
+    parser.add_argument('-e', '--epsilon', dest = 'epsilon',
+            action = 'store', type = float, default = 0.3,
+            help = 'Chance of taking a random action in q-learning (default %(default)s)')
 
-    parser.add_argument('-l', '--learning-rate', dest='learningRate',
-            action='store', type=float, default=0.5,
-            help='TD learning rate (default %(default)s)')
+    parser.add_argument('-l', '--learning-rate', dest = 'learningRate',
+            action = 'store', type = float, default = 0.5,
+            help = 'TD learning rate (default %(default)s)')
 
-    parser.add_argument('-i', '--iterations', dest='iters',
-            action='store', type=int, default=10,
-            help='Number of rounds of value iteration (default %(default)s)')
+    parser.add_argument('-i', '--iterations', dest = 'iters',
+            action = 'store', type = int, default = 10,
+            help = 'Number of rounds of value iteration (default %(default)s)')
 
-    parser.add_argument('-k', '--episodes', dest='episodes',
-            action='store', type=int, default=1,
-            help='Number of epsiodes of the MDP to run (default %(default)s)')
+    parser.add_argument('-k', '--episodes', dest = 'episodes',
+            action = 'store', type = int, default = 1,
+            help = 'Number of epsiodes of the MDP to run (default %(default)s)')
 
-    parser.add_argument('-g', '--grid', dest='grid',
-            action='store', type=str, default="BookGrid",
-            help='Grid type: BookGrid, BridgeGrid, CliffGrid, MazeGrid, %(default)s (default)')
+    parser.add_argument('-g', '--grid', dest = 'grid',
+            action = 'store', type = str, default = 'BookGrid',
+            help = 'Grid type: BookGrid, BridgeGrid, CliffGrid, MazeGrid, %(default)s (default)')
 
-    parser.add_argument('-w', '--window-size', dest='gridSize',
-            action='store', type=int, default=150,
-            help='Request a window width of X pixels *per grid cell* (default %(default)s)')
+    parser.add_argument('-w', '--window-size', dest = 'gridSize',
+            action = 'store', type = int, default = 150,
+            help = 'Request a window width of X pixels *per grid cell* (default %(default)s)')
 
-    parser.add_argument('-a', '--agent', dest='agent',
-            action='store', type=str, default="random",
-            help='Agent type (options are \'random\', \'value\' and \'q\', default %(default)s)')
+    parser.add_argument('-a', '--agent', dest = 'agent',
+            action = 'store', type = str, default = 'random',
+            help = 'Agent type (options are \'random\', \'value\' and \'q\', default %(default)s)')
 
-    parser.add_argument('-t', '--text', dest='textDisplay',
-            action='store_true', default=False,
-            help='Use text-only ASCII display (default %(default)s)')
+    parser.add_argument('-t', '--text', dest = 'textDisplay',
+            action = 'store_true', default = False,
+            help = 'Use text-only ASCII display (default %(default)s)')
 
-    parser.add_argument('-p', '--pause', dest='pause',
-            action='store_true', default=False,
-            help='Pause GUI after each time step when running the MDP (default %(default)s)')
+    parser.add_argument('-p', '--pause', dest = 'pause',
+            action = 'store_true', default = False,
+            help = 'Pause GUI after each time step when running the MDP (default %(default)s)')
 
-    parser.add_argument('-x', '--skip-display', dest='skipDisplay',
-            action='store_true', default=False,
-            help='Skip display of any learning episodes (default %(default)s)')
+    parser.add_argument('-x', '--skip-display', dest = 'skipDisplay',
+            action = 'store_true', default = False,
+            help = 'Skip display of any learning episodes (default %(default)s)')
 
-    parser.add_argument('-q', '--quiet', dest='quiet',
-            action='store_true', default=False,
-            help='Sets logging level to warning (default: %(default)s)')
+    parser.add_argument('-q', '--quiet', dest = 'quiet',
+            action = 'store_true', default = False,
+            help = 'Sets logging level to warning (default: %(default)s)')
 
-    parser.add_argument('-d', '--debug', dest='debug',
-            action='store_true', default=False,
-            help='Sets logging level to debug (default: %(default)s)')
+    parser.add_argument('-d', '--debug', dest = 'debug',
+            action = 'store_true', default = False,
+            help = 'Sets logging level to debug (default: %(default)s)')
 
-    parser.add_argument('-s', '--speed', dest='speed',
-            action='store', type=float, default=1.0,
-            help='Speed of animation, S > 1.0 is faster, 0 < S < 1 is slower (default %(default)s)')
+    parser.add_argument('-s', '--speed', dest = 'speed',
+            action = 'store', type = float, default = 1.0,
+            help = 'Speed of animation, S>1.0 is faster, 0<S<1 is slower (default %(default)s)')
 
-    parser.add_argument('-m', '--manual', dest='manual',
-            action='store_true', default=False,
-            help='Manually control agent (default %(default)s)')
+    parser.add_argument('-m', '--manual', dest = 'manual',
+            action = 'store_true', default = False,
+            help = 'Manually control agent (default %(default)s)')
 
-    parser.add_argument('-v', '--value-steps', dest='valueSteps',
-            action='store_true', default=False,
-            help='Display each step of value iteration (default %(default)s)')
+    parser.add_argument('-v', '--value-steps', dest = 'valueSteps',
+            action = 'store_true', default = False,
+            help = 'Display each step of value iteration (default %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
-    assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
+
+    if len(otherjunk) != 0:
+        raise ValueError('Unrecognized options: ' + str(otherjunk))
 
     # Set the logging level
     if options.quiet and options.debug:
-        raise Exception("Logging cannont be set to both debug and quiet")
+        raise ValueError('Logging cannont be set to both debug and quiet')
 
     if options.quiet:
-        initLogging(logging_level = logging.WARNING)
+        updateLoggingLevel(logging.WARNING)
     elif options.debug:
-        initLogging(logging_level = logging.DEBUG)
-    else:
-        initLogging(logging_level = logging.INFO)
+        updateLoggingLevel(logging.DEBUG)
 
     if options.manual and options.agent != 'q':
         logging.info('## Disabling Agents in Manual Mode (-m) ##')
@@ -478,6 +480,8 @@ def parseOptions(argv):
     return options
 
 def main(argv):
+    initLogging()
+
     opts = parseOptions(argv)
 
     ###########################
