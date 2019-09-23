@@ -393,58 +393,60 @@ def readCommand(argv):
     Processes the command used to run pacman from the command line.
     """
 
-    usageString = """
-    USAGE: python -m pacman.py <options>
+    description = """
+    DESCRIPTION:
+        This program will run a classic pacman game. Collect all the pellets before
+        the ghosts catch you!
+
     EXAMPLES:
         (1) python -m pacai.bin.pacman
-            - starts an interactive game
-        (2) python -m pacai.bin.pacman --layout smallClassic --zoom 2
-            OR python -m pacai.bin.pacman -l smallClassic -z 2
-            - starts an interactive game on a smaller board, zoomed in
+            - Starts an interactive game.
+        (2) python -m pacai.bin.pacman --layout smallClassic
+            - Starts an interactive game on a smaller board.
     """
 
-    parser = getParser(usageString, os.path.basename(__file__))
+    parser = getParser(description, os.path.basename(__file__))
 
     parser.add_argument('-g', '--ghosts', dest = 'ghost',
             action = 'store', type = str, default = 'RandomGhost',
-            help = 'Use the specified ghostAgent module for the ghosts (default: %(default)s)')
+            help = 'use the specified ghostAgent module for the ghosts (default: %(default)s)')
 
     parser.add_argument('-k', '--num-ghosts', dest = 'numGhosts',
             action = 'store', type = int, default = 4,
-            help = 'Set the maximum number of ghosts (default: %(default)s)')
+            help = 'set the maximum number of ghosts (default: %(default)s)')
 
     parser.add_argument('-l', '--layout', dest = 'layout',
             action = 'store', type = str, default = 'mediumClassic',
-            help = 'Use the specified map layout (default: %(default)s)')
+            help = 'use the specified map layout (default: %(default)s)')
 
     parser.add_argument('-p', '--pacman', dest = 'pacman',
             action = 'store', type = str, default = 'WASDKeyboardAgent',
-            help = 'Use the specified pacmanAgent module for pacman (default: %(default)s)')
+            help = 'use the specified pacmanAgent module for pacman (default: %(default)s)')
 
     parser.add_argument('--agent-args', dest = 'agentArgs',
             action = 'store', type = str, default = None,
-            help = 'Comma separated arguments to be passed to agents (e.g. "opt1=val1,opt2")'
+            help = 'comma separated arguments to be passed to agents (e.g. \'opt1=val1,opt2\')'
                 + '(default: %(default)s)')
 
     parser.add_argument('--frame-time', dest = 'frameTime',
             action = 'store', type = float, default = 0.1,
-            help = 'Time to delay between frames, less than zero means keyboard agent'
+            help = 'time to delay between frames, less than zero means keyboard agent'
                 + '(default: %(default)s)')
 
     parser.add_argument('--timeout', dest = 'timeout',
             action = 'store', type = int, default = 30,
-            help = 'Maximum time limit (seconds) an agent can spend computing per game '
+            help = 'maximum time limit (seconds) an agent can spend computing per game '
                 + '(default: %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
     args = dict()
 
     if len(otherjunk) != 0:
-        raise ValueError('Unrecognized options: ' + str(otherjunk))
+        raise ValueError('Unrecognized options: \'%s\'.' % (str(otherjunk)))
 
     # Set the logging level
     if options.quiet and options.debug:
-        raise ValueError('Logging cannont be set to both debug and quiet')
+        raise ValueError('Logging cannont be set to both debug and quiet.')
 
     if options.quiet:
         updateLoggingLevel(logging.WARNING)
@@ -458,7 +460,7 @@ def readCommand(argv):
     # Choose a layout
     args['layout'] = getLayout(options.layout)
     if (args['layout'] is None):
-        raise ValueError('The layout ' + options.layout + ' cannot be found')
+        raise ValueError('The layout ' + options.layout + ' cannot be found.')
 
     # TODO(eriq): There are multiple keyboard agents.
     # Choose a Pacman agent

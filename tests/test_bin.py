@@ -5,7 +5,7 @@ from pacai.bin import gridworld
 from pacai.bin import pacman
 
 """
-This is a test class to assess the executables of this project
+This is a test class to assess the executables of this project.
 """
 class BinTest(unittest.TestCase):
 
@@ -21,7 +21,8 @@ class BinTest(unittest.TestCase):
             # Expected exception.
             pass
 
-        # Show all pacman arguments
+    def test_pacman_help(self):
+        # Show all pacman arguments.
         try:
             pacman.main(['--help'])
         except SystemExit as status:
@@ -32,7 +33,8 @@ class BinTest(unittest.TestCase):
         # Run game of capture with default agents.
         capture.main(['--null-graphics'])
 
-        # Show all capture arguments
+    def test_capture_help(self):
+        # Show all capture arguments.
         try:
             capture.main(['--help'])
         except SystemExit as status:
@@ -41,9 +43,10 @@ class BinTest(unittest.TestCase):
 
     def test_gridworld(self):
         # Run game of gridworld with default agents.
-        gridworld.main(['--text', '--quiet'])
+        gridworld.main(['--null-graphics'])
 
-        # Show all gridworld arguments
+    def test_gridworld_help(self):
+        # Show all gridworld arguments.
         try:
             gridworld.main(['--help'])
         except SystemExit as status:

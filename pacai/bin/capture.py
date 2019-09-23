@@ -510,76 +510,79 @@ def parseAgentArgs(str):
 
 def readCommand(argv):
     """
-    Processes the command used to run pacman from the command line.
+    Processes the command used to run capture from the command line.
     """
 
-    usageString = """
-    USAGE:        python -m pacai.bin.capture <options>
+    description = """
+    DESCRIPTION:
+        This program will run a capture game. Two teams of pacman agents are pitted against
+        one another in a capture the flag style game. Collect the most pellets to win!
+
     EXAMPLES:
         (1) python -m pacai.bin.capture
-            - starts a game with two baseline agents
+          - Starts a game with two baseline agents.
         (2) python -m pacai.bin.capture --keys0
-            - starts an interactive game where the arrow keys control agent 0,
-            and all other agents are baseline agents
+          - Starts an interactive game where the arrow keys control agent 0 and all other
+            agents are baseline agents.
         (3) python -m pacai.bin.capture.py -r pacai.core.baselineTeam -b pacai.student.myTeam
-            - starts an automated game where the red team is a baseline team and blue
-            team is pacai.student.myTeam
+          - Starts an automated game where the red team is a baseline team and blue
+            team is pacai.student.myTeam.
     """
 
-    parser = getParser(usageString, os.path.basename(__file__))
+    parser = getParser(description, os.path.basename(__file__))
 
     parser.add_argument('-b', '--blue', dest = 'blue',
             action = 'store', type = str, default = 'pacai.core.baselineTeam',
-            help = 'Set blue team (default: %(default)s)')
+            help = 'set blue team (default: %(default)s)')
 
     parser.add_argument('-l', '--layout', dest = 'layout',
             action = 'store', type = str, default = 'defaultCapture',
-            help = 'Use the specified map layout or input RANDOM<seed> '
+            help = 'use the specified map layout or input RANDOM<seed> '
                 + 'for a random seeded map (i.e. RANDOM23) (default: %(default)s)')
 
     parser.add_argument('-r', '--red', dest = 'red',
             action = 'store', type = str, default = 'pacai.core.baselineTeam',
-            help = 'Set red team (default: %(default)s)')
+            help = 'set red team (default: %(default)s)')
 
     parser.add_argument('--blue-args', dest = 'blueArgs',
             action = 'store', type = str, default = None,
-            help = 'Comma separated arguments to be passed to blue team (e.g. "opt1=val1,opt2") '
+            help = 'comma separated arguments to be passed to blue team (e.g. \'opt1=val1,opt2\') '
                 + '(default: %(default)s)')
 
     parser.add_argument('--keys0', dest = 'keys0',
             action = 'store_true', default = False,
-            help = 'Make agent 0 (first red player) a keyboard agent (default: %(default)s)')
+            help = 'make agent 0 (first red player) a keyboard agent (default: %(default)s)')
 
     parser.add_argument('--keys1', dest = 'keys1',
             action = 'store_true', default = False,
-            help = 'Make agent 1 (first blue player) a keyboard agent (default: %(default)s)')
+            help = 'make agent 1 (first blue player) a keyboard agent (default: %(default)s)')
 
     parser.add_argument('--keys2', dest = 'keys2',
             action = 'store_true', default = False,
-            help = 'Make agent 2 (second red player) a keyboard agent (default: %(default)s)')
+            help = 'make agent 2 (second red player) a keyboard agent (default: %(default)s)')
 
     parser.add_argument('--keys3', dest = 'keys3',
             action = 'store_true', default = False,
-            help = 'Make agent 3 (second blue player) a keyboard agent (default: %(default)s)')
+            help = 'make agent 3 (second blue player) a keyboard agent (default: %(default)s)')
 
     parser.add_argument('--max-moves', dest = 'maxMoves',
             action = 'store', type = int, default = 1200,
-            help = 'Set maximum number of moves in a game (default: %(default)s)')
+            help = 'set maximum number of moves in a game (default: %(default)s)')
 
     parser.add_argument('--red-args', dest = 'redArgs',
             action = 'store', type = str, default = None,
-            help = 'Comma separated arguments to be passed to red team (e.g. "opt1=val1,opt2") '
+            help = 'comma separated arguments to be passed to red team (e.g. \'opt1=val1,opt2\') '
                 + '(default: %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
     args = dict()
 
     if len(otherjunk) != 0:
-        raise ValueError('Unrecognized options: ' + str(otherjunk))
+        raise ValueError('Unrecognized options: \'%s\'. ' % (str(otherjunk)))
 
     # Set the logging level
     if options.quiet and options.debug:
-        raise ValueError('Logging cannont be set to both debug and quiet')
+        raise ValueError('Logging cannont be set to both debug and quiet.')
 
     if options.quiet:
         updateLoggingLevel(logging.WARNING)
@@ -632,7 +635,7 @@ def readCommand(argv):
         elif numKeyboardAgents == 1:
             agent = keyboard.IJKLKeyboardAgent(index)
         else:
-            raise ValueError('Max of two keyboard agents supported')
+            raise ValueError('Max of two keyboard agents supported.')
         numKeyboardAgents += 1
         args['agents'][index] = agent
 
@@ -644,12 +647,12 @@ def readCommand(argv):
 
         args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
-        raise ValueError('You must use a capture layout with capture.py')
+        raise ValueError('You must use a capture layout with capture.py.')
     else:
         args['layout'] = pacai.core.layout.getLayout(options.layout)
 
     if (args['layout'] is None):
-        raise ValueError('The layout ' + options.layout + ' cannot be found')
+        raise ValueError('The layout ' + options.layout + ' cannot be found.')
 
     args['length'] = options.maxMoves
     args['numGames'] = options.numGames

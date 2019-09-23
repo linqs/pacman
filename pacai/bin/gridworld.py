@@ -3,6 +3,7 @@ import logging
 import os
 import random
 import sys
+import textwrap
 
 from pacai.core.environment import Environment
 from pacai.core.mdp import MarkovDecisionProcess
@@ -366,100 +367,103 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
 
 def parseOptions(argv):
     """
-    Processes the command used to run grid from the command line.
+    Processes the command used to run gridworld from the command line.
     """
 
-    usageString = """
-    USAGE:        python -m pacai.bin.gridworld <options>
+    description = """
+    DESCRIPTION:
+        This program will create a gridworld. Explore and find the best path to the reward!
+
     EXAMPLES:
         (1) python -m pacai.bin.gridworld
-            - creats a gridworld with default settings
+            - Creats a gridworld with default settings.
         (2) python -m pacai.bin.gridworld --discount 0.7
-            - creats a gridworld with a 0.7 discount factor
+            - Creats a gridworld with a 0.7 discount factor.
     """
 
-    parser = argparse.ArgumentParser(description = usageString, prog = os.path.basename(__file__))
+    parser = argparse.ArgumentParser(description = textwrap.dedent(description),
+        prog = os.path.basename(__file__), formatter_class = argparse.RawTextHelpFormatter)
 
     parser.add_argument('-a', '--agent', dest = 'agent',
             action = 'store', type = str, default = 'random',
-            help = 'Agent type (options are \'random\', \'value\' and \'q\', default %(default)s)')
+            help = 'agent type (options are \'random\', \'value\' and \'q\', default %(default)s)')
 
     parser.add_argument('-d', '--debug', dest = 'debug',
             action = 'store_true', default = False,
-            help = 'Sets logging level to debug (default: %(default)s)')
+            help = 'sets logging level to debug (default: %(default)s)')
 
     parser.add_argument('-e', '--epsilon', dest = 'epsilon',
             action = 'store', type = float, default = 0.3,
-            help = 'Chance of taking a random action in q-learning (default %(default)s)')
+            help = 'chance of taking a random action in q-learning (default %(default)s)')
 
     parser.add_argument('-g', '--grid', dest = 'grid',
             action = 'store', type = str, default = 'BookGrid',
-            help = 'Grid type: BookGrid, BridgeGrid, CliffGrid, MazeGrid, %(default)s (default)')
+            help = 'grid type: BookGrid, BridgeGrid, CliffGrid, MazeGrid, %(default)s (default)')
 
     parser.add_argument('-i', '--iterations', dest = 'iters',
             action = 'store', type = int, default = 10,
-            help = 'Number of rounds of value iteration (default %(default)s)')
+            help = 'number of rounds of value iteration (default %(default)s)')
 
     parser.add_argument('-k', '--episodes', dest = 'episodes',
             action = 'store', type = int, default = 1,
-            help = 'Number of epsiodes of the MDP to run (default %(default)s)')
+            help = 'number of epsiodes of the MDP to run (default %(default)s)')
 
     parser.add_argument('-l', '--learning-rate', dest = 'learningRate',
             action = 'store', type = float, default = 0.5,
-            help = 'TD learning rate (default %(default)s)')
+            help = 'set the learning rate (default %(default)s)')
 
     parser.add_argument('-n', '--noise', dest = 'noise',
             action = 'store', type = float, default = 0.2,
-            help = 'How often action results in unintended direction (default %(default)s)')
+            help = 'sets how often actions result in unintended directions (default %(default)s)')
 
     parser.add_argument('-p', '--pause', dest = 'pause',
             action = 'store_true', default = False,
-            help = 'Pause GUI after each time step when running the MDP (default %(default)s)')
+            help = 'pause GUI after each time step when running the MDP (default %(default)s)')
 
     parser.add_argument('-q', '--quiet', dest = 'quiet',
             action = 'store_true', default = False,
-            help = 'Sets logging level to warning (default: %(default)s)')
+            help = 'sets logging level to warning (default: %(default)s)')
 
     parser.add_argument('-r', '--living-reward', dest = 'livingReward',
             action = 'store', type = float, default = 0.0,
-            help = 'Reward for living for a time step (default %(default)s)')
+            help = 'reward for living for a time step (default %(default)s)')
 
     parser.add_argument('-s', '--speed', dest = 'speed',
             action = 'store', type = float, default = 1.0,
-            help = 'Speed of animation, S>1.0 is faster, 0<S<1 is slower (default %(default)s)')
+            help = 'speed of animation, S>1.0 is faster, 0<S<1 is slower (default %(default)s)')
 
     parser.add_argument('-v', '--value-steps', dest = 'valueSteps',
             action = 'store_true', default = False,
-            help = 'Display each step of value iteration (default %(default)s)')
+            help = 'display each step of value iteration (default %(default)s)')
 
     parser.add_argument('-y', '--discount', dest = 'discount',
             action = 'store', type = float, default = 0.9,
-            help = 'Discount on future (default %(default)s)')
+            help = 'discount on future (default %(default)s)')
 
     parser.add_argument('--manual', dest = 'manual',
             action = 'store_true', default = False,
-            help = 'Manually control agent (default %(default)s)')
+            help = 'manually control agent (default %(default)s)')
 
-    parser.add_argument('--skip-display', dest = 'skipDisplay',
+    parser.add_argument('--null-graphics', dest = 'nullGraphics',
             action = 'store_true', default = False,
-            help = 'Skip display of any learning episodes (default %(default)s)')
+            help = 'generate no graphics (default: %(default)s)')
 
-    parser.add_argument('--text', dest = 'textDisplay',
+    parser.add_argument('--text-graphics', dest = 'textGraphics',
             action = 'store_true', default = False,
-            help = 'Use text-only ASCII display (default %(default)s)')
+            help = 'display output as text only (default: %(default)s)')
 
     parser.add_argument('--window-size', dest = 'gridSize',
             action = 'store', type = int, default = 150,
-            help = 'Request a window width of X pixels *per grid cell* (default %(default)s)')
+            help = 'request a window width of X pixels *per grid cell* (default %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
 
     if len(otherjunk) != 0:
-        raise ValueError('Unrecognized options: ' + str(otherjunk))
+        raise ValueError('Unrecognized options: \'%s\'.' % (str(otherjunk)))
 
     # Set the logging level
     if options.quiet and options.debug:
-        raise ValueError('Logging cannont be set to both debug and quiet')
+        raise ValueError('Logging cannont be set to both debug and quiet.')
 
     if options.quiet:
         updateLoggingLevel(logging.WARNING)
@@ -467,11 +471,11 @@ def parseOptions(argv):
         updateLoggingLevel(logging.DEBUG)
 
     if options.manual and options.agent != 'q':
-        logging.info('## Disabling Agents in Manual Mode (-m) ##')
+        logging.info('Disabling Agents in Manual Mode.')
         options.agent = None
 
     # MANAGE CONFLICTS
-    if options.textDisplay or options.skipDisplay:
+    if options.textGraphics or options.nullGraphics:
         options.pause = False
 
     if options.manual:
@@ -499,7 +503,7 @@ def main(argv):
 
     import pacai.ui.textGridworldDisplay
     display = pacai.ui.textGridworldDisplay.TextGridworldDisplay(mdp)
-    if not opts.textDisplay:
+    if not opts.textGraphics and not opts.nullGraphics:
         import pacai.ui.graphicsGridworldDisplay
         display = pacai.ui.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp,
                 opts.gridSize, opts.speed)
@@ -566,7 +570,7 @@ def main(argv):
 
     # Figure out what to display each time step (if anything).
     displayCallback = lambda x: None
-    if (not opts.skipDisplay):
+    if (not opts.nullGraphics):
         if (opts.manual and opts.agent is None):
             displayCallback = lambda state: display.displayNullValues(state)
         else:
@@ -578,7 +582,7 @@ def main(argv):
                 displayCallback = lambda state: display.displayQValues(a, state, 'CURRENT Q-VALUES')
 
     messageCallback = lambda x: print(x)
-    if (opts.skipDisplay):
+    if (opts.nullGraphics):
         messageCallback = lambda x: None
 
     # FIGURE OUT WHETHER TO WAIT FOR A KEY PRESS AFTER EACH TIME STEP
