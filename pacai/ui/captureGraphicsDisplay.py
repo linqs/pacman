@@ -4,8 +4,8 @@ import os
 
 from pacai.ui import graphicsUtils
 from pacai.ui import graphicsConstants
-from pacai.ui.pacmanDisplay import AbstractPane
 from pacai.ui.pacmanDisplay import AbstractPacmanGraphics
+from pacai.ui.pacmanDisplay import AbstractPane
 
 class CaptureInfoPane(AbstractPane):
     def __init__(self, layout, gridSize, redTeam, blueTeam):

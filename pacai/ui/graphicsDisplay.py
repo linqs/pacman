@@ -3,8 +3,9 @@
 import os
 
 from pacai.ui import graphicsUtils
-from pacai.ui.pacmanDisplay import AbstractPane
+from pacai.ui import graphicsConstants
 from pacai.ui.pacmanDisplay import AbstractPacmanGraphics
+from pacai.ui.pacmanDisplay import AbstractPane
 
 class InfoPane(AbstractPane):
     def __init__(self, layout, gridSize):
@@ -13,7 +14,7 @@ class InfoPane(AbstractPane):
 
     def drawPane(self):
         self.scoreText = graphicsUtils.text(self.toScreen(0, 0), self.textColor,
-                "SCORE:    0", "Times", self.fontSize, "bold")
+                "SCORE:    0", graphicsConstants.DEFAULT_FONT, self.fontSize, graphicsConstants.TEXT_MOD_BOLD)
 
     def updateScore(self, score):
         graphicsUtils.changeText(self.scoreText, "SCORE: % 4d" % score)
