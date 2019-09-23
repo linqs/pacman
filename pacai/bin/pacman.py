@@ -475,15 +475,10 @@ def readCommand(argv):
         if 'numTraining' not in agentOpts:
             agentOpts['numTraining'] = options.numTraining
 
-    args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
-
     # Don't display training games
     if 'numTrain' in agentOpts:
         options.numQuiet = int(agentOpts['numTrain'])
         options.numIgnore = int(agentOpts['numTrain'])
-
-    # Choose a ghost agent
-    args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
 
     # Choose a display format
     if options.quietGraphics:
@@ -493,12 +488,21 @@ def readCommand(argv):
         from pacai.ui.pacman.text import PacmanTextView
         args['display'] = PacmanTextView()
     else:
+        """ TODO(eriq): Move options to the new version.
         import pacai.ui.graphicsDisplay
         args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom,
                 frameTime = options.frameTime,
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames,
                 gif_fps = options.gifFPS)
+        """
+        import pacai.ui.pacman.gui
+        args['display'] = pacai.ui.pacman.gui.PacmanGUIView()
 
+        if (options.pacman.endswith('KeyboardAgent')):
+            agentOpts['keyboard'] = args['display'].getKeyboard()
+
+    args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
+    args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
     args['numGames'] = options.numGames
     args['record'] = options.record
     args['catchExceptions'] = options.catchExceptions

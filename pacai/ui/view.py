@@ -11,8 +11,6 @@ from pacai.util import util
 DEFAULT_SAVE_FRAMES = True
 DEFAULT_SAVE_EVERY_N_FRAMES = 5
 
-SQUARE_SIZE = 50
-
 GIF_FPS = 10
 GIF_FRAME_DURATION_MS = int(1.0 / GIF_FPS * 1000.0)
 GIF_FILENAME = 'test.gif'
@@ -51,11 +49,20 @@ class AbstractView(abc.ABC):
             images[0].save(GIF_FILENAME, save_all = True, append_images = images,
                     duration = GIF_FRAME_DURATION_MS, loop = 0, optimize = True)
 
+    def getKeyboard(self):
+        """
+        For views that support keyboards, get an instance of a pacai.ui.keyboard.Keyboard.
+        """
+
+        raise NotImplementedError("This view does not support keyboards.")
+
     def initialize(self, state):
         """
         Perform an initial drawing of the view.
         """
 
+        # TODO(eriq): This should not happer here.
+        #  When we have a chance to update the main graphics loop, just actually call update instead.
         self.update(state, forceDraw = True)
 
     def update(self, state, forceDraw = False):
@@ -132,6 +139,8 @@ class Frame(object):
     """
     A general representation of that can be seen on-screen at a given time.
     """
+
+    SQUARE_SIZE = 50
 
     STOP = 0
     NORTH = 1
@@ -335,10 +344,10 @@ class Frame(object):
     def _cropSprite(spritesheet, row, col):
         # (left, upper, right, lower)
         rectangle = (
-            col * SQUARE_SIZE,
-            row * SQUARE_SIZE,
-            (col + 1) * SQUARE_SIZE,
-            (row + 1) * SQUARE_SIZE,
+            col * Frame.SQUARE_SIZE,
+            row * Frame.SQUARE_SIZE,
+            (col + 1) * Frame.SQUARE_SIZE,
+            (row + 1) * Frame.SQUARE_SIZE,
         )
 
         return spritesheet.crop(rectangle)
@@ -411,7 +420,7 @@ class Frame(object):
         return tokens
 
     def toImage(self, sprites = {}):
-        image = Image.new('RGB', (self._width * SQUARE_SIZE, self._height * SQUARE_SIZE))
+        image = Image.new('RGB', (self._width * Frame.SQUARE_SIZE, self._height * Frame.SQUARE_SIZE))
         draw = ImageDraw.Draw(image)
 
         # First, draw the board.
@@ -437,7 +446,7 @@ class Frame(object):
 
     def _toImageCoords(self, x, y):
         # PIL has (0, 0) as the upper-left, while pacai has it as the lower-left.
-        return (int(x * SQUARE_SIZE), int((self._height - 1 - y) * SQUARE_SIZE))
+        return (int(x * Frame.SQUARE_SIZE), int((self._height - 1 - y) * Frame.SQUARE_SIZE))
 
     def _tokenToColor(self, token):
         if (token == Frame.EMPTY):
