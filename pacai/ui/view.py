@@ -9,7 +9,7 @@ from pacai.util import util
 
 # TODO(eriq): This should eventually be false.
 DEFAULT_SAVE_FRAMES = True
-DEFAULT_SAVE_EVERY_N_FRAMES = 3
+DEFAULT_SAVE_EVERY_N_FRAMES = 5
 
 SQUARE_SIZE = 50
 
@@ -31,8 +31,13 @@ class AbstractView(abc.ABC):
             saveFrames = DEFAULT_SAVE_FRAMES, saveEveryNFrames = DEFAULT_SAVE_EVERY_N_FRAMES):
         self._saveFrames = saveFrames
         self._saveEveryNFrames = saveEveryNFrames
-        self._frameCount = 0
         self._keyFrames = []
+
+        # The number of frames this view has produced.
+        self._frameCount = 0
+        # The number of turns this view has produced.
+        # (Tracked by the number of times agent 0 has been animated.)
+        self._turnCount = 0
 
         self._sprites = Frame.loadSpriteSheet(DEFAULT_SPRITES)
 
@@ -61,13 +66,16 @@ class AbstractView(abc.ABC):
         if (state.isOver()):
             forceDraw = True
 
-        frame = Frame(state)
+        frame = Frame(self._frameCount, state, self._turnCount)
         if (state.isOver()
                 or (self._saveFrames and self._frameCount % self._saveEveryNFrames == 0)):
             self._keyFrames.append(frame)
 
         self._drawFrame(state, frame, forceDraw = forceDraw)
+
         self._frameCount += 1
+        if (state.getLastAgentMoved() == 0):
+            self._turnCount += 1
 
     @abc.abstractmethod
     def _drawFrame(self, state, frame, forceDraw = False):
@@ -125,10 +133,21 @@ class Frame(object):
     A general representation of that can be seen on-screen at a given time.
     """
 
+    STOP = 0
     NORTH = 1
     EAST = 2
     SOUTH = 3
     WEST = 4
+
+    DIRECTIONS = [
+        NORTH,
+        EAST,
+        SOUTH,
+        WEST,
+    ]
+
+    # There are 4 frames in each animation cycle.
+    ANIMATION_CYCLE = 4
 
     # For the walls, we have a different sprite depending on what sides (lines) are present.
     # An 'X' in the name indicates that a wall is not there.
@@ -158,79 +177,33 @@ class Frame(object):
     CAPSULE = 2
     SCARED_GHOST = 3
 
-    PACMAN_1 = 210
-    PACMAN_1N = PACMAN_1 + NORTH
-    PACMAN_1E = PACMAN_1 + EAST
-    PACMAN_1S = PACMAN_1 + SOUTH
-    PACMAN_1W = PACMAN_1 + WEST
+    # Animations fill the room between the explicitly listed tokens.
+    PACMAN_1 = 1100
+    PACMAN_2 = 1200
+    PACMAN_3 = 1300
+    PACMAN_4 = 1400
+    PACMAN_5 = 1500
+    PACMAN_6 = 1600
+    PACMAN_END = 1700
 
-    PACMAN_2 = 220
-    PACMAN_2N = PACMAN_2 + NORTH
-    PACMAN_2E = PACMAN_2 + EAST
-    PACMAN_2S = PACMAN_2 + SOUTH
-    PACMAN_2W = PACMAN_2 + WEST
+    GHOST_1 = 2100
+    GHOST_2 = 2200
+    GHOST_3 = 2300
+    GHOST_4 = 2400
+    GHOST_5 = 2500
+    GHOST_6 = 2600
+    GHOST_END = 2700
 
-    PACMAN_3 = 230
-    PACMAN_3N = PACMAN_3 + NORTH
-    PACMAN_3E = PACMAN_3 + EAST
-    PACMAN_3S = PACMAN_3 + SOUTH
-    PACMAN_3W = PACMAN_3 + WEST
+    SPRITE_SHEET_AGENT_ORDER = [
+        PACMAN_1,
+        GHOST_1,
+        GHOST_2,
+    ]
 
-    PACMAN_4 = 240
-    PACMAN_4N = PACMAN_4 + NORTH
-    PACMAN_4E = PACMAN_4 + EAST
-    PACMAN_4S = PACMAN_4 + SOUTH
-    PACMAN_4W = PACMAN_4 + WEST
+    def __init__(self, frame, state, turn):
+        self._frame = frame
+        self._turn = turn
 
-    PACMAN_5 = 250
-    PACMAN_5N = PACMAN_5 + NORTH
-    PACMAN_5E = PACMAN_5 + EAST
-    PACMAN_5S = PACMAN_5 + SOUTH
-    PACMAN_5W = PACMAN_5 + WEST
-
-    PACMAN_6 = 260
-    PACMAN_6N = PACMAN_6 + NORTH
-    PACMAN_6E = PACMAN_6 + EAST
-    PACMAN_6S = PACMAN_6 + SOUTH
-    PACMAN_6W = PACMAN_6 + WEST
-
-    GHOST_1 = 310
-    GHOST_1N = GHOST_1 + NORTH
-    GHOST_1E = GHOST_1 + EAST
-    GHOST_1S = GHOST_1 + SOUTH
-    GHOST_1W = GHOST_1 + WEST
-
-    GHOST_2 = 320
-    GHOST_2N = GHOST_2 + NORTH
-    GHOST_2E = GHOST_2 + EAST
-    GHOST_2S = GHOST_2 + SOUTH
-    GHOST_2W = GHOST_2 + WEST
-
-    GHOST_3 = 330
-    GHOST_3N = GHOST_3 + NORTH
-    GHOST_3E = GHOST_3 + EAST
-    GHOST_3S = GHOST_3 + SOUTH
-    GHOST_3W = GHOST_3 + WEST
-
-    GHOST_4 = 340
-    GHOST_4N = GHOST_4 + NORTH
-    GHOST_4E = GHOST_4 + EAST
-    GHOST_4S = GHOST_4 + SOUTH
-    GHOST_4W = GHOST_4 + WEST
-
-    GHOST_5 = 350
-    GHOST_5N = GHOST_5 + NORTH
-    GHOST_5E = GHOST_5 + EAST
-    GHOST_5S = GHOST_5 + SOUTH
-    GHOST_5W = GHOST_5 + WEST
-
-    GHOST_6 = 360
-    GHOST_6N = GHOST_6 + NORTH
-    GHOST_6E = GHOST_6 + EAST
-    GHOST_6S = GHOST_6 + SOUTH
-    GHOST_6W = GHOST_6 + WEST
-
-    def __init__(self, state):
         self._height = state.getInitialLayout().getHeight()
         self._width = state.getInitialLayout().getWidth()
 
@@ -269,15 +242,38 @@ class Frame(object):
 
     @staticmethod
     def isGhost(token):
-        return token >= Frame.GHOST_1 and token <= Frame.GHOST_6
+        return token >= Frame.GHOST_1 and token <= Frame.GHOST_END
 
     @staticmethod
     def isPacman(token):
-        return token >= Frame.PACMAN_1 and token <= Frame.PACMAN_6
+        return token >= Frame.PACMAN_1 and token <= Frame.PACMAN_END
 
     @staticmethod
     def isWall(token):
         return token >= Frame.WALL_NESW and token <= Frame.WALL_XXXX
+
+    @staticmethod
+    def _translateDirection(direction):
+        if (direction == Directions.NORTH):
+            return Frame.NORTH
+        elif (direction == Directions.EAST):
+            return Frame.EAST
+        elif (direction == Directions.SOUTH):
+            return Frame.SOUTH
+        elif (direction == Directions.WEST):
+            return Frame.WEST
+        else:
+            return Frame.STOP
+
+    @staticmethod
+    def _getAnimationOffset(direction, frame):
+        """
+        Get the token for a specific animation frame.
+        """
+
+        if (direction == Frame.STOP):
+            return 0
+        return 1 + (direction - 1) * Frame.ANIMATION_CYCLE + (frame % Frame.ANIMATION_CYCLE)
 
     @staticmethod
     def loadSpriteSheet(path):
@@ -285,46 +281,8 @@ class Frame(object):
 
         sprites = {
             Frame.PACMAN_1: Frame._cropSprite(spritesheet, 0, 0),
-            Frame.PACMAN_1N: Frame._cropSprite(spritesheet, 0, 1),
-            Frame.PACMAN_1E: Frame._cropSprite(spritesheet, 0, 2),
-            Frame.PACMAN_1S: Frame._cropSprite(spritesheet, 0, 3),
-            Frame.PACMAN_1W: Frame._cropSprite(spritesheet, 0, 4),
-
             Frame.GHOST_1: Frame._cropSprite(spritesheet, 1, 0),
-            Frame.GHOST_1N: Frame._cropSprite(spritesheet, 1, 1),
-            Frame.GHOST_1E: Frame._cropSprite(spritesheet, 1, 2),
-            Frame.GHOST_1S: Frame._cropSprite(spritesheet, 1, 3),
-            Frame.GHOST_1W: Frame._cropSprite(spritesheet, 1, 4),
-
             Frame.GHOST_2: Frame._cropSprite(spritesheet, 2, 0),
-            Frame.GHOST_2N: Frame._cropSprite(spritesheet, 2, 1),
-            Frame.GHOST_2E: Frame._cropSprite(spritesheet, 2, 2),
-            Frame.GHOST_2S: Frame._cropSprite(spritesheet, 2, 3),
-            Frame.GHOST_2W: Frame._cropSprite(spritesheet, 2, 4),
-
-            Frame.GHOST_3: Frame._cropSprite(spritesheet, 3, 0),
-            Frame.GHOST_3N: Frame._cropSprite(spritesheet, 3, 1),
-            Frame.GHOST_3E: Frame._cropSprite(spritesheet, 3, 2),
-            Frame.GHOST_3S: Frame._cropSprite(spritesheet, 3, 3),
-            Frame.GHOST_3W: Frame._cropSprite(spritesheet, 3, 4),
-
-            Frame.GHOST_4: Frame._cropSprite(spritesheet, 4, 0),
-            Frame.GHOST_4N: Frame._cropSprite(spritesheet, 4, 1),
-            Frame.GHOST_4E: Frame._cropSprite(spritesheet, 4, 2),
-            Frame.GHOST_4S: Frame._cropSprite(spritesheet, 4, 3),
-            Frame.GHOST_4W: Frame._cropSprite(spritesheet, 4, 4),
-
-            Frame.GHOST_5: Frame._cropSprite(spritesheet, 5, 0),
-            Frame.GHOST_5N: Frame._cropSprite(spritesheet, 5, 1),
-            Frame.GHOST_5E: Frame._cropSprite(spritesheet, 5, 2),
-            Frame.GHOST_5S: Frame._cropSprite(spritesheet, 5, 3),
-            Frame.GHOST_5W: Frame._cropSprite(spritesheet, 5, 4),
-
-            Frame.GHOST_6: Frame._cropSprite(spritesheet, 6, 0),
-            Frame.GHOST_6N: Frame._cropSprite(spritesheet, 6, 1),
-            Frame.GHOST_6E: Frame._cropSprite(spritesheet, 6, 2),
-            Frame.GHOST_6S: Frame._cropSprite(spritesheet, 6, 3),
-            Frame.GHOST_6W: Frame._cropSprite(spritesheet, 6, 4),
 
             Frame.FOOD: Frame._cropSprite(spritesheet, 7, 0),
             Frame.CAPSULE: Frame._cropSprite(spritesheet, 7, 1),
@@ -347,6 +305,16 @@ class Frame(object):
             Frame.WALL_XXXW: Frame._cropSprite(spritesheet, 11, 2),
             Frame.WALL_XXXX: Frame._cropSprite(spritesheet, 11, 3),
         }
+
+        # Load all the agent animations.
+        for agentIndex in range(len(Frame.SPRITE_SHEET_AGENT_ORDER)):
+            baseToken = Frame.SPRITE_SHEET_AGENT_ORDER[agentIndex]
+
+            for direction in Frame.DIRECTIONS:
+                for frame in range(Frame.ANIMATION_CYCLE):
+                    animationOffset = Frame._getAnimationOffset(direction, frame)
+                    token = baseToken + animationOffset
+                    sprites[token] = Frame._cropSprite(spritesheet, agentIndex, animationOffset)
 
         return sprites
 
@@ -414,21 +382,16 @@ class Frame(object):
                 tokens[position] = Frame.SCARED_GHOST
             else:
                 token = None
+
                 if (agentState.isPacman()):
                     token = Frame.PACMAN_1
                 else:
-                    token = Frame.GHOST_1 + (agentIndex - 1) * 10
+                    token = Frame.GHOST_1 + (agentIndex - 1) * 100
 
-                direction = agentState.getDirection()
+                direction = Frame._translateDirection(agentState.getDirection())
 
-                if (direction == Directions.NORTH):
-                    token += Frame.NORTH
-                elif (direction == Directions.EAST):
-                    token += Frame.EAST
-                elif (direction == Directions.SOUTH):
-                    token += Frame.SOUTH
-                elif (direction == Directions.WEST):
-                    token += Frame.WEST
+                # token += Frame._getAnimationOffset(direction, self._turn)
+                token += Frame._getAnimationOffset(direction, self._frame)
 
                 tokens[position] = token
 
