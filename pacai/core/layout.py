@@ -30,6 +30,12 @@ class Layout(object):
         x, col = pos
         return self.walls[x][col]
 
+    def getHeight(self):
+        return self.height
+
+    def getWidth(self):
+        return self.width
+
     def getRandomLegalPosition(self):
         x = random.choice(list(range(self.width)))
         y = random.choice(list(range(self.height)))
