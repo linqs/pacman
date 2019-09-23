@@ -14,7 +14,8 @@ class InfoPane(AbstractPane):
 
     def drawPane(self):
         self.scoreText = graphicsUtils.text(self.toScreen(0, 0), self.textColor,
-                "SCORE:    0", graphicsConstants.DEFAULT_FONT, self.fontSize, graphicsConstants.TEXT_MOD_BOLD)
+                "SCORE:    0", graphicsConstants.DEFAULT_FONT, self.fontSize,
+                graphicsConstants.TEXT_MOD_BOLD)
 
     def updateScore(self, score):
         graphicsUtils.changeText(self.scoreText, "SCORE: % 4d" % score)
