@@ -42,6 +42,9 @@ class AgentState:
     def getPosition(self):
         return self._position
 
+    def getNearestPosition(self):
+        return util.nearestPoint(self._position)
+
     def getScaredTimer(self):
         return self._scaredTimer
 
