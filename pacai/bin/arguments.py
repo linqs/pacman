@@ -1,20 +1,11 @@
 import argparse
-import os
 
-def loadArgs(usageString):
+def getParser(usageString, executable):
     """
-    Loads common arguments between pacman and capture
+    Loads common arguments between pacman and capture.
     """
 
-    parser = argparse.ArgumentParser(description = usageString, prog = os.path.basename(__file__))
-
-    parser.add_argument('-n', '--num-games', dest = 'numGames',
-            action = 'store', type = int, default = 1,
-            help = 'Play the specified number of games (default: %(default)s)')
-
-    parser.add_argument('-q', '--quiet', dest = 'quiet',
-            action = 'store_true', default = False,
-            help = 'Sets logging level to warning (default: %(default)s)')
+    parser = argparse.ArgumentParser(description = usageString, prog = executable)
 
     parser.add_argument('-d', '--debug', dest = 'debug',
             action = 'store_true', default = False,
@@ -24,29 +15,13 @@ def loadArgs(usageString):
             action = 'store_true', default = False,
             help = 'Fixes the random seed to always play the same game (default: %(default)s)')
 
-    parser.add_argument('--text-graphics', dest = 'textGraphics',
+    parser.add_argument('-n', '--num-games', dest = 'numGames',
+            action = 'store', type = int, default = 1,
+            help = 'Play the specified number of games (default: %(default)s)')
+
+    parser.add_argument('-q', '--quiet', dest = 'quiet',
             action = 'store_true', default = False,
-            help = 'Display output as text only (default: %(default)s)')
-
-    parser.add_argument('--null-text-graphics', dest = 'nullGraphics',
-            action = 'store_true', default = False,
-            help = 'Generate minimal output and no graphics (default: %(default)s)')
-
-    parser.add_argument('--zoom', dest = 'zoom',
-            action = 'store', type = float, default = 1.0,
-            help = 'Zoom the size of the graphics window (default: %(default)s)')
-
-    parser.add_argument('--record', dest = 'record',
-            action = 'store', type = str, default = None,
-            help = 'Writes the moves of a game to the named pickle file (default: %(default)s)')
-
-    parser.add_argument('--replay', dest = 'replay',
-            action = 'store', type = str, default = None,
-            help = 'Load a recorded pickle game file to replay (default: %(default)s)')
-
-    parser.add_argument('--num-training', dest = 'numTraining',
-            action = 'store', type = int, default = 0,
-            help = 'Set how many episodes of training (suppresses output) (default: %(default)s)')
+            help = 'Sets logging level to warning (default: %(default)s)')
 
     parser.add_argument('--catch-exceptions', dest = 'catchExceptions',
             action = 'store_true', default = False,
@@ -56,12 +31,36 @@ def loadArgs(usageString):
             action = 'store_true', default = False,
             help = 'Save the game as a gif to the specified path (default: %(default)s)')
 
+    parser.add_argument('--gif-fps', dest = 'gifFPS',
+            action = 'store', type = float, default = 10.0,
+            help = 'FPS of the gif (default: %(default)s)')
+
     parser.add_argument('--gif-skip-frames', dest = 'gifSkipFrames',
             action = 'store', type = int, default = 0,
             help = 'Skip this number of frames between frames of the gif (default: %(default)s)')
 
-    parser.add_argument('--gif-fps', dest = 'gifFPS',
-            action = 'store', type = float, default = 10.0,
-            help = 'FPS of the gif (default: %(default)s)')
+    parser.add_argument('--null-graphics', dest = 'nullGraphics',
+            action = 'store_true', default = False,
+            help = 'Generate no graphics (default: %(default)s)')
+
+    parser.add_argument('--num-training', dest = 'numTraining',
+            action = 'store', type = int, default = 0,
+            help = 'Set how many episodes of training (suppresses output) (default: %(default)s)')
+
+    parser.add_argument('--record', dest = 'record',
+            action = 'store', type = str, default = None,
+            help = 'Writes the moves of a game to the named pickle file (default: %(default)s)')
+
+    parser.add_argument('--replay', dest = 'replay',
+            action = 'store', type = str, default = None,
+            help = 'Load a recorded pickle game file to replay (default: %(default)s)')
+
+    parser.add_argument('--text-graphics', dest = 'textGraphics',
+            action = 'store_true', default = False,
+            help = 'Display output as text only (default: %(default)s)')
+
+    parser.add_argument('--zoom', dest = 'zoom',
+            action = 'store', type = float, default = 1.0,
+            help = 'Zoom the size of the graphics window (default: %(default)s)')
 
     return parser

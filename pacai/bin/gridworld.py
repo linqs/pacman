@@ -370,35 +370,31 @@ def parseOptions(argv):
     """
 
     usageString = """
-    USAGE:        python pacai.bin.gridworld <options>
+    USAGE:        python -m pacai.bin.gridworld <options>
     EXAMPLES:
         (1) python -m pacai.bin.gridworld
             - creats a gridworld with default settings
-        (2) python -m pacai.bin.gridworld -d 0.7
+        (2) python -m pacai.bin.gridworld --discount 0.7
             - creats a gridworld with a 0.7 discount factor
     """
 
     parser = argparse.ArgumentParser(description = usageString, prog = os.path.basename(__file__))
 
-    parser.add_argument('-c', '--discount', dest = 'discount',
-            action = 'store', type = float, default = 0.9,
-            help = 'Discount on future (default %(default)s)')
+    parser.add_argument('-a', '--agent', dest = 'agent',
+            action = 'store', type = str, default = 'random',
+            help = 'Agent type (options are \'random\', \'value\' and \'q\', default %(default)s)')
 
-    parser.add_argument('-r', '--living-reward', dest = 'livingReward',
-            action = 'store', type = float, default = 0.0,
-            help = 'Reward for living for a time step (default %(default)s)')
-
-    parser.add_argument('-n', '--noise', dest = 'noise',
-            action = 'store', type = float, default = 0.2,
-            help = 'How often action results in unintended direction (default %(default)s)')
+    parser.add_argument('-d', '--debug', dest = 'debug',
+            action = 'store_true', default = False,
+            help = 'Sets logging level to debug (default: %(default)s)')
 
     parser.add_argument('-e', '--epsilon', dest = 'epsilon',
             action = 'store', type = float, default = 0.3,
             help = 'Chance of taking a random action in q-learning (default %(default)s)')
 
-    parser.add_argument('-l', '--learning-rate', dest = 'learningRate',
-            action = 'store', type = float, default = 0.5,
-            help = 'TD learning rate (default %(default)s)')
+    parser.add_argument('-g', '--grid', dest = 'grid',
+            action = 'store', type = str, default = 'BookGrid',
+            help = 'Grid type: BookGrid, BridgeGrid, CliffGrid, MazeGrid, %(default)s (default)')
 
     parser.add_argument('-i', '--iterations', dest = 'iters',
             action = 'store', type = int, default = 10,
@@ -408,49 +404,53 @@ def parseOptions(argv):
             action = 'store', type = int, default = 1,
             help = 'Number of epsiodes of the MDP to run (default %(default)s)')
 
-    parser.add_argument('-g', '--grid', dest = 'grid',
-            action = 'store', type = str, default = 'BookGrid',
-            help = 'Grid type: BookGrid, BridgeGrid, CliffGrid, MazeGrid, %(default)s (default)')
+    parser.add_argument('-l', '--learning-rate', dest = 'learningRate',
+            action = 'store', type = float, default = 0.5,
+            help = 'TD learning rate (default %(default)s)')
 
-    parser.add_argument('-w', '--window-size', dest = 'gridSize',
-            action = 'store', type = int, default = 150,
-            help = 'Request a window width of X pixels *per grid cell* (default %(default)s)')
-
-    parser.add_argument('-a', '--agent', dest = 'agent',
-            action = 'store', type = str, default = 'random',
-            help = 'Agent type (options are \'random\', \'value\' and \'q\', default %(default)s)')
-
-    parser.add_argument('-t', '--text', dest = 'textDisplay',
-            action = 'store_true', default = False,
-            help = 'Use text-only ASCII display (default %(default)s)')
+    parser.add_argument('-n', '--noise', dest = 'noise',
+            action = 'store', type = float, default = 0.2,
+            help = 'How often action results in unintended direction (default %(default)s)')
 
     parser.add_argument('-p', '--pause', dest = 'pause',
             action = 'store_true', default = False,
             help = 'Pause GUI after each time step when running the MDP (default %(default)s)')
 
-    parser.add_argument('-x', '--skip-display', dest = 'skipDisplay',
-            action = 'store_true', default = False,
-            help = 'Skip display of any learning episodes (default %(default)s)')
-
     parser.add_argument('-q', '--quiet', dest = 'quiet',
             action = 'store_true', default = False,
             help = 'Sets logging level to warning (default: %(default)s)')
 
-    parser.add_argument('-d', '--debug', dest = 'debug',
-            action = 'store_true', default = False,
-            help = 'Sets logging level to debug (default: %(default)s)')
+    parser.add_argument('-r', '--living-reward', dest = 'livingReward',
+            action = 'store', type = float, default = 0.0,
+            help = 'Reward for living for a time step (default %(default)s)')
 
     parser.add_argument('-s', '--speed', dest = 'speed',
             action = 'store', type = float, default = 1.0,
             help = 'Speed of animation, S>1.0 is faster, 0<S<1 is slower (default %(default)s)')
 
-    parser.add_argument('-m', '--manual', dest = 'manual',
-            action = 'store_true', default = False,
-            help = 'Manually control agent (default %(default)s)')
-
     parser.add_argument('-v', '--value-steps', dest = 'valueSteps',
             action = 'store_true', default = False,
             help = 'Display each step of value iteration (default %(default)s)')
+
+    parser.add_argument('-y', '--discount', dest = 'discount',
+            action = 'store', type = float, default = 0.9,
+            help = 'Discount on future (default %(default)s)')
+
+    parser.add_argument('--manual', dest = 'manual',
+            action = 'store_true', default = False,
+            help = 'Manually control agent (default %(default)s)')
+
+    parser.add_argument('--skip-display', dest = 'skipDisplay',
+            action = 'store_true', default = False,
+            help = 'Skip display of any learning episodes (default %(default)s)')
+
+    parser.add_argument('--text', dest = 'textDisplay',
+            action = 'store_true', default = False,
+            help = 'Use text-only ASCII display (default %(default)s)')
+
+    parser.add_argument('--window-size', dest = 'gridSize',
+            action = 'store', type = int, default = 150,
+            help = 'Request a window width of X pixels *per grid cell* (default %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
 

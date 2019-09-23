@@ -29,6 +29,7 @@ The keys are
 
 import importlib
 import logging
+import os
 import pickle
 import random
 import sys
@@ -37,7 +38,7 @@ import traceback
 import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
-from pacai.bin.arguments import loadArgs
+from pacai.bin.arguments import getParser
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 from pacai.core.game import Game
@@ -513,7 +514,7 @@ def readCommand(argv):
     """
 
     usageString = """
-    USAGE:        python pacai.bin.capture <options>
+    USAGE:        python -m pacai.bin.capture <options>
     EXAMPLES:
         (1) python -m pacai.bin.capture
             - starts a game with two baseline agents
@@ -525,7 +526,11 @@ def readCommand(argv):
             team is pacai.student.myTeam
     """
 
-    parser = loadArgs(usageString)
+    parser = getParser(usageString, os.path.basename(__file__))
+
+    parser.add_argument('-b', '--blue', dest = 'blue',
+            action = 'store', type = str, default = 'pacai.core.baselineTeam',
+            help = 'Set blue team (default: %(default)s)')
 
     parser.add_argument('-l', '--layout', dest = 'layout',
             action = 'store', type = str, default = 'defaultCapture',
@@ -535,15 +540,6 @@ def readCommand(argv):
     parser.add_argument('-r', '--red', dest = 'red',
             action = 'store', type = str, default = 'pacai.core.baselineTeam',
             help = 'Set red team (default: %(default)s)')
-
-    parser.add_argument('-b', '--blue', dest = 'blue',
-            action = 'store', type = str, default = 'pacai.core.baselineTeam',
-            help = 'Set blue team (default: %(default)s)')
-
-    parser.add_argument('--red-args', dest = 'redArgs',
-            action = 'store', type = str, default = None,
-            help = 'Comma separated arguments to be passed to red team (e.g. "opt1=val1,opt2") '
-                + '(default: %(default)s)')
 
     parser.add_argument('--blue-args', dest = 'blueArgs',
             action = 'store', type = str, default = None,
@@ -569,6 +565,11 @@ def readCommand(argv):
     parser.add_argument('--max-moves', dest = 'maxMoves',
             action = 'store', type = int, default = 1200,
             help = 'Set maximum number of moves in a game (default: %(default)s)')
+
+    parser.add_argument('--red-args', dest = 'redArgs',
+            action = 'store', type = str, default = None,
+            help = 'Comma separated arguments to be passed to red team (e.g. "opt1=val1,opt2") '
+                + '(default: %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
     args = dict()

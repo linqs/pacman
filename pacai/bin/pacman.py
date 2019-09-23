@@ -26,6 +26,7 @@ Have fun!
 """
 
 import logging
+import os
 import pickle
 import random
 import sys
@@ -33,7 +34,7 @@ import sys
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
 from pacai.agents.greedy import GreedyAgent
-from pacai.bin.arguments import loadArgs
+from pacai.bin.arguments import getParser
 from pacai.core.actions import Actions
 from pacai.core.directions import Directions
 from pacai.core.distance import manhattan
@@ -393,7 +394,7 @@ def readCommand(argv):
     """
 
     usageString = """
-    USAGE: python pacman.py <options>
+    USAGE: python -m pacman.py <options>
     EXAMPLES:
         (1) python -m pacai.bin.pacman
             - starts an interactive game
@@ -402,15 +403,7 @@ def readCommand(argv):
             - starts an interactive game on a smaller board, zoomed in
     """
 
-    parser = loadArgs(usageString)
-
-    parser.add_argument('-l', '--layout', dest = 'layout',
-            action = 'store', type = str, default = 'mediumClassic',
-            help = 'Use the specified map layout (default: %(default)s)')
-
-    parser.add_argument('-p', '--pacman', dest = 'pacman',
-            action = 'store', type = str, default = 'WASDKeyboardAgent',
-            help = 'Use the specified pacmanAgent module for pacman (default: %(default)s)')
+    parser = getParser(usageString, os.path.basename(__file__))
 
     parser.add_argument('-g', '--ghosts', dest = 'ghost',
             action = 'store', type = str, default = 'RandomGhost',
@@ -419,6 +412,14 @@ def readCommand(argv):
     parser.add_argument('-k', '--num-ghosts', dest = 'numGhosts',
             action = 'store', type = int, default = 4,
             help = 'Set the maximum number of ghosts (default: %(default)s)')
+
+    parser.add_argument('-l', '--layout', dest = 'layout',
+            action = 'store', type = str, default = 'mediumClassic',
+            help = 'Use the specified map layout (default: %(default)s)')
+
+    parser.add_argument('-p', '--pacman', dest = 'pacman',
+            action = 'store', type = str, default = 'WASDKeyboardAgent',
+            help = 'Use the specified pacmanAgent module for pacman (default: %(default)s)')
 
     parser.add_argument('--agent-args', dest = 'agentArgs',
             action = 'store', type = str, default = None,
