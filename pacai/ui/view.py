@@ -62,7 +62,7 @@ class AbstractView(abc.ABC):
         """
 
         # TODO(eriq): This should not happer here.
-        #  When we have a chance to update the main graphics loop, just actually call update instead.
+        # When we have a chance to update the main graphics loop, just actually call update instead.
         self.update(state, forceDraw = True)
 
     def update(self, state, forceDraw = False):
@@ -420,7 +420,8 @@ class Frame(object):
         return tokens
 
     def toImage(self, sprites = {}):
-        image = Image.new('RGB', (self._width * Frame.SQUARE_SIZE, self._height * Frame.SQUARE_SIZE))
+        size = (self._width * Frame.SQUARE_SIZE, self._height * Frame.SQUARE_SIZE)
+        image = Image.new('RGB', size)
         draw = ImageDraw.Draw(image)
 
         # First, draw the board.

@@ -168,7 +168,6 @@ class InfoPane:
 class PacmanGraphics:
     def __init__(self, redTeam, blueTeam, zoom=1.0, frameTime=0.0, capture=False,
             gif = None, gif_skip_frames = 0, gif_fps = 10):
-        self.expandedCells = []
         self.have_window = 0
         self.currentGhostImages = {}
         self.pacmanImage = None
@@ -674,47 +673,6 @@ class PacmanGraphics:
     def removeCapsule(self, cell, capsuleImages):
         x, y = cell
         graphicsUtils.remove_from_screen(capsuleImages[(x, y)])
-
-    def drawExpandedCells(self, cells):
-        """
-        Draws an overlay of expanded grid positions for search agents
-        """
-        n = float(len(cells))
-        baseColor = [1.0, 0.0, 0.0]
-        self.clearExpandedCells()
-        self.expandedCells = []
-        for k, cell in enumerate(cells):
-            screenPos = self.to_screen(cell)
-            cellColor = graphicsUtils.formatColor(*[(n - k) * c * .5 / n + .25 for c in baseColor])
-            block = graphicsUtils.square(screenPos, 0.5 * self.gridSize,
-                    color = cellColor, filled = 1, behind = 2)
-            self.expandedCells.append(block)
-            if self.frameTime < 0:
-                graphicsUtils.refresh()
-
-    def clearDebug(self):
-        if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
-            for cell in self.expandedCells:
-                graphicsUtils.remove_from_screen(cell)
-
-    def debugDraw(self, cells, color=[1.0, 0.0, 0.0], clear=False):
-        if clear:
-            self.clearDebug()
-            self.expandedCells = []
-
-        for k, cell in enumerate(cells):
-            screenPos = self.to_screen(cell)
-            cellColor = graphicsUtils.formatColor(*color)
-            block = graphicsUtils.square(screenPos, 0.5 * self.gridSize,
-                    color = cellColor, filled = 1, behind = 2)
-            self.expandedCells.append(block)
-            if self.frameTime < 0:
-                graphicsUtils.refresh()
-
-    def clearExpandedCells(self):
-        if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
-            for cell in self.expandedCells:
-                graphicsUtils.remove_from_screen(cell)
 
 class FirstPersonPacmanGraphics(PacmanGraphics):
     def __init__(self, zoom = 1.0, showGhosts = True, capture = False, frameTime=0):

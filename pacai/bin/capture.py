@@ -590,8 +590,6 @@ def readCommand(argv):
                 options.zoom, 0, capture=True,
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames,
                 gif_fps = options.gifFPS)
-        import __main__
-        __main__.__dict__['_display'] = args['display']
 
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue

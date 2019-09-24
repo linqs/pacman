@@ -5,7 +5,6 @@ Interfaces for capture agents and agent factories
 import abc
 
 from pacai.agents.base import BaseAgent
-from pacai.ui import captureGraphicsDisplay
 from pacai.core import distanceCalculator
 from pacai.util import util
 
@@ -48,9 +47,6 @@ class CaptureAgent(BaseAgent):
         # Time to spend each turn on computing maze distances
         self.timeForComputing = timeForComputing
 
-        # Access to the graphics
-        self.display = None
-
     def registerInitialState(self, gameState):
         """
         This method handles the initial setup of the
@@ -68,10 +64,6 @@ class CaptureAgent(BaseAgent):
         # Comment this out to forgo maze distance computation and use manhattan distances
         self.distancer.getMazeDistances()
 
-        import __main__
-        if '_display' in dir(__main__):
-            self.display = __main__._display
-
     def final(self, gameState):
         self.observationHistory = []
 
@@ -82,17 +74,6 @@ class CaptureAgent(BaseAgent):
         """
 
         self.agentsOnTeam = agentsOnTeam
-
-    def debugDraw(self, cells, color, clear = False):
-
-        if self.display and isinstance(self.display, captureGraphicsDisplay.PacmanGraphics):
-            if not type(cells) is list:
-                cells = [cells]
-            self.display.debugDraw(cells, color, clear)
-
-    def debugClear(self):
-        if self.display and isinstance(self.display, captureGraphicsDisplay.PacmanGraphics):
-            self.display.clearDebug()
 
     def getAction(self, gameState):
         """

@@ -40,6 +40,8 @@ from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.layout import getLayout
+from pacai.ui.pacman.text import PacmanTextView
+from pacai.ui.textDisplay import NullGraphics
 from pacai.util.logs import initLogging
 from pacai.util.util import nearestPoint
 
@@ -482,10 +484,8 @@ def readCommand(argv):
 
     # Choose a display format
     if options.quietGraphics:
-        import pacai.ui.textDisplay
-        args['display'] = pacai.ui.textDisplay.NullGraphics()
+        args['display'] = NullGraphics()
     elif options.textGraphics:
-        from pacai.ui.pacman.text import PacmanTextView
         args['display'] = PacmanTextView()
     else:
         """ TODO(eriq): Move options to the new version.
@@ -495,8 +495,12 @@ def readCommand(argv):
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames,
                 gif_fps = options.gifFPS)
         """
-        import pacai.ui.pacman.gui
-        args['display'] = pacai.ui.pacman.gui.PacmanGUIView()
+
+        # Defer importing the GUI unless we actually need it.
+        # This allows people to not have tkinter installed.
+        from pacai.ui.pacman.gui import PacmanGUIView
+
+        args['display'] = PacmanGUIView()
         agentOpts['keyboard'] = args['display'].getKeyboard()
 
     args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
@@ -534,6 +538,8 @@ def replayGame(layout, actions, display):
 
 def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraining = 0,
         catchExceptions = False, timeout = 30, **kwargs):
+    # TODO(eriq): This is used to draw expanded positions in search, but this interface is bad.
+    #  Do this better.
     import __main__
     __main__.__dict__['_display'] = display
 
@@ -543,9 +549,8 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
     for i in range(numGames):
         beQuiet = (i < numTraining)
         if beQuiet:
-            # Suppress output and graphics
-            import pacai.ui.textDisplay
-            gameDisplay = pacai.ui.textDisplay.NullGraphics()
+            # Suppress output and graphics.
+            gameDisplay = NullGraphics()
         else:
             gameDisplay = display
 
