@@ -390,7 +390,7 @@ def parseOptions(argv):
 
     parser.add_argument('-d', '--debug', dest = 'debug',
             action = 'store_true', default = False,
-            help = 'sets logging level to debug (default: %(default)s)')
+            help = 'set logging level to debug (default: %(default)s)')
 
     parser.add_argument('-e', '--epsilon', dest = 'epsilon',
             action = 'store', type = float, default = 0.3,
@@ -414,7 +414,7 @@ def parseOptions(argv):
 
     parser.add_argument('-n', '--noise', dest = 'noise',
             action = 'store', type = float, default = 0.2,
-            help = 'sets how often actions result in unintended directions (default %(default)s)')
+            help = 'set how often actions result in unintended directions (default %(default)s)')
 
     parser.add_argument('-p', '--pause', dest = 'pause',
             action = 'store_true', default = False,
@@ -422,7 +422,7 @@ def parseOptions(argv):
 
     parser.add_argument('-q', '--quiet', dest = 'quiet',
             action = 'store_true', default = False,
-            help = 'sets logging level to warning (default: %(default)s)')
+            help = 'set logging level to warning (default: %(default)s)')
 
     parser.add_argument('-r', '--living-reward', dest = 'livingReward',
             action = 'store', type = float, default = 0.0,

@@ -11,7 +11,7 @@ def getParser(description, name):
 
     parser.add_argument('-d', '--debug', dest = 'debug',
             action = 'store_true', default = False,
-            help = 'sets logging level to debug (default: %(default)s)')
+            help = 'set logging level to debug (default: %(default)s)')
 
     parser.add_argument('-f', '--fix-random-seed', dest = 'fixRandomSeed',
             action = 'store_true', default = False,
@@ -23,7 +23,7 @@ def getParser(description, name):
 
     parser.add_argument('-q', '--quiet', dest = 'quiet',
             action = 'store_true', default = False,
-            help = 'sets logging level to warning (default: %(default)s)')
+            help = 'set logging level to warning (default: %(default)s)')
 
     parser.add_argument('--catch-exceptions', dest = 'catchExceptions',
             action = 'store_true', default = False,
@@ -35,7 +35,7 @@ def getParser(description, name):
 
     parser.add_argument('--gif-fps', dest = 'gifFPS',
             action = 'store', type = float, default = 10.0,
-            help = 'sets the fps of the gif (default: %(default)s)')
+            help = 'set the fps of the gif (default: %(default)s)')
 
     parser.add_argument('--gif-skip-frames', dest = 'gifSkipFrames',
             action = 'store', type = int, default = 0,

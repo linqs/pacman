@@ -578,9 +578,9 @@ def readCommand(argv):
     args = dict()
 
     if len(otherjunk) != 0:
-        raise ValueError('Unrecognized options: \'%s\'. ' % (str(otherjunk)))
+        raise ValueError('Unrecognized options: \'%s\'.' % (str(otherjunk)))
 
-    # Set the logging level
+    # Set the logging level.
     if options.quiet and options.debug:
         raise ValueError('Logging cannont be set to both debug and quiet.')
 
@@ -589,7 +589,7 @@ def readCommand(argv):
     elif options.debug:
         updateLoggingLevel(logging.DEBUG)
 
-    # Choose a display format
+    # Choose a display format.
     if options.textGraphics:
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.PacmanGraphics()
@@ -598,7 +598,7 @@ def readCommand(argv):
         args['display'] = pacai.ui.textDisplay.NullGraphics()
     else:
         import pacai.ui.captureGraphicsDisplay
-        # Hack for agents writing to the display
+        # Hack for agents writing to the display.
         pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
         args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue,
                 options.zoom, 0, capture=True,
@@ -613,7 +613,7 @@ def readCommand(argv):
     if options.fixRandomSeed:
         random.seed(FIXED_SEED)
 
-    # Choose a pacman agent
+    # Choose a pacman agent.
     redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
     if options.numTraining > 0:
         redArgs['numTraining'] = options.numTraining
@@ -623,7 +623,7 @@ def readCommand(argv):
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
     logging.debug('\nBlue team %s with %s:' % (options.blue, blueArgs))
     blueAgents = loadAgents(False, options.blue, nokeyboard, blueArgs)
-    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], [])  # list of agents
+    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], [])  # List of agents.
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
@@ -639,7 +639,7 @@ def readCommand(argv):
         numKeyboardAgents += 1
         args['agents'][index] = agent
 
-    # Choose a layout
+    # Choose a layout.
     if options.layout.startswith('RANDOM'):
         seed = random.randint(0, 99999999)
         if (options.layout != 'RANDOM'):

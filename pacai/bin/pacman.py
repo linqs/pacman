@@ -444,7 +444,7 @@ def readCommand(argv):
     if len(otherjunk) != 0:
         raise ValueError('Unrecognized options: \'%s\'.' % (str(otherjunk)))
 
-    # Set the logging level
+    # Set the logging level.
     if options.quiet and options.debug:
         raise ValueError('Logging cannont be set to both debug and quiet.')
 
@@ -453,17 +453,17 @@ def readCommand(argv):
     elif options.debug:
         updateLoggingLevel(logging.DEBUG)
 
-    # Fix the random seed
+    # Fix the random seed.
     if options.fixRandomSeed:
         random.seed(FIXED_SEED)
 
-    # Choose a layout
+    # Choose a layout.
     args['layout'] = getLayout(options.layout)
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
 
     # TODO(eriq): There are multiple keyboard agents.
-    # Choose a Pacman agent
+    # Choose a Pacman agent.
     noKeyboard = (options.replay is None and (options.textGraphics or options.nullGraphics))
     if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
         raise ValueError('Keyboard agents require graphics.')
@@ -476,15 +476,15 @@ def readCommand(argv):
 
     args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
 
-    # Don't display training games
+    # Don't display training games.
     if 'numTrain' in agentOpts:
         options.numQuiet = int(agentOpts['numTrain'])
         options.numIgnore = int(agentOpts['numTrain'])
 
-    # Choose a ghost agent
+    # Choose a ghost agent.
     args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
 
-    # Choose a display format
+    # Choose a display format.
     if options.nullGraphics:
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.NullGraphics()
