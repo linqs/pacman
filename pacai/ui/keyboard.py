@@ -41,13 +41,13 @@ class Keyboard(object):
             if (queryKeys is None or key in queryKeys):
                 keys.append(key)
             else:
-                keepKeys.append(keys)
+                keepKeys.append(key)
 
         self._keys = keepKeys
         return keys
 
     def _clear(self, event):
-        pass
+        self.clear()
 
     def _keyPress(self, event):
         self._keys.append(event.keysym)
