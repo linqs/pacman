@@ -61,9 +61,7 @@ class AbstractView(abc.ABC):
         Perform an initial drawing of the view.
         """
 
-        # TODO(eriq): This should not happer here.
-        # When we have a chance to update the main graphics loop, just actually call update instead.
-        self.update(state, forceDraw = True)
+        pass
 
     def update(self, state, forceDraw = False):
         """

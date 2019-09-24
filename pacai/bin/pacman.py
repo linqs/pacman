@@ -430,9 +430,9 @@ def readCommand(argv):
             help = 'comma separated arguments to be passed to agents (e.g. \'opt1=val1,opt2\')'
                 + '(default: %(default)s)')
 
-    parser.add_argument('--frame-time', dest = 'frameTime',
-            action = 'store', type = float, default = 0.1,
-            help = 'time to delay between frames, less than zero means keyboard agent'
+    parser.add_argument('--fps', dest = 'fps',
+            action = 'store', type = float, default = 15,
+            help = 'cap the game to this fps, at zero frames will be animated as fast as possible'
                 + '(default: %(default)s)')
 
     parser.add_argument('--timeout', dest = 'timeout',
@@ -490,7 +490,6 @@ def readCommand(argv):
         """ TODO(eriq): Move options to the new version.
         import pacai.ui.graphicsDisplay
         args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(
-                frameTime = options.frameTime,
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames,
                 gif_fps = options.gifFPS)
         """
@@ -499,16 +498,16 @@ def readCommand(argv):
         # This allows people to not have tkinter installed.
         from pacai.ui.pacman.gui import PacmanGUIView
 
-        args['display'] = PacmanGUIView()
+        args['display'] = PacmanGUIView(fps = options.fps)
         agentOpts['keyboard'] = args['display'].getKeyboard()
 
-    args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
+    args['catchExceptions'] = options.catchExceptions
+    args['gameToReplay'] = options.replay
     args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
     args['numGames'] = options.numGames
+    args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
     args['record'] = options.record
-    args['catchExceptions'] = options.catchExceptions
     args['timeout'] = options.timeout
-    args['gameToReplay'] = options.replay
 
     return args
 

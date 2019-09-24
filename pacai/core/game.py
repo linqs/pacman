@@ -36,14 +36,18 @@ class Game:
         Main control loop for game play.
         """
 
-        self.display.initialize(self.state)
         self.numMoves = 0
+
+        agentIndex = self.startingIndex
+        numAgents = len(self.agents)
+
+        self.display.initialize(self.state)
 
         if (not self._registerInitialState()):
             return False
 
-        agentIndex = self.startingIndex
-        numAgents = len(self.agents)
+        # Draw the initial frame.
+        self.display.update(self.state)
 
         while (not self.gameOver):
             # Fetch the next agent

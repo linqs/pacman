@@ -285,6 +285,9 @@ class PacmanGraphics:
         self.frame += 1
 
         agentIndex = newState.getLastAgentMoved()
+        if (agentIndex is None):
+            return
+
         agentState = newState.getAgentState(agentIndex)
 
         if (self.agentImages[agentIndex][0].isPacman() != agentState.isPacman()):
