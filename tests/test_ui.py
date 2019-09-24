@@ -16,7 +16,7 @@ class UITest(unittest.TestCase):
             '-w', '0.01',
             'python3',
             '-m', 'pacai.bin.pacman',
-            '--frameTime=0.001',
+            '--frame-time=0.001',
             '-p', 'GreedyAgent',
         ]
 
@@ -46,7 +46,6 @@ class UITest(unittest.TestCase):
             '-w', '0.01',
             'python3',
             '-m', 'pacai.bin.gridworld',
-            '-q',
         ]
 
         subprocess.run(args, shell = False, check = True)
