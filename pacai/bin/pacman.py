@@ -457,7 +457,7 @@ def readCommand(argv):
         random.seed(options.seed)
     else:
         seed = random.randint(0, 2**32)
-        logging.debug('Seed value: ' + seed)
+        logging.debug('Seed value: ' + str(seed))
 
 
 

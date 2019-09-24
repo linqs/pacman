@@ -610,7 +610,7 @@ def readCommand(argv):
 
     # If no seed entry generate a random seed value
     seed = random.seed(options.seed) if options.seed else random.randint(0, 2**32)
-    logging.debug('Seed value: ' + seed)
+    logging.debug('Seed value: ' + str(seed))
 
     # Choose a pacman agent.
     redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
