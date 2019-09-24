@@ -26,7 +26,7 @@ Have fun!
 """
 
 import logging
-import optparse
+import os
 import pickle
 import random
 import sys
@@ -34,6 +34,7 @@ import sys
 from pacai.agents.base import BaseAgent
 from pacai.agents.ghost.random import RandomGhost
 from pacai.agents.greedy import GreedyAgent
+from pacai.bin.arguments import getParser
 from pacai.core.actions import Actions
 from pacai.core.directions import Directions
 from pacai.core.distance import manhattan
@@ -43,6 +44,7 @@ from pacai.core.layout import getLayout
 from pacai.ui.pacman.text import PacmanTextView
 from pacai.ui.textDisplay import NullGraphics
 from pacai.util.logs import initLogging
+from pacai.util.logs import updateLoggingLevel
 from pacai.util.util import nearestPoint
 
 FIXED_SEED = 140188
@@ -373,9 +375,6 @@ class GhostRules:
 # FRAMEWORK TO START A GAME #
 #############################
 
-def default(str):
-    return str + ' [Default: %default]'
-
 def parseAgentArgs(str):
     if (str is None):
         return {}
@@ -396,80 +395,80 @@ def readCommand(argv):
     Processes the command used to run pacman from the command line.
     """
 
-    usageStr = """
-    USAGE: python pacman.py <options>
+    description = """
+    DESCRIPTION:
+        This program will run a classic pacman game. Collect all the pellets before
+        the ghosts catch you!
+
     EXAMPLES:
-        (1) python pacman.py
-            - starts an interactive game
-        (2) python pacman.py --layout smallClassic --zoom 2
-            OR python pacman.py -l smallClassic -z 2
-            - starts an interactive game on a smaller board, zoomed in
+        (1) python -m pacai.bin.pacman
+            - Starts an interactive game.
+        (2) python -m pacai.bin.pacman --layout smallClassic
+            - Starts an interactive game on a smaller board.
     """
 
-    parser = optparse.OptionParser(usageStr)
+    parser = getParser(description, os.path.basename(__file__))
 
-    parser.add_option('-n', '--numGames', dest='numGames', type='int',
-            help=default('the number of GAMES to play'), metavar='GAMES', default=1)
-    parser.add_option('-l', '--layout', dest='layout',
-            help=default('the LAYOUT_FILE from which to load the map layout'),
-            metavar='LAYOUT_FILE', default='mediumClassic')
-    parser.add_option('-p', '--pacman', dest='pacman',
-            help=default('the agent TYPE in the pacmanAgents module to use'),
-            metavar='TYPE', default='WASDKeyboardAgent')
-    parser.add_option('-t', '--textGraphics', action='store_true', dest='textGraphics',
-            help='Display output as text only', default=False)
-    parser.add_option('-q', '--quietTextGraphics', action='store_true', dest='quietGraphics',
-            help='Generate minimal output and no graphics', default=False)
-    parser.add_option('-g', '--ghosts', dest='ghost',
-            help=default('the ghost agent TYPE in the ghostAgents module to use'),
-            metavar = 'TYPE', default='RandomGhost')
-    parser.add_option('-k', '--numghosts', type='int', dest='numGhosts',
-            help=default('The maximum number of ghosts to use'), default=4)
-    parser.add_option('-z', '--zoom', type='float', dest='zoom',
-            help=default('Zoom the size of the graphics window'), default=1.0)
-    parser.add_option('-f', '--fixRandomSeed', action='store_true', dest='fixRandomSeed',
-            help='Fixes the random seed to always play the same game', default=False)
-    parser.add_option('--record', type='string', dest='record',
-            help='Writes game histories to the named file')
-    parser.add_option('--replay', dest='gameToReplay',
-            help='A recorded game file (pickle) to replay', default=None)
-    parser.add_option('-a', '--agentArgs', dest='agentArgs',
-            help='Comma separated values sent to agent. e.g. "opt1=val1,opt2,opt3=val3"')
-    parser.add_option('-x', '--numTraining', dest='numTraining', type='int',
-            help=default('How many episodes are training (suppresses output)'), default=0)
-    parser.add_option('--frameTime', dest='frameTime', type='float',
-            help=default('Time to delay between frames; <0 means keyboard'), default=0.1)
-    parser.add_option('-c', '--catchExceptions', action='store_true', dest='catchExceptions',
-            help='Turns on exception handling and timeouts during games', default=False)
-    parser.add_option('--timeout', dest='timeout', type='int',
-            help=default('Maximum length of time an agent can spend computing in a single game'),
-            default=30)
-    parser.add_option('--gif', dest='gif',
-            help=default('Save the game as a gif to the specified path'))
-    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
-            help=default('Skip this number of frames between frames of the gif.'))
-    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10,
-            help=default('FPS of the gif.'))
+    parser.add_argument('-g', '--ghosts', dest = 'ghost',
+            action = 'store', type = str, default = 'RandomGhost',
+            help = 'use the specified ghostAgent module for the ghosts (default: %(default)s)')
 
-    options, otherjunk = parser.parse_args(argv)
-    if len(otherjunk) != 0:
-        raise Exception('Command line input not understood: ' + str(otherjunk))
+    parser.add_argument('-k', '--num-ghosts', dest = 'numGhosts',
+            action = 'store', type = int, default = 4,
+            help = 'set the maximum number of ghosts (default: %(default)s)')
+
+    parser.add_argument('-l', '--layout', dest = 'layout',
+            action = 'store', type = str, default = 'mediumClassic',
+            help = 'use the specified map layout (default: %(default)s)')
+
+    parser.add_argument('-p', '--pacman', dest = 'pacman',
+            action = 'store', type = str, default = 'WASDKeyboardAgent',
+            help = 'use the specified pacmanAgent module for pacman (default: %(default)s)')
+
+    parser.add_argument('--agent-args', dest = 'agentArgs',
+            action = 'store', type = str, default = None,
+            help = 'comma separated arguments to be passed to agents (e.g. \'opt1=val1,opt2\')'
+                + '(default: %(default)s)')
+
+    parser.add_argument('--frame-time', dest = 'frameTime',
+            action = 'store', type = float, default = 0.1,
+            help = 'time to delay between frames, less than zero means keyboard agent'
+                + '(default: %(default)s)')
+
+    parser.add_argument('--timeout', dest = 'timeout',
+            action = 'store', type = int, default = 30,
+            help = 'maximum time limit (seconds) an agent can spend computing per game '
+                + '(default: %(default)s)')
+
+    options, otherjunk = parser.parse_known_args(argv)
     args = dict()
 
-    # Fix the random seed
+    if len(otherjunk) != 0:
+        raise ValueError('Unrecognized options: \'%s\'.' % (str(otherjunk)))
+
+    # Set the logging level.
+    if options.quiet and options.debug:
+        raise ValueError('Logging cannont be set to both debug and quiet.')
+
+    if options.quiet:
+        updateLoggingLevel(logging.WARNING)
+    elif options.debug:
+        updateLoggingLevel(logging.DEBUG)
+
+    # Fix the random seed.
     if options.fixRandomSeed:
         random.seed(FIXED_SEED)
 
-    # Choose a layout
+    # Choose a layout.
     args['layout'] = getLayout(options.layout)
     if (args['layout'] is None):
-        raise Exception("The layout " + options.layout + " cannot be found")
+        raise ValueError('The layout ' + options.layout + ' cannot be found.')
 
     # TODO(eriq): There are multiple keyboard agents.
-    # Choose a Pacman agent
-    noKeyboard = (options.gameToReplay is None and (options.textGraphics or options.quietGraphics))
+    # Choose a Pacman agent.
+    noKeyboard = (options.replay is None and (options.textGraphics or options.nullGraphics))
     if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
-        raise Exception('Keyboard agents require graphics.')
+        raise ValueError('Keyboard agents require graphics.')
 
     agentOpts = parseAgentArgs(options.agentArgs)
     if options.numTraining > 0:
@@ -477,13 +476,13 @@ def readCommand(argv):
         if 'numTraining' not in agentOpts:
             agentOpts['numTraining'] = options.numTraining
 
-    # Don't display training games
+    # Don't display training games.
     if 'numTrain' in agentOpts:
         options.numQuiet = int(agentOpts['numTrain'])
         options.numIgnore = int(agentOpts['numTrain'])
 
-    # Choose a display format
-    if options.quietGraphics:
+    # Choose a display format.
+    if options.nullGraphics:
         args['display'] = NullGraphics()
     elif options.textGraphics:
         args['display'] = PacmanTextView()
@@ -509,7 +508,7 @@ def readCommand(argv):
     args['record'] = options.record
     args['catchExceptions'] = options.catchExceptions
     args['timeout'] = options.timeout
-    args['gameToReplay'] = options.gameToReplay
+    args['gameToReplay'] = options.replay
 
     return args
 
@@ -592,6 +591,7 @@ def main(argv):
 
     argv already has the executable stripped.
     """
+
     initLogging()
 
     # Get game components based on input
