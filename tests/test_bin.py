@@ -21,6 +21,9 @@ class BinTest(unittest.TestCase):
             # Expected exception.
             pass
 
+        # Run game of pacman with seed value entry
+        pacman.main(['-p', 'GreedyAgent', '--null-graphics', '--seed', '1234'])
+
     def test_pacman_help(self):
         # Show all pacman arguments.
         try:
@@ -32,6 +35,9 @@ class BinTest(unittest.TestCase):
     def test_capture(self):
         # Run game of capture with default agents.
         capture.main(['--null-graphics'])
+
+        # Run game of capture with seed entry
+        capture.main(['--null-graphics', '--seed', '1234'])
 
     def test_capture_help(self):
         # Show all capture arguments.

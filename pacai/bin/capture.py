@@ -57,8 +57,6 @@ MIN_FOOD = 2
 
 SCARED_TIME = 40
 
-FIXED_SEED = 140188
-
 class CaptureGameState(AbstractGameState):
     """
     A game state specific to capture.
@@ -610,8 +608,8 @@ def readCommand(argv):
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue
 
-    if options.fixRandomSeed:
-        random.seed(FIXED_SEED)
+    if options.seed:
+        random.seed(options.seed)
 
     # Choose a pacman agent.
     redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)

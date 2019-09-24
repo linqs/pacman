@@ -453,9 +453,9 @@ def readCommand(argv):
     elif options.debug:
         updateLoggingLevel(logging.DEBUG)
 
-    # Fix the random seed.
-    if options.fixRandomSeed:
-        random.seed(FIXED_SEED)
+    # Seed value entered.
+    if options.seed:
+        random.seed(options.seed)
 
     # Choose a layout.
     args['layout'] = getLayout(options.layout)
