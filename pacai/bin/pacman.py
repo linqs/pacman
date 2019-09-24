@@ -41,8 +41,8 @@ from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.layout import getLayout
+from pacai.ui.pacman.null import PacmanNullView
 from pacai.ui.pacman.text import PacmanTextView
-from pacai.ui.textDisplay import NullGraphics
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.util import nearestPoint
@@ -480,7 +480,7 @@ def readCommand(argv):
 
     # Choose a display format.
     if options.nullGraphics:
-        args['display'] = NullGraphics()
+        args['display'] = PacmanNullView()
     elif options.textGraphics:
         args['display'] = PacmanTextView()
     else:
@@ -542,16 +542,18 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
     games = []
 
     for i in range(numGames):
-        beQuiet = (i < numTraining)
-        if beQuiet:
-            # Suppress output and graphics.
-            gameDisplay = NullGraphics()
+        isTraining = (i < numTraining)
+
+        if (isTraining):
+            # Suppress graphics for training.
+            gameDisplay = PacmanNullView()
         else:
             gameDisplay = display
 
         game = rules.newGame(layout, pacman, ghosts, gameDisplay, catchExceptions)
         game.run()
-        if (not beQuiet):
+
+        if (not isTraining):
             games.append(game)
 
         if (record):
@@ -563,7 +565,7 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
             with open(path, 'wb') as file:
                 pickle.dump(components, file)
 
-    if (numGames - numTraining) > 0:
+    if ((numGames - numTraining) > 0):
         scores = [game.state.getScore() for game in games]
         wins = [game.state.isWin() for game in games]
         winRate = wins.count(True) / float(len(wins))
