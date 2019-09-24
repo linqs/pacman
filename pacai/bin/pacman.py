@@ -196,9 +196,6 @@ class ClassicGameRules(object):
         logging.info('Pacman died! Score: %d' % state.getScore())
         game.gameOver = True
 
-    def getProgress(self, game):
-        return float(game.state.getNumFood()) / self._initialFoodCount
-
     def agentCrash(self, game, agentIndex):
         if (agentIndex == PACMAN_AGENT_INDEX):
             logging.error('Pacman crashed')

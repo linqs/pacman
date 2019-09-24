@@ -25,12 +25,6 @@ class Game:
         self.enforceTimeouts = catchExceptions
         self.catchExceptions = catchExceptions
 
-    def getProgress(self):
-        if (self.gameOver):
-            return 1.0
-        else:
-            return self.rules.getProgress(self)
-
     def run(self):
         """
         Main control loop for game play.
@@ -86,7 +80,7 @@ class Game:
             # Allow for game specific conditions (winning, losing, etc.).
             self.rules.process(self.state, self)
 
-            # Track progress
+            # Track progress.
             if (agentIndex == numAgents + 1):
                 self.numMoves += 1
 
