@@ -22,7 +22,7 @@ def getParser(description, name):
             help = 'set logging level to warning (default: %(default)s)')
 
     parser.add_argument('-s', '--seed', dest = 'seed',
-            action = 'store', type = int, default = 0,
+            action = 'store', type = int, default = None,
             help = 'Enter seed value to randomize the game')
 
     parser.add_argument('--catch-exceptions', dest = 'catchExceptions',

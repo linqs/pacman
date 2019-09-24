@@ -45,7 +45,6 @@ from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.util import nearestPoint
 
-FIXED_SEED = 140188
 PACMAN_AGENT_INDEX = 0
 
 SCARED_TIME = 40  # The number of moves that ghosts are scared for.
@@ -453,9 +452,14 @@ def readCommand(argv):
     elif options.debug:
         updateLoggingLevel(logging.DEBUG)
 
-    # Seed value entered.
+    # If seed value is not entered generate a random seed value
     if options.seed:
         random.seed(options.seed)
+    else:
+        seed = random.randint(0, 2**32)
+        logging.debug('Seed value: ' + seed)
+
+
 
     # Choose a layout.
     args['layout'] = getLayout(options.layout)

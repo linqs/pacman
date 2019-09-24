@@ -608,8 +608,9 @@ def readCommand(argv):
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue
 
-    if options.seed:
-        random.seed(options.seed)
+    # If no seed entry generate a random seed value
+    seed = random.seed(options.seed) if options.seed else random.randint(0, 2**32)
+    logging.debug('Seed value: ' + seed)
 
     # Choose a pacman agent.
     redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
@@ -639,7 +640,6 @@ def readCommand(argv):
 
     # Choose a layout.
     if options.layout.startswith('RANDOM'):
-        seed = random.randint(0, 99999999)
         if (options.layout != 'RANDOM'):
             seed = int(options.layout[6:])
 
