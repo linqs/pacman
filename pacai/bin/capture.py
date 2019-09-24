@@ -608,9 +608,13 @@ def readCommand(argv):
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue
 
-    # If no seed entry generate a random seed value
-    seed = random.seed(options.seed) if options.seed else random.randint(0, 2**32)
-    logging.debug('Seed value: ' + str(seed))
+    # If no seed entry generate a random seed value.
+    seed = None
+    if options.seed:
+        seed = random.seed(options.seed)
+    else:
+        seed = random.randint(0, 2**32)
+        logging.info('Seed value: ' + str(seed))
 
     # Choose a pacman agent.
     redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
@@ -641,9 +645,9 @@ def readCommand(argv):
     # Choose a layout.
     if options.layout.startswith('RANDOM'):
         if (options.layout != 'RANDOM'):
-            seed = int(options.layout[6:])
+            layoutSeed = int(options.layout[6:])
 
-        args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
+        args['layout'] = pacai.core.layout.Layout(randomLayout(layoutSeed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise ValueError('You must use a capture layout with capture.py.')
     else:
@@ -662,8 +666,6 @@ def readCommand(argv):
     return args
 
 def randomLayout(seed = None):
-    if not seed:
-        seed = random.randint(0, 99999999)
     return pacai.util.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):

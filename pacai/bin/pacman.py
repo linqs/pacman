@@ -452,12 +452,12 @@ def readCommand(argv):
     elif options.debug:
         updateLoggingLevel(logging.DEBUG)
 
-    # If seed value is not entered generate a random seed value
+    # If seed value is not entered generate a random seed value.
     if options.seed:
         random.seed(options.seed)
     else:
         seed = random.randint(0, 2**32)
-        logging.debug('Seed value: ' + str(seed))
+        logging.info('Seed value: ' + str(seed))
 
     # Choose a layout.
     args['layout'] = getLayout(options.layout)

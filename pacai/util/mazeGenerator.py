@@ -19,6 +19,7 @@ Notes:
 @author: Jie Tang
 """
 
+import logging
 import random
 import sys
 
@@ -300,12 +301,14 @@ def add_pacman_stuff(maze, max_food=60, max_capsules=4, toskip=0):
             total_food += 2
 
 def generateMaze(seed = None):
+    rng = random.Random()
     if not seed:
-        seed = random.randint(1, MAX_DIFFERENT_MAZES)
+        seed = rng.randint(1, MAX_DIFFERENT_MAZES)
+    logging.info('Seed value for Maze Generation: ' + str(seed))
 
-    random.seed(seed)
+    rng.seed(seed)
     maze = Maze(16, 16)
-    gapfactor = min(0.65, random.gauss(0.5, 0.1))
+    gapfactor = min(0.65, rng.gauss(0.5, 0.1))
     skip = make_with_prison(maze, depth=0, gaps=3, vert=True, min_width=1, gapfactor=gapfactor)
     maze.to_map()
     add_pacman_stuff(maze, 2 * (maze.r * int(maze.c / 20)), 4, skip)
