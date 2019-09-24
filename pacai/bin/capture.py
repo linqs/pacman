@@ -644,6 +644,7 @@ def readCommand(argv):
 
     # Choose a layout.
     if options.layout.startswith('RANDOM'):
+        layoutSeed = None
         if (options.layout != 'RANDOM'):
             layoutSeed = int(options.layout[6:])
 
@@ -666,7 +667,7 @@ def readCommand(argv):
     return args
 
 def randomLayout(seed = None):
-    return pacai.util.util.mazeGenerator.generateMaze(seed)
+    return pacai.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     "Calls agent factories and returns lists of agents"
