@@ -83,7 +83,8 @@ class Distancer(object):
         return bestDistance
 
     def getDistanceOnGrid(self, pos1, pos2):
-        if (pos1, pos2) in self._distances:
+        key = (pos1, pos2)
+        if key in self._distances:
             return self._distances[key]
 
         raise Exception("Position not in grid: " + str(key))
