@@ -29,7 +29,7 @@ The keys are
 
 import importlib
 import logging
-import optparse
+import os
 import pickle
 import random
 import sys
@@ -38,12 +38,14 @@ import traceback
 import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
+from pacai.bin.arguments import getParser
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
 from pacai.util.logs import initLogging
+from pacai.util.logs import updateLoggingLevel
 from pacai.util.util import nearestPoint
 
 COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
@@ -492,9 +494,6 @@ class AgentRules:
 # FRAMEWORK TO START A GAME #
 #############################
 
-def default(str):
-    return str + ' [Default: %default]'
-
 def parseAgentArgs(str):
     if (str is None or str == ''):
         return {}
@@ -511,80 +510,95 @@ def parseAgentArgs(str):
 
 def readCommand(argv):
     """
-    Processes the command used to run pacman from the command line.
+    Processes the command used to run capture from the command line.
     """
-    usageStr = """
-    USAGE:        python pacman.py <options>
-    EXAMPLES:    (1) python capture.py
-                                    - starts a game with two baseline agents
-                            (2) python capture.py --keys0
-                                    - starts a two-player interactive game
-                                        where the arrow keys control agent 0,
-                                        and all other agents are baseline agents
-                            (3) python capture.py -r pacai.core.baselineTeam -b pacai.student.myTeam
-                                    - starts a fully automated game where the red team
-                                        is a baseline team and blue team is pacai.student.myTeam
+
+    description = """
+    DESCRIPTION:
+        This program will run a capture game. Two teams of pacman agents are pitted against
+        one another in a capture the flag style game. Collect the most pellets to win!
+
+    EXAMPLES:
+        (1) python -m pacai.bin.capture
+          - Starts a game with two baseline agents.
+        (2) python -m pacai.bin.capture --keys0
+          - Starts an interactive game where the arrow keys control agent 0 and all other
+            agents are baseline agents.
+        (3) python -m pacai.bin.capture.py -r pacai.core.baselineTeam -b pacai.student.myTeam
+          - Starts an automated game where the red team is a baseline team and blue
+            team is pacai.student.myTeam.
     """
-    parser = optparse.OptionParser(usageStr)
 
-    parser.add_option('-r', '--red', help=default('Red team'), default='pacai.core.baselineTeam')
-    parser.add_option('-b', '--blue', help=default('Blue team'), default='pacai.core.baselineTeam')
-    parser.add_option('--redOpts', help=default('Options for red team (e.g. first=keys)'),
-            default='')
-    parser.add_option('--blueOpts', help=default('Options for blue team (e.g. first=keys)'),
-            default='')
-    parser.add_option('--keys0', help='Make agent 0 (first red player) a keyboard agent',
-            action='store_true', default=False)
-    parser.add_option('--keys1', help='Make agent 1 (second red player) a keyboard agent',
-            action='store_true', default=False)
-    parser.add_option('--keys2', help='Make agent 2 (first blue player) a keyboard agent',
-            action='store_true', default=False)
-    parser.add_option('--keys3', help='Make agent 3 (second blue player) a keyboard agent',
-            action='store_true', default=False)
-    parser.add_option('-l', '--layout', dest='layout',
-            help=default('the LAYOUT_FILE from which to load the layout; use RANDOM for a random'
-                    + 'maze; use RANDOM<seed> to use a specified random seed, e.g., RANDOM23'),
-            metavar='LAYOUT_FILE', default='defaultCapture')
-    parser.add_option('-t', '--textgraphics', action='store_true', dest='textgraphics',
-            help='Display output as text only', default=False)
-    parser.add_option('-q', '--quiet', action='store_true',
-            help='Display minimal output and no graphics', default=False)
-    parser.add_option('-z', '--zoom', type='float', dest='zoom',
-            help=default('Zoom in the graphics'), default=1)
-    parser.add_option('-i', '--time', type='int', dest='time',
-            help=default('TIME limit of a game in moves'), default=1200, metavar='TIME')
-    parser.add_option('-n', '--numGames', type='int',
-            help=default('Number of games to play'), default=1)
-    parser.add_option('-f', '--fixRandomSeed', action='store_true',
-            help='Fixes the random seed to always play the same game', default=False)
-    parser.add_option('--record', type='string', dest='record',
-            help='Writes game histories to the named file')
-    parser.add_option('--replay', default=None, help='Replays a recorded game file.')
-    parser.add_option('-x', '--numTraining', dest='numTraining', type='int',
-            help=default('How many episodes are training (suppresses output)'), default=0)
-    parser.add_option('-c', '--catchExceptions', action='store_true', default=False,
-            help='Catch exceptions and enforce time limits')
-    parser.add_option('--gif', dest='gif',
-            help=default('Save the game as a gif to the specified path'))
-    parser.add_option('--gif-skip-frames', dest='gifSkipFrames', type='int', default=0,
-            help=default('Skip this number of frames between frames of the gif.'))
-    parser.add_option('--gif-fps', dest='gifFPS', type='float', default=10,
-            help=default('FPS of the gif.'))
+    parser = getParser(description, os.path.basename(__file__))
 
-    options, otherjunk = parser.parse_args(argv)
-    assert len(otherjunk) == 0, "Unrecognized options: " + str(otherjunk)
+    parser.add_argument('-b', '--blue', dest = 'blue',
+            action = 'store', type = str, default = 'pacai.core.baselineTeam',
+            help = 'set blue team (default: %(default)s)')
+
+    parser.add_argument('-l', '--layout', dest = 'layout',
+            action = 'store', type = str, default = 'defaultCapture',
+            help = 'use the specified map layout or input RANDOM<seed> '
+                + 'for a random seeded map (i.e. RANDOM23) (default: %(default)s)')
+
+    parser.add_argument('-r', '--red', dest = 'red',
+            action = 'store', type = str, default = 'pacai.core.baselineTeam',
+            help = 'set red team (default: %(default)s)')
+
+    parser.add_argument('--blue-args', dest = 'blueArgs',
+            action = 'store', type = str, default = None,
+            help = 'comma separated arguments to be passed to blue team (e.g. \'opt1=val1,opt2\') '
+                + '(default: %(default)s)')
+
+    parser.add_argument('--keys0', dest = 'keys0',
+            action = 'store_true', default = False,
+            help = 'make agent 0 (first red player) a keyboard agent (default: %(default)s)')
+
+    parser.add_argument('--keys1', dest = 'keys1',
+            action = 'store_true', default = False,
+            help = 'make agent 1 (first blue player) a keyboard agent (default: %(default)s)')
+
+    parser.add_argument('--keys2', dest = 'keys2',
+            action = 'store_true', default = False,
+            help = 'make agent 2 (second red player) a keyboard agent (default: %(default)s)')
+
+    parser.add_argument('--keys3', dest = 'keys3',
+            action = 'store_true', default = False,
+            help = 'make agent 3 (second blue player) a keyboard agent (default: %(default)s)')
+
+    parser.add_argument('--max-moves', dest = 'maxMoves',
+            action = 'store', type = int, default = 1200,
+            help = 'set maximum number of moves in a game (default: %(default)s)')
+
+    parser.add_argument('--red-args', dest = 'redArgs',
+            action = 'store', type = str, default = None,
+            help = 'comma separated arguments to be passed to red team (e.g. \'opt1=val1,opt2\') '
+                + '(default: %(default)s)')
+
+    options, otherjunk = parser.parse_known_args(argv)
     args = dict()
 
-    # Choose a display format
-    if options.textgraphics:
+    if len(otherjunk) != 0:
+        raise ValueError('Unrecognized options: \'%s\'.' % (str(otherjunk)))
+
+    # Set the logging level.
+    if options.quiet and options.debug:
+        raise ValueError('Logging cannont be set to both debug and quiet.')
+
+    if options.quiet:
+        updateLoggingLevel(logging.WARNING)
+    elif options.debug:
+        updateLoggingLevel(logging.DEBUG)
+
+    # Choose a display format.
+    if options.textGraphics:
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.PacmanGraphics()
-    elif options.quiet:
+    elif options.nullGraphics:
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.NullGraphics()
     else:
         import pacai.ui.captureGraphicsDisplay
-        # Hack for agents writing to the display
+        # Hack for agents writing to the display.
         pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
         args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue,
                 options.zoom, 0, capture=True,
@@ -599,17 +613,17 @@ def readCommand(argv):
     if options.fixRandomSeed:
         random.seed(FIXED_SEED)
 
-    # Choose a pacman agent
-    redArgs, blueArgs = parseAgentArgs(options.redOpts), parseAgentArgs(options.blueOpts)
+    # Choose a pacman agent.
+    redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
     if options.numTraining > 0:
         redArgs['numTraining'] = options.numTraining
         blueArgs['numTraining'] = options.numTraining
-    nokeyboard = options.textgraphics or options.quiet or options.numTraining > 0
+    nokeyboard = options.textGraphics or options.nullGraphics or options.numTraining > 0
     logging.debug('\nRed team %s with %s:' % (options.red, redArgs))
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
     logging.debug('\nBlue team %s with %s:' % (options.blue, blueArgs))
     blueAgents = loadAgents(False, options.blue, nokeyboard, blueArgs)
-    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], [])  # list of agents
+    args['agents'] = sum([list(el) for el in zip(redAgents, blueAgents)], [])  # List of agents.
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
@@ -621,11 +635,11 @@ def readCommand(argv):
         elif numKeyboardAgents == 1:
             agent = keyboard.IJKLKeyboardAgent(index)
         else:
-            raise Exception('Max of two keyboard agents supported')
+            raise ValueError('Max of two keyboard agents supported.')
         numKeyboardAgents += 1
         args['agents'][index] = agent
 
-    # Choose a layout
+    # Choose a layout.
     if options.layout.startswith('RANDOM'):
         seed = random.randint(0, 99999999)
         if (options.layout != 'RANDOM'):
@@ -633,14 +647,14 @@ def readCommand(argv):
 
         args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
-        raise Exception('You must use a capture layout with capture.py')
+        raise ValueError('You must use a capture layout with capture.py.')
     else:
         args['layout'] = pacai.core.layout.getLayout(options.layout)
 
     if (args['layout'] is None):
-        raise Exception("The layout " + options.layout + " cannot be found")
+        raise ValueError('The layout ' + options.layout + ' cannot be found.')
 
-    args['length'] = options.time
+    args['length'] = options.maxMoves
     args['numGames'] = options.numGames
     args['numTraining'] = options.numTraining
     args['record'] = options.record
@@ -773,6 +787,7 @@ def main(argv):
 
     argv already has the executable stripped.
     """
+
     initLogging()
 
     # Get game components based on input
