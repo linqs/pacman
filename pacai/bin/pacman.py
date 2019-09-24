@@ -489,7 +489,7 @@ def readCommand(argv):
     else:
         """ TODO(eriq): Move options to the new version.
         import pacai.ui.graphicsDisplay
-        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom,
+        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(
                 frameTime = options.frameTime,
                 gif = options.gif, gif_skip_frames = options.gifSkipFrames,
                 gif_fps = options.gifFPS)

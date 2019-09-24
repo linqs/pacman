@@ -61,8 +61,4 @@ def getParser(description, name):
             action = 'store_true', default = False,
             help = 'display output as text only (default: %(default)s)')
 
-    parser.add_argument('--zoom', dest = 'zoom',
-            action = 'store', type = float, default = 1.0,
-            help = 'zoom the size of the graphics window (default: %(default)s)')
-
     return parser
