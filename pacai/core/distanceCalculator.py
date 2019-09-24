@@ -16,7 +16,6 @@ class Distancer(object):
         """
         Initialize with Distancer (layout).
         """
-        
         self._distances = None
 
     def getDistance(self, pos1, pos2):
