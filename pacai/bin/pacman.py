@@ -459,8 +459,6 @@ def readCommand(argv):
         seed = random.randint(0, 2**32)
         logging.debug('Seed value: ' + str(seed))
 
-
-
     # Choose a layout.
     args['layout'] = getLayout(options.layout)
     if (args['layout'] is None):
