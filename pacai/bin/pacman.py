@@ -497,9 +497,7 @@ def readCommand(argv):
         """
         import pacai.ui.pacman.gui
         args['display'] = pacai.ui.pacman.gui.PacmanGUIView()
-
-        if (options.pacman.endswith('KeyboardAgent')):
-            agentOpts['keyboard'] = args['display'].getKeyboard()
+        agentOpts['keyboard'] = args['display'].getKeyboard()
 
     args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
     args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]

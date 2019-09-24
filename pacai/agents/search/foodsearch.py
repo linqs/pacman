@@ -8,7 +8,7 @@ class AStarFoodSearchAgent(SearchAgent):
     A SearchAgent for FoodSearchProblem using A* and your foodHeuristic
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
         self.searchFunction = lambda prob: search.astar(prob, searchAgents.foodHeuristic)

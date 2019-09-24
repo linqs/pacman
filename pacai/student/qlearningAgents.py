@@ -51,19 +51,19 @@ class QLearningAgent(ReinforcementAgent):
     DESCRIPTION: <Write something here so we know what you did.>
     """
 
-    def __init__(self, index, **args):
+    def __init__(self, index, **kwargs):
         """
         You can initialize Q-values here...
         """
 
-        super().__init__(index, **args)
+        super().__init__(index, **kwargs)
 
 class PacmanQAgent(QLearningAgent):
     """
     Exactly the same as QLearningAgent, but with different default parameters.
     """
 
-    def __init__(self, index, epsilon = 0.05, gamma = 0.8, alpha = 0.2, numTraining = 0, **args):
+    def __init__(self, index, epsilon = 0.05, gamma = 0.8, alpha = 0.2, numTraining = 0, **kwargs):
         """
         These default parameters can be changed from the pacman.py command line.
         For example, to change the exploration rate, try:
@@ -75,12 +75,12 @@ class PacmanQAgent(QLearningAgent):
         numTraining - number of training episodes, i.e. no learning after these many episodes
         """
 
-        args['epsilon'] = epsilon
-        args['gamma'] = gamma
-        args['alpha'] = alpha
-        args['numTraining'] = numTraining
+        kwargs['epsilon'] = epsilon
+        kwargs['gamma'] = gamma
+        kwargs['alpha'] = alpha
+        kwargs['numTraining'] = numTraining
 
-        super().__init__(index, **args)
+        super().__init__(index, **kwargs)
 
     def getAction(self, state):
         """
@@ -114,8 +114,9 @@ class ApproximateQAgent(PacmanQAgent):
     DESCRIPTION: <Write something here so we know what you did.>
     """
 
-    def __init__(self, index, extractor = 'pacai.util.featureExtractors.IdentityExtractor', **args):
-        super().__init__(index, **args)
+    def __init__(self, index,
+            extractor = 'pacai.util.featureExtractors.IdentityExtractor', **kwargs):
+        super().__init__(index, **kwargs)
         self.featExtractor = reflection.qualifiedImport(extractor)
 
         # You might want to initialize weights here.

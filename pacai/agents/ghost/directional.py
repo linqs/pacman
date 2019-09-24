@@ -8,7 +8,7 @@ class DirectionalGhost(GhostAgent):
     A ghost that prefers to rush Pacman, or flee when scared.
     """
 
-    def __init__(self, index, prob_attack = 0.8, prob_scaredFlee = 0.8):
+    def __init__(self, index, prob_attack = 0.8, prob_scaredFlee = 0.8, **kwargs):
         super().__init__(index)
 
         self.prob_attack = prob_attack

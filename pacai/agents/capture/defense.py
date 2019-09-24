@@ -9,7 +9,7 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
     It is not the best or only way to make such an agent.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def getFeatures(self, gameState, action):

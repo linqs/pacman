@@ -16,6 +16,9 @@ class BaseAgent(abc.ABC):
     Note that methods that take in a state should assume that they own a shallow copy of the state.
     So the state should not be modified and a deep copy should be made of any information
     they want to keep.
+
+    Non-abstract children should make sure that their constructors accept **kwargs,
+    since agents are typically created reflexively.
     """
 
     def __init__(self, index = 0):

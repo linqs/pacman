@@ -13,7 +13,7 @@ class ReflexAgent(BaseAgent):
     so long as you don't touch the method headers.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def getAction(self, gameState):
@@ -92,7 +92,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         and self.evaluationFunction.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
@@ -105,7 +105,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.treeDepth and self.evaluationFunction
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
@@ -121,7 +121,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         Returns the expectimax action using self.treeDepth and self.evaluationFunction
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
 def betterEvaluationFunction(currentGameState):
@@ -151,5 +151,5 @@ class ContestAgent(MultiAgentSearchAgent):
         Returns an action.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)

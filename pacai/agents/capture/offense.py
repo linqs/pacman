@@ -8,7 +8,7 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
     but it is by no means the best or only way to build an offensive agent.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def getFeatures(self, gameState, action):

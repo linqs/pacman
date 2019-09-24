@@ -6,7 +6,7 @@ class RandomGhost(GhostAgent):
     A ghost that chooses a legal action uniformly at random.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def getDistribution(self, state):

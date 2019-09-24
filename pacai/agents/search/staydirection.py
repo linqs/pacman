@@ -10,7 +10,7 @@ class StayEastSearchAgent(SearchAgent):
     The cost function for stepping into a position (x,y) is 1/2^x.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
         self.searchFunction = search.ucs
@@ -25,7 +25,7 @@ class StayWestSearchAgent(SearchAgent):
     The cost function for stepping into a position (x,y) is 2^x.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
         self.searchFunction = search.ucs

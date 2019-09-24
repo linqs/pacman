@@ -6,15 +6,12 @@ class BaseKeyboardAgent(BaseAgent):
     An agent controlled by the keyboard.
     """
 
-    def __init__(self, index = 0, keyboard = None, directionalKeys = {}):
+    def __init__(self, index = 0, keyboard = None, directionalKeys = {}, **kwargs):
         """
         directionalKeys is a dict of direction to keys for that direction.
         """
 
         super().__init__(index)
-
-        if (keyboard is None):
-            raise ValueError("Keyboard agents require a pacai.ui.keyboard.Keyboard.")
 
         self._keyboard = keyboard
         self._lastMove = Directions.STOP
@@ -27,6 +24,11 @@ class BaseKeyboardAgent(BaseAgent):
                 self._queryKeys.add(key)
 
     def getAction(self, state):
+        # Note that we delay this check (instead of doing it in the constructor)
+        # so that replays can create any agent and not worry about a GUI.
+        if (self._keyboard is None):
+            raise ValueError("Keyboard agents require a pacai.ui.keyboard.Keyboard.")
+
         intended_action = None
         legal = state.getLegalActions(self.index)
 

@@ -164,7 +164,7 @@ class ClosestDotSearchAgent(SearchAgent):
     Search for all food using a sequence of searches
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def registerInitialState(self, state):
@@ -251,5 +251,5 @@ class ApproximateSearchAgent(BaseAgent):
         This method is called before any moves are made.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)

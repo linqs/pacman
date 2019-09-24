@@ -1,7 +1,3 @@
-"""
-Interfaces for capture agents and agent factories
-"""
-
 import random
 import time
 
@@ -13,7 +9,7 @@ class TimeoutAgent(BaseAgent):
     too much time results in penalties and random moves.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def getAction(self, state):

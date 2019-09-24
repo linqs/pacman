@@ -11,7 +11,7 @@ class ReflexCaptureAgent(CaptureAgent):
     A base class for reflex agents that chooses score-maximizing actions
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def chooseAction(self, gameState):

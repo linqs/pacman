@@ -5,7 +5,7 @@ from pacai.core.directions import Directions
 from pacai.util import reflection
 
 class GreedyAgent(BaseAgent):
-    def __init__(self, index, evalFn = "pacai.core.eval.score"):
+    def __init__(self, index, evalFn = "pacai.core.eval.score", **kwargs):
         super().__init__(index)
 
         self.evaluationFunction = reflection.qualifiedImport(evalFn)

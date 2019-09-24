@@ -12,7 +12,7 @@ class MultiAgentSearchAgent(BaseAgent):
     Please do not remove anything, however.
     """
 
-    def __init__(self, index, evalFn = 'pacai.core.eval.score', depth = '2'):
+    def __init__(self, index, evalFn = 'pacai.core.eval.score', depth = '2', **kwargs):
         super().__init__(index)
 
         self.evaluationFunction = reflection.qualifiedImport(evalFn)

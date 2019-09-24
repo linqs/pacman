@@ -26,7 +26,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         terminal state, you should return None.
     """
 
-    def __init__(self, index, mdp, discountRate = 0.9, iters = 100):
+    def __init__(self, index, mdp, discountRate = 0.9, iters = 100, **kwargs):
         """
         Your value iteration agent should take an mdp on
         construction, run the indicated number of iterations
