@@ -478,11 +478,18 @@ def readCommand(argv):
         options.numQuiet = int(agentOpts['numTrain'])
         options.numIgnore = int(agentOpts['numTrain'])
 
+    viewOptions = {
+        'spritesPath': options.spritesPath,
+        'gifPath': options.gif,
+        'gifFPS': options.gifFPS,
+        'skipFrames': options.gifSkipFrames,
+    }
+
     # Choose a display format.
     if options.nullGraphics:
-        args['display'] = PacmanNullView()
+        args['display'] = PacmanNullView(**viewOptions)
     elif options.textGraphics:
-        args['display'] = PacmanTextView()
+        args['display'] = PacmanTextView(**viewOptions)
     else:
         """ TODO(eriq): Move options to the new version.
         import pacai.ui.graphicsDisplay
@@ -495,7 +502,7 @@ def readCommand(argv):
         # This allows people to not have tkinter installed.
         from pacai.ui.pacman.gui import PacmanGUIView
 
-        args['display'] = PacmanGUIView(fps = options.fps)
+        args['display'] = PacmanGUIView(fps = options.fps, **viewOptions)
         agentOpts['keyboard'] = args['display'].getKeyboard()
 
     args['catchExceptions'] = options.catchExceptions

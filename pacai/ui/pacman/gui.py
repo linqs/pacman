@@ -10,8 +10,8 @@ from pacai.ui.view import Frame
 MAX_FPS = 1000
 
 class PacmanGUIView(AbstractView):
-    def __init__(self, fps = 0):
-        super().__init__()
+    def __init__(self, fps = 0, **kwargs):
+        super().__init__(**kwargs)
 
         self._fps = int(max(0, min(MAX_FPS, fps)))
 

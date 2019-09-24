@@ -1,6 +1,8 @@
 import argparse
 import textwrap
 
+from pacai.ui import view
+
 def getParser(description, name):
     """
     Loads common arguments between pacman and capture.
@@ -30,16 +32,16 @@ def getParser(description, name):
             help = 'turns on exception handling and timeouts during games (default: %(default)s)')
 
     parser.add_argument('--gif', dest = 'gif',
-            action = 'store_true', default = False,
+            action = 'store', type = str, default = None,
             help = 'save the game as a gif to the specified path (default: %(default)s)')
 
     parser.add_argument('--gif-fps', dest = 'gifFPS',
-            action = 'store', type = float, default = 10.0,
+            action = 'store', type = int, default = view.DEFAULT_GIF_FPS,
             help = 'set the fps of the gif (default: %(default)s)')
 
     parser.add_argument('--gif-skip-frames', dest = 'gifSkipFrames',
-            action = 'store', type = int, default = 0,
-            help = 'skip this number of frames between frames of the gif (default: %(default)s)')
+            action = 'store', type = int, default = view.DEFAULT_SKIP_FRAMES,
+            help = 'skip X actual frames between each frame of the gif (default: %(default)s)')
 
     parser.add_argument('--null-graphics', dest = 'nullGraphics',
             action = 'store_true', default = False,
@@ -56,6 +58,10 @@ def getParser(description, name):
     parser.add_argument('--replay', dest = 'replay',
             action = 'store', type = str, default = None,
             help = 'load a recorded pickle game file to replay (default: %(default)s)')
+
+    parser.add_argument('--sprites', dest = 'spritesPath',
+            action = 'store', type = str, default = view.DEFAULT_SPRITES,
+            help = 'use the specified spritesheet for graphics (default: %(default)s)')
 
     parser.add_argument('--text-graphics', dest = 'textGraphics',
             action = 'store_true', default = False,

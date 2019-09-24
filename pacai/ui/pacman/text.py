@@ -2,8 +2,8 @@ from pacai.ui.view import AbstractView
 from pacai.ui.view import Frame
 
 class PacmanTextView(AbstractView):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     # Override
     def _drawFrame(self, state, frame, forceDraw = False):

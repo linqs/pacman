@@ -7,28 +7,30 @@ from PIL import ImageDraw
 from pacai.core.directions import Directions
 from pacai.util import util
 
-# TODO(eriq): This should eventually be false.
-DEFAULT_SAVE_FRAMES = True
-DEFAULT_SAVE_EVERY_N_FRAMES = 5
-
-GIF_FPS = 10
-GIF_FRAME_DURATION_MS = int(1.0 / GIF_FPS * 1000.0)
-GIF_FILENAME = 'test.gif'
+DEFAULT_GIF_FPS = 10
+MIN_GIF_FPS = 1
+DEFAULT_SKIP_FRAMES = 4
 
 # By default, the sprite sheet is adjacent to this file.
 DEFAULT_SPRITES = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pacman-sprites.png')
 
-# TODO(eriq): This is specific for the Pacman-style games.
 class AbstractView(abc.ABC):
     """
     A abstarct view that represents all the necessary functionality a specific
     view should implement.
+    The ability to produce a gif is inherent to all views,
+    even if they do not produce graphics at runtime.
     """
 
-    def __init__(self,
-            saveFrames = DEFAULT_SAVE_FRAMES, saveEveryNFrames = DEFAULT_SAVE_EVERY_N_FRAMES):
-        self._saveFrames = saveFrames
-        self._saveEveryNFrames = saveEveryNFrames
+    def __init__(self, spritesPath = DEFAULT_SPRITES,
+            gifPath = None, gifFPS = DEFAULT_GIF_FPS, skipFrames = DEFAULT_SKIP_FRAMES):
+        self._spritesPath = spritesPath
+
+        self._gifPath = gifPath
+        self._gifFPS = max(MIN_GIF_FPS, int(gifFPS))
+
+        self._saveFrames = (self._gifPath is not None)
+        self._skipFrames = max(1, int(skipFrames))
         self._keyFrames = []
 
         # The number of frames this view has produced.
@@ -37,17 +39,20 @@ class AbstractView(abc.ABC):
         # (Tracked by the number of times agent 0 has been animated.)
         self._turnCount = 0
 
-        self._sprites = Frame.loadSpriteSheet(DEFAULT_SPRITES)
+        self._sprites = Frame.loadSpriteSheet(spritesPath)
 
     def finish(self):
         """
         Signal that the game is over and the UI should cleanup.
         """
 
+        # Save the gif.
         if (self._saveFrames and len(self._keyFrames) > 0):
+            gifTimePerFrameMS = int(1.0 / self._gifFPS * 1000.0)
+
             images = [frame.toImage(self._sprites) for frame in self._keyFrames]
-            images[0].save(GIF_FILENAME, save_all = True, append_images = images,
-                    duration = GIF_FRAME_DURATION_MS, loop = 0, optimize = True)
+            images[0].save(self._gifPath, save_all = True, append_images = images,
+                    duration = gifTimePerFrameMS, loop = 0, optimize = True)
 
     def getKeyboard(self):
         """
@@ -73,7 +78,7 @@ class AbstractView(abc.ABC):
 
         frame = Frame(self._frameCount, state, self._turnCount)
         if (state.isOver()
-                or (self._saveFrames and self._frameCount % self._saveEveryNFrames == 0)):
+                or (self._saveFrames and self._frameCount % self._skipFrames == 0)):
             self._keyFrames.append(frame)
 
         self._drawFrame(state, frame, forceDraw = forceDraw)
