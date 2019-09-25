@@ -7,11 +7,15 @@ distancer = Distancer(gameState.getInitialLayout())
 distancer.getDistance((1, 1), (10, 10))
 """
 
+import sys
+
 from pacai.core.distance import manhattan
+from pacai.util import priorityQueue
 
 DEFAULT_DISTANCE = 10000
 
 class Distancer(object):
+
     def __init__(self, layout):
         """
         Initialize with Distancer (layout).
@@ -80,6 +84,3 @@ class Distancer(object):
             return self._distances[key]
 
         raise Exception("Position not in grid: " + str(key))
-
-    def isReadyForMazeDistance(self):
-        return (self._distances is not None)
