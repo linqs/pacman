@@ -602,10 +602,9 @@ def readCommand(argv):
 
     # If no seed entry generate a random seed value.
     seed = options.seed
-    if seed is not None:
-        random.seed(options.seed)
-    else:
+    if seed is None:
         seed = random.randint(0, 2**32)
+    random.seed(seed)
     logging.debug('Seed value: ' + str(seed))
 
     # Choose a pacman agent.

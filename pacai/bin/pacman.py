@@ -451,10 +451,9 @@ def readCommand(argv):
 
     # If seed value is not entered generate a random seed value.
     seed = options.seed
-    if seed is not None:
-        random.seed(options.seed)
-    else:
+    if seed is None:
         seed = random.randint(0, 2**32)
+    random.seed(seed)
     logging.debug('Seed value: ' + str(seed))
 
     # Choose a layout.
