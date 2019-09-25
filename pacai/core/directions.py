@@ -22,3 +22,10 @@ class Directions:
         WEST: EAST,
         STOP: STOP
     }
+
+    CARDINAL = [
+        NORTH,
+        EAST,
+        SOUTH,
+        WEST,
+    ]

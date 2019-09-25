@@ -4,8 +4,8 @@ import tkinter
 from PIL import ImageTk
 
 from pacai.ui.keyboard import Keyboard
+from pacai.ui import spritesheet
 from pacai.ui.view import AbstractView
-from pacai.ui.view import Frame
 
 MAX_FPS = 1000
 
@@ -40,8 +40,8 @@ class PacmanGUIView(AbstractView):
     def initialize(self, state):
         super().initialize(state)
 
-        self._height = state.getInitialLayout().getHeight() * Frame.SQUARE_SIZE
-        self._width = state.getInitialLayout().getWidth() * Frame.SQUARE_SIZE
+        self._height = state.getInitialLayout().getHeight() * spritesheet.SQUARE_SIZE
+        self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
 
         self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
         self._canvas.pack()

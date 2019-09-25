@@ -1,6 +1,7 @@
 import abc
 import os
 
+from pacai.ui import spritesheet
 from pacai.ui.frame import Frame
 
 DEFAULT_GIF_FPS = 10
@@ -35,7 +36,7 @@ class AbstractView(abc.ABC):
         # (Tracked by the number of times agent 0 has been animated.)
         self._turnCount = 0
 
-        self._sprites = Frame.loadSpriteSheet(spritesPath)
+        self._sprites = spritesheet.loadSpriteSheet(spritesPath)
 
     def finish(self):
         """

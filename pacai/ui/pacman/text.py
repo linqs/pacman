@@ -1,5 +1,5 @@
+from pacai.ui import token
 from pacai.ui.view import AbstractView
-from pacai.ui.view import Frame
 
 class PacmanTextView(AbstractView):
     def __init__(self, **kwargs):
@@ -28,20 +28,20 @@ class PacmanTextView(AbstractView):
 
             print(''.join(row))
 
-    def _convertToken(self, token):
-        if (token == Frame.EMPTY):
+    def _convertToken(self, objectToken):
+        if (objectToken == token.EMPTY_TOKEN):
             return ' '
-        if (Frame.isWall(token)):
+        if (token.isWall(objectToken)):
             return '█'
-        if (Frame.isFood(token)):
+        if (token.isFood(objectToken)):
             return '⋅'
-        elif (Frame.isCapsule(token)):
+        elif (token.isCapsule(objectToken)):
             return 'c'
-        elif (Frame.isPacman(token)):
+        elif (token.isPacman(objectToken)):
             return 'P'
-        elif (Frame.isGhost(token)):
+        elif (token.isGhost(objectToken)):
             return 'G'
-        elif (token == Frame.SCARED_GHOST):
+        elif (objectToken == token.SCARED_GHOST_TOKEN):
             return 'S'
         else:
-            return "%02d" % (token)
+            return "%02d" % (objectToken)

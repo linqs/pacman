@@ -1,123 +1,21 @@
+"""
+A Frame is the base unit of a View.
+Frames hold all the information necessary to draw the game in whatever medium
+the view chooses.
+"""
+
 from PIL import Image
 from PIL import ImageDraw
 
-from pacai.core.directions import Directions
+from pacai.ui import spritesheet
+from pacai.ui import token
 from pacai.util import util
 
-# Reserve 200 tokens for walls.
-BLUE_WALL_BASE = 200
-RED_WALL_BASE = 250
-WALL_END = 299
-
-# Reserve 100 tokens for food.
-DEFAULT_FOOD_BASE = 100
-RED_FOOD_BASE = 110
-BLUE_FOOD_BASE = 120
-FOOD_END = 199
-
-# TODO(eriq): Frames can probably be more effiicent with bit packing.
 class Frame(object):
     """
     A general representation of that can be seen on-screen at a given time.
     Frames are the basic units of the views.
     """
-
-    SQUARE_SIZE = 50
-
-    STOP = 0
-    NORTH = 1
-    EAST = 2
-    SOUTH = 3
-    WEST = 4
-
-    DIRECTIONS = [
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST,
-    ]
-
-    # There are 4 frames in each animation cycle.
-    ANIMATION_CYCLE = 4
-
-    # Token to mark what can occupy different locations.
-    EMPTY = 0
-    FOOD = 1
-    CAPSULE = 2
-    SCARED_GHOST = 3
-
-    # Animations fill the room between the explicitly listed tokens.
-    PACMAN_1 = 1100
-    PACMAN_2 = 1200
-    PACMAN_3 = 1300
-    PACMAN_4 = 1400
-    PACMAN_5 = 1500
-    PACMAN_6 = 1600
-    PACMAN_7 = 1700
-    PACMAN_END = 1800
-
-    GHOST_1 = 2100
-    GHOST_2 = 2200
-    GHOST_3 = 2300
-    GHOST_4 = 2400
-    GHOST_5 = 2500
-    GHOST_6 = 2600
-    GHOST_END = 2700
-
-    # Constants specific to the sprite sheet.
-
-    # The row where several miscellaneous items appear on.
-    MISC_ROW = 13
-
-    # The different types of food that appear.
-    SPRITE_SHEET_FOOD_TYPES = [
-        DEFAULT_FOOD_BASE,
-        RED_FOOD_BASE,
-        BLUE_FOOD_BASE,
-    ]
-
-    # The different wall types that appear (their base token number and spritesheet row).
-    SPRITE_SHEET_WALL_TYPES = [
-        (BLUE_WALL_BASE, 14),
-        (RED_WALL_BASE, 15),
-    ]
-
-    # The order that the wall sprites appear in the sheet.
-    # True indicates that there is a wall adjacent in that cardinal direction (N, E, S, W).
-    SPRITE_SHEET_WALL_ORDER = [
-        (False, False, False, False),
-        (False, False, False, True),
-        (False, False, True, False),
-        (False, False, True, True),
-        (False, True, False, False),
-        (False, True, False, True),
-        (False, True, True, False),
-        (False, True, True, True),
-        (True, False, False, False),
-        (True, False, False, True),
-        (True, False, True, False),
-        (True, False, True, True),
-        (True, True, False, False),
-        (True, True, False, True),
-        (True, True, True, False),
-        (True, True, True, True),
-    ]
-
-    SPRITE_SHEET_AGENTS = [
-        (PACMAN_1, 0),
-        (PACMAN_2, 1),
-        (PACMAN_3, 2),
-        (PACMAN_4, 3),
-        (PACMAN_5, 4),
-        (PACMAN_6, 5),
-        (PACMAN_7, 6),
-        (GHOST_1, 7),
-        (GHOST_2, 8),
-        (GHOST_3, 9),
-        (GHOST_4, 10),
-        (GHOST_5, 11),
-        (GHOST_6, 12),
-    ]
 
     def __init__(self, frame, state, turn):
         self._frame = frame
@@ -159,68 +57,8 @@ class Frame(object):
     def getWidth(self):
         return self._width
 
-    @staticmethod
-    def isCapsule(token):
-        return token >= DEFAULT_FOOD_BASE and token <= FOOD_END and token % 2 == 0
-
-    @staticmethod
-    def isFood(token):
-        return token >= DEFAULT_FOOD_BASE and token <= FOOD_END and token % 2 == 1
-
-    @staticmethod
-    def isGhost(token):
-        return token >= Frame.GHOST_1 and token <= Frame.GHOST_END
-
-    @staticmethod
-    def isPacman(token):
-        return token >= Frame.PACMAN_1 and token <= Frame.PACMAN_END
-
-    @staticmethod
-    def isWall(token):
-        return token >= BLUE_WALL_BASE and token <= WALL_END
-
-    @staticmethod
-    def loadSpriteSheet(path):
-        spritesheet = Image.open(path)
-
-        sprites = {}
-
-        # Load the food.
-        miscColumnIndex = 0
-        for foodTypeBase in Frame.SPRITE_SHEET_FOOD_TYPES:
-            for foodItem in [Frame.FOOD, Frame.CAPSULE]:
-                token = foodTypeBase + foodItem
-                sprites[token] = Frame._cropSprite(spritesheet, Frame.MISC_ROW, miscColumnIndex)
-                miscColumnIndex += 1
-
-        # The scared ghost is after the food.
-        sprites[Frame.SCARED_GHOST] = Frame._cropSprite(spritesheet, Frame.MISC_ROW,
-                miscColumnIndex)
-
-        # Load all the wall sprites.
-        for (wallTypeBase, row) in Frame.SPRITE_SHEET_WALL_TYPES:
-            for wallIndex in range(len(Frame.SPRITE_SHEET_WALL_ORDER)):
-                adjacentWalls = Frame.SPRITE_SHEET_WALL_ORDER[wallIndex]
-                wallToken = Frame._computeWallToken(wallTypeBase, *adjacentWalls)
-
-                sprites[wallToken] = Frame._cropSprite(spritesheet, row, wallIndex)
-
-        # Load all the agents.
-        for (agentBaseToken, row) in Frame.SPRITE_SHEET_AGENTS:
-            # Load the stopped sprite.
-            sprites[agentBaseToken] = Frame._cropSprite(spritesheet, row, 0)
-
-            # Now load animations.
-            for direction in Frame.DIRECTIONS:
-                for frame in range(Frame.ANIMATION_CYCLE):
-                    animationOffset = Frame._getAnimationOffset(direction, frame)
-                    token = agentBaseToken + animationOffset
-                    sprites[token] = Frame._cropSprite(spritesheet, row, animationOffset)
-
-        return sprites
-
     def toImage(self, sprites = {}):
-        size = (self._width * Frame.SQUARE_SIZE, self._height * Frame.SQUARE_SIZE)
+        size = (self._width * spritesheet.SQUARE_SIZE, self._height * spritesheet.SQUARE_SIZE)
         image = Image.new('RGB', size)
         draw = ImageDraw.Draw(image)
 
@@ -239,7 +77,7 @@ class Frame(object):
         board = self._width * [None]
         for x in range(self._width):
 
-            items = self._height * [Frame.EMPTY]
+            items = self._height * [token.EMPTY_TOKEN]
             for y in range(self._height):
                 if (state.hasWall(x, y)):
                     items[y] = self._getWallToken(x, y, state)
@@ -251,50 +89,6 @@ class Frame(object):
             board[x] = items
 
         return board
-
-    @staticmethod
-    def _computeWallToken(base, hasWallN, hasWallE, hasWallS, hasWallW):
-        """
-        Given information about a wall's cardinal neighbors,
-        compute the correct type of wall to use.
-        The computation is similar to POSIX permission bits,
-        To get the pacman "tubular" look, adjacent walls will look connected
-        and not have a line between them.
-        all combinations produce unique sums.
-        """
-
-        N_WALL = 1
-        E_WALL = 2
-        S_WALL = 4
-        W_WALL = 8
-
-        code = base
-
-        if (hasWallN):
-            code += N_WALL
-
-        if (hasWallE):
-            code += E_WALL
-
-        if (hasWallS):
-            code += S_WALL
-
-        if (hasWallW):
-            code += W_WALL
-
-        return code
-
-    @staticmethod
-    def _cropSprite(spritesheet, row, col):
-        # (left, upper, right, lower)
-        rectangle = (
-            col * Frame.SQUARE_SIZE,
-            row * Frame.SQUARE_SIZE,
-            (col + 1) * Frame.SQUARE_SIZE,
-            (row + 1) * Frame.SQUARE_SIZE,
-        )
-
-        return spritesheet.crop(rectangle)
 
     def _getAgentTokens(self, state):
         """
@@ -308,34 +102,23 @@ class Frame(object):
             position = agentState.getPosition()
 
             if (agentState.isScaredGhost()):
-                tokens[position] = Frame.SCARED_GHOST
+                tokens[position] = token.SCARED_GHOST_TOKEN
             else:
-                token = self._getAgentBaseToken(*position, agentIndex, state)
+                agentBaseToken = self._getAgentBaseToken(*position, agentIndex, state)
+                direction = agentState.getDirection()
 
-                direction = Frame._translateDirection(agentState.getDirection())
+                # agentToken = token.getAnimationToken(agentBaseToken, direction, self._turn)
+                agentToken = token.getAnimationToken(agentBaseToken, direction, self._frame)
 
-                # token += Frame._getAnimationOffset(direction, self._turn)
-                token += Frame._getAnimationOffset(direction, self._frame)
-
-                tokens[position] = token
+                tokens[position] = agentToken
 
         return tokens
 
-    @staticmethod
-    def _getAnimationOffset(direction, frame):
-        """
-        Get the token for a specific animation frame.
-        """
-
-        if (direction == Frame.STOP):
-            return 0
-        return 1 + (direction - 1) * Frame.ANIMATION_CYCLE + (frame % Frame.ANIMATION_CYCLE)
-
     def _getCapsuleToken(self, x, y, state):
-        return self._getCapsuleBaseToken(x, y, state) + Frame.CAPSULE
+        return self._getCapsuleBaseToken(x, y, state) + token.CAPSULE_OFFSET
 
     def _getFoodToken(self, x, y, state):
-        return self._getFoodBaseToken(x, y, state) + Frame.FOOD
+        return self._getFoodBaseToken(x, y, state) + token.FOOD_OFFSET
 
     def _getWallToken(self, x, y, state):
         hasWallN = False
@@ -357,52 +140,42 @@ class Frame(object):
         if (x != 0):
             hasWallW = state.hasWall(x - 1, y)
 
-        return Frame._computeWallToken(baseToken, hasWallN, hasWallE, hasWallS, hasWallW)
+        return token.getWallToken(baseToken, hasWallN, hasWallE, hasWallS, hasWallW)
 
-    def _placeToken(self, x, y, token, sprites, image, draw):
+    def _placeToken(self, x, y, objectToken, sprites, image, draw):
         startPoint = self._toImageCoords(x, y)
         endPoint = self._toImageCoords(x + 1, y - 1)
 
-        if (token in sprites):
-            image.paste(sprites[token], startPoint, sprites[token])
+        if (objectToken in sprites):
+            image.paste(sprites[objectToken], startPoint, sprites[objectToken])
         else:
-            color = self._tokenToColor(token)
+            color = self._tokenToColor(objectToken)
             draw.rectangle([startPoint, endPoint], fill = color)
 
     def _toImageCoords(self, x, y):
         # PIL has (0, 0) as the upper-left, while pacai has it as the lower-left.
-        return (int(x * Frame.SQUARE_SIZE), int((self._height - 1 - y) * Frame.SQUARE_SIZE))
+        return (
+            int(x * spritesheet.SQUARE_SIZE),
+            int((self._height - 1 - y) * spritesheet.SQUARE_SIZE)
+        )
 
-    def _tokenToColor(self, token):
-        if (token == Frame.EMPTY):
+    def _tokenToColor(self, objectToken):
+        if (objectToken == token.EMPTY_TOKEN):
             return (0, 0, 0)
-        elif (self.isWall(token)):
+        elif (self.isWall(objectToken)):
             return (0, 51, 255)
-        elif (self.isFood(token)):
+        elif (self.isFood(objectToken)):
             return (255, 255, 255)
-        elif (self.isCapsule(token)):
+        elif (self.isCapsule(objectToken)):
             return (255, 0, 255)
-        elif (self.isGhost(token)):
+        elif (self.isGhost(objectToken)):
             return (229, 0, 0)
-        elif (self.isPacman(token)):
+        elif (self.isPacman(objectToken)):
             return (255, 255, 61)
-        elif (token == Frame.SCARED_GHOST):
+        elif (objectToken == token.SCARED_GHOST_TOKEN):
             return (0, 255, 0)
         else:
             return (0, 0, 0)
-
-    @staticmethod
-    def _translateDirection(direction):
-        if (direction == Directions.NORTH):
-            return Frame.NORTH
-        elif (direction == Directions.EAST):
-            return Frame.EAST
-        elif (direction == Directions.SOUTH):
-            return Frame.SOUTH
-        elif (direction == Directions.WEST):
-            return Frame.WEST
-        else:
-            return Frame.STOP
 
     # TODO(eriq): Abstract out Pacman and Capture frames, and split the blow methods acordingly.
 
@@ -410,43 +183,43 @@ class Frame(object):
 
     def _getAgentBaseToken(self, x, y, agentIndex, state):
         if (state.getAgentState(agentIndex).isPacman()):
-            return Frame.PACMAN_1
+            return token.PACMAN_1
         else:
-            return Frame.GHOST_1 + (agentIndex - 1) * 100
+            return token.GHOST_1 + (agentIndex - 1) * 100
 
     def _getCapsuleBaseToken(self, x, y, state):
-        return DEFAULT_FOOD_BASE
+        return token.DEFAULT_FOOD_BASE
 
     def _getFoodBaseToken(self, x, y, state):
-        return DEFAULT_FOOD_BASE
+        return token.DEFAULT_FOOD_BASE
 
     def _getWallBaseToken(self, x, y, state):
-        return BLUE_WALL_BASE
+        return token.BLUE_WALL_BASE
 
     # Capture
     """
     def _getAgentBaseToken(self, x, y, agentIndex, state):
         if (state.getAgentState(agentIndex).isPacman()):
-            return Frame.PACMAN_2 + agentIndex * 100
+            return token.PACMAN_2 + agentIndex * 100
         else:
-            return Frame.GHOST_1 + agentIndex * 100
+            return token.GHOST_1 + agentIndex * 100
 
     def _getCapsuleBaseToken(self, x, y, state):
         if (x < self._width / 2):
-            return RED_FOOD_BASE
+            return token.RED_FOOD_BASE
         else:
-            return BLUE_FOOD_BASE
+            return token.BLUE_FOOD_BASE
 
     def _getFoodBaseToken(self, x, y, state):
         if (x < self._width / 2):
-            return RED_FOOD_BASE
+            return token.RED_FOOD_BASE
         else:
-            return BLUE_FOOD_BASE
+            return token.BLUE_FOOD_BASE
 
 
     def _getWallBaseToken(self, x, y, state):
         if (x < self._width / 2):
-            return RED_WALL_BASE
+            return token.RED_WALL_BASE
         else:
-            return BLUE_WALL_BASE
+            return token.BLUE_WALL_BASE
     """
