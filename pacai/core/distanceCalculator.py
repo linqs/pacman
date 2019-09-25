@@ -7,10 +7,7 @@ distancer = Distancer(gameState.getInitialLayout())
 distancer.getDistance((1, 1), (10, 10))
 """
 
-import sys
-
 from pacai.core.distance import manhattan
-from pacai.util import priorityQueue
 
 DEFAULT_DISTANCE = 10000
 
