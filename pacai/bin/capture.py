@@ -37,12 +37,12 @@ import traceback
 
 from pacai.agents import keyboard
 from pacai.bin.arguments import getParser
+from pacai.core import layout
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
-from pacai.core import layout
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.mazeGenerator import generateMaze
