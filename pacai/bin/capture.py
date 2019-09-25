@@ -325,14 +325,6 @@ class CaptureRules:
         logging.info('The %s team wins by %d points.' % (winner, abs(state.getScore())))
         state.endGame(True)
 
-    def getProgress(self, game):
-        blue = 1.0 - (game.state.getBlueFood().count() / float(self._totalBlueFood))
-        red = 1.0 - (game.state.getRedFood().count() / float(self._totalRedFood))
-        moves = len(self.moveHistory) / float(game.length)
-
-        # Return the most likely progress indicator, clamped to [0, 1].
-        return min(max(0.75 * max(red, blue) + 0.25 * moves, 0.0), 1.0)
-
     def agentCrash(self, game, agentIndex):
         if (game.state.isOnRedTeam(agentIndex)):
             logging.error("Red agent crashed.")
