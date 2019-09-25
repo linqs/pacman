@@ -32,6 +32,7 @@ class UITest(unittest.TestCase):
             '-w', '0.01',
             'python3',
             '-m', 'pacai.bin.capture',
+            '--fps=1000',
         ]
 
         subprocess.run(args, shell = False, check = True)

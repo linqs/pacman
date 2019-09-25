@@ -27,7 +27,7 @@ class ReplayTest(unittest.TestCase):
     def test_capture(self):
         replayPath = os.path.join(tempfile.gettempdir(), CAPTURE_FILENAME)
 
-        capture.main(['--null-graphics', '--record', replayPath])
+        capture.main(['--null-graphics', '--fps=1000', '--record', replayPath])
 
         self.assertTrue(os.path.isfile(replayPath))
 

@@ -31,6 +31,11 @@ def getParser(description, name):
             action = 'store_true', default = False,
             help = 'turns on exception handling and timeouts during games (default: %(default)s)')
 
+    parser.add_argument('--fps', dest = 'fps',
+            action = 'store', type = float, default = 15,
+            help = 'cap the game to this fps, at zero frames will be animated as fast as possible'
+                + '(default: %(default)s)')
+
     parser.add_argument('--gif', dest = 'gif',
             action = 'store', type = str, default = None,
             help = 'save the game as a gif to the specified path (default: %(default)s)')

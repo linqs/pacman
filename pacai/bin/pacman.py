@@ -427,11 +427,6 @@ def readCommand(argv):
             help = 'comma separated arguments to be passed to agents (e.g. \'opt1=val1,opt2\')'
                 + '(default: %(default)s)')
 
-    parser.add_argument('--fps', dest = 'fps',
-            action = 'store', type = float, default = 15,
-            help = 'cap the game to this fps, at zero frames will be animated as fast as possible'
-                + '(default: %(default)s)')
-
     parser.add_argument('--timeout', dest = 'timeout',
             action = 'store', type = int, default = 30,
             help = 'maximum time limit (seconds) an agent can spend computing per game '
@@ -479,10 +474,10 @@ def readCommand(argv):
         options.numIgnore = int(agentOpts['numTrain'])
 
     viewOptions = {
-        'spritesPath': options.spritesPath,
-        'gifPath': options.gif,
         'gifFPS': options.gifFPS,
+        'gifPath': options.gif,
         'skipFrames': options.gifSkipFrames,
+        'spritesPath': options.spritesPath,
     }
 
     # Choose a display format.
@@ -491,13 +486,6 @@ def readCommand(argv):
     elif options.textGraphics:
         args['display'] = PacmanTextView(**viewOptions)
     else:
-        """ TODO(eriq): Move options to the new version.
-        import pacai.ui.graphicsDisplay
-        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
-                gif_fps = options.gifFPS)
-        """
-
         # Defer importing the GUI unless we actually need it.
         # This allows people to not have tkinter installed.
         from pacai.ui.pacman.gui import PacmanGUIView

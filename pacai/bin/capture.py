@@ -35,7 +35,6 @@ import random
 import sys
 import traceback
 
-import pacai.core.layout
 import pacai.util.mazeGenerator
 from pacai.agents import keyboard
 from pacai.bin.arguments import getParser
@@ -44,6 +43,9 @@ from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
+from pacai.core.layout import Layout
+from pacai.core.layout import getLayout
+from pacai.ui.capture.null import CaptureNullView
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.util import nearestPoint
@@ -581,21 +583,25 @@ def readCommand(argv):
     elif options.debug:
         updateLoggingLevel(logging.DEBUG)
 
+    viewOptions = {
+        'gifFPS': options.gifFPS,
+        'gifPath': options.gif,
+        'skipFrames': options.gifSkipFrames,
+        'spritesPath': options.spritesPath,
+    }
+
     # Choose a display format.
     if options.textGraphics:
         import pacai.ui.textDisplay
         args['display'] = pacai.ui.textDisplay.PacmanGraphics()
     elif options.nullGraphics:
-        import pacai.ui.textDisplay
-        args['display'] = pacai.ui.textDisplay.NullGraphics()
+        args['display'] = CaptureNullView(**viewOptions)
     else:
-        import pacai.ui.captureGraphicsDisplay
-        # Hack for agents writing to the display.
-        pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue,
-                frameTime=0, capture=True,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
-                gif_fps = options.gifFPS)
+        # Defer importing the GUI unless we actually need it.
+        # This allows people to not have tkinter installed.
+        from pacai.ui.capture.gui import CaptureGUIView
+
+        args['display'] = CaptureGUIView(fps = options.fps, **viewOptions)
 
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue
@@ -635,11 +641,11 @@ def readCommand(argv):
         if (options.layout != 'RANDOM'):
             seed = int(options.layout[6:])
 
-        args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
+        args['layout'] = Layout(randomLayout(seed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise ValueError('You must use a capture layout with capture.py.')
     else:
-        args['layout'] = pacai.core.layout.getLayout(options.layout)
+        args['layout'] = getLayout(options.layout)
 
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
