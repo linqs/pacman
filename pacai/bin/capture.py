@@ -45,6 +45,7 @@ from pacai.core.grid import Grid
 from pacai.core.layout import Layout
 from pacai.core.layout import getLayout
 from pacai.ui.capture.null import CaptureNullView
+from pacai.ui.capture.text import CaptureTextView
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.mazeGenerator import generateMaze
@@ -590,8 +591,7 @@ def readCommand(argv):
 
     # Choose a display format.
     if options.textGraphics:
-        import pacai.ui.textDisplay
-        args['display'] = pacai.ui.textDisplay.PacmanGraphics()
+        args['display'] = CaptureTextView(**viewOptions)
     elif options.nullGraphics:
         args['display'] = CaptureNullView(**viewOptions)
     else:
@@ -718,9 +718,8 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
     for i in range(numGames):
         beQuiet = (i < numTraining)
         if beQuiet:
-            # Suppress output and graphics
-            import textDisplay
-            gameDisplay = textDisplay.NullGraphics()
+            # Suppress graphics for training.
+            gameDisplay = CaptureNullView()
         else:
             gameDisplay = display
 
