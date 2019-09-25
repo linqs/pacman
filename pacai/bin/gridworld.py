@@ -9,7 +9,8 @@ from pacai.core.environment import Environment
 from pacai.core.mdp import MarkovDecisionProcess
 from pacai.student.qlearningAgents import QLearningAgent
 from pacai.student.valueIterationAgent import ValueIterationAgent
-from pacai.ui import graphicsUtils
+from pacai.ui.gridworld.text import TextGridworldDisplay
+from pacai.ui.gridworld.utils import wait_for_keys
 from pacai.util.counter import Counter
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
@@ -291,7 +292,7 @@ def getUserAction(state, actionFunction):
     action = None
 
     while True:
-        keys = graphicsUtils.wait_for_keys()
+        keys = wait_for_keys()
 
         if ('Up' in keys):
             action = 'north'
@@ -501,12 +502,11 @@ def main(argv):
     # GET THE DISPLAY ADAPTER
     ###########################
 
-    import pacai.ui.textGridworldDisplay
-    display = pacai.ui.textGridworldDisplay.TextGridworldDisplay(mdp)
+    display = TextGridworldDisplay(mdp)
     if not opts.textGraphics and not opts.nullGraphics:
-        import pacai.ui.graphicsGridworldDisplay
-        display = pacai.ui.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp,
-                opts.gridSize, opts.speed)
+        from pacai.ui.gridworld.gui import GraphicsGridworldDisplay
+        display = GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
+
     display.start()
 
     ###########################
