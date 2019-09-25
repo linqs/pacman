@@ -66,7 +66,6 @@ class CaptureAgent(BaseAgent):
         self.distancer = distanceCalculator.Distancer(gameState.getInitialLayout())
 
         # Comment this out to forgo maze distance computation and use manhattan distances
-        self.distancer.getMazeDistances()
 
         import __main__
         if '_display' in dir(__main__):
