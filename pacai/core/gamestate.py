@@ -268,5 +268,5 @@ class AbstractGameState(abc.ABC):
                 and self._layout == other._layout)
 
     def __hash__(self):
-        return util.buildHash(self._score, self._gameover, self._win, self._capsules,
-                self._food, self._agentStates, self._layout)
+        return util.buildHash(self._score, self._gameover, self._win, *self._capsules,
+                self._food, *self._agentStates, self._layout)
