@@ -33,9 +33,9 @@ class PacmanTextView(AbstractView):
             return ' '
         if (Frame.isWall(token)):
             return '█'
-        if (token == Frame.FOOD):
+        if (Frame.isFood(token)):
             return '⋅'
-        elif (token == Frame.CAPSULE):
+        elif (Frame.isCapsule(token)):
             return 'c'
         elif (Frame.isPacman(token)):
             return 'P'
