@@ -46,6 +46,7 @@ from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
+from pacai.util.mazeGenerator import generateMaze
 from pacai.util.util import nearestPoint
 
 COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
@@ -601,12 +602,12 @@ def readCommand(argv):
     args['blueTeamName'] = options.blue
 
     # If no seed entry generate a random seed value.
-    seed = None
-    if options.seed:
-        seed = random.seed(options.seed)
+    seed = options.seed
+    if seed is not None:
+        random.seed(options.seed)
     else:
         seed = random.randint(0, 2**32)
-        logging.info('Seed value: ' + str(seed))
+    logging.debug('Seed value: ' + str(seed))
 
     # Choose a pacman agent.
     redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
@@ -640,7 +641,7 @@ def readCommand(argv):
         if (options.layout != 'RANDOM'):
             layoutSeed = int(options.layout[6:])
 
-        args['layout'] = pacai.core.layout.Layout(randomLayout(layoutSeed).split('\n'))
+        args['layout'] = pacai.core.layout.Layout(generateMaze(layoutSeed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise ValueError('You must use a capture layout with capture.py.')
     else:
@@ -657,9 +658,6 @@ def readCommand(argv):
     args['replay'] = options.replay
 
     return args
-
-def randomLayout(seed = None):
-    return pacai.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     "Calls agent factories and returns lists of agents"
