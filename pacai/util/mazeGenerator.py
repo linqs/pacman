@@ -19,6 +19,7 @@ Notes:
 @author: Jie Tang
 """
 
+import logging
 import random
 import sys
 
@@ -77,7 +78,7 @@ class Maze(object):
 
         return s[:-1]
 
-    def add_wall(self, i, gaps=1, vert=True):
+    def add_wall(self, rng, i, gaps=1, vert=True):
         """
         Add a wall with gaps.
         """
@@ -99,7 +100,7 @@ class Maze(object):
             if len(slots) <= gaps:
                 return 0
 
-            random.shuffle(slots)
+            rng.shuffle(slots)
             for row in slots[int(round(gaps)):]:
                 self.root.grid[row][add_c + i] = WALL
 
@@ -123,7 +124,7 @@ class Maze(object):
             if len(slots) <= gaps:
                 return 0
 
-            random.shuffle(slots)
+            rng.shuffle(slots)
             for col in slots[int(round(gaps)):]:
                 self.root.grid[add_r + i][col] = WALL
 
@@ -132,13 +133,13 @@ class Maze(object):
 
         return 1
 
-def make_with_prison(room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
+def make_with_prison(rng, room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
     """
     Build a maze with 0,1,2 layers of prison (randomly).
     """
 
-    p = random.randint(0, 2)
-    proll = random.random()
+    p = rng.randint(0, 2)
+    proll = rng.random()
     if proll < 0.5:
         p = 1
     elif proll < 0.7:
@@ -161,11 +162,11 @@ def make_with_prison(room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5)
 
     room.rooms.append(Maze(room.r, room.c - (2 * p), (add_r, add_c + (2 * p)), room.root))
     for sub_room in room.rooms:
-        make(sub_room, depth + 1, gaps, vert, min_width, gapfactor)
+        make(rng, sub_room, depth + 1, gaps, vert, min_width, gapfactor)
 
     return 2 * p
 
-def make(room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
+def make(rng, room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
     """
     recursively build a maze
     TODO: randomize number of gaps?
@@ -197,13 +198,13 @@ def make(room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
     if len(wall_slots) == 0:
         return
 
-    choice = random.choice(wall_slots)
-    if not room.add_wall(choice, gaps, vert):
+    choice = rng.choice(wall_slots)
+    if not room.add_wall(rng, choice, gaps, vert):
         return
 
     # Recursively add walls
     for sub_room in room.rooms:
-        make(sub_room, depth + 1, max(1, gaps * gapfactor), not vert, min_width, gapfactor)
+        make(rng, sub_room, depth + 1, max(1, gaps * gapfactor), not vert, min_width, gapfactor)
 
 def copy_grid(grid):
     new_grid = []
@@ -215,7 +216,7 @@ def copy_grid(grid):
 
     return new_grid
 
-def add_pacman_stuff(maze, max_food=60, max_capsules=4, toskip=0):
+def add_pacman_stuff(rng, maze, max_food=60, max_capsules=4, toskip=0):
     """
     Add pacmen starting position.
     Add food at dead ends plus some extra.
@@ -269,8 +270,8 @@ def add_pacman_stuff(maze, max_food=60, max_capsules=4, toskip=0):
     # Add capsules
     total_capsules = 0
     while (total_capsules < max_capsules):
-        row = random.randint(1, maze.r - 1)
-        col = random.randint(1 + toskip, int(maze.c / 2) - 2)
+        row = rng.randint(1, maze.r - 1)
+        col = rng.randint(1 + toskip, int(maze.c / 2) - 2)
 
         if (row > maze.r - 6) and (col < 6):
             continue
@@ -285,8 +286,8 @@ def add_pacman_stuff(maze, max_food=60, max_capsules=4, toskip=0):
 
     # Extra random food
     while (total_food < max_food):
-        row = random.randint(1, maze.r - 1)
-        col = random.randint(1 + toskip, int(maze.c / 2) - 1)
+        row = rng.randint(1, maze.r - 1)
+        col = rng.randint(1 + toskip, int(maze.c / 2) - 1)
 
         if (row > maze.r - 6) and (col < 6):
             continue
@@ -300,15 +301,17 @@ def add_pacman_stuff(maze, max_food=60, max_capsules=4, toskip=0):
             total_food += 2
 
 def generateMaze(seed = None):
-    if not seed:
-        seed = random.randint(1, MAX_DIFFERENT_MAZES)
+    rng = random.Random()
+    if seed is None:
+        seed = rng.randint(1, MAX_DIFFERENT_MAZES)
+    logging.debug('Seed value for Maze Generation: ' + str(seed))
 
-    random.seed(seed)
+    rng.seed(seed)
     maze = Maze(16, 16)
-    gapfactor = min(0.65, random.gauss(0.5, 0.1))
-    skip = make_with_prison(maze, depth=0, gaps=3, vert=True, min_width=1, gapfactor=gapfactor)
+    gapfactor = min(0.65, rng.gauss(0.5, 0.1))
+    skip = make_with_prison(rng, maze, depth=0, gaps=3, vert=True, min_width=1, gapfactor=gapfactor)
     maze.to_map()
-    add_pacman_stuff(maze, 2 * (maze.r * int(maze.c / 20)), 4, skip)
+    add_pacman_stuff(rng, maze, 2 * (maze.r * int(maze.c / 20)), 4, skip)
 
     return str(maze)
 

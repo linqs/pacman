@@ -13,10 +13,6 @@ def getParser(description, name):
             action = 'store_true', default = False,
             help = 'set logging level to debug (default: %(default)s)')
 
-    parser.add_argument('-f', '--fix-random-seed', dest = 'fixRandomSeed',
-            action = 'store_true', default = False,
-            help = 'fixes the random seed to always play the same game (default: %(default)s)')
-
     parser.add_argument('-n', '--num-games', dest = 'numGames',
             action = 'store', type = int, default = 1,
             help = 'play the specified number of games (default: %(default)s)')
@@ -24,6 +20,10 @@ def getParser(description, name):
     parser.add_argument('-q', '--quiet', dest = 'quiet',
             action = 'store_true', default = False,
             help = 'set logging level to warning (default: %(default)s)')
+
+    parser.add_argument('-s', '--seed', dest = 'seed',
+            action = 'store', type = int, default = None,
+            help = 'Enter seed value to randomize the game')
 
     parser.add_argument('--catch-exceptions', dest = 'catchExceptions',
             action = 'store_true', default = False,

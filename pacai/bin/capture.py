@@ -35,10 +35,9 @@ import random
 import sys
 import traceback
 
-import pacai.core.layout
-import pacai.util.mazeGenerator
 from pacai.agents import keyboard
 from pacai.bin.arguments import getParser
+from pacai.core import layout
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 from pacai.core.game import Game
@@ -46,6 +45,7 @@ from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
+from pacai.util.mazeGenerator import generateMaze
 from pacai.util.util import nearestPoint
 
 COLLISION_TOLERANCE = 0.7  # How close ghosts must be to Pacman to kill
@@ -56,8 +56,6 @@ FOOD_POINTS = 1  # Points for eating food.
 MIN_FOOD = 2
 
 SCARED_TIME = 40
-
-FIXED_SEED = 140188
 
 class CaptureGameState(AbstractGameState):
     """
@@ -602,8 +600,12 @@ def readCommand(argv):
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue
 
-    if options.fixRandomSeed:
-        random.seed(FIXED_SEED)
+    # If no seed entry generate a random seed value.
+    seed = options.seed
+    if seed is None:
+        seed = random.randint(0, 2**32)
+    random.seed(seed)
+    logging.debug('Seed value: ' + str(seed))
 
     # Choose a pacman agent.
     redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
@@ -633,15 +635,15 @@ def readCommand(argv):
 
     # Choose a layout.
     if options.layout.startswith('RANDOM'):
-        seed = random.randint(0, 99999999)
+        layoutSeed = None
         if (options.layout != 'RANDOM'):
-            seed = int(options.layout[6:])
+            layoutSeed = int(options.layout[6:])
 
-        args['layout'] = pacai.core.layout.Layout(randomLayout(seed).split('\n'))
+        args['layout'] = layout.Layout(generateMaze(layoutSeed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise ValueError('You must use a capture layout with capture.py.')
     else:
-        args['layout'] = pacai.core.layout.getLayout(options.layout)
+        args['layout'] = layout.getLayout(options.layout)
 
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
@@ -654,11 +656,6 @@ def readCommand(argv):
     args['replay'] = options.replay
 
     return args
-
-def randomLayout(seed = None):
-    if not seed:
-        seed = random.randint(0, 99999999)
-    return pacai.util.util.mazeGenerator.generateMaze(seed)
 
 def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
     "Calls agent factories and returns lists of agents"

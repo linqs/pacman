@@ -53,5 +53,19 @@ class BinTest(unittest.TestCase):
             if status.code != 0:
                 self.fail("Error occured when running --help.")
 
+    def test_seeded_runs(self):
+        # Run game of capture with seed entry.
+        capture.main(['--null-graphics', '--seed', '1234'])
+
+        # Run game of pacman with seed value entry.
+        pacman.main(['-p', 'GreedyAgent', '--null-graphics', '--seed', '1234'])
+
+    def test_capture_seeded_maze_generations(self):
+        # Run game of capture with random generated map without seed value.
+        capture.main(['--null-graphics', '--layout', 'RANDOM']) 
+
+        # Run game of capture with random generated map with seed value.
+        capture.main(['--null-graphics', '--layout', 'RANDOM94'])
+
 if __name__ == '__main__':
     unittest.main()
