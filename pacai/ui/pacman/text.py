@@ -1,7 +1,7 @@
 from pacai.ui import token
-from pacai.ui.view import AbstractView
+from pacai.ui.pacman.view import PacmanAbstractView
 
-class PacmanTextView(AbstractView):
+class PacmanTextView(PacmanAbstractView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

@@ -4,6 +4,8 @@ Frames hold all the information necessary to draw the game in whatever medium
 the view chooses.
 """
 
+import abc
+
 from PIL import Image
 from PIL import ImageDraw
 
@@ -11,7 +13,7 @@ from pacai.ui import spritesheet
 from pacai.ui import token
 from pacai.util import util
 
-class Frame(object):
+class Frame(abc.ABC):
     """
     A general representation of that can be seen on-screen at a given time.
     Frames are the basic units of the views.
@@ -90,6 +92,10 @@ class Frame(object):
 
         return board
 
+    @abc.abstractmethod
+    def _getAgentBaseToken(self, x, y, agentIndex, state):
+        pass
+
     def _getAgentTokens(self, state):
         """
         Returns: {(x, y): token, ...}
@@ -114,11 +120,23 @@ class Frame(object):
 
         return tokens
 
+    @abc.abstractmethod
+    def _getCapsuleBaseToken(self, x, y, state):
+        pass
+
     def _getCapsuleToken(self, x, y, state):
         return self._getCapsuleBaseToken(x, y, state) + token.CAPSULE_OFFSET
 
+    @abc.abstractmethod
+    def _getFoodBaseToken(self, x, y, state):
+        pass
+
     def _getFoodToken(self, x, y, state):
         return self._getFoodBaseToken(x, y, state) + token.FOOD_OFFSET
+
+    @abc.abstractmethod
+    def _getWallBaseToken(self, x, y, state):
+        pass
 
     def _getWallToken(self, x, y, state):
         hasWallN = False
@@ -176,50 +194,3 @@ class Frame(object):
             return (0, 255, 0)
         else:
             return (0, 0, 0)
-
-    # TODO(eriq): Abstract out Pacman and Capture frames, and split the blow methods acordingly.
-
-    # Pacman
-
-    def _getAgentBaseToken(self, x, y, agentIndex, state):
-        if (state.getAgentState(agentIndex).isPacman()):
-            return token.PACMAN_1
-        else:
-            return token.GHOST_1 + (agentIndex - 1) * 100
-
-    def _getCapsuleBaseToken(self, x, y, state):
-        return token.DEFAULT_FOOD_BASE
-
-    def _getFoodBaseToken(self, x, y, state):
-        return token.DEFAULT_FOOD_BASE
-
-    def _getWallBaseToken(self, x, y, state):
-        return token.BLUE_WALL_BASE
-
-    # Capture
-    """
-    def _getAgentBaseToken(self, x, y, agentIndex, state):
-        if (state.getAgentState(agentIndex).isPacman()):
-            return token.PACMAN_2 + agentIndex * 100
-        else:
-            return token.GHOST_1 + agentIndex * 100
-
-    def _getCapsuleBaseToken(self, x, y, state):
-        if (x < self._width / 2):
-            return token.RED_FOOD_BASE
-        else:
-            return token.BLUE_FOOD_BASE
-
-    def _getFoodBaseToken(self, x, y, state):
-        if (x < self._width / 2):
-            return token.RED_FOOD_BASE
-        else:
-            return token.BLUE_FOOD_BASE
-
-
-    def _getWallBaseToken(self, x, y, state):
-        if (x < self._width / 2):
-            return token.RED_WALL_BASE
-        else:
-            return token.BLUE_WALL_BASE
-    """

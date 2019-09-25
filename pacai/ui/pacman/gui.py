@@ -5,11 +5,11 @@ from PIL import ImageTk
 
 from pacai.ui.keyboard import Keyboard
 from pacai.ui import spritesheet
-from pacai.ui.view import AbstractView
+from pacai.ui.pacman.view import PacmanAbstractView
 
 MAX_FPS = 1000
 
-class PacmanGUIView(AbstractView):
+class PacmanGUIView(PacmanAbstractView):
     def __init__(self, fps = 0, **kwargs):
         super().__init__(**kwargs)
 

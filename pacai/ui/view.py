@@ -2,7 +2,6 @@ import abc
 import os
 
 from pacai.ui import spritesheet
-from pacai.ui.frame import Frame
 
 DEFAULT_GIF_FPS = 10
 MIN_GIF_FPS = 1
@@ -73,7 +72,7 @@ class AbstractView(abc.ABC):
         if (state.isOver()):
             forceDraw = True
 
-        frame = Frame(self._frameCount, state, self._turnCount)
+        frame = self._createFrame(state)
         if (state.isOver()
                 or (self._saveFrames and self._frameCount % self._skipFrames == 0)):
             self._keyFrames.append(frame)
@@ -83,6 +82,15 @@ class AbstractView(abc.ABC):
         self._frameCount += 1
         if (state.getLastAgentMoved() == 0):
             self._turnCount += 1
+
+    @abc.abstractmethod
+    def _createFrame(self, state):
+        """
+        Create the frame using the given state.
+        Children can decide on the correct concrete representation of a frame.
+        """
+
+        pass
 
     @abc.abstractmethod
     def _drawFrame(self, state, frame, forceDraw = False):

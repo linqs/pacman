@@ -1,6 +1,6 @@
-from pacai.ui.view import AbstractView
+from pacai.ui.pacman.view import PacmanAbstractView
 
-class PacmanNullView(AbstractView):
+class PacmanNullView(PacmanAbstractView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
