@@ -309,7 +309,8 @@ def generateMaze(seed = None):
     rng.seed(seed)
     maze = Maze(16, 16)
     gapfactor = min(0.65, rng.gauss(0.5, 0.1))
-    skip = make_with_prison(maze, depth=0, gaps=3, vert=True, min_width=1, gapfactor=gapfactor, rng=rng)
+    skip = make_with_prison(maze, depth=0, gaps=3, vert=True, min_width=1, gapfactor=gapfactor,
+            rng=rng)
     maze.to_map()
     add_pacman_stuff(maze, 2 * (maze.r * int(maze.c / 20)), 4, skip, rng)
 

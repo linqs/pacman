@@ -35,8 +35,6 @@ import random
 import sys
 import traceback
 
-import pacai.core.layout
-import pacai.util.mazeGenerator
 from pacai.agents import keyboard
 from pacai.bin.arguments import getParser
 from pacai.core.actions import Actions
@@ -44,6 +42,7 @@ from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
+from pacai.core import layout
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.mazeGenerator import generateMaze
@@ -641,11 +640,11 @@ def readCommand(argv):
         if (options.layout != 'RANDOM'):
             layoutSeed = int(options.layout[6:])
 
-        args['layout'] = pacai.core.layout.Layout(generateMaze(layoutSeed).split('\n'))
+        args['layout'] = layout.Layout(generateMaze(layoutSeed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise ValueError('You must use a capture layout with capture.py.')
     else:
-        args['layout'] = pacai.core.layout.getLayout(options.layout)
+        args['layout'] = layout.getLayout(options.layout)
 
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
