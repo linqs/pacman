@@ -26,12 +26,55 @@ class SearchAgent(BaseAgent):
             heuristic = 'pacai.core.search.heuristic.null',
             **kwargs):
         super().__init__(index)
+
         # Get the search problem type from the name.
         self.searchType = reflection.qualifiedImport(prob)
         logging.info('[SearchAgent] using problem type %s.' % (prob))
 
         # Get the search function from the name and heuristic.
         self.searchFunction = self._fetchSearchFunction(fn, heuristic)
+
+    def registerInitialState(self, state):
+        """
+        This is the first time that the agent sees the layout of the game board. Here, we
+        choose a path to the goal. In this phase, the agent should compute the path to the
+        goal and store it in a local variable. All of the work is done in this method!
+
+        state: a GameState object (pacman.py)
+        """
+
+        if (self.searchFunction is None):
+            raise Exception('No search function provided for SearchAgent')
+
+        starttime = time.time()
+        problem = self.searchType(state)  # Makes a new search problem
+        self.actions = self.searchFunction(problem)  # Find a path
+        totalCost = problem.actionsCost(self.actions)
+
+        state.setHighlightLocations(problem.getVisitHistory())
+
+        logging.info('Path found with total cost of %d in %.1f seconds' %
+                (totalCost, time.time() - starttime))
+
+        logging.info('Search nodes expanded: %d' % problem.getExpandedCount())
+
+    def getAction(self, state):
+        """
+        Returns the next action in the path chosen earlier (in registerInitialState).
+        Return Directions.STOP if there is no further action to take.
+
+        state: a GameState object (pacman.py)
+        """
+
+        if 'actionIndex' not in dir(self):
+            self.actionIndex = 0
+
+        i = self.actionIndex
+        self.actionIndex += 1
+        if i < len(self.actions):
+            return self.actions[i]
+
+        return Directions.STOP
 
     def _fetchSearchFunction(self, functionName, heuristicName):
         """
@@ -55,43 +98,3 @@ class SearchAgent(BaseAgent):
 
         # Bind the heuristic.
         return lambda x: function(x, heuristic = heuristic)
-
-    def registerInitialState(self, state):
-        """
-        This is the first time that the agent sees the layout of the game board. Here, we
-        choose a path to the goal. In this phase, the agent should compute the path to the
-        goal and store it in a local variable. All of the work is done in this method!
-
-        state: a GameState object (pacman.py)
-        """
-
-        if (self.searchFunction is None):
-            raise Exception('No search function provided for SearchAgent')
-
-        starttime = time.time()
-        problem = self.searchType(state)  # Makes a new search problem
-        self.actions = self.searchFunction(problem)  # Find a path
-        totalCost = problem.actionsCost(self.actions)
-
-        logging.info('Path found with total cost of %d in %.1f seconds' %
-                (totalCost, time.time() - starttime))
-        if '_expanded' in dir(problem):
-            logging.info('Search nodes expanded: %d' % problem._expanded)
-
-    def getAction(self, state):
-        """
-        Returns the next action in the path chosen earlier (in registerInitialState).
-        Return Directions.STOP if there is no further action to take.
-
-        state: a GameState object (pacman.py)
-        """
-
-        if 'actionIndex' not in dir(self):
-            self.actionIndex = 0
-
-        i = self.actionIndex
-        self.actionIndex += 1
-        if i < len(self.actions):
-            return self.actions[i]
-
-        return Directions.STOP

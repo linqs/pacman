@@ -23,6 +23,8 @@ class PositionSearchProblem(SearchProblem):
         goal: A position in the gameState
         """
 
+        super().__init__()
+
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
         if start is not None:
@@ -33,24 +35,19 @@ class PositionSearchProblem(SearchProblem):
         if (warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal))):
             logging.warning('This does not look like a regular search maze')
 
-        # For display purposes
-        self._visited, self._visitedlist, self._expanded = {}, [], 0
-
     def startingState(self):
         return self.startState
 
     def isGoal(self, state):
-        isGoal = state == self.goal
+        if (state != self.goal):
+            return False
 
-        # For display purposes only
-        if isGoal:
-            self._visitedlist.append(state)
-            import __main__
-            if '_display' in dir(__main__):
-                if 'drawExpandedCells' in dir(__main__._display):  # @UndefinedVariable
-                    __main__._display.drawExpandedCells(self._visitedlist)  # @UndefinedVariable
+        # Register the locations we have visited as special.
+        # This allows the GUI to highlight them.
+        self._visitedLocations.add(state)
+        self._visitHistory.append(state)
 
-        return isGoal
+        return True
 
     def successorStates(self, state):
         """
@@ -75,10 +72,10 @@ class PositionSearchProblem(SearchProblem):
                 successors.append((nextState, action, cost))
 
         # Bookkeeping for display purposes
-        self._expanded += 1
-        if state not in self._visited:
-            self._visited[state] = True
-            self._visitedlist.append(state)
+        self._numExpanded += 1
+        if (state not in self._visitedLocations):
+            self._visitedLocations.add(state)
+            self._visitHistory.append(state)
 
         return successors
 

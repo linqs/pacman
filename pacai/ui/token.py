@@ -20,6 +20,7 @@ from pacai.core.directions import Directions
 ANIMATION_CYCLE = 4
 
 EMPTY_TOKEN = 0
+HIGHLIGHT_TOKEN = 1
 SCARED_GHOST_TOKEN = 10
 
 # Reserve 100s for food.

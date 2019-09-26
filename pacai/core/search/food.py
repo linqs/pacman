@@ -13,10 +13,11 @@ class FoodSearchProblem(SearchProblem):
     """
 
     def __init__(self, startingGameState):
+        super().__init__()
+
         self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
-        self._expanded = 0
         self.heuristicInfo = {}  # A dictionary for the heuristic to store information
 
     def startingState(self):
@@ -31,7 +32,7 @@ class FoodSearchProblem(SearchProblem):
         """
 
         successors = []
-        self._expanded += 1
+        self._numExpanded += 1
         for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             x, y = state[0]
             dx, dy = Actions.directionToVector(direction)

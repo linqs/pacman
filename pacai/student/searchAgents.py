@@ -48,9 +48,9 @@ class CornersProblem(SearchProblem):
 
         As noted in search.py:
         For a given state, this should return a list of triples, (successor, action, stepCost),
-        where 'successor' is a successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
+        where 'successor' is a successor to the current state,
+        'action' is the action required to get there,
+        and 'stepCost' is the incremental cost of expanding to that successor.
 
         successors = []
         directions = [
@@ -67,13 +67,14 @@ class CornersProblem(SearchProblem):
                dx, dy = Actions.directionToVector(action)
                nextx, nexty = int(x + dx), int(y + dy)
                hitsWall = self.walls[nextx][nexty]
-        self._expanded += 1
         return successors
     """
     def __init__(self, startingGameState):
         """
         Stores the walls, pacman's starting position and corners.
         """
+
+        super().__init__()
 
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
@@ -84,8 +85,6 @@ class CornersProblem(SearchProblem):
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 logging.warning('Warning: no food in corner ' + str(corner))
-
-        self._expanded = 0  # Number of search nodes expanded
 
         # *** Your Code Here ***
         raise NotImplementedError()
@@ -226,16 +225,10 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         Stores information from the gameState.  You don't need to change this.
         """
 
+        super().__init__(gameState, goal = None)
+
         # Store the food for later reference
         self.food = gameState.getFood()
-
-        # Store info for the PositionSearchProblem (no need to change this)
-        self.walls = gameState.getWalls()
-        self.startState = gameState.getPacmanPosition()
-        self.costFn = lambda x: 1
-        self._visited = {}
-        self._visitedlist = []
-        self._expanded = 0
 
 class ApproximateSearchAgent(BaseAgent):
     """

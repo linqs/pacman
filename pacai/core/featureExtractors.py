@@ -92,6 +92,8 @@ class _ClosestFoodSearchProblem(SearchProblem):
     # Search problem requires the initial position to search from, the food
     # and walls on the map
     def __init__(self, initPos, food, walls):
+        super().__init__()
+
         self._start = initPos
         self._foodGrid = food
         self._walls = walls
