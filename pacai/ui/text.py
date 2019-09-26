@@ -28,6 +28,8 @@ class AbstractTextView(AbstractView):
 
             print(''.join(row))
 
+        print('Score: %d' % (state.getScore()))
+
     def _convertToken(self, objectToken):
         if (objectToken == token.EMPTY_TOKEN):
             return ' '
