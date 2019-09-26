@@ -5,8 +5,8 @@ import abc
 
 from pacai.core.actions import Actions
 from pacai.core.directions import Directions
+from pacai.core.search import search
 from pacai.core.search.problem import SearchProblem
-from pacai.student import search
 from pacai.util import counter
 
 class FeatureExtractor(abc.ABC):
@@ -91,10 +91,11 @@ class _ClosestFoodSearchProblem(SearchProblem):
 
     # Search problem requires the initial position to search from, the food
     # and walls on the map
-    def __init__(self, initPos, food, walls):
+    def __init__(self, initPos, food, walls, costFn = lambda x: 1):
         self._start = initPos
         self._foodGrid = food
         self._walls = walls
+        self._costFn = costFn
 
     def startingState(self):
         return self._start
@@ -108,9 +109,11 @@ class _ClosestFoodSearchProblem(SearchProblem):
         for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             x, y = state
             dx, dy = Actions.directionToVector(direction)
-            nextx, nexty = int(x + dx) + int(y + dy)
+            nextx, nexty = int(x + dx), int(y + dy)
             if not self._walls[nextx][nexty]:
-                successors.append((nextx, nexty))
+                nextState = (nextx, nexty)
+                cost = self._costFn(nextState)
+                successors.append((nextState, direction, cost))
         return successors
 
     def actionsCost(self, actions):
@@ -118,7 +121,7 @@ class _ClosestFoodSearchProblem(SearchProblem):
         cost = 0
         for action in actions:
             dx, dy = Actions.directionToVector(action)
-            x, y = int(x + dx) + int(y + dy)
+            x, y = int(x + dx), int(y + dy)
             if self._walls[x][y]:
                 return 999999
             cost += 1
