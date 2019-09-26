@@ -29,6 +29,7 @@ class AbstractGUIView(AbstractView):
 
         self._root = tkinter.Tk()
         self._canvas = None
+        self._imageArea = None
 
         self._height = None
         self._width = None
@@ -44,6 +45,7 @@ class AbstractGUIView(AbstractView):
         self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
 
         self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
+        self._imageArea = self._canvas.create_image(0, 0, image = None, anchor = tkinter.NW)
         self._canvas.pack()
 
         self._totalDrawRequests = 0
@@ -75,7 +77,7 @@ class AbstractGUIView(AbstractView):
                     self._root.after(int(1000 * timeLeft))
 
         image = ImageTk.PhotoImage(frame.toImage(self._sprites))
-        self._canvas.create_image(0, 0, image = image, anchor = tkinter.NW)
+        self._canvas.itemconfig(self._imageArea, image = image)
 
         self._root.update_idletasks()
         self._root.update()
