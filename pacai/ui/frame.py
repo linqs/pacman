@@ -13,6 +13,9 @@ from pacai.ui import spritesheet
 from pacai.ui import token
 from pacai.util import util
 
+# The range of opacity values for highlighted locations.
+MAX_HIGHLIGHT_OPACITY_RANGE = 180
+
 class Frame(abc.ABC):
     """
     A general representation of that can be seen on-screen at a given time.
@@ -31,6 +34,11 @@ class Frame(abc.ABC):
 
         # Agents may not be at integral positions, so they are represented independently.
         self._agentTokens = self._getAgentTokens(state)
+
+        # Highlight locations is on the lowest layer.
+        self._highlightLocations = state.getHighlightLocations()
+        if (self._highlightLocations is None):
+            self._highlightLocations = []
 
     def getAgents(self):
         return self._agentTokens
@@ -61,15 +69,23 @@ class Frame(abc.ABC):
 
     def toImage(self, sprites = {}):
         size = (self._width * spritesheet.SQUARE_SIZE, self._height * spritesheet.SQUARE_SIZE)
-        image = Image.new('RGB', size)
+        image = Image.new('RGBA', size, (0, 0, 0, 255))
         draw = ImageDraw.Draw(image)
 
-        # First, draw the board.
+        # First, draw any highlights.
+        for i in range(len(self._highlightLocations)):
+            (x, y) = self._highlightLocations[i]
+
+            opacity = 255 - int((i / len(self._highlightLocations)) * MAX_HIGHLIGHT_OPACITY_RANGE)
+            self._placeToken(x, y, token.HIGHLIGHT_TOKEN, sprites, image, draw, opacity = opacity)
+
+        # Then, draw the board.
         for x in range(self._width):
             for y in range(self._height):
-                self._placeToken(x, y, self._board[x][y], sprites, image, draw)
+                if (self._board[x][y] != token.EMPTY_TOKEN):
+                    self._placeToken(x, y, self._board[x][y], sprites, image, draw)
 
-        # Now, overlay the agents.
+        # Finally, overlay the agents.
         for ((x, y), agentToken) in self._agentTokens.items():
             self._placeToken(x, y, agentToken, sprites, image, draw)
 
@@ -160,7 +176,7 @@ class Frame(abc.ABC):
 
         return token.getWallToken(baseToken, hasWallN, hasWallE, hasWallS, hasWallW)
 
-    def _placeToken(self, x, y, objectToken, sprites, image, draw):
+    def _placeToken(self, x, y, objectToken, sprites, image, draw, opacity = 255):
         startPoint = self._toImageCoords(x, y)
         endPoint = self._toImageCoords(x + 1, y - 1)
 
@@ -168,6 +184,7 @@ class Frame(abc.ABC):
             image.paste(sprites[objectToken], startPoint, sprites[objectToken])
         else:
             color = self._tokenToColor(objectToken)
+            color = (*color, opacity)
             draw.rectangle([startPoint, endPoint], fill = color)
 
     def _toImageCoords(self, x, y):
@@ -180,15 +197,17 @@ class Frame(abc.ABC):
     def _tokenToColor(self, objectToken):
         if (objectToken == token.EMPTY_TOKEN):
             return (0, 0, 0)
-        elif (self.isWall(objectToken)):
+        elif (objectToken == token.HIGHLIGHT_TOKEN):
+            return (255, 0, 0)
+        elif (token.isWall(objectToken)):
             return (0, 51, 255)
-        elif (self.isFood(objectToken)):
+        elif (token.isFood(objectToken)):
             return (255, 255, 255)
-        elif (self.isCapsule(objectToken)):
+        elif (token.isCapsule(objectToken)):
             return (255, 0, 255)
-        elif (self.isGhost(objectToken)):
+        elif (token.isGhost(objectToken)):
             return (229, 0, 0)
-        elif (self.isPacman(objectToken)):
+        elif (token.isPacman(objectToken)):
             return (255, 255, 61)
         elif (objectToken == token.SCARED_GHOST_TOKEN):
             return (0, 255, 0)

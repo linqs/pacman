@@ -34,6 +34,10 @@ class AbstractGameState(abc.ABC):
         self._capsules = layout.capsules.copy()
         self._lastCapsuleEaten = None
 
+        # An ordered list of locations that this state considers special.
+        # A view may choose to specially represent these locations.
+        self._highlightLocations = []
+
         self._agentStates = []
         for (isPacman, position) in layout.agentPositions:
             self._agentStates.append(AgentState(position, Directions.STOP, isPacman))
@@ -137,6 +141,9 @@ class AbstractGameState(abc.ABC):
 
         return self._food.copy()
 
+    def getHighlightLocations(self):
+        return self._highlightLocations
+
     def getInitialAgentPosition(self, agentIndex):
         return self._layout.agentPositions[agentIndex][1]
 
@@ -219,6 +226,9 @@ class AbstractGameState(abc.ABC):
 
     def isWin(self):
         return self.isOver() and self._win
+
+    def setHighlightLocations(self, locations):
+        self._highlightLocations = list(locations)
 
     def setScore(self, score):
         self._score = score

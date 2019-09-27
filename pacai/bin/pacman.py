@@ -492,7 +492,7 @@ def readCommand(argv):
         # This allows people to not have tkinter installed.
         from pacai.ui.pacman.gui import PacmanGUIView
 
-        args['display'] = PacmanGUIView(fps = options.fps, **viewOptions)
+        args['display'] = PacmanGUIView(fps = options.fps, title = 'Pacman', **viewOptions)
         agentOpts['keyboard'] = args['display'].getKeyboard()
 
     args['catchExceptions'] = options.catchExceptions
@@ -530,11 +530,6 @@ def replayGame(layout, actions, display):
 
 def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraining = 0,
         catchExceptions = False, timeout = 30, **kwargs):
-    # TODO(eriq): This is used to draw expanded positions in search, but this interface is bad.
-    #  Do this better.
-    import __main__
-    __main__.__dict__['_display'] = display
-
     rules = ClassicGameRules(timeout)
     games = []
 

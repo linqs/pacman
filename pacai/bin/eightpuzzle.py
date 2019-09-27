@@ -3,7 +3,6 @@ import random
 from pacai.core.search import search
 from pacai.core.search.problem import SearchProblem
 from pacai.util.logs import initLogging
-# Module Classes
 
 class EightPuzzleState:
     """
@@ -191,6 +190,8 @@ class EightPuzzleSearchProblem(SearchProblem):
         """
         Creates a new EightPuzzleSearchProblem which stores search information.
         """
+
+        super().__init__()
 
         self.puzzle = puzzle
 
