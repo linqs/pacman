@@ -1,6 +1,8 @@
 from pacai.ui import token
 from pacai.ui.frame import Frame
 
+TEXT_COLOR = (255, 255, 1, 255)
+
 class PacmanFrame(Frame):
     # Override
     def _getAgentBaseToken(self, x, y, agentIndex, state):
@@ -16,6 +18,10 @@ class PacmanFrame(Frame):
     # Override
     def _getFoodBaseToken(self, x, y, state):
         return token.DEFAULT_FOOD_BASE
+
+    # Override
+    def _getTextColor(self):
+        return TEXT_COLOR
 
     # Override
     def _getWallBaseToken(self, x, y, state):
