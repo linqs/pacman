@@ -197,10 +197,6 @@ class Frame(abc.ABC):
 
         if (objectToken in sprites):
             image.paste(sprites[objectToken], startPoint, sprites[objectToken])
-        elif (objectToken == 999):
-            color = (255, 255, 255)
-            color = (*color, opacity)
-            draw.rectangle([startPoint, endPoint], fill = color)
         else:
             color = self._tokenToColor(objectToken)
             color = (*color, opacity)
