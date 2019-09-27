@@ -33,6 +33,6 @@ def maze(position1, position2, gameState):
     assert not walls[x1][y1], 'position1 is a wall: ' + position1
     assert not walls[x2][y2], 'position2 is a wall: ' + str(position2)
 
-    prob = PositionSearchProblem(gameState, start = position1, goal = position2, warn = False)
+    prob = PositionSearchProblem(gameState, start = position1, goal = position2)
 
     return len(search.bfs(prob))

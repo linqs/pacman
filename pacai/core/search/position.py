@@ -14,7 +14,7 @@ class PositionSearchProblem(SearchProblem):
 
     Note: this search problem is fully specified; you should NOT change it.
     """
-    def __init__(self, gameState, costFn = lambda x: 1, goal=(1, 1), start = None, warn = True):
+    def __init__(self, gameState, costFn = lambda x: 1, goal=(1, 1), start = None):
         """
         Stores the start and goal.
 
@@ -31,9 +31,6 @@ class PositionSearchProblem(SearchProblem):
             self.startState = start
         self.goal = goal
         self.costFn = costFn
-
-        if (warn and (gameState.getNumFood() != 1 or not gameState.hasFood(*goal))):
-            logging.warning('This does not look like a regular search maze')
 
     def startingState(self):
         return self.startState
