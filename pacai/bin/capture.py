@@ -599,7 +599,7 @@ def readCommand(argv):
         # This allows people to not have tkinter installed.
         from pacai.ui.capture.gui import CaptureGUIView
 
-        args['display'] = CaptureGUIView(fps = options.fps, **viewOptions)
+        args['display'] = CaptureGUIView(fps = options.fps, title = 'Capture', **viewOptions)
 
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue

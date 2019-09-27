@@ -1,3 +1,4 @@
+import sys
 import time
 import tkinter
 
@@ -8,9 +9,11 @@ from pacai.ui import spritesheet
 from pacai.ui.view import AbstractView
 
 MAX_FPS = 1000
+TK_BASE_NAME = 'pacai'
+DEATH_SLEEP_TIME = 0.5
 
 class AbstractGUIView(AbstractView):
-    def __init__(self, fps = 0, **kwargs):
+    def __init__(self, fps = 0, title = 'pacai', **kwargs):
         super().__init__(**kwargs)
 
         self._fps = int(max(0, min(MAX_FPS, fps)))
@@ -27,11 +30,21 @@ class AbstractGUIView(AbstractView):
         self._initTime = None
         self._lastDrawTime = None
 
-        self._root = tkinter.Tk()
+        if (title != 'pacai'):
+            title = 'pacai - %s' % (str(title))
+
+        self._root = tkinter.Tk(baseName = TK_BASE_NAME)
+        self._root.protocol('WM_DELETE_WINDOW', self._windowClosed)
+        self._root.resizable(False, False)
+        self._root.title(title)
+
         self._canvas = None
+        self._imageArea = None
 
         self._height = None
         self._width = None
+
+        self._dead = False
 
     def getKeyboard(self):
         return Keyboard(self._root)
@@ -45,14 +58,33 @@ class AbstractGUIView(AbstractView):
         self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
 
         self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
+        self._imageArea = self._canvas.create_image(0, 0, image = None, anchor = tkinter.NW)
         self._canvas.pack()
 
         self._totalDrawRequests = 0
         self._totalDroppedFrames = 0
         self._initTime = time.time()
 
+    def _cleanup(self):
+        """
+        This GUI has been killed, clean up.
+        This is one of the rare cases where we will exit outside of the bin package.
+        """
+
+        # Sleep for a short period, so the last state of the game can be seen.
+        time.sleep(DEATH_SLEEP_TIME)
+
+        if (self._root is not None):
+            self._root.destroy()
+            self._root = None
+
+        sys.exit(0)
+
     # Override
     def _drawFrame(self, state, frame, forceDraw = False):
+        if (self._dead):
+            self._cleanup()
+
         self._totalDrawRequests += 1
 
         # Delay drawing the frame to cap the FPS.
@@ -76,9 +108,16 @@ class AbstractGUIView(AbstractView):
                     self._root.after(int(1000 * timeLeft))
 
         image = ImageTk.PhotoImage(frame.toImage(self._sprites, self._font))
-        self._canvas.create_image(0, 0, image = image, anchor = tkinter.NW)
+        self._canvas.itemconfig(self._imageArea, image = image)
 
         self._root.update_idletasks()
         self._root.update()
 
         self._lastDrawTime = time.time()
+
+    def _windowClosed(self, event = None):
+        """
+        Handler for the TK window closing.
+        """
+
+        self._dead = True

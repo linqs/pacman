@@ -492,7 +492,7 @@ def readCommand(argv):
         # This allows people to not have tkinter installed.
         from pacai.ui.pacman.gui import PacmanGUIView
 
-        args['display'] = PacmanGUIView(fps = options.fps, **viewOptions)
+        args['display'] = PacmanGUIView(fps = options.fps, title = 'Pacman', **viewOptions)
         agentOpts['keyboard'] = args['display'].getKeyboard()
 
     args['catchExceptions'] = options.catchExceptions
