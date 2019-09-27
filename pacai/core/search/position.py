@@ -1,5 +1,3 @@
-import logging
-
 from pacai.core.actions import Actions
 from pacai.core.directions import Directions
 from pacai.core.search.problem import SearchProblem
