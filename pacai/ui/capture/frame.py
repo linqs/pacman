@@ -1,6 +1,10 @@
 from pacai.ui import token
 from pacai.ui.frame import Frame
 
+TIE_TEXT_COLOR = (180, 60, 180, 255)
+RED_TEXT_COLOR = (229, 0, 0, 255)
+BLUE_TEXT_COLOR = (0, 76, 229, 255)
+
 class CaptureFrame(Frame):
     # Override
     def _getAgentBaseToken(self, x, y, agentIndex, state):
@@ -22,6 +26,15 @@ class CaptureFrame(Frame):
             return token.RED_FOOD_BASE
         else:
             return token.BLUE_FOOD_BASE
+
+    # Override
+    def _getTextColor(self):
+        if (self._score > 0):
+            return RED_TEXT_COLOR
+        elif (self._score < 0):
+            return BLUE_TEXT_COLOR
+        else:
+            return TIE_TEXT_COLOR
 
     # Override
     def _getWallBaseToken(self, x, y, state):

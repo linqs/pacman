@@ -1,6 +1,8 @@
 import abc
 import os
 
+from PIL import ImageFont
+
 from pacai.ui import spritesheet
 
 DEFAULT_GIF_FPS = 10
@@ -9,6 +11,9 @@ DEFAULT_SKIP_FRAMES = 4
 
 # By default, the sprite sheet is adjacent to this file.
 DEFAULT_SPRITES = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pacman-sprites.png')
+
+THIS_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)))
+FONT_PATH = os.path.join(THIS_DIR, 'fonts', 'roboto', 'RobotoMono-Regular.ttf')
 
 class AbstractView(abc.ABC):
     """
@@ -36,6 +41,7 @@ class AbstractView(abc.ABC):
         self._turnCount = 0
 
         self._sprites = spritesheet.loadSpriteSheet(spritesPath)
+        self._font = ImageFont.truetype(FONT_PATH, spritesheet.SQUARE_SIZE - 14)
 
     def finish(self):
         """
@@ -46,7 +52,7 @@ class AbstractView(abc.ABC):
         if (self._saveFrames and len(self._keyFrames) > 0):
             gifTimePerFrameMS = int(1.0 / self._gifFPS * 1000.0)
 
-            images = [frame.toImage(self._sprites) for frame in self._keyFrames]
+            images = [frame.toImage(self._sprites, self._font) for frame in self._keyFrames]
             images[0].save(self._gifPath, save_all = True, append_images = images,
                     duration = gifTimePerFrameMS, loop = 0, optimize = True)
 

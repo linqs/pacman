@@ -5,11 +5,9 @@ the view chooses.
 """
 
 import abc
-import os
 
 from PIL import Image
 from PIL import ImageDraw
-from PIL import ImageFont
 
 from pacai.ui import spritesheet
 from pacai.ui import token
@@ -17,6 +15,9 @@ from pacai.util import util
 
 # The range of opacity values for highlighted locations.
 MAX_HIGHLIGHT_OPACITY_RANGE = 180
+
+SCORE_X_POSITION = 0.55
+SCORE_Y_POSITION = -0.95
 
 class Frame(abc.ABC):
     """
@@ -41,7 +42,8 @@ class Frame(abc.ABC):
         self._highlightLocations = state.getHighlightLocations()
         if (self._highlightLocations is None):
             self._highlightLocations = []
-        self.score = state.getScore()
+
+        self._score = state.getScore()
 
     def getAgents(self):
         return self._agentTokens
@@ -70,8 +72,9 @@ class Frame(abc.ABC):
     def getWidth(self):
         return self._width
 
-    def toImage(self, sprites = {}):
-        size = (self._width * spritesheet.SQUARE_SIZE, self._height * spritesheet.SQUARE_SIZE + spritesheet.SQUARE_SIZE)
+    def toImage(self, sprites = {}, font = None):
+        # Height is +1 for the score.
+        size = (self._width * spritesheet.SQUARE_SIZE, (self._height + 1) * spritesheet.SQUARE_SIZE)
         image = Image.new('RGBA', size, (0, 0, 0, 255))
         draw = ImageDraw.Draw(image)
 
@@ -92,18 +95,10 @@ class Frame(abc.ABC):
         for ((x, y), agentToken) in self._agentTokens.items():
             self._placeToken(x, y, agentToken, sprites, image, draw)
 
-        thisDir = os.path.join(os.path.dirname(os.path.realpath(__file__)))
-        FONT_PATH = os.path.join(thisDir, 'fonts', 'roboto', 'RobotoMono-Regular.ttf')
-
         # Draw score
-        textX = 10
-        textY = self._height - 10
-        tempWhite = (255, 255, 255, 255)
-        scoreText = "Score: %d" % self.score
-        # font = ImageFont.truetype("Ubuntu-R.ttf", spritesheet.SQUARE_SIZE - 10)
-        font = ImageFont.truetype(FONT_PATH, spritesheet.SQUARE_SIZE - 14)
-        draw.text((textX, textY), scoreText, tempWhite, font)
-        # draw.text((textX,textY), scoreText, tempWhite)
+        position = self._toImageCoords(SCORE_X_POSITION, SCORE_Y_POSITION)
+        scoreText = "Score: %d" % (self._score)
+        draw.text(position, scoreText, self._getTextColor(), font)
 
         return image
 
@@ -167,6 +162,10 @@ class Frame(abc.ABC):
         return self._getFoodBaseToken(x, y, state) + token.FOOD_OFFSET
 
     @abc.abstractmethod
+    def _getTextColor(self):
+        pass
+
+    @abc.abstractmethod
     def _getWallBaseToken(self, x, y, state):
         pass
 
@@ -211,7 +210,7 @@ class Frame(abc.ABC):
         # PIL has (0, 0) as the upper-left, while pacai has it as the lower-left.
         return (
             int(x * spritesheet.SQUARE_SIZE),
-            int((self._height - 1 - y) * spritesheet.SQUARE_SIZE + spritesheet.SQUARE_SIZE)
+            int((self._height - 1 - y) * spritesheet.SQUARE_SIZE)
         )
 
     def _tokenToColor(self, objectToken):

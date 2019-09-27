@@ -40,7 +40,8 @@ class AbstractGUIView(AbstractView):
     def initialize(self, state):
         super().initialize(state)
 
-        self._height = state.getInitialLayout().getHeight() * spritesheet.SQUARE_SIZE + spritesheet.SQUARE_SIZE
+        # Height is +1 for the score.
+        self._height = (state.getInitialLayout().getHeight() + 1) * spritesheet.SQUARE_SIZE
         self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
 
         self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
@@ -74,7 +75,7 @@ class AbstractGUIView(AbstractView):
                     # Use Tkinter to block.
                     self._root.after(int(1000 * timeLeft))
 
-        image = ImageTk.PhotoImage(frame.toImage(self._sprites))
+        image = ImageTk.PhotoImage(frame.toImage(self._sprites, self._font))
         self._canvas.create_image(0, 0, image = image, anchor = tkinter.NW)
 
         self._root.update_idletasks()
