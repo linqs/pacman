@@ -5,6 +5,7 @@ the view chooses.
 """
 
 import abc
+import os
 
 from PIL import Image
 from PIL import ImageDraw
@@ -91,13 +92,18 @@ class Frame(abc.ABC):
         for ((x, y), agentToken) in self._agentTokens.items():
             self._placeToken(x, y, agentToken, sprites, image, draw)
 
+        thisDir = os.path.join(os.path.dirname(os.path.realpath(__file__)))
+        FONT_PATH = os.path.join(thisDir, 'fonts', 'roboto', 'RobotoMono-Regular.ttf')
+
         # Draw score
-        textX = 0
-        textY = self._height
+        textX = 10
+        textY = self._height - 10
         tempWhite = (255, 255, 255, 255)
         scoreText = "Score: %d" % self.score
-        font = ImageFont.truetype("Ubuntu-R.ttf", spritesheet.SQUARE_SIZE - 10)
-        draw.text((textX,textY), scoreText, tempWhite, font)
+        # font = ImageFont.truetype("Ubuntu-R.ttf", spritesheet.SQUARE_SIZE - 10)
+        font = ImageFont.truetype(FONT_PATH, spritesheet.SQUARE_SIZE - 14)
+        draw.text((textX, textY), scoreText, tempWhite, font)
+        # draw.text((textX,textY), scoreText, tempWhite)
 
         return image
 
