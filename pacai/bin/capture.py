@@ -275,9 +275,6 @@ class CaptureRules:
         game.state = initState
         game.length = length
 
-        if 'drawCenterLine' in dir(display):
-            display.drawCenterLine()
-
         self._totalBlueFood = initState.getBlueFood().count()
         self._totalRedFood = initState.getRedFood().count()
 

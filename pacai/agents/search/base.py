@@ -15,9 +15,6 @@ class SearchAgent(BaseAgent):
     Options for fn include:
         depthFirstSearch or dfs
         breadthFirstSearch or bfs
-
-
-    Note: You should NOT change any code in SearchAgent
     """
 
     # TODO(eriq): We should pass actual objects instead of strings.
@@ -34,6 +31,11 @@ class SearchAgent(BaseAgent):
         # Get the search function from the name and heuristic.
         self.searchFunction = self._fetchSearchFunction(fn, heuristic)
 
+        # The actions the search produced.
+        self._actions = []
+        # The currentl action (from self._actions) that the agent is performing.
+        self._actionIndex = 0
+
     def registerInitialState(self, state):
         """
         This is the first time that the agent sees the layout of the game board. Here, we
@@ -48,8 +50,11 @@ class SearchAgent(BaseAgent):
 
         starttime = time.time()
         problem = self.searchType(state)  # Makes a new search problem
-        self.actions = self.searchFunction(problem)  # Find a path
-        totalCost = problem.actionsCost(self.actions)
+
+        self._actions = self.searchFunction(problem)  # Find a path
+        self._actionIndex = 0
+
+        totalCost = problem.actionsCost(self._actions)
 
         state.setHighlightLocations(problem.getVisitHistory())
 
@@ -66,15 +71,13 @@ class SearchAgent(BaseAgent):
         state: a GameState object (pacman.py)
         """
 
-        if 'actionIndex' not in dir(self):
-            self.actionIndex = 0
+        if (self._actionIndex >= (len(self._actions))):
+            return Directions.STOP
 
-        i = self.actionIndex
-        self.actionIndex += 1
-        if i < len(self.actions):
-            return self.actions[i]
+        action = self._actions[self._actionIndex]
+        self._actionIndex += 1
 
-        return Directions.STOP
+        return action
 
     def _fetchSearchFunction(self, functionName, heuristicName):
         """

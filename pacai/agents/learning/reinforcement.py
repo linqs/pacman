@@ -42,10 +42,6 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.alpha = float(alpha)
         self.discountRate = float(gamma)
 
-    ############################
-    # Override These Functions #
-    ############################
-
     @abc.abstractmethod
     def update(self, state, action, nextState, reward):
         """
@@ -54,10 +50,6 @@ class ReinforcementAgent(ValueEstimationAgent):
         """
 
         pass
-
-    ########################
-    # Read These Functions #
-    ########################
 
     def getLegalActions(self, state):
         """

@@ -127,7 +127,7 @@ class CrawlingRobotEnvironment(Environment):
         self.crawlingRobot.setAngles(self.armBuckets[armState], self.handBuckets[handState])
         self.crawlingRobot.positions = [20, self.crawlingRobot.getRobotPosition()[0]]
 
-class CrawlingRobot:
+class CrawlingRobot(object):
     def setAngles(self, armAngle, handAngle):
         """
         set the robot's arm and hand angles
@@ -320,7 +320,7 @@ class CrawlingRobot:
         positionMsg = 'Position: %2.f' % pos
         stepMsg = 'Step: %d' % stepCount
 
-        if 'vel_msg' in dir(self):
+        if (self.vel_msg is not None):
             self.canvas.delete(self.vel_msg)
             self.canvas.delete(self.pos_msg)
             self.canvas.delete(self.step_msg)
@@ -381,6 +381,11 @@ class CrawlingRobot:
 
         self.positions = [0, 0]
         # self.angleSums = [0, 0]
+
+        self.vel_msg = None
+        self.velavg_msg = None
+        self.pos_msg = None
+        self.step_msg = None
 
 class Application(object):
     def __init__(self, win, max_steps):

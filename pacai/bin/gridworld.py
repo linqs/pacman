@@ -5,6 +5,7 @@ import random
 import sys
 import textwrap
 
+from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.core.environment import Environment
 from pacai.core.mdp import MarkovDecisionProcess
 from pacai.student.qlearningAgents import QLearningAgent
@@ -325,7 +326,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
     totalDiscount = 1.0
     environment.reset()
 
-    if 'startEpisode' in dir(agent):
+    if (isinstance(agent, ReinforcementAgent)):
         agent.startEpisode()
 
     logging.info('BEGINNING EPISODE: ' + str(episode) + "\n")
@@ -356,14 +357,14 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
         logString += '\nGot reward: ' + str(reward) + '\n'
         logging.debug(logString)
 
-        # UPDATE LEARNER
-        if ('observeTransition' in dir(agent)):
+        # Update learner.
+        if (isinstance(agent, ReinforcementAgent)):
             agent.observeTransition(state, action, nextState, reward)
 
         returns += reward * totalDiscount
         totalDiscount *= discount
 
-    if 'stopEpisode' in dir(agent):
+    if (isinstance(agent, ReinforcementAgent)):
         agent.stopEpisode()
 
 def parseOptions(argv):

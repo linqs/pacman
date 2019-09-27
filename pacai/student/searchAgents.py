@@ -167,12 +167,14 @@ class ClosestDotSearchAgent(SearchAgent):
         super().__init__(index)
 
     def registerInitialState(self, state):
-        self.actions = []
+        self._actions = []
+        self._actionIndex = 0
+
         currentState = state
 
         while (currentState.getFood().count() > 0):
             nextPathSegment = self.findPathToClosestDot(currentState)  # The missing piece
-            self.actions += nextPathSegment
+            self._actions += nextPathSegment
 
             for action in nextPathSegment:
                 legal = currentState.getLegalActions()
@@ -182,8 +184,7 @@ class ClosestDotSearchAgent(SearchAgent):
 
                 currentState = currentState.generateSuccessor(0, action)
 
-        self.actionIndex = 0
-        logging.info('Path found with cost %d.' % len(self.actions))
+        logging.info('Path found with cost %d.' % len(self._actions))
 
     def findPathToClosestDot(self, gameState):
         """
