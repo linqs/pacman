@@ -196,7 +196,7 @@ class EightPuzzleSearchProblem(SearchProblem):
         self.puzzle = puzzle
 
     def startingState(self):
-        return puzzle
+        return self.puzzle
 
     def isGoal(self, state):
         return state.isGoal()
