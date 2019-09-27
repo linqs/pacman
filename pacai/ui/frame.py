@@ -8,6 +8,7 @@ import abc
 
 from PIL import Image
 from PIL import ImageDraw
+from PIL import ImageFont
 
 from pacai.ui import spritesheet
 from pacai.ui import token
@@ -39,6 +40,7 @@ class Frame(abc.ABC):
         self._highlightLocations = state.getHighlightLocations()
         if (self._highlightLocations is None):
             self._highlightLocations = []
+        self.score = state.getScore()
 
     def getAgents(self):
         return self._agentTokens
@@ -68,7 +70,7 @@ class Frame(abc.ABC):
         return self._width
 
     def toImage(self, sprites = {}):
-        size = (self._width * spritesheet.SQUARE_SIZE, self._height * spritesheet.SQUARE_SIZE)
+        size = (self._width * spritesheet.SQUARE_SIZE, self._height * spritesheet.SQUARE_SIZE + spritesheet.SQUARE_SIZE)
         image = Image.new('RGBA', size, (0, 0, 0, 255))
         draw = ImageDraw.Draw(image)
 
@@ -88,6 +90,14 @@ class Frame(abc.ABC):
         # Finally, overlay the agents.
         for ((x, y), agentToken) in self._agentTokens.items():
             self._placeToken(x, y, agentToken, sprites, image, draw)
+
+        # Draw score
+        textX = 0
+        textY = self._height
+        tempWhite = (255, 255, 255, 255)
+        scoreText = "Score: %d" % self.score
+        font = ImageFont.truetype("Ubuntu-R.ttf", spritesheet.SQUARE_SIZE - 10)
+        draw.text((textX,textY), scoreText, tempWhite, font)
 
         return image
 
@@ -182,6 +192,10 @@ class Frame(abc.ABC):
 
         if (objectToken in sprites):
             image.paste(sprites[objectToken], startPoint, sprites[objectToken])
+        elif (objectToken == 999):
+            color = (255, 255, 255)
+            color = (*color, opacity)
+            draw.rectangle([startPoint, endPoint], fill = color)
         else:
             color = self._tokenToColor(objectToken)
             color = (*color, opacity)
@@ -191,7 +205,7 @@ class Frame(abc.ABC):
         # PIL has (0, 0) as the upper-left, while pacai has it as the lower-left.
         return (
             int(x * spritesheet.SQUARE_SIZE),
-            int((self._height - 1 - y) * spritesheet.SQUARE_SIZE)
+            int((self._height - 1 - y) * spritesheet.SQUARE_SIZE + spritesheet.SQUARE_SIZE)
         )
 
     def _tokenToColor(self, objectToken):

@@ -40,7 +40,7 @@ class AbstractGUIView(AbstractView):
     def initialize(self, state):
         super().initialize(state)
 
-        self._height = state.getInitialLayout().getHeight() * spritesheet.SQUARE_SIZE
+        self._height = state.getInitialLayout().getHeight() * spritesheet.SQUARE_SIZE + spritesheet.SQUARE_SIZE
         self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
 
         self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
