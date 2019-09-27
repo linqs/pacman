@@ -27,13 +27,11 @@ The keys are
     P2: 'l', ';', ',', and 'p' to move
 """
 
-import importlib
 import logging
 import os
 import pickle
 import random
 import sys
-import traceback
 
 from pacai.agents import keyboard
 from pacai.bin.arguments import getParser
@@ -46,6 +44,7 @@ from pacai.core.layout import Layout
 from pacai.core.layout import getLayout
 from pacai.ui.capture.null import CaptureNullView
 from pacai.ui.capture.text import CaptureTextView
+from pacai.util import reflection
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.mazeGenerator import generateMaze
@@ -658,33 +657,23 @@ def readCommand(argv):
 
     return args
 
-def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
-    "Calls agent factories and returns lists of agents"
-    try:
-        module = importlib.import_module(agent_module)
-    except ImportError:
-        logging.error('The team "' + agent_module + '" could not be loaded! ')
-        traceback.print_exc()
-        return [None for i in range(2)]
+def loadAgents(isRed, agentModule, textgraphics, args):
+    """
+    Calls agent factories and returns lists of agents.
+    """
 
-    args = dict()
-    args.update(cmdLineArgs)  # Add command line args with priority
+    createTeamFunctionPath = agentModule + '.createTeam'
+    createTeamFunction = reflection.qualifiedImport(createTeamFunctionPath)
 
-    logging.info('Loading Team:%s', agent_module)
-    logging.info('Arguments:%s', args)
-
-    try:
-        createTeamFunc = getattr(module, 'createTeam')
-    except AttributeError:
-        logging.error('The team "' + agent_module + '" could not be loaded! ')
-        traceback.print_exc()
-        return [None for i in range(2)]
+    logging.info('Loading Team: %s', agentModule)
+    logging.info('Arguments: %s', args)
 
     indexAddend = 0
-    if not isRed:
+    if (not isRed):
         indexAddend = 1
     indices = [2 * i + indexAddend for i in range(2)]
-    return createTeamFunc(indices[0], indices[1], isRed, **args)
+
+    return createTeamFunction(indices[0], indices[1], isRed, **args)
 
 def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
     rules = CaptureRules()
