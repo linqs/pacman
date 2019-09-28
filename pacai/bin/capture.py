@@ -259,6 +259,8 @@ class CaptureGameState(AbstractGameState):
         self._lastAgentMoved = agentIndex
         self._timeleft -= 1
 
+        self._hash = None
+
 class CaptureRules:
     """
     These game rules manage the control flow of a game, deciding when

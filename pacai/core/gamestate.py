@@ -23,6 +23,10 @@ class AbstractGameState(abc.ABC):
 
         self._layout = layout
 
+        # Keep a copy of the hash, since it is expensive to compute.
+        # Any children should be sure to clear the hash when modifications are made.
+        self._hash = None
+
         # For food and capsules, we will only copy on write (if we eat one of them).
         # This avoid additional copies on successors that don't eat.
 
@@ -62,6 +66,7 @@ class AbstractGameState(abc.ABC):
         pass
 
     def addScore(self, score):
+        self._hash = None
         self._score += score
 
     def eatCapsule(self, x, y):
@@ -79,6 +84,7 @@ class AbstractGameState(abc.ABC):
         self._capsules.remove((x, y))
         self._lastCapsuleEaten = (x, y)
 
+        self._hash = None
         return True
 
     def eatFood(self, x, y):
@@ -96,11 +102,14 @@ class AbstractGameState(abc.ABC):
         self._food[x][y] = False
         self._lastFoodEaten = (x, y)
 
+        self._hash = None
         return True
 
     def endGame(self, win):
         self._gameover = True
         self._win = win
+
+        self._hash = None
 
     def getAgentPosition(self, index):
         """
@@ -232,6 +241,7 @@ class AbstractGameState(abc.ABC):
 
     def setScore(self, score):
         self._score = score
+        self._hash = None
 
     def _initSuccessor(self):
         """
@@ -241,6 +251,7 @@ class AbstractGameState(abc.ABC):
 
         # Start with a shallow copy.
         successor = copy.copy(self)
+        successor._hash = None
 
         # Leave food and capsules as a shallow copy, but mark them to be copied on write.
         successor._foodCopied = False
@@ -278,5 +289,8 @@ class AbstractGameState(abc.ABC):
                 and self._layout == other._layout)
 
     def __hash__(self):
-        return util.buildHash(self._score, self._gameover, self._win, *self._capsules,
+        if (self._hash is None):
+            self._hash = util.buildHash(self._score, self._gameover, self._win, *self._capsules,
                 self._food, *self._agentStates, self._layout)
+
+        return self._hash

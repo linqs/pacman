@@ -160,6 +160,8 @@ class PacmanGameState(AbstractGameState):
         # Book keeping.
         self._lastAgentMoved = agentIndex
 
+        self._hash = None
+
 class ClassicGameRules(object):
     """
     These game rules manage the control flow of a game, deciding when
