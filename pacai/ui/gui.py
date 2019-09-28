@@ -46,6 +46,12 @@ class AbstractGUIView(AbstractView):
 
         self._dead = False
 
+    # Override
+    def finish(self):
+        super().finish()
+
+        self._canvas.delete("all")
+
     def getKeyboard(self):
         return Keyboard(self._root)
 
@@ -57,7 +63,9 @@ class AbstractGUIView(AbstractView):
         self._height = (state.getInitialLayout().getHeight() + 1) * spritesheet.SQUARE_SIZE
         self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
 
-        self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
+        if (self._canvas is None):
+            self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
+
         self._imageArea = self._canvas.create_image(0, 0, image = None, anchor = tkinter.NW)
         self._canvas.pack()
 
@@ -65,7 +73,7 @@ class AbstractGUIView(AbstractView):
         self._totalDroppedFrames = 0
         self._initTime = time.time()
 
-    def _cleanup(self):
+    def _cleanup(self, exit = True):
         """
         This GUI has been killed, clean up.
         This is one of the rare cases where we will exit outside of the bin package.
@@ -78,7 +86,8 @@ class AbstractGUIView(AbstractView):
             self._root.destroy()
             self._root = None
 
-        sys.exit(0)
+        if (exit):
+            sys.exit(0)
 
     # Override
     def _drawFrame(self, state, frame, forceDraw = False):
