@@ -106,11 +106,3 @@ class AbstractView(abc.ABC):
         """
 
         pass
-
-    def pause(self):
-        # TODO(eriq): Deprecated. From old interface.
-        pass
-
-    def draw(self, state):
-        # TODO(eriq): Deprecated. From old interface.
-        pass

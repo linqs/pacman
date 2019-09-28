@@ -1,6 +1,3 @@
-# TODO(eriq): Why is there both a Distancer and DistanceCalculator?
-# TODO(eriq): Maybe rename to "distance.py" and put all distance things here.
-
 """
 This file contains a Distancer object which computes and
 caches the shortest path between any two points in a given maze.

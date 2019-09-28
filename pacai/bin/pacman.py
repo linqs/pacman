@@ -460,10 +460,9 @@ def readCommand(argv):
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
 
-    # TODO(eriq): There are multiple keyboard agents.
     # Choose a Pacman agent.
     noKeyboard = (options.replay is None and (options.textGraphics or options.nullGraphics))
-    if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
+    if (noKeyboard and ('KeyboardAgent' in options.pacman)):
         raise ValueError('Keyboard agents require graphics.')
 
     agentOpts = parseAgentArgs(options.agentArgs)

@@ -17,7 +17,6 @@ class SearchAgent(BaseAgent):
         breadthFirstSearch or bfs
     """
 
-    # TODO(eriq): We should pass actual objects instead of strings.
     def __init__(self, index, fn = 'pacai.core.search.search.dfs',
             prob = 'pacai.core.search.position.PositionSearchProblem',
             heuristic = 'pacai.core.search.heuristic.null',
