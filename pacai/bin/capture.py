@@ -698,21 +698,24 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
     rules = CaptureRules()
     games = []
 
-    if numTraining > 0:
-        logging.info('Playing %d training games' % numTraining)
+    nullView = None
+    if (numTraining > 0):
+        logging.info('Playing %d training games.' % numTraining)
+        nullView = CaptureNullView()
 
     for i in range(numGames):
-        beQuiet = (i < numTraining)
-        if beQuiet:
+        isTraining = (i < numTraining)
+
+        if (isTraining):
             # Suppress graphics for training.
-            gameDisplay = CaptureNullView()
+            gameDisplay = nullView
         else:
             gameDisplay = display
 
         g = rules.newGame(layout, agents, gameDisplay, length, catchExceptions)
         g.run()
 
-        if (not beQuiet):
+        if (not isTraining):
             games.append(g)
 
         g.record = None

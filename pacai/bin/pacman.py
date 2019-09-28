@@ -533,12 +533,17 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
     rules = ClassicGameRules(timeout)
     games = []
 
+    nullView = None
+    if (numTraining > 0):
+        logging.info('Playing %d training games.' % numTraining)
+        nullView = PacmanNullView()
+
     for i in range(numGames):
         isTraining = (i < numTraining)
 
         if (isTraining):
             # Suppress graphics for training.
-            gameDisplay = PacmanNullView()
+            gameDisplay = nullView
         else:
             gameDisplay = display
 
