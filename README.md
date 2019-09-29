@@ -4,15 +4,15 @@ A modified version of the Pacman educational project from the [Berkley AI Lab](h
 This project has been upgraded to Python 3, organized into packages, brought up to a common style, several bugs have been fixed, and the entire graphics systems has been replaced.
 
 Some improvements from the original project:
-    - Upgraded to Python 3.
-    - Organized into packages.
-    - Brought up to a common style.
-    - Added logging.
-    - Added tests.
-    - Fixed several bugs.
-    - Generalized and reorganized several project elements.
-    - Replaced the graphics systems.
-    - Added the ability to generate gifs from any pacman or capture game.
+ - Upgraded to Python 3.
+ - Organized into packages.
+ - Brought up to a common style with a style checker.
+ - Added logging.
+ - Added tests.
+ - Fixed several bugs.
+ - Generalized and reorganized several project elements.
+ - Replaced the graphics systems.
+ - Added the ability to generate gifs from any pacman or capture game.
 
 ### FAQ
 
