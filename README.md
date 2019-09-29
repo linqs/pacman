@@ -1,7 +1,7 @@
 ## Pacman
 
-A modified version of the Pacman educational project from the Berkley AI Lab:
-http://ai.berkeley.edu/project_overview.html
+A modified version of the Pacman educational project from the [Berkley AI Lab](http://ai.berkeley.edu/project_overview.html).
+This project has been upgraded to Python 3, organized into packages, brought up to a common style, several bugs have been fixed, and the entire graphics systems has been replaced.
 
 ### FAQ
 
@@ -9,17 +9,25 @@ http://ai.berkeley.edu/project_overview.html
 **A:** Python >= 3.5.
 The original version of this project was written for Python 2, but it has since been updated.
 
-**Q:** Why are there no packages? Seems disorganized...  
-**A:** You are right, this project is not designed with modern Python package-oriented design principles.
-This project is meant for students who may be seeing Python for the first time,
-and therefore has been simplified.
+**Q:** What dependencies do I need for this project?  
+**A:** This project has very limited dependencies.
+The pure Python dependencies can be installed via pip and are all listed in the requirements file.
+These can be installed via: `pip3 install -r requirements.txt`.
+To use a GUI, you also need `Tk` installed.
+The process for installing Tk differs depending on your OS, instructions can be found [here](https://tkdocs.com/tutorial/install.html).
 
-**Q:** What's with these `_student` files?  
-**A:** The `_student` files are the files that students will edit to complete assignments.
-When an assignment is graded, any other pacman files (without the `_student` suffix) that a student submits will
-be overwritten.
+**Q:** How do I run this project?  
+**A:** All the binary/executables for this project are located in the `pacai.bin` directory.
+You can invoke them from this repository's root direction (where this file is located) using a command like:
+```
+python3 -m pacai.bin.pacman
+```
+
+**Q:** What's with the `student` package?  
+**A:** The `student` package os for the files that students will edit to complete assignments.
+When an assignment is graded, all files will be placed in the `student` package.
+The rest will be supplied by the autograder.
 This makes it clear to the student what files they are allowed to change.
-It is not pretty (and not how non-educational projects should be designed), but it is easy for students and graders.
 
 **Q:** How do I get my own copy of repo to develop on?  
 **A:** They typical answer would be to [fork](https://help.github.com/en/articles/fork-a-repo).
@@ -60,9 +68,9 @@ git push
 You're all set!
 You now have a private copy of this pacman repo.
 
-#### Pulling Changes from This Repo
+#### Pulling Changes from This Repo Into Your Fork
 
-Rarely, you may need to pull changes/fixes from this repository.
+Occasionally, you may need to pull changes/fixes from this repository.
 Doing so is super easy.
 Just do a `git pull` command and specify this repository as an argument:
 ```
@@ -78,3 +86,5 @@ Here are just a few that we know about:
  - Ed Karuna for providing improved graphics and debugging help.
  - Jeremy Cowles for implementing an initial tournament infrastructure.
  - LiveWires for providing some code from a Pacman implementation (used / modified with permission).
+ - The LINQS lab from UCSC.
+ - Graduates of the CMPS 140 class who have helped pave the way for future classes (their identities are immortalized in the git history).
