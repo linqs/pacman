@@ -3,6 +3,17 @@
 A modified version of the Pacman educational project from the [Berkley AI Lab](http://ai.berkeley.edu/project_overview.html).
 This project has been upgraded to Python 3, organized into packages, brought up to a common style, several bugs have been fixed, and the entire graphics systems has been replaced.
 
+Some improvements from the original project:
+    - Upgraded to Python 3.
+    - Organized into packages.
+    - Brought up to a common style.
+    - Added logging.
+    - Added tests.
+    - Fixed several bugs.
+    - Generalized and reorganized several project elements.
+    - Replaced the graphics systems.
+    - Added the ability to generate gifs from any pacman or capture game.
+
 ### FAQ
 
 **Q:** What version of Python does this project support?  
@@ -17,20 +28,20 @@ To use a GUI, you also need `Tk` installed.
 The process for installing Tk differs depending on your OS, instructions can be found [here](https://tkdocs.com/tutorial/install.html).
 
 **Q:** How do I run this project?  
-**A:** All the binary/executables for this project are located in the `pacai.bin` directory.
-You can invoke them from this repository's root direction (where this file is located) using a command like:
+**A:** All the binary/executables for this project are located in the `pacai.bin` package.
+You can invoke them from this repository's root directory (where this file is located) using a command like:
 ```
 python3 -m pacai.bin.pacman
 ```
 
 **Q:** What's with the `student` package?  
-**A:** The `student` package os for the files that students will edit to complete assignments.
+**A:** The `student` package is for the files that students will edit to complete assignments.
 When an assignment is graded, all files will be placed in the `student` package.
 The rest will be supplied by the autograder.
 This makes it clear to the student what files they are allowed to change.
 
 **Q:** How do I get my own copy of repo to develop on?  
-**A:** They typical answer would be to [fork](https://help.github.com/en/articles/fork-a-repo).
+**A:** They typical answer would be to [fork it](https://help.github.com/en/articles/fork-a-repo).
 However GitHub requires that all forks be public, and we don't want this for class assignments.
 The following section has instructions on making a private copy of this repo.
 
@@ -49,7 +60,8 @@ Now, clone **this** pacman repo (the one that you are reading this README on):
 git clone https://github.com/linqs/pacman.git
 cd pacman
 ```
-If you are a cool kid with (ssh keys)[https://help.github.com/en/articles/connecting-to-github-with-ssh], then you can use the ssh endpoint.
+If you are a cool kid with [ssh keys](https://help.github.com/en/articles/connecting-to-github-with-ssh), then you can use the ssh endpoint instead of the http endpoint listed above.
+
 If you accidentally already created a pacman fork, then you can just cd into the fork repository you already cloned.
 (Just make sure to delete the fork through the GitHub web interface after you finish these steps.)
 
