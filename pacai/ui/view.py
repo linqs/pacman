@@ -79,8 +79,8 @@ class AbstractView(abc.ABC):
             forceDraw = True
 
         frame = self._createFrame(state)
-        if (state.isOver()
-                or (self._saveFrames and self._frameCount % self._skipFrames == 0)):
+        if (frame is not None and self._saveFrames
+                and (state.isOver() or (self._frameCount % self._skipFrames == 0))):
             self._keyFrames.append(frame)
 
         self._drawFrame(state, frame, forceDraw = forceDraw)

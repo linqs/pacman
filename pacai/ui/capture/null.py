@@ -6,8 +6,8 @@ class CaptureNullView(CaptureAbstractView):
 
     # Override
     def _createFrame(self, state):
-        # Don't bother creating any frames for gifs if we are not creating gifs.
-        if (self._saveFrames):
+        # Only create frames if we are creating a gif and this is not a skip frame.
+        if (self._saveFrames and (self._frameCount % self._skipFrames == 0)):
             return super()._createFrame(state)
 
         return None
