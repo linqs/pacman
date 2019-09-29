@@ -1,7 +1,6 @@
 ## Pacman
 
 A modified version of the Pacman educational project from the [Berkley AI Lab](http://ai.berkeley.edu/project_overview.html).
-This project has been upgraded to Python 3, organized into packages, brought up to a common style, several bugs have been fixed, and the entire graphics systems has been replaced.
 
 Some improvements from the original project:
  - Upgraded to Python 3.
