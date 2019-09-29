@@ -221,12 +221,12 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         that will complete the problem definition.
     """
 
-    def __init__(self, gameState):
+    def __init__(self, gameState, start = None):
         """
         Stores information from the gameState.  You don't need to change this.
         """
 
-        super().__init__(gameState, goal = None)
+        super().__init__(gameState, goal = None, start = start)
 
         # Store the food for later reference
         self.food = gameState.getFood()
