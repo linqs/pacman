@@ -15,11 +15,11 @@ class AbstractTextView(AbstractView):
 
         agentTokens = frame.getDiscreteAgents()
 
-        row = frame.getWidth() * [None]
+        row = frame.getBoardWidth() * [None]
 
         # Start in the upper left (0, height - 1) amd go row-by-row.
-        for y in range(frame.getHeight() - 1, -1, -1):
-            for x in range(0, frame.getWidth(), 1):
+        for y in range(frame.getBoardHeight() - 1, -1, -1):
+            for x in range(0, frame.getBoardWidth(), 1):
                 # Overlay the agent's onto the board at the closest interger position.
                 if ((x, y) in agentTokens):
                     row[x] = self._convertToken(agentTokens[(x, y)])

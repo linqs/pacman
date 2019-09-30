@@ -2,6 +2,7 @@ import sys
 import time
 import tkinter
 
+from PIL import Image
 from PIL import ImageTk
 
 from pacai.ui.keyboard import Keyboard
@@ -35,8 +36,10 @@ class AbstractGUIView(AbstractView):
 
         self._root = tkinter.Tk(baseName = TK_BASE_NAME)
         self._root.protocol('WM_DELETE_WINDOW', self._windowClosed)
-        self._root.resizable(False, False)
+        self._root.resizable(True, True)
         self._root.title(title)
+
+        self._root.bind("<Configure>", self._resize)
 
         self._canvas = None
         self._imageArea = None
@@ -64,10 +67,11 @@ class AbstractGUIView(AbstractView):
         self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
 
         if (self._canvas is None):
-            self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width)
+            self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width,
+                    highlightthickness = 0)
 
         self._imageArea = self._canvas.create_image(0, 0, image = None, anchor = tkinter.NW)
-        self._canvas.pack()
+        self._canvas.pack(fill = 'both', expand = True)
 
         self._totalDrawRequests = 0
         self._totalDroppedFrames = 0
@@ -116,13 +120,30 @@ class AbstractGUIView(AbstractView):
                     # Use Tkinter to block.
                     self._root.after(int(1000 * timeLeft))
 
-        image = ImageTk.PhotoImage(frame.toImage(self._sprites, self._font))
+        image = frame.toImage(self._sprites, self._font)
+
+        # Check for a resize.
+        if (self._height != frame.getImageHeight() or self._width != frame.getImageWidth()):
+            image = image.resize((self._width, self._height), resample = Image.LANCZOS)
+
+        # Convert the image into a ik image.
+        image = ImageTk.PhotoImage(image)
         self._canvas.itemconfig(self._imageArea, image = image)
 
         self._root.update_idletasks()
         self._root.update()
 
         self._lastDrawTime = time.time()
+
+    def _resize(self, event):
+        if (self._width == event.width and self._height == event.height):
+            return
+
+        self._width = event.width
+        self._height = event.height
+
+        self._canvas.config(width = self._width, height = self._height)
+        self._canvas.pack(fill = 'both', expand = True)
 
     def _windowClosed(self, event = None):
         """

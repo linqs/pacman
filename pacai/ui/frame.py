@@ -29,8 +29,8 @@ class Frame(abc.ABC):
         self._frame = frame
         self._turn = turn
 
-        self._height = state.getInitialLayout().getHeight()
-        self._width = state.getInitialLayout().getWidth()
+        self._boardHeight = state.getInitialLayout().getHeight()
+        self._boardWidth = state.getInitialLayout().getWidth()
 
         # All items on the board are at integral potision.
         self._board = self._buildBoard(state)
@@ -60,8 +60,15 @@ class Frame(abc.ABC):
 
         return agentTokens
 
-    def getHeight(self):
-        return self._height
+    def getBoardHeight(self):
+        return self._boardHeight
+
+    def getImageHeight(self):
+        # +1 for the score.
+        return (self._boardHeight + 1) * spritesheet.SQUARE_SIZE
+
+    def getImageWidth(self):
+        return self._boardWidth * spritesheet.SQUARE_SIZE
 
     def getToken(self, x, y):
         return self._board[x][y]
@@ -69,12 +76,16 @@ class Frame(abc.ABC):
     def getCol(self, x):
         return self._board[x]
 
-    def getWidth(self):
-        return self._width
+    def getBoardWidth(self):
+        return self._boardWidth
 
     def toImage(self, sprites = {}, font = None):
         # Height is +1 for the score.
-        size = (self._width * spritesheet.SQUARE_SIZE, (self._height + 1) * spritesheet.SQUARE_SIZE)
+        size = (
+            self._boardWidth * spritesheet.SQUARE_SIZE,
+            (self._boardHeight + 1) * spritesheet.SQUARE_SIZE
+        )
+
         image = Image.new('RGBA', size, (0, 0, 0, 255))
         draw = ImageDraw.Draw(image)
 
@@ -86,8 +97,8 @@ class Frame(abc.ABC):
             self._placeToken(x, y, token.HIGHLIGHT_TOKEN, sprites, image, draw, opacity = opacity)
 
         # Then, draw the board.
-        for x in range(self._width):
-            for y in range(self._height):
+        for x in range(self._boardWidth):
+            for y in range(self._boardHeight):
                 if (self._board[x][y] != token.EMPTY_TOKEN):
                     self._placeToken(x, y, self._board[x][y], sprites, image, draw)
 
@@ -103,11 +114,11 @@ class Frame(abc.ABC):
         return image
 
     def _buildBoard(self, state):
-        board = self._width * [None]
-        for x in range(self._width):
+        board = self._boardWidth * [None]
+        for x in range(self._boardWidth):
 
-            items = self._height * [token.EMPTY_TOKEN]
-            for y in range(self._height):
+            items = self._boardHeight * [token.EMPTY_TOKEN]
+            for y in range(self._boardHeight):
                 if (state.hasWall(x, y)):
                     items[y] = self._getWallToken(x, y, state)
                 elif (state.hasFood(x, y)):
@@ -177,10 +188,10 @@ class Frame(abc.ABC):
 
         baseToken = self._getWallBaseToken(x, y, state)
 
-        if (y != self._height - 1):
+        if (y != self._boardHeight - 1):
             hasWallN = state.hasWall(x, y + 1)
 
-        if (x != self._width - 1):
+        if (x != self._boardWidth - 1):
             hasWallE = state.hasWall(x + 1, y)
 
         if (y != 0):
@@ -206,7 +217,7 @@ class Frame(abc.ABC):
         # PIL has (0, 0) as the upper-left, while pacai has it as the lower-left.
         return (
             int(x * spritesheet.SQUARE_SIZE),
-            int((self._height - 1 - y) * spritesheet.SQUARE_SIZE)
+            int((self._boardHeight - 1 - y) * spritesheet.SQUARE_SIZE)
         )
 
     def _tokenToColor(self, objectToken):

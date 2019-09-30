@@ -15,14 +15,14 @@ class CaptureFrame(Frame):
 
     # Override
     def _getCapsuleBaseToken(self, x, y, state):
-        if (x < self._width / 2):
+        if (x < self._boardWidth / 2):
             return token.RED_FOOD_BASE
         else:
             return token.BLUE_FOOD_BASE
 
     # Override
     def _getFoodBaseToken(self, x, y, state):
-        if (x < self._width / 2):
+        if (x < self._boardWidth / 2):
             return token.RED_FOOD_BASE
         else:
             return token.BLUE_FOOD_BASE
@@ -38,7 +38,7 @@ class CaptureFrame(Frame):
 
     # Override
     def _getWallBaseToken(self, x, y, state):
-        if (x < self._width / 2):
+        if (x < self._boardWidth / 2):
             return token.RED_WALL_BASE
         else:
             return token.BLUE_WALL_BASE
