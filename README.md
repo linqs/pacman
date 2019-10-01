@@ -1,6 +1,6 @@
 ## Pacman
 
-A modified version of the Pacman educational project from the [Berkley AI Lab](http://ai.berkeley.edu/project_overview.html).
+A modified version of the Pacman educational project from the [Berkeley AI Lab](http://ai.berkeley.edu/project_overview.html).
 
 Some improvements from the original project:
  - Upgraded to Python 3.
@@ -32,6 +32,10 @@ You can invoke them from this repository's root directory (where this file is lo
 ```
 python3 -m pacai.bin.pacman
 ```
+
+**Q:** How can I run the style checker?  
+**A:** The easiest way to run the style checker is to execute the `run_style.sh` script in the root of this repository.
+If a `0` comes up, then you are good!
 
 **Q:** What's with the `student` package?  
 **A:** The `student` package is for the files that students will edit to complete assignments.
@@ -93,8 +97,8 @@ git pull https://github.com/linqs/pacman.git
 This project has been built up from the work of many people.
 Here are just a few that we know about:
  - The Berkley AI Lab for starting this project. Primarily John Denero and Dan Klein.
- - Barak Michener for providing improved graphics and debugging help.
- - Ed Karuna for providing improved graphics and debugging help.
+ - Barak Michener for providing the original graphics and debugging help.
+ - Ed Karuna for providing the original graphics and debugging help.
  - Jeremy Cowles for implementing an initial tournament infrastructure.
  - LiveWires for providing some code from a Pacman implementation (used / modified with permission).
  - The LINQS lab from UCSC.
