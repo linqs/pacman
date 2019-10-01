@@ -28,7 +28,7 @@ class AbstractGUIView(AbstractView):
         self._totalDrawRequests = None
         self._totalDroppedFrames = None
 
-        self._initTime = None
+        self._firstDrawTime = None
         self._lastDrawTime = None
 
         if (title != 'pacai'):
@@ -75,7 +75,7 @@ class AbstractGUIView(AbstractView):
 
         self._totalDrawRequests = 0
         self._totalDroppedFrames = 0
-        self._initTime = time.time()
+        self._firstDrawTime = None
 
     def _cleanup(self, exit = True):
         """
@@ -100,6 +100,9 @@ class AbstractGUIView(AbstractView):
 
         self._totalDrawRequests += 1
 
+        if (self._firstDrawTime is None):
+            self._firstDrawTime = time.time()
+
         # Delay drawing the frame to cap the FPS.
         # Every iteration of the loop outputs a frame,
         # so ensure that no single frame is output too quickly.
@@ -107,7 +110,7 @@ class AbstractGUIView(AbstractView):
             now = time.time()
 
             # The FPS after accounting for dropped frames.
-            adjustedFPS = self._totalDrawRequests / (now - self._initTime)
+            adjustedFPS = self._totalDrawRequests / (now - self._firstDrawTime)
 
             # To keep the FPS up, we may skip animating frames.
             if (adjustedFPS < self._fps):
