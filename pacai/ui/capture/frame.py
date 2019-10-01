@@ -1,9 +1,9 @@
 from pacai.ui import token
 from pacai.ui.frame import Frame
 
-TIE_TEXT_COLOR = (180, 60, 180, 255)
-RED_TEXT_COLOR = (229, 0, 0, 255)
-BLUE_TEXT_COLOR = (0, 76, 229, 255)
+TIE_TEXT_COLOR = (180, 60, 180)
+RED_TEXT_COLOR = (229, 0, 0)
+BLUE_TEXT_COLOR = (0, 76, 229)
 
 class CaptureFrame(Frame):
     # Override

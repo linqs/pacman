@@ -1,7 +1,7 @@
 from pacai.ui import token
 from pacai.ui.frame import Frame
 
-TEXT_COLOR = (255, 255, 1, 255)
+TEXT_COLOR = (255, 255, 1)
 
 class PacmanFrame(Frame):
     # Override

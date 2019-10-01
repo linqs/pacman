@@ -54,7 +54,7 @@ class AbstractView(abc.ABC):
 
             images = [frame.toImage(self._sprites, self._font) for frame in self._keyFrames]
             images[0].save(self._gifPath, save_all = True, append_images = images,
-                    duration = gifTimePerFrameMS, loop = 0, optimize = True)
+                    duration = gifTimePerFrameMS, loop = 0, optimize = False)
 
     def getKeyboard(self):
         """

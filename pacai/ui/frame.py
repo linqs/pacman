@@ -13,8 +13,8 @@ from pacai.ui import spritesheet
 from pacai.ui import token
 from pacai.util import util
 
-# The range of opacity values for highlighted locations.
-MAX_HIGHLIGHT_OPACITY_RANGE = 180
+# The range of intensity values for highlighted locations.
+MAX_HIGHLIGHT_INTENSITY_RANGE = 150
 
 SCORE_X_POSITION = 0.55
 SCORE_Y_POSITION = -0.95
@@ -86,15 +86,18 @@ class Frame(abc.ABC):
             (self._boardHeight + 1) * spritesheet.SQUARE_SIZE
         )
 
-        image = Image.new('RGBA', size, (0, 0, 0, 255))
+        image = Image.new('RGB', size, (0, 0, 0, 255))
         draw = ImageDraw.Draw(image)
 
         # First, draw any highlights.
         for i in range(len(self._highlightLocations)):
             (x, y) = self._highlightLocations[i]
+            startPoint = self._toImageCoords(x, y)
+            endPoint = self._toImageCoords(x + 1, y - 1)
 
-            opacity = 255 - int((i / len(self._highlightLocations)) * MAX_HIGHLIGHT_OPACITY_RANGE)
-            self._placeToken(x, y, token.HIGHLIGHT_TOKEN, sprites, image, draw, opacity = opacity)
+            intensity = int((i / len(self._highlightLocations)) * MAX_HIGHLIGHT_INTENSITY_RANGE)
+
+            draw.rectangle([startPoint, endPoint], fill = (255, intensity, intensity))
 
         # Then, draw the board.
         for x in range(self._boardWidth):
@@ -202,7 +205,7 @@ class Frame(abc.ABC):
 
         return token.getWallToken(baseToken, hasWallN, hasWallE, hasWallS, hasWallW)
 
-    def _placeToken(self, x, y, objectToken, sprites, image, draw, opacity = 255):
+    def _placeToken(self, x, y, objectToken, sprites, image, draw):
         startPoint = self._toImageCoords(x, y)
         endPoint = self._toImageCoords(x + 1, y - 1)
 
@@ -210,7 +213,6 @@ class Frame(abc.ABC):
             image.paste(sprites[objectToken], startPoint, sprites[objectToken])
         else:
             color = self._tokenToColor(objectToken)
-            color = (*color, opacity)
             draw.rectangle([startPoint, endPoint], fill = color)
 
     def _toImageCoords(self, x, y):
