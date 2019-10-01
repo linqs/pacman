@@ -8,16 +8,16 @@ from pacai.util import reflection
 class BaseAgent(abc.ABC):
     """
     An agent is something in the pacman world that does something (takes some action).
-    Could be a ghost, the player controller Pac-Man, an AI controlling Pac-Man, etc.
+    Could be a ghost, the player controlled pacman, an AI controlled pacman, etc.
 
-    An agent must define the getAction method,
+    An agent must define the `BaseAgent.getAction` method,
     but may also override any of the other methods.
 
     Note that methods that take in a state should assume that they own a shallow copy of the state.
     So the state should not be modified and a deep copy should be made of any information
     they want to keep.
 
-    Non-abstract children should make sure that their constructors accept **kwargs,
+    Non-abstract children should make sure that their constructors accept `**kwargs`,
     since agents are typically created reflexively.
     """
 
@@ -27,8 +27,8 @@ class BaseAgent(abc.ABC):
     @abc.abstractmethod
     def getAction(self, state):
         """
-        The BaseAgent will receive a GameState (from either {pacman, capture, sonar}.py) and
-        must return an action from Directions.{North, South, East, West, Stop}
+        The BaseAgent will receive an `pacai.core.gamestate.AbstractGameState`,
+        and must return an action from `pacai.core.directions.Directions`.
         """
 
         pass
@@ -43,6 +43,7 @@ class BaseAgent(abc.ABC):
     def observationFunction(self, state):
         """
         Make an observation on the state of the game.
+        Called once for each round of the game.
         """
 
         pass
@@ -54,38 +55,59 @@ class BaseAgent(abc.ABC):
 
         pass
 
-    def loadAgent(class_name, index, args = {}):
+    @staticmethod
+    def loadAgent(name, index, args = {}):
+        """
+        Load an agent with the given class name.
+        The name can be fully qualified or just the bare class name.
+        If the bare name is given, the class should appear in the
+        `pacai.agents` or `pacai.student` package.
+        """
+
+        if (name.startswith('pacai.')):
+            # This name looks like a fully qualified name, load it directly.
+            agentClass = reflection.qualifiedImport(name)
+            return agentClass(index = index, **args)
+        else:
+            # This is probably just a class name.
+            return BaseAgent._loadAgentByName(name, index, args)
+
+    @staticmethod
+    def _loadAgentByName(className, index, args = {}):
         """
         Create an agent of the given class with the given index and args.
+        This will search the `pacai.agents` package as well as the `pacai.student` package
+        for an agent with the given class name.
         """
 
-        this_dir = os.path.dirname(__file__)
+        thisDir = os.path.dirname(__file__)
 
-        BaseAgent._import_agents(os.path.join(this_dir, '*.py'), 'pacai.agents.%s')
-        BaseAgent._import_agents(os.path.join(this_dir, '..', 'student', '*.py'),
+        BaseAgent._importAgents(os.path.join(thisDir, '*.py'), 'pacai.agents.%s')
+        BaseAgent._importAgents(os.path.join(thisDir, '..', 'student', '*.py'),
                 'pacai.student.%s')
 
         # Also check any subpackages of pacai.agents.
-        for path in glob.glob(os.path.join(this_dir, '*')):
+        for path in glob.glob(os.path.join(thisDir, '*')):
             if (os.path.isfile(path)):
                 continue
 
             if (os.path.basename(path).startswith('__')):
                 continue
 
-            package_name = os.path.basename(path)
-            package_format_string = 'pacai.agents.%s.%%s' % (package_name)
+            packageName = os.path.basename(path)
+            packageFormatString = 'pacai.agents.%s.%%s' % (packageName)
 
-            BaseAgent._import_agents(os.path.join(path, '*.py'), package_format_string)
+            BaseAgent._importAgents(os.path.join(path, '*.py'), packageFormatString)
 
         # Now that the agent classes have been loaded, just look for subclasses.
         for subclass in reflection.getAllDescendents(BaseAgent):
-            if (subclass.__name__ == class_name):
+            if (subclass.__name__ == className):
                 return subclass(index = index, **args)
 
-        raise LookupError('Could not find an agent with the name: ' + class_name)
+        raise LookupError('Could not find an agent with the name: ' + className)
 
-    def _import_agents(glob_path, package_format_string):
+    @staticmethod
+    def _importAgents(globPath, packageFormatString):
         """
         Load all the agents from this package.
         Note that we are explicitly doing this now so that others are not
@@ -93,7 +115,7 @@ class BaseAgent(abc.ABC):
         We don't need the module in scope, we just need the import to run.
         """
 
-        for path in glob.glob(glob_path):
+        for path in glob.glob(globPath):
             if (not os.path.isfile(path)):
                 continue
 
@@ -101,9 +123,9 @@ class BaseAgent(abc.ABC):
                 continue
 
             # Ignore the rest of the path and extension.
-            module_name = os.path.basename(path)[:-3]
+            moduleName = os.path.basename(path)[:-3]
 
             try:
-                __import__(package_format_string % (module_name))
+                __import__(packageFormatString % (moduleName))
             except ImportError as ex:
-                logging.warning('Unable to import agent: "%s". -- %s' % (module_name, str(ex)))
+                logging.warning('Unable to import agent: "%s". -- %s' % (moduleName, str(ex)))
