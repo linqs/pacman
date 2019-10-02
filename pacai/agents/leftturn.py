@@ -3,7 +3,8 @@ from pacai.core.directions import Directions
 
 class LeftTurnAgent(BaseAgent):
     """
-    An agent that turns left at every opportunity
+    An agent that turns left at every opportunity.
+    Three lefts make a right, and two rights (six lefts) don't make a wrong.
     """
 
     def __init__(self, index, **kwargs):

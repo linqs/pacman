@@ -3,7 +3,7 @@ from pacai.core.directions import Directions
 
 class BaseKeyboardAgent(BaseAgent):
     """
-    An agent controlled by the keyboard.
+    An general agent controlled by the keyboard.
     """
 
     def __init__(self, index = 0, keyboard = None, directionalKeys = {}, **kwargs):
