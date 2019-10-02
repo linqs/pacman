@@ -19,7 +19,7 @@ class DummyAgent(CaptureAgent):
         IMPORTANT: If this method runs for more than 15 seconds, your agent will time out.
         """
 
-        super().registerInitialState(self, gameState)
+        super().registerInitialState(gameState)
 
         # Your initialization code goes here, if you need any.
 
