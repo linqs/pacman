@@ -4,7 +4,7 @@ from pacai.util import util
 
 class AgentState:
     """
-    AgentStates hold the state of an agent (position, direction, scared, etc).
+    This class hold the state of an agent (position, direction, scared, etc).
 
     The convention for positions, like a graph, is that (0, 0) is the lower left corner,
     x increases horizontally and y increases vertically.

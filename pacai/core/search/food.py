@@ -5,11 +5,12 @@ from pacai.core.search.problem import SearchProblem
 class FoodSearchProblem(SearchProblem):
     """
     A search problem associated with finding the a path that collects all of the
-    food (dots) in a Pacman game.
+    food in a pacman game.
 
-    A search state in this problem is a tuple (pacmanPosition, foodGrid) where
-        pacmanPosition: a tuple (x, y) of integers specifying Pacman's position
-        foodGrid: a Grid (see game.py) of either True or False, specifying remaining food
+    A search state in this problem is a tuple (pacmanPosition, foodGrid).
+    Wwhere pacmanPosition is a tuple (x, y) of integers specifying Pacman's position,
+    and foodGrid is a `pacai.core.grid.Grid` of either `True` or `False`,
+    specifying remaining food.
     """
 
     def __init__(self, startingGameState):
@@ -47,7 +48,7 @@ class FoodSearchProblem(SearchProblem):
     def actionsCost(self, actions):
         """
         Returns the cost of a particular sequence of actions.
-        If those actions include an illegal move, return 999999
+        If those actions include an illegal move, return 999999.
         """
 
         x, y = self.startingState()[0]

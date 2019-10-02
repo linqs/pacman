@@ -2,10 +2,24 @@ import abc
 
 class SearchProblem(abc.ABC):
     """
-    This class outlines the structure of a search problem, but doesn't implement
-    any of the methods (in object-oriented terminology: an abstract class).
+    This class outlines the structure of a search problem.
+    Any search problem will need to provide answers to the following questions:
+    ```
+    Where should the search start?
+    Is this state a goal?
+    What moves are possible from this state?
+    How much did it cost to perform these action?
+    ```
 
-    You do not need to change anything in this class, ever.
+    The answers to these questions are provided by implementing
+    the abstract methods in this class.
+
+    Note that all the states passed into a `SearchProblem` are also generated
+    by the same `SearchProblem`.
+    `SearchProblem.startingState` and `SearchProblem.successorStates` produce
+    states,
+    while `SearchProblem.isGoal` and `SearchProblem.actionsCost` evaluate
+    those same states and actions.
     """
 
     def __init__(self):
@@ -21,10 +35,10 @@ class SearchProblem(abc.ABC):
     @abc.abstractmethod
     def actionsCost(self, actions):
         """
-        actions: A list of actions to take
+        Answers the question:
+        How much did it cost to perform these action?
 
-        This method returns the total cost of a particular sequence of actions.
-        The sequence must be composed of legal moves.
+        Returns the total cost of a particular sequence of legal actions.
         """
 
         pass
@@ -38,9 +52,10 @@ class SearchProblem(abc.ABC):
     @abc.abstractmethod
     def isGoal(self, state):
         """
-        state: Search state
+        Answers the question:
+        Is this state a goal?
 
-        Returns True if and only if the state is a valid goal state
+        Returns True if and only if the state is a valid goal state.
         """
 
         pass
@@ -48,7 +63,10 @@ class SearchProblem(abc.ABC):
     @abc.abstractmethod
     def startingState(self):
         """
-        Returns the start state for the search problem
+        Answers the question:
+        Where should the search start?
+
+        Returns the starting state for the search problem.
         """
 
         pass
@@ -56,13 +74,11 @@ class SearchProblem(abc.ABC):
     @abc.abstractmethod
     def successorStates(self, state):
         """
-        state: Search state
+        Answers the question:
+        What moves are possible from this state?
 
-        For a given state, this should return a list of triples,
-        (successor, action, stepCost), where 'successor' is a
-        successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
+        Returns a list of tuples with three values:
+        (successor state, action, cost of taking the action).
         """
 
         pass

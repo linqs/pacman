@@ -80,12 +80,14 @@ class Layout(object):
         Coordinates are flipped from the input format to the (x, y) convention here
 
         The shape of the maze.
-        Each character represents a different type of object.
+        Each character represents a different type of object:
+        ```
             % - Wall
             . - Food
             o - Capsule
             G - Ghost
             P - Pacman
+        ```
         Other characters are ignored.
         """
 

@@ -3,8 +3,9 @@ from pacai.student import search
 
 def tinyMazeSearch(problem):
     """
-    Returns a sequence of moves that solves tinyMaze.
-    For any other maze, the sequence of moves will be incorrect, so only use this for tinyMaze.
+    Returns a sequence of moves that solves `tinyMaze`.
+    For any other maze, the sequence of moves will be incorrect,
+    so only use this for `tinyMaze`.
     """
 
     s = Directions.SOUTH

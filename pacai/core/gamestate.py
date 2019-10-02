@@ -7,11 +7,10 @@ from pacai.util import util
 
 class AbstractGameState(abc.ABC):
     """
-    A GameState specifies the full game state, including the food, capsules,
-    agents, and score.
+    A game state specifies the status of a game, including the food, capsules, agents, and score.
 
-    GameStates are used by the Game object to capture the actual state of the game and
-    can be used by agents to reason about the game.
+    Game states are used by the `pacai.core.game.Game` to capture the actual state of the game,
+    and can be used by agents to reason about the game.
 
     Only use the accessor methods to get data about the game state.
     """

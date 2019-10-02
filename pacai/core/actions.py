@@ -3,6 +3,7 @@ from pacai.core.directions import Directions
 class Actions:
     """
     A collection of static methods for manipulating move actions.
+    An action is just a `pacai.core.directions.Directions`.
     """
 
     # Directions

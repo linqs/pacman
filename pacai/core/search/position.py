@@ -2,33 +2,37 @@ from pacai.core.actions import Actions
 from pacai.core.directions import Directions
 from pacai.core.search.problem import SearchProblem
 
+DEFAULT_COST_FUNCTION = lambda x: 1
+DEFAULT_GOAL_POSITION = (1, 1)
+
 class PositionSearchProblem(SearchProblem):
     """
-    A search problem defines the state space, start state, goal test,
-    successor function and cost function. This search problem can be
-    used to find paths to a particular point on the pacman board.
+    A `pacai.core.search.problem.SearchProblem` for finding a specific location on the board.
+    The state space consists of (x, y) positions.
 
-    The state space consists of (x, y) positions in a pacman game.
-
-    Note: this search problem is fully specified; you should NOT change it.
+    Note that this search problem is fully specified and should be used as an example.
     """
-    def __init__(self, gameState, costFn = lambda x: 1, goal=(1, 1), start = None):
+    def __init__(self, gameState, costFn = DEFAULT_COST_FUNCTION,
+            goal = DEFAULT_GOAL_POSITION, start = None):
         """
-        Stores the start and goal.
-
-        gameState: A GameState object (pacman.py)
-        costFn: A function from a search state (tuple) to a non-negative number
-        goal: A position in the gameState
+        Args:
+            gameState: A `pacai.core.gamestate.AbstractGameState`.
+            costFn: A function from a search state (x, y) to a non-negative number.
+            goal: The target position.
         """
 
         super().__init__()
 
         self.walls = gameState.getWalls()
-        self.startState = gameState.getPacmanPosition()
-        if start is not None:
-            self.startState = start
         self.goal = goal
         self.costFn = costFn
+
+        self.startState = start
+        if (self.startState is None):
+            self.startState = gameState.getAgentPosition(0)
+
+        if (self.startState is None):
+            raise ValueError("Could not find starting location.")
 
     def startingState(self):
         return self.startState
@@ -37,7 +41,7 @@ class PositionSearchProblem(SearchProblem):
         if (state != self.goal):
             return False
 
-        # Register the locations we have visited as special.
+        # Register the locations we have visited.
         # This allows the GUI to highlight them.
         self._visitedLocations.add(state)
         self._visitHistory.append(state)
@@ -46,27 +50,23 @@ class PositionSearchProblem(SearchProblem):
 
     def successorStates(self, state):
         """
-        Returns successor states, the actions they require, and a cost of 1.
-
-        As noted in search.py:
-        For a given state, this should return a list of triples,
-        (successor, action, stepCost), where 'successor' is a
-        successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
+        Returns successor states, the actions they require, and a constant cost of 1.
         """
 
         successors = []
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+
+        for action in Directions.CARDINAL:
             x, y = state
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
-            if not self.walls[nextx][nexty]:
+
+            if (not self.walls[nextx][nexty]):
                 nextState = (nextx, nexty)
                 cost = self.costFn(nextState)
+
                 successors.append((nextState, action, cost))
 
-        # Bookkeeping for display purposes
+        # Bookkeeping for display purposes (the highlight in the GUI).
         self._numExpanded += 1
         if (state not in self._visitedLocations):
             self._visitedLocations.add(state)
@@ -76,8 +76,8 @@ class PositionSearchProblem(SearchProblem):
 
     def actionsCost(self, actions):
         """
-        Returns the cost of a particular sequence of actions. If those actions
-        include an illegal move, return 999999
+        Returns the cost of a particular sequence of actions.
+        If those actions include an illegal move, return 999999.
         """
 
         if (actions is None):
@@ -85,12 +85,14 @@ class PositionSearchProblem(SearchProblem):
 
         x, y = self.startingState()
         cost = 0
+
         for action in actions:
             # Check figure out the next state and see whether its' legal
             dx, dy = Actions.directionToVector(action)
             x, y = int(x + dx), int(y + dy)
-            if self.walls[x][y]:
+            if (self.walls[x][y]):
                 return 999999
+
             cost += self.costFn((x, y))
 
         return cost

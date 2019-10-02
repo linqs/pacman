@@ -1,5 +1,5 @@
 """
-The core of a Pac-Man game.
+The core of a pacman-style game.
 """
 
 import logging

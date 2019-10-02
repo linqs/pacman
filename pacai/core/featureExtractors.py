@@ -1,5 +1,6 @@
-# Feature extractors for Pacman game states and a private search problem to find
-# the closest food.
+"""
+Feature extractors for game states.
+"""
 
 import abc
 
@@ -9,6 +10,11 @@ from pacai.student.searchAgents import AnyFoodSearchProblem
 from pacai.util import counter
 
 class FeatureExtractor(abc.ABC):
+    """
+    A class that takes a `pacai.core.gamestate.AbstractGameState` and `pacai.core.actions.Actions`,
+    and returns a dict of features.
+    """
+
     @abc.abstractmethod
     def getFeatures(self, state, action):
         """
@@ -28,11 +34,7 @@ class IdentityExtractor(FeatureExtractor):
 
 class SimpleExtractor(FeatureExtractor):
     """
-    Returns simple features for a basic reflex Pacman:
-        - whether food will be eaten
-        - how far away the next food is
-        - whether a ghost collision is imminent
-        - whether a ghost is one step away
+    Returns simple features for a basic reflex Pacman.
     """
 
     def getFeatures(self, state, action):
