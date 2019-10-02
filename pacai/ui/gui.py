@@ -108,6 +108,9 @@ class AbstractGUIView(AbstractView):
         if (self._firstDrawTime is None):
             self._firstDrawTime = time.time()
 
+            # This is our first frame, we do not have an FPS to stabilize yet.
+            forceDraw = True
+
         # Delay drawing the frame to cap the FPS.
         # Every iteration of the loop outputs a frame,
         # so ensure that no single frame is output too quickly.
