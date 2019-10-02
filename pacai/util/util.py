@@ -19,7 +19,7 @@ def arrayInvert(array):
 
 def buildHash(*args):
     """
-    Build a hash from different components.
+    Build a hash code from different components.
     """
 
     hashCode = INITIAL_HASH_VALUE

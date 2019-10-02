@@ -1,10 +1,14 @@
+"""
+Various utilities for working with probabilities and distributions.
+"""
+
 import random
 
 from pacai.util import counter
 
 def normalize(vectorOrCounter):
     """
-    normalize a vector or counter by dividing each value by the sum of all values
+    Normalize a vector or counter by dividing each value by the sum of all values.
     """
 
     normalizedCounter = counter.Counter()
@@ -87,7 +91,7 @@ def flipCoin(p):
 
 def chooseFromDistribution(distribution):
     """
-    Takes either a counter or a list of (prob, key) pairs and samples
+    Takes either a counter or a list of (prob, key) pairs and samples.
     """
 
     if type(distribution) == dict or type(distribution) == counter.Counter:
