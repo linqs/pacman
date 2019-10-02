@@ -1,30 +1,8 @@
 """
-Capture.py holds the logic for Pacman capture the flag.
-
-    (i) Your interface to the pacman world:
-                    Pacman is a complex environment. You probably don't want to
-                    read through all of the code we wrote to make the game runs
-                    correctly. This section contains the parts of the code
-                    that you will need to understand in order to complete the
-                    project. There is also some code in game.py that you should
-                    understand.
-
-    (ii) The hidden secrets of pacman:
-                    This section contains all of the logic code that the pacman
-                    environment uses to decide who can move where, who dies when
-                    things collide, etc. You shouldn't need to read this section
-                    of code, but you can if you want.
-
-    (iii) Framework to start a game:
-                    The final section contains the code for reading the command
-                    you use to set up the game, then starting up a new game, along with
-                    linking in all the external parts (agent functions, graphics).
-                    Check this section out to see all the options available to you.
-
-To play your first game, type 'python capture.py' from the command line.
-The keys are
-    P1: 'a', 's', 'd', and 'w' to move
-    P2: 'l', ';', ',', and 'p' to move
+Capture is a variant of pacman where two teams face off.
+The goal is to eat more food than your opponent.
+On your side of the map, you are a ghost and can eat pacmen.
+On your opponents side of the map, you are a pacman and can eat food and capsules.
 """
 
 import logging
@@ -759,16 +737,8 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
 
 def main(argv):
     """
-    The main function called when pacman.py is run
-    from the command line:
-
-    > python capture.py
-
-    See the usage string for more details.
-
-    > python capture.py --help
-
-    argv already has the executable stripped.
+    Entry point for a capture game.
+    The args are a blind pass of `sys.argv` with the executable stripped.
     """
 
     initLogging()

@@ -1,3 +1,7 @@
+"""
+Binary for the crawler simulation.
+"""
+
 import sys
 
 from pacai.ui.crawler.gui import run
@@ -16,6 +20,11 @@ def _load_args(args):
     return max_steps
 
 def main(argv):
+    """
+    Entry point for the crawler simulation.
+    The args are a blind pass of `sys.argv`.
+    """
+
     initLogging()
     max_steps = _load_args(argv)
     sys.exit(run(max_steps = max_steps))

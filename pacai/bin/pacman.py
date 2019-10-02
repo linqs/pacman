@@ -1,27 +1,9 @@
 """
-Pacman.py holds the logic for the classic pacman game along with the main code to run a game.
-This file is divided into three sections:
-
-(i) Your interface to the pacman world:
-Pacman is a complex environment.
-You probably don't want to read through all of the code we wrote to make the game runs correctly.
-This section contains the parts of the code that you will need to understand in order to complete
-the project.
-There is also some code in game.py that you should understand.
-
-(ii) The hidden secrets of pacman:
-This section contains the logic code that the pacman environment uses to decide who can move where,
-who dies when things collide, etc.
-You shouldn't need to read this section of code, but you can if you want.
-
-(iii) Framework to start a game:
-The final section contains the code for reading the command you use to set up the game,
-then starting up a new game, along with linking in all the external parts
-(agent functions, graphics).
-Check this section out to see all the options available to you.
+This file holds the logic for a classic pacman game along with the main code to run a game.
 
 To play your first game, type 'python -m pacai.bin.pacman' from the command line.
-The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).
+Use WASD (or the arrow keys) to move.
+
 Have fun!
 """
 
@@ -576,16 +558,8 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
 
 def main(argv):
     """
-    The main function called when pacman.py is run
-    from the command line:
-
-    > python pacman.py
-
-    See the usage string for more details.
-
-    > python pacman.py --help
-
-    argv already has the executable stripped.
+    Entry point for a pacman game.
+    The args are a blind pass of `sys.argv` with the executable stripped.
     """
 
     initLogging()

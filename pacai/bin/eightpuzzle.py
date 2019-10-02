@@ -268,6 +268,10 @@ def createRandomEightPuzzle(moves = 100):
     return puzzle
 
 def main():
+    """
+    Entry point for the eightpuzzle simulation.
+    """
+
     initLogging()
 
     puzzle = createRandomEightPuzzle(25)

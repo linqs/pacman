@@ -17,10 +17,6 @@ from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 
 class Gridworld(MarkovDecisionProcess):
-    """
-    Gridworld
-    """
-
     def __init__(self, grid):
         # layout
         if (isinstance(grid, list)):
@@ -486,6 +482,11 @@ def parseOptions(argv):
     return options
 
 def main(argv):
+    """
+    Entry point for the gridworld simulation
+    The args are a blind pass of `sys.argv` with the executable stripped.
+    """
+
     initLogging()
 
     opts = parseOptions(argv)
