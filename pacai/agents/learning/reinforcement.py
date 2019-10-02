@@ -6,28 +6,23 @@ from pacai.agents.learning.value import ValueEstimationAgent
 
 class ReinforcementAgent(ValueEstimationAgent):
     """
-    Abstract Reinforcemnt Agent: A ValueEstimationAgent
-        which estimates Q-Values (as well as policies) from experience
-        rather than a model
+    An abstract value estimation agent that learns by estimating Q-values from experience.
 
-    What you need to know:
-        - The environment will call
-            observeTransition(state, action, nextState, deltaReward),
-            which will call update(state, action, nextState, deltaReward)
-            which you should override.
-        - Use self.getLegalActions(state) to know which actions
-            are available in a state
+    You should know the following:
+    The environment will call `ReinforcementAgent.observeTransition`,
+    which will then call `ReinforcementAgent.update` (which you should override).
+    Use `ReinforcementAgent.getLegalActions` to know which actions are available in a state.
     """
 
-    def __init__(self, index, actionFn = None, numTraining=100, epsilon=0.5,
-            alpha=0.5, gamma=1, **kwargs):
+    def __init__(self, index, actionFn = None, numTraining = 100, epsilon = 0.5,
+            alpha = 0.5, gamma = 1, **kwargs):
         """
-        actionFn: Function which takes a state and returns the list of legal actions
-
-        alpha - learning rate
-        epsilon - exploration rate
-        gamma - discount factor
-        numTraining - number of training episodes, i.e. no learning after these many episodes
+        Args:
+            actionFn: A function which takes a state and returns the list of legal actions.
+            alpha: The learning rate.
+            epsilon: The exploration rate.
+            gamma: The discount factor.
+            numTraining: The number of training episodes.
         """
         super().__init__(index)
 
@@ -46,28 +41,24 @@ class ReinforcementAgent(ValueEstimationAgent):
     @abc.abstractmethod
     def update(self, state, action, nextState, reward):
         """
-        This class will call this function, which you write, after
-        observing a transition and reward
+        This class will call this function after observing a transition and reward.
         """
 
         pass
 
     def getLegalActions(self, state):
         """
-        Get the actions available for a given
-        state. This is what you should use to
-        obtain legal actions for a state
+        Get the actions available for a given state.
+        This is what you should use to obtain legal actions for a state.
         """
 
         return self.actionFn(state)
 
     def observeTransition(self, state, action, nextState, deltaReward):
         """
-        Called by environment to inform agent that a transition has
-        been observed. This will result in a call to self.update
-        on the same arguments
-
-        NOTE: Do *not* override or call this function
+        Called by environment to inform agent that a transition has been observed.
+        This will result in a call to `ReinforcementAgent.update` on the same arguments.
+        You should not directly call this function (the environment will).
         """
 
         self.episodeRewards += deltaReward
@@ -75,7 +66,7 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def startEpisode(self):
         """
-        Called by environment when new episode is starting
+        Called by environment when a new episode is starting.
         """
 
         self.lastState = None
@@ -84,29 +75,25 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def stopEpisode(self):
         """
-        Called by environment when episode is done
+        Called by environment when an episode is done.
         """
 
-        if self.episodesSoFar < self.numTraining:
+        if (self.episodesSoFar < self.numTraining):
             self.accumTrainRewards += self.episodeRewards
         else:
             self.accumTestRewards += self.episodeRewards
 
         self.episodesSoFar += 1
-        if self.episodesSoFar >= self.numTraining:
-            # Take off the training wheels
-            self.epsilon = 0.0  # no exploration
-            self.alpha = 0.0  # no learning
+        if (self.episodesSoFar >= self.numTraining):
+            # Take off the training wheels.
+            self.epsilon = 0.0  # No exploration.
+            self.alpha = 0.0  # No learning.
 
     def isInTraining(self):
-        return self.episodesSoFar < self.numTraining
+        return (self.episodesSoFar < self.numTraining)
 
     def isInTesting(self):
         return not self.isInTraining()
-
-    ###############################
-    # Controls needed for Crawler #
-    ###############################
 
     def setEpsilon(self, epsilon):
         self.epsilon = epsilon
@@ -119,21 +106,15 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def doAction(self, state, action):
         """
-        Called by inherited class when
-        an action is taken in a state
+        Called by inherited class when an action is taken in a state.
         """
 
         self.lastState = state
         self.lastAction = action
 
-    ###################
-    # Pacman Specific #
-    ###################
-
     def observationFunction(self, state):
         """
         This is where we ended up after our last action.
-        The simulation should somehow ensure this is called
         """
 
         if self.lastState is not None:
@@ -147,28 +128,27 @@ class ReinforcementAgent(ValueEstimationAgent):
 
     def final(self, state):
         """
-        Called by Pacman game at the terminal state
+        Called by Pacman game at the terminal state.
         """
 
         deltaReward = state.getScore() - self.lastState.getScore()
         self.observeTransition(self.lastState, self.lastAction, state, deltaReward)
         self.stopEpisode()
 
-        # Make sure we have this var
-        if 'episodeStartTime' not in self.__dict__:
+        if ('episodeStartTime' not in self.__dict__):
             self.episodeStartTime = time.time()
 
-        if 'lastWindowAccumRewards' not in self.__dict__:
+        if ('lastWindowAccumRewards' not in self.__dict__):
             self.lastWindowAccumRewards = 0.0
 
         self.lastWindowAccumRewards += state.getScore()
 
         NUM_EPS_UPDATE = 100
-        if self.episodesSoFar % NUM_EPS_UPDATE == 0:
+        if (self.episodesSoFar % NUM_EPS_UPDATE == 0):
             logging.debug('Reinforcement Learning Status:')
             windowAvg = self.lastWindowAccumRewards / float(NUM_EPS_UPDATE)
 
-            if self.episodesSoFar <= self.numTraining:
+            if (self.episodesSoFar <= self.numTraining):
                 trainAvg = self.accumTrainRewards / float(self.episodesSoFar)
                 logging.debug('\tCompleted %d out of %d training episodes' %
                         (self.episodesSoFar, self.numTraining))
@@ -186,6 +166,6 @@ class ReinforcementAgent(ValueEstimationAgent):
             self.lastWindowAccumRewards = 0.0
             self.episodeStartTime = time.time()
 
-        if self.episodesSoFar == self.numTraining:
+        if (self.episodesSoFar == self.numTraining):
             msg = 'Training Done (turning off epsilon and alpha)'
             logging.debug('%s\n%s' % (msg, '-' * len(msg)))

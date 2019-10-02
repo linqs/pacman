@@ -4,8 +4,8 @@ from pacai.util import counter
 
 class DefensiveReflexAgent(ReflexCaptureAgent):
     """
-    A reflex agent that keeps its side Pacman-free.
-    Again, this is to give you an idea of what a defensive agent could be like.
+    A reflex agent that tries to keep its side Pacman-free.
+    This is to give you an idea of what a defensive agent could be like.
     It is not the best or only way to make such an agent.
     """
 
@@ -21,7 +21,7 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
 
         # Computes whether we're on defense (1) or offense (0).
         features['onDefense'] = 1
-        if myState.isPacman():
+        if (myState.isPacman()):
             features['onDefense'] = 0
 
         # Computes distance to invaders we can see.
@@ -29,15 +29,15 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
         invaders = [a for a in enemies if a.isPacman() and a.getPosition() is not None]
         features['numInvaders'] = len(invaders)
 
-        if len(invaders) > 0:
+        if (len(invaders) > 0):
             dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
             features['invaderDistance'] = min(dists)
 
-        if action == Directions.STOP:
+        if (action == Directions.STOP):
             features['stop'] = 1
 
         rev = Directions.REVERSE[gameState.getAgentState(self.index).getDirection()]
-        if action == rev:
+        if (action == rev):
             features['reverse'] = 1
 
         return features

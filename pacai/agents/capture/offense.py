@@ -3,8 +3,8 @@ from pacai.util import counter
 
 class OffensiveReflexAgent(ReflexCaptureAgent):
     """
-    A reflex agent that seeks food. This is an agent
-    we give you to get an idea of what an offensive agent might look like,
+    A reflex agent that seeks food.
+    This agent will give you an idea of what an offensive agent might look like,
     but it is by no means the best or only way to build an offensive agent.
     """
 
@@ -16,9 +16,11 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
         successor = self.getSuccessor(gameState, action)
         features['successorScore'] = self.getScore(successor)
 
-        # Compute distance to the nearest food
+        # Compute distance to the nearest food.
         foodList = self.getFood(successor).asList()
-        if len(foodList) > 0:  # This should always be True, but better safe than sorry
+
+        # This should always be True, but better safe than sorry.
+        if (len(foodList) > 0):
             myPos = successor.getAgentState(self.index).getPosition()
             minDistance = min([self.getMazeDistance(myPos, food) for food in foodList])
             features['distanceToFood'] = minDistance

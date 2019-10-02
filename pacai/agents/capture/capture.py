@@ -1,7 +1,3 @@
-"""
-Interfaces for capture agents and agent factories
-"""
-
 import abc
 
 from pacai.agents.base import BaseAgent
@@ -70,7 +66,8 @@ class CaptureAgent(BaseAgent):
 
         myState = gameState.getAgentState(self.index)
         myPos = myState.getPosition()
-        if myPos != util.nearestPoint(myPos):
+
+        if (myPos != util.nearestPoint(myPos)):
             # We're halfway from one position to the next.
             return gameState.getLegalActions(self.index)[0]
         else:
@@ -158,24 +155,20 @@ class CaptureAgent(BaseAgent):
 
     def getMazeDistance(self, pos1, pos2):
         """
-        Returns the distance between two points; These are calculated using the provided
-        distancer object.
-
-        If distancer.getMazeDistances() has been called, then maze distances are available.
-        Otherwise, this just returns Manhattan distance.
+        Returns the distance between two points using the builtin distancer.
         """
 
-        d = self.distancer.getDistance(pos1, pos2)
-        return d
+        return self.distancer.getDistance(pos1, pos2)
 
     def getPreviousObservation(self):
         """
-        Returns the GameState object corresponding to the last state this agent saw
-        (the observed state of the game last time this agent moved - this may not include
-        all of your opponent's agent locations exactly).
+        Returns the `pacai.core.gamestate.AbstractGameState` object corresponding to
+        the last state this agent saw.
+        That is the observed state of the game last time this agent moved,
+        this may not include all of your opponent's agent locations exactly.
         """
 
-        if len(self.observationHistory) == 1:
+        if (len(self.observationHistory) <= 1):
             return None
 
         return self.observationHistory[-2]
@@ -185,6 +178,14 @@ class CaptureAgent(BaseAgent):
         Returns the GameState object corresponding this agent's current observation
         (the observed state of the game - this may not include
         all of your opponent's agent locations exactly).
+
+        Returns the `pacai.core.gamestate.AbstractGameState` object corresponding to
+        this agent's current observation.
+        That is the observed state of the game last time this agent moved,
+        this may not include all of your opponent's agent locations exactly.
         """
+
+        if (len(self.observationHistory) == 0):
+            return None
 
         return self.observationHistory[-1]

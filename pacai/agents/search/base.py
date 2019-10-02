@@ -7,17 +7,16 @@ from pacai.util import reflection
 
 class SearchAgent(BaseAgent):
     """
-    This very general search agent finds a path using a supplied search algorithm for a
-    supplied search problem, then returns actions to follow that path.
+    A general search agent that finds a path using a supplied search algorithm for a
+    supplied search problem,
+    then returns actions to follow that path.
 
-    As a default, this agent runs DFS on a PositionSearchProblem to find location (1,1)
-
-    Options for fn include:
-        depthFirstSearch or dfs
-        breadthFirstSearch or bfs
+    As a default, this agent runs `pacai.student.search.depthFirstSearch` on a
+    `pacai.core.search.position.PositionSearchProblem` to find location (1, 1).
     """
 
-    def __init__(self, index, fn = 'pacai.core.search.search.dfs',
+    def __init__(self, index,
+            fn = 'pacai.student.search.depthFirstSearch',
             prob = 'pacai.core.search.position.PositionSearchProblem',
             heuristic = 'pacai.core.search.heuristic.null',
             **kwargs):
@@ -32,25 +31,26 @@ class SearchAgent(BaseAgent):
 
         # The actions the search produced.
         self._actions = []
+
         # The currentl action (from self._actions) that the agent is performing.
         self._actionIndex = 0
 
     def registerInitialState(self, state):
         """
-        This is the first time that the agent sees the layout of the game board. Here, we
-        choose a path to the goal. In this phase, the agent should compute the path to the
-        goal and store it in a local variable. All of the work is done in this method!
-
-        state: a GameState object (pacman.py)
+        This is the first time that the agent sees the layout of the game board.
+        Here, we choose a path to the goal.
+        In this phase, the agent should compute the path to the goal
+        and store it in a local variable.
+        All of the work is done in this method!
         """
 
         if (self.searchFunction is None):
-            raise Exception('No search function provided for SearchAgent')
+            raise Exception('No search function provided for SearchAgent.')
 
         starttime = time.time()
-        problem = self.searchType(state)  # Makes a new search problem
+        problem = self.searchType(state)  # Makes a new search problem.
 
-        self._actions = self.searchFunction(problem)  # Find a path
+        self._actions = self.searchFunction(problem)  # Find a path.
         self._actionIndex = 0
 
         totalCost = problem.actionsCost(self._actions)
@@ -66,8 +66,6 @@ class SearchAgent(BaseAgent):
         """
         Returns the next action in the path chosen earlier (in registerInitialState).
         Return Directions.STOP if there is no further action to take.
-
-        state: a GameState object (pacman.py)
         """
 
         if (self._actionIndex >= (len(self._actions))):
@@ -80,9 +78,9 @@ class SearchAgent(BaseAgent):
 
     def _fetchSearchFunction(self, functionName, heuristicName):
         """
-        Search specific modules for a function matching the given name.
+        Get the specified search function by name.
         If that function also takes a heurisitc (i.e. has a parameter called "heuristic"),
-        then return a lambda that binds the heuristic.
+        then return a lambda that binds the heuristic to the function.
         """
 
         # Locate the function.
