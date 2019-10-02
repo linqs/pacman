@@ -438,7 +438,7 @@ def readCommand(argv):
     logging.debug('Seed value: ' + str(seed))
 
     # Choose a layout.
-    args['layout'] = getLayout(options.layout)
+    args['layout'] = getLayout(options.layout, maxGhosts = options.numGhosts)
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
 

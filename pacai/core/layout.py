@@ -7,12 +7,14 @@ from pacai.core.grid import Grid
 # By default, the layout directory is adjacent to this file.
 DEFAULT_LAYOUT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'layouts')
 
+GHOST_NUMS = ['1', '2', '3', '4']
+
 class Layout(object):
     """
     A Layout manages the static information about the game board.
     """
 
-    def __init__(self, layoutText):
+    def __init__(self, layoutText, maxGhosts = None):
         self.width = len(layoutText[0])
         self.height = len(layoutText)
         self.walls = Grid(self.width, self.height, initialValue = False)
@@ -20,8 +22,9 @@ class Layout(object):
         self.capsules = []
         self.agentPositions = []
         self.numGhosts = 0
-        self.processLayoutText(layoutText)
         self.layoutText = layoutText
+
+        self.processLayoutText(layoutText, maxGhosts)
 
     def getNumGhosts(self):
         return self.numGhosts
@@ -75,7 +78,7 @@ class Layout(object):
     def deepCopy(self):
         return Layout(self.layoutText[:])
 
-    def processLayoutText(self, layoutText):
+    def processLayoutText(self, layoutText, maxGhosts):
         """
         Coordinates are flipped from the input format to the (x, y) convention here
 
@@ -95,27 +98,27 @@ class Layout(object):
         for y in range(self.height):
             for x in range(self.width):
                 layoutChar = layoutText[maxY - y][x]
-                self.processLayoutChar(x, y, layoutChar)
+                self.processLayoutChar(x, y, layoutChar, maxGhosts)
         self.agentPositions.sort()
         self.agentPositions = [(i == 0, pos) for i, pos in self.agentPositions]
 
-    def processLayoutChar(self, x, y, layoutChar):
-        if layoutChar == '%':
+    def processLayoutChar(self, x, y, layoutChar, maxGhosts):
+        if (layoutChar == '%'):
             self.walls[x][y] = True
-        elif layoutChar == '.':
+        elif (layoutChar == '.'):
             self.food[x][y] = True
-        elif layoutChar == 'o':
+        elif (layoutChar == 'o'):
             self.capsules.append((x, y))
-        elif layoutChar == 'P':
+        elif (layoutChar == 'P'):
             self.agentPositions.append((0, (x, y)))
-        elif layoutChar in ['G']:
+        elif (layoutChar in ['G'] and (maxGhosts is None or self.numGhosts < maxGhosts)):
             self.agentPositions.append((1, (x, y)))
             self.numGhosts += 1
-        elif layoutChar in ['1', '2', '3', '4']:
+        elif (layoutChar in GHOST_NUMS and (maxGhosts is None or self.numGhosts < maxGhosts)):
             self.agentPositions.append((int(layoutChar), (x, y)))
             self.numGhosts += 1
 
-def getLayout(name, layout_dir = DEFAULT_LAYOUT_DIR):
+def getLayout(name, layout_dir = DEFAULT_LAYOUT_DIR, maxGhosts = None):
     if (not name.endswith('.lay')):
         name += '.lay'
 
@@ -130,4 +133,4 @@ def getLayout(name, layout_dir = DEFAULT_LAYOUT_DIR):
             if (line != ''):
                 rows.append(line)
 
-    return Layout(rows)
+    return Layout(rows, maxGhosts)
