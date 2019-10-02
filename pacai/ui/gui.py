@@ -14,6 +14,11 @@ TK_BASE_NAME = 'pacai'
 DEATH_SLEEP_TIME = 0.5
 
 class AbstractGUIView(AbstractView):
+    """
+    Most of the functionality necessary to draw graphics in a window.
+    `tkinter` is used, so Tk must be installed on the machine.
+    """
+
     def __init__(self, fps = 0, title = 'pacai', **kwargs):
         super().__init__(**kwargs)
 

@@ -3,6 +3,10 @@ from pacai.ui.capture.view import CaptureAbstractView
 from pacai.ui.text import AbstractTextView
 
 class CaptureTextView(CaptureAbstractView, AbstractTextView):
+    """
+    A text view for capture.
+    """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

@@ -1,6 +1,10 @@
 from pacai.ui.view import AbstractView
 
 class AbstractNullView(AbstractView):
+    """
+    A view that does not output anything.
+    """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

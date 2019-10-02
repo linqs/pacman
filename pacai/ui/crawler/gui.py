@@ -8,6 +8,10 @@ from pacai.student.qlearningAgents import QLearningAgent
 from pacai.core.environment import Environment
 
 class CrawlingRobotEnvironment(Environment):
+    """
+    A GUI display for crawler.
+    """
+
     def __init__(self, crawlingRobot):
         self.crawlingRobot = crawlingRobot
 

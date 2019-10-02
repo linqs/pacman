@@ -4,7 +4,7 @@ A token represents any object that can be on a pacman board (including the walls
 A frame really consists of a collection of tokens.
 It is up to specific views to know how to interpret tokens into displayable objects.
 
-Internally, a token is just an int, so we can do math on them.
+Internally tokens are just ints, so we can do math on them.
 We typically reserve a range of numbers for some related type of tokens,
 like all walls or agents.
 Then, we establish some "base" tokens within each group,

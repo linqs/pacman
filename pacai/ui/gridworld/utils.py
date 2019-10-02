@@ -1,3 +1,7 @@
+"""
+Various graphics utilities for gridworld.
+"""
+
 import sys
 import time
 import tkinter

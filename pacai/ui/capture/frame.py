@@ -6,6 +6,11 @@ RED_TEXT_COLOR = (229, 0, 0)
 BLUE_TEXT_COLOR = (0, 76, 229)
 
 class CaptureFrame(Frame):
+    """
+    A frame specific to capture.
+    Capture frames understand how to properly color each side of the board.
+    """
+
     # Override
     def _getAgentBaseToken(self, x, y, agentIndex, state):
         if (state.getAgentState(agentIndex).isPacman()):

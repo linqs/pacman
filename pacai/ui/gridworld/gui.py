@@ -16,6 +16,10 @@ GRID_HEIGHT = -1
 MARGIN = -1
 
 class GraphicsGridworldDisplay(object):
+    """
+    A GUI display for gridworld.
+    """
+
     def __init__(self, gridworld, size=120, speed=1.0):
         self.gridworld = gridworld
         self.size = size

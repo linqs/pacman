@@ -4,6 +4,10 @@ from pacai.ui.frame import Frame
 TEXT_COLOR = (255, 255, 1)
 
 class PacmanFrame(Frame):
+    """
+    A frame specific to pacman.
+    """
+
     # Override
     def _getAgentBaseToken(self, x, y, agentIndex, state):
         if (state.getAgentState(agentIndex).isPacman()):

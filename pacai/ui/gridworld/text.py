@@ -7,6 +7,10 @@ ARROWS = {
 }
 
 class TextGridworldDisplay(object):
+    """
+    A text display for gridworld.
+    """
+
     def __init__(self, gridworld):
         self.gridworld = gridworld
 

@@ -2,6 +2,10 @@ from pacai.ui import token
 from pacai.ui.view import AbstractView
 
 class AbstractTextView(AbstractView):
+    """
+    A view that outputs to stdout.
+    """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
