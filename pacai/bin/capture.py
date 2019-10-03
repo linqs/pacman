@@ -601,15 +601,16 @@ def readCommand(argv):
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
-        if not val:
+        if (not val):
             continue
 
-        if numKeyboardAgents == 0:
-            agent = keyboard.WASDKeyboardAgent(index)
-        elif numKeyboardAgents == 1:
-            agent = keyboard.IJKLKeyboardAgent(index)
+        if (numKeyboardAgents == 0):
+            agent = keyboard.WASDKeyboardAgent(index, keyboard = args['display'].getKeyboard())
+        elif (numKeyboardAgents == 1):
+            agent = keyboard.IJKLKeyboardAgent(index, keyboard = args['display'].getKeyboard())
         else:
             raise ValueError('Max of two keyboard agents supported.')
+
         numKeyboardAgents += 1
         args['agents'][index] = agent
 

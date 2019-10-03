@@ -34,17 +34,17 @@ class Keyboard(object):
         Returns: a list of keys that have been pressed (in FIFO order).
         """
 
-        keys = []
+        returnKeys = []
         keepKeys = []
 
         for key in self._keys:
             if (queryKeys is None or key in queryKeys):
-                keys.append(key)
+                returnKeys.append(key)
             else:
                 keepKeys.append(key)
 
         self._keys = keepKeys
-        return keys
+        return returnKeys
 
     def _clear(self, event):
         self.clear()

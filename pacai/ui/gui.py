@@ -53,6 +53,7 @@ class AbstractGUIView(AbstractView):
         self._width = None
 
         self._dead = False
+        self._keyboard = None
 
     # Override
     def finish(self):
@@ -61,7 +62,11 @@ class AbstractGUIView(AbstractView):
         self._canvas.delete("all")
 
     def getKeyboard(self):
-        return Keyboard(self._root)
+        # tkinter is not good with multiple keybinds.
+        if (self._keyboard is None):
+            self._keyboard = Keyboard(self._root)
+
+        return self._keyboard
 
     # Override
     def initialize(self, state):
