@@ -56,7 +56,7 @@ class BaseKeyboardAgent(BaseAgent):
         Convert key presses into Directions (e.g. Directions.WEST).
         """
 
-        for key in keysPressed:
+        for key in reversed(keysPressed):
             for (direction, possibleKeys) in self._directionalKeys.items():
                 if (key in possibleKeys):
                     return direction
