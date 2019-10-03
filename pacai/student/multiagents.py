@@ -20,22 +20,21 @@ class ReflexAgent(BaseAgent):
         """
         You do not need to change this method, but you're welcome to.
 
-        getAction chooses among the best options according to the evaluation function.
+        `ReflexAgent.getAction` chooses among the best options according to the evaluation function.
 
-        Just like in the previous project, getAction takes a GameState and returns
-        some Directions.X for some X in the set {North, South, West, East, Stop}
+        Just like in the previous project, this method takes a
+        `pacai.core.gamestate.AbstractGameState` and returns some value from
+        `pacai.core.directions.Directions`.
         """
 
-        # Collect legal moves and successor states
+        # Collect legal moves.
         legalMoves = gameState.getLegalActions()
 
-        # Choose one of the best actions
+        # Choose one of the best actions.
         scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
         chosenIndex = random.choice(bestIndices)  # Pick randomly among the best.
-
-        # *** Add more of your code here if you want to ***
 
         return legalMoves[chosenIndex]
 
@@ -43,20 +42,15 @@ class ReflexAgent(BaseAgent):
         """
         Design a better evaluation function here.
 
-        The evaluation function takes in the current and proposed successor
-        GameStates (pacman.py) and returns a number, where higher numbers are better.
-
-        The code below extracts some useful information from the state, like the
-        remaining food (oldFood) and Pacman position after moving (newPos).
-        newScaredTimes holds the number of moves that each ghost will remain
-        scared because of Pacman having eaten a power pellet.
-
-        Print out these variables to see what you're getting, then combine them
-        to create a masterful evaluation function.
+        The evaluation function takes in the current `pacai.bin.pacman.PacmanGameState`
+        and an action, and returns a number, where higher numbers are better.
+        Make sure to understand the range of different values before you combine them
+        in your evaluation function.
         """
 
-        # Useful information you can extract from a GameState (pacman.py)
         successorGameState = currentGameState.generatePacmanSuccessor(action)
+
+        # Useful information you can extract.
         # newPosition = successorGameState.getPacmanPosition()
         # oldFood = currentGameState.getFood()
         # newGhostStates = successorGameState.getGhostStates()
@@ -68,28 +62,29 @@ class ReflexAgent(BaseAgent):
 
 class MinimaxAgent(MultiAgentSearchAgent):
     """
-    Your minimax agent (question 2)
+    A minimax agent.
 
     Here are some method calls that might be useful when implementing minimax.
 
-    gameState.getLegalActions(agentIndex):
-        Returns a list of legal actions for an agent
-        agentIndex=0 means Pacman, ghosts are >= 1
+    `pacai.core.gamestate.AbstractGameState.getNumAgents()`:
+    Get the total number of agents in the game
 
-    Directions.STOP:
-        The stop direction, which is always legal
+    `pacai.core.gamestate.AbstractGameState.getLegalActions`:
+    Returns a list of legal actions for an agent.
+    Pacman is always at index 0, and ghosts are >= 1.
 
-    gameState.generateSuccessor(agentIndex, action):
-        Returns the successor game state after an agent takes an action
+    `pacai.core.gamestate.AbstractGameState.generateSuccessor`:
+    Get the successor game state after an agent takes an action.
 
-    gameState.getNumAgents():
-        Returns the total number of agents in the game
+    `pacai.core.directions.Directions.STOP`:
+    The stop direction, which is always legal, but you may not want to include in your search.
 
     Method to Implement:
 
-    def getAction(self, gameState):
-        Returns the minimax action from the current gameState using self.treeDepth
-        and self.evaluationFunction.
+    `pacai.agents.base.BaseAgent.getAction`:
+    Returns the minimax action from the current gameState using
+    `pacai.agents.search.multiagent.MultiAgentSearchAgent.getTreeDepth`
+    and `pacai.agents.search.multiagent.MultiAgentSearchAgent.getEvaluationFunction`.
     """
 
     def __init__(self, index, **kwargs):
@@ -97,12 +92,14 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
-    Your minimax agent with alpha-beta pruning (question 3)
+    A minimax agent with alpha-beta pruning.
 
     Method to Implement:
 
-    def getAction(self, gameState):
-        Returns the minimax action using self.treeDepth and self.evaluationFunction
+    `pacai.agents.base.BaseAgent.getAction`:
+    Returns the minimax action from the current gameState using
+    `pacai.agents.search.multiagent.MultiAgentSearchAgent.getTreeDepth`
+    and `pacai.agents.search.multiagent.MultiAgentSearchAgent.getEvaluationFunction`.
     """
 
     def __init__(self, index, **kwargs):
@@ -110,15 +107,16 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
-    Your expectimax agent (question 4)
+    An expectimax agent.
 
-    All ghosts should be modeled as choosing uniformly at random from their
-    legal moves.
+    All ghosts should be modeled as choosing uniformly at random from their legal moves.
 
     Method to Implement:
 
-    def getAction(self, gameState):
-        Returns the expectimax action using self.treeDepth and self.evaluationFunction
+    `pacai.agents.base.BaseAgent.getAction`:
+    Returns the expectimax action from the current gameState using
+    `pacai.agents.search.multiagent.MultiAgentSearchAgent.getTreeDepth`
+    and `pacai.agents.search.multiagent.MultiAgentSearchAgent.getEvaluationFunction`.
     """
 
     def __init__(self, index, **kwargs):
@@ -126,29 +124,26 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
 
 def betterEvaluationFunction(currentGameState):
     """
-    Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
-    evaluation function (question 5).
+    Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable evaluation function.
 
     DESCRIPTION: <write something here so we know what you did>
     """
 
-    # *** Your Code Here ***
     return currentGameState.getScore()
 
 class ContestAgent(MultiAgentSearchAgent):
     """
-    Your agent for the mini-contest
+    Your agent for the mini-contest.
 
     You can use any method you want and search to any depth you want.
     Just remember that the mini-contest is timed, so you have to trade off speed and computation.
 
     Ghosts don't behave randomly anymore, but they aren't perfect either -- they'll usually
-    just make a beeline straight towards Pacman (or away from him if they're scared!)
+    just make a beeline straight towards Pacman (or away if they're scared!)
 
     Method to Implement:
 
-    def getAction(self, gameState):
-        Returns an action.
+    `pacai.agents.base.BaseAgent.getAction`
     """
 
     def __init__(self, index, **kwargs):

@@ -588,10 +588,13 @@ def readCommand(argv):
     logging.debug('Seed value: ' + str(seed))
 
     # Choose a pacman agent.
-    redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
+    redArgs = parseAgentArgs(options.redArgs)
+    blueArgs = parseAgentArgs(options.blueArgs)
+
     if options.numTraining > 0:
         redArgs['numTraining'] = options.numTraining
         blueArgs['numTraining'] = options.numTraining
+
     nokeyboard = options.textGraphics or options.nullGraphics or options.numTraining > 0
     logging.debug('\nRed team %s with %s:' % (options.red, redArgs))
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)

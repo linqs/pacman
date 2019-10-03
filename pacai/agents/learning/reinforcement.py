@@ -46,6 +46,15 @@ class ReinforcementAgent(ValueEstimationAgent):
 
         pass
 
+    def getAlpha(self):
+        return self.alpha
+
+    def getDiscountRate(self):
+        return self.discountRate
+
+    def getEpsilon(self):
+        return self.epsilon
+
     def getLegalActions(self, state):
         """
         Get the actions available for a given state.

@@ -22,7 +22,7 @@ class CornersProblem(SearchProblem):
     See the `pacai.core.search.position.PositionSearchProblem` class for an example of
     a working SearchProblem.
 
-    Methods to Implement:
+    Additional methods to implement:
 
     `pacai.core.search.problem.SearchProblem.startingState`:
     Returns the start state (in your search space,
@@ -192,7 +192,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
     You can use this search problem to help you fill in
     the `ClosestDotSearchAgent.findPathToClosestDot` method.
 
-    Methods to Implement:
+    Additional methods to implement:
 
     `pacai.core.search.position.PositionSearchProblem.isGoal`:
     The state is Pacman's position.
@@ -209,7 +209,7 @@ class ApproximateSearchAgent(BaseAgent):
     """
     Implement your contest entry here.
 
-    Methods to Implement:
+    Additional methods to implement:
 
     `pacai.agents.base.BaseAgent.getAction`:
     Get a `pacai.bin.pacman.PacmanGameState`
