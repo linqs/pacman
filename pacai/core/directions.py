@@ -32,7 +32,7 @@ class Directions:
 
     CARDINAL = [
         NORTH,
-        EAST,
         SOUTH,
+        EAST,
         WEST,
     ]

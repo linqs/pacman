@@ -86,8 +86,8 @@ def getWallToken(baseToken, hasWallN, hasWallE, hasWallS, hasWallW):
     """
 
     N_WALL = 1
-    E_WALL = 2
-    S_WALL = 4
+    S_WALL = 2
+    E_WALL = 4
     W_WALL = 8
 
     token = baseToken
