@@ -25,7 +25,7 @@ class QLearningAgent(ReinforcementAgent):
     `random.choice`:
     Pick randomly from a list.
 
-    Methods to Implement:
+    Additional methods to implement:
 
     `pacai.agents.base.BaseAgent.getAction`:
     Compute the action to take in the current state.
@@ -118,7 +118,7 @@ class ApproximateQAgent(PacmanQAgent):
     and `pacai.agents.learning.reinforcement.ReinforcementAgent.update`.
     All other `QLearningAgent` functions should work as is.
 
-    Methods to Implement:
+    Additional methods to implement:
 
     `QLearningAgent.getQValue`:
     Should return `Q(state, action) = w * featureVector`,
