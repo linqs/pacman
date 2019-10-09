@@ -55,6 +55,9 @@ class ReinforcementAgent(ValueEstimationAgent):
     def getEpsilon(self):
         return self.epsilon
 
+    def getGamma(self):
+        return self.discountRate
+
     def getLegalActions(self, state):
         """
         Get the actions available for a given state.
