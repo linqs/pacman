@@ -22,7 +22,7 @@ The original version of this project was written for Python 2, but it has since 
 **Q:** What dependencies do I need for this project?  
 **A:** This project has very limited dependencies.
 The pure Python dependencies can be installed via pip and are all listed in the requirements file.
-These can be installed via: `pip3 install -r requirements.txt`.
+These can be installed via: `pip3 install --user -r requirements.txt`.
 To use a GUI, you also need `Tk` installed.
 The process for installing Tk differs depending on your OS, instructions can be found [here](https://tkdocs.com/tutorial/install.html).
 
