@@ -25,7 +25,7 @@ class Distancer(object):
 
     def getMazeDistance(self):
         if self.layout.walls not in self.cache:
-            self.cache[self.layout.walls] = computeDistances(self.layout)
+            self.cache[self.layout.walls] = self.computeDistances(self.layout)
 
         self._distances = self.cache[self.layout.walls]
 
@@ -60,7 +60,7 @@ class Distancer(object):
 
         raise Exception("Position not in grid: " + str(key))
 
-    def getGrids2D(pos):
+    def getGrids2D(self, pos):
         grids = grid1Dx = grid1Dy = []
         intX = int(pos[0])
         intY = int(pos[1])
@@ -75,7 +75,7 @@ class Distancer(object):
                 grids.append(((x, y), xDistance + yDistance))
         return grids
 
-    def computeDistances(layout):
+    def computeDistances(self, layout):
 
         distances = {}
         allNodes = layout.walls.asList(False)
