@@ -5,7 +5,7 @@ from pacai.util import priorityQueue
 
 DEFAULT_DISTANCE = 10000
 
-class Distancer(Object):
+class Distancer(object):
     """
     This file contains a Distancer object which computes and
     caches the shortest path between any two points in a given maze.
@@ -23,36 +23,6 @@ class Distancer(Object):
         self.layout = layout
         self.cache = {}
 
-    def getMazeDistance(self):
-        if self.layout.walls not in self.cache:
-            self.cache[self.layout.walls] = computeDistances(self.layout)
-
-        self._distances = self.cache[self.layout.walls]
-
-    def getDistance(self, pos1, pos2):
-        """
-        The getDistance function is the only one you'll need after you create the object.
-        """
-
-        if (self._distances is None):
-            return manhattan(pos1, pos2)
-
-        if pos1[0] == int(pos1[0]) and pos1[1] == int(pos1[1]):
-            if pos2[0] == int(pos2[0]) and pos2[1] == int(pos2[1]):
-                return self.getDistanceOnGrid(pos1, pos2)
-
-        pos1Grids = getGrids2D(pos1)
-        pos2Grids = getGrids2D(pos2)
-        bestDistance = DEFAULT_DISTANCE
-
-        for pos1Snap, snap1Distance in pos1Grids:
-            for pos2Snap, snap2Distance in pos2Grids:
-                gridDistance = self.getDistanceOnGrid(pos1Snap, pos2Snap)
-                distance = gridDistance + snap1Distance + snap2Distance
-                if bestDistance > distance:
-                    bestDistance = distance
-        return bestDistance
-
     def getGrids2D(pos):
         grids = []
         for x, xDistance in getGrids1D(pos[0]):
@@ -65,13 +35,6 @@ class Distancer(Object):
         if x == int(x):
             return [(x, 0)]
         return [(intX, x - intX), (intX + 1, intX + 1 - x)]
-
-    def getDistanceOnGrid(self, pos1, pos2):
-        key = (pos1, pos2)
-        if key in self._distances:
-            return self._distances[key]
-
-        raise Exception("Position not in grid: " + str(key))
 
     def computeDistances(layout):
 
@@ -125,3 +88,40 @@ class Distancer(Object):
                 distances[(target, source)] = dist[target]
 
         return distances
+    
+    def getMazeDistance(self):
+        if self.layout.walls not in self.cache:
+            self.cache[self.layout.walls] = computeDistances(self.layout)
+
+        self._distances = self.cache[self.layout.walls]
+
+    def getDistance(self, pos1, pos2):
+        """
+        The getDistance function is the only one you'll need after you create the object.
+        """
+
+        if (self._distances is None):
+            return manhattan(pos1, pos2)
+
+        if pos1[0] == int(pos1[0]) and pos1[1] == int(pos1[1]):
+            if pos2[0] == int(pos2[0]) and pos2[1] == int(pos2[1]):
+                return self.getDistanceOnGrid(pos1, pos2)
+
+        pos1Grids = getGrids2D(pos1)
+        pos2Grids = getGrids2D(pos2)
+        bestDistance = DEFAULT_DISTANCE
+
+        for pos1Snap, snap1Distance in pos1Grids:
+            for pos2Snap, snap2Distance in pos2Grids:
+                gridDistance = self.getDistanceOnGrid(pos1Snap, pos2Snap)
+                distance = gridDistance + snap1Distance + snap2Distance
+                if bestDistance > distance:
+                    bestDistance = distance
+        return bestDistance
+    
+   def getDistanceOnGrid(self, pos1, pos2):
+        key = (pos1, pos2)
+        if key in self._distances:
+            return self._distances[key]
+
+        raise Exception("Position not in grid: " + str(key))
