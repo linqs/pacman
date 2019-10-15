@@ -12,7 +12,6 @@ from pacai.student.qlearningAgents import QLearningAgent
 from pacai.student.valueIterationAgent import ValueIterationAgent
 from pacai.ui.gridworld.text import TextGridworldDisplay
 from pacai.ui.gridworld.utils import wait_for_keys
-from pacai.util.counter import Counter
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 
@@ -168,12 +167,15 @@ class Gridworld(MarkovDecisionProcess):
         return successors
 
     def __aggregate(self, statesAndProbs):
-        counter = Counter()
+        counter = {}
         for state, prob in statesAndProbs:
-            counter[state] += prob
+            if state in counter:
+                counter[state] += prob
+            else:
+                counter[state] = prob
 
         newStatesAndProbs = []
-        for state, prob in list(counter.items()):
+        for state, prob in counter.items():
             newStatesAndProbs.append((state, prob))
 
         return newStatesAndProbs
