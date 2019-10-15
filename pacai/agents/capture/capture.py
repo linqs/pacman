@@ -40,7 +40,7 @@ class CaptureAgent(BaseAgent):
         self.red = gameState.isOnRedTeam(self.index)
         self.distancer = distanceCalculator.Distancer(gameState.getInitialLayout())
 
-        self.distancer.getMazeDistances()
+        self.distancer.getMazeDistance()
 
     def final(self, gameState):
         self.observationHistory = []
