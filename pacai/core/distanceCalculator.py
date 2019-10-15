@@ -61,19 +61,19 @@ class Distancer(object):
         raise Exception("Position not in grid: " + str(key))
 
     def getGrids2D(pos):
-        grids = []
-        grid1Dx = self.getGrids1D(pos[0])
-        grid1Dy = self.getGrids1D(pos[1])
+        grids = grid1Dx = grid1Dy = []
+        intX = int(pos[0])
+        intY = int(pos[1])
+        if pos[0] == intX:
+            grid1Dx = [(pos[0], 0)]
+        grid1Dx = [(intX, pos[0] - intX), (intX + 1, intX + 1 - pos[0])]
+        if pos[1] == intY:
+            grid1Dy = [(pos[1], 0)]
+        grid1Dy = [(intY, pos[1] - intY), (intY + 1, intY + 1 - pos[1])]
         for x, xDistance in grid1Dx:
             for y, yDistance in grid1Dy:
                 grids.append(((x, y), xDistance + yDistance))
         return grids
-
-    def getGrids1D(x):
-        intX = int(x)
-        if x == int(x):
-            return [(x, 0)]
-        return [(intX, x - intX), (intX + 1, intX + 1 - x)]
 
     def computeDistances(layout):
 
