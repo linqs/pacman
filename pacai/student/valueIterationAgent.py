@@ -1,5 +1,4 @@
 from pacai.agents.learning.value import ValueEstimationAgent
-from pacai.util import counter
 
 class ValueIterationAgent(ValueEstimationAgent):
     """
@@ -44,7 +43,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discountRate = discountRate
         self.iters = iters
-        self.values = counter.Counter()  # A Counter is a dict with default 0
+        self.values = {}  # A dict to store Q-values for a state
 
         """
         Description:

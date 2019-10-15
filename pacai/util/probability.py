@@ -1,26 +1,23 @@
 import random
 
-from pacai.util import counter
-
-def normalize(vectorOrCounter):
+def normalize(vectorOrDict):
     """
-    normalize a vector or counter by dividing each value by the sum of all values
+    normalize a vector or dict by dividing each value by the sum of all values
     """
 
-    normalizedCounter = counter.Counter()
-    if type(vectorOrCounter) == type(normalizedCounter):
-        counterContainer = vectorOrCounter
-        total = float(counterContainer.totalCount())
+    if type(vectorOrDict) == dict:
+        normalizedDict = {}
+        dictContainer = vectorOrDict
+        total = float(sum(dictContainer.values()))
         if total == 0:
-            return counterContainer
+            return dictContainer
 
-        for key in list(counter.keys()):
-            value = counter[key]
-            normalizedCounter[key] = value / total
+        for key, value in dictContainer.items():
+            normalizedDict[key] = value / total
 
-        return normalizedCounter
+        return normalizedDict
     else:
-        vector = vectorOrCounter
+        vector = vectorOrDict
         s = float(sum(vector))
         if s == 0:
             return vector
@@ -46,7 +43,7 @@ def nSample(distribution, values, n):
     return samples
 
 def sample(distribution, values = None):
-    if type(distribution) == counter.Counter:
+    if type(distribution) == dict:
         items = sorted(list(distribution.items()))
         distribution = [i[1] for i in items]
         values = [i[0] for i in items]
@@ -64,8 +61,8 @@ def sample(distribution, values = None):
 
     return values[i]
 
-def sampleFromCounter(ctr):
-    items = sorted(list(ctr.items()))
+def sampleFromDict(dict):
+    items = sorted(list(dict.items()))
     return sample([v for k, v in items], [k for k, v in items])
 
 def getProbability(value, distribution, values):
@@ -87,10 +84,10 @@ def flipCoin(p):
 
 def chooseFromDistribution(distribution):
     """
-    Takes either a counter or a list of (prob, key) pairs and samples
+    Takes either a dict or a list of (prob, key) pairs and samples
     """
 
-    if type(distribution) == dict or type(distribution) == counter.Counter:
+    if type(distribution) == dict:
         return sample(distribution)
 
     r = random.random()

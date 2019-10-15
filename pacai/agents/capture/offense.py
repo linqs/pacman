@@ -1,5 +1,4 @@
 from pacai.agents.capture.reflex import ReflexCaptureAgent
-from pacai.util import counter
 
 class OffensiveReflexAgent(ReflexCaptureAgent):
     """
@@ -12,7 +11,7 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
         super().__init__(index)
 
     def getFeatures(self, gameState, action):
-        features = counter.Counter()
+        features = {}
         successor = self.getSuccessor(gameState, action)
         features['successorScore'] = self.getScore(successor)
 

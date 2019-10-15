@@ -3,7 +3,6 @@ import random
 import time
 
 from pacai.agents.capture.capture import CaptureAgent
-from pacai.util import counter
 from pacai.util import util
 
 class ReflexCaptureAgent(CaptureAgent):
@@ -51,14 +50,14 @@ class ReflexCaptureAgent(CaptureAgent):
         features = self.getFeatures(gameState, action)
         weights = self.getWeights(gameState, action)
 
-        return features * weights
+        return sum([features[feature] * weights[feature] for feature in features])
 
     def getFeatures(self, gameState, action):
         """
         Returns a counter of features for the state
         """
 
-        features = counter.Counter()
+        features = {}
         successor = self.getSuccessor(gameState, action)
         features['successorScore'] = self.getScore(successor)
 

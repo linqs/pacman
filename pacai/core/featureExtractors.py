@@ -7,7 +7,6 @@ from pacai.core.actions import Actions
 from pacai.core.directions import Directions
 from pacai.core.search.problem import SearchProblem
 from pacai.student import search
-from pacai.util import counter
 
 class FeatureExtractor(abc.ABC):
     @abc.abstractmethod
@@ -22,7 +21,7 @@ class FeatureExtractor(abc.ABC):
 
 class IdentityExtractor(FeatureExtractor):
     def getFeatures(self, state, action):
-        feats = counter.Counter()
+        feats = {}
         feats[(state, action)] = 1.0
 
         return feats
@@ -42,7 +41,7 @@ class SimpleExtractor(FeatureExtractor):
         walls = state.getWalls()
         ghosts = state.getGhostPositions()
 
-        features = counter.Counter()
+        features = {}
 
         features["bias"] = 1.0
 
