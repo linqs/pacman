@@ -52,19 +52,18 @@ class Distancer(object):
                 if bestDistance > distance:
                     bestDistance = distance
         return bestDistance
-    
+
     def getDistanceOnGrid(self, pos1, pos2):
         key = (pos1, pos2)
         if key in self._distances:
             return self._distances[key]
 
         raise Exception("Position not in grid: " + str(key))
-        
-      
+
     def getGrids2D(pos):
         grids = []
-        for x, xDistance in self.getGrids1D(pos[0]):
-            for y, yDistance in self.getGrids1D(pos[1]):
+        for x, xDistance in getGrids1D(pos[0]):
+            for y, yDistance in getGrids1D(pos[1]):
                 grids.append(((x, y), xDistance + yDistance))
         return grids
 
