@@ -25,7 +25,7 @@ class Distancer(object):
 
     def getMazeDistance(self):
         if self.layout.walls not in self.cache:
-            self.cache[self.layout.walls] = self.computeDistances(self.layout)
+            self.cache[self.layout.walls] = computeDistances(self.layout)
 
         self._distances = self.cache[self.layout.walls]
 
