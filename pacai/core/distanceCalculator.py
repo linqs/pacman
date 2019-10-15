@@ -62,8 +62,10 @@ class Distancer(object):
 
     def getGrids2D(pos):
         grids = []
-        for x, xDistance in self.getGrids1D(pos[0]):
-            for y, yDistance in self.getGrids1D(pos[1]):
+        grid1Dx = self.getGrids1D(pos[0])
+        grid1Dy = self.getGrids1D(pos[1])
+        for x, xDistance in grid1Dx:
+            for y, yDistance in grid1Dy:
                 grids.append(((x, y), xDistance + yDistance))
         return grids
 
