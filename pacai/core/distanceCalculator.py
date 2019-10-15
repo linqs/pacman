@@ -119,7 +119,7 @@ class Distancer(object):
                     bestDistance = distance
         return bestDistance
     
-   def getDistanceOnGrid(self, pos1, pos2):
+    def getDistanceOnGrid(self, pos1, pos2):
         key = (pos1, pos2)
         if key in self._distances:
             return self._distances[key]
