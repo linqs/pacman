@@ -1,27 +1,9 @@
 """
-Pacman.py holds the logic for the classic pacman game along with the main code to run a game.
-This file is divided into three sections:
-
-(i) Your interface to the pacman world:
-Pacman is a complex environment.
-You probably don't want to read through all of the code we wrote to make the game runs correctly.
-This section contains the parts of the code that you will need to understand in order to complete
-the project.
-There is also some code in game.py that you should understand.
-
-(ii) The hidden secrets of pacman:
-This section contains the logic code that the pacman environment uses to decide who can move where,
-who dies when things collide, etc.
-You shouldn't need to read this section of code, but you can if you want.
-
-(iii) Framework to start a game:
-The final section contains the code for reading the command you use to set up the game,
-then starting up a new game, along with linking in all the external parts
-(agent functions, graphics).
-Check this section out to see all the options available to you.
+This file holds the logic for a classic pacman game along with the main code to run a game.
 
 To play your first game, type 'python -m pacai.bin.pacman' from the command line.
-The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).
+Use WASD (or the arrow keys) to move.
+
 Have fun!
 """
 
@@ -41,6 +23,8 @@ from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.layout import getLayout
+from pacai.ui.pacman.null import PacmanNullView
+from pacai.ui.pacman.text import PacmanTextView
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.util import nearestPoint
@@ -157,6 +141,8 @@ class PacmanGameState(AbstractGameState):
 
         # Book keeping.
         self._lastAgentMoved = agentIndex
+
+        self._hash = None
 
 class ClassicGameRules(object):
     """
@@ -424,11 +410,6 @@ def readCommand(argv):
             help = 'comma separated arguments to be passed to agents (e.g. \'opt1=val1,opt2\')'
                 + '(default: %(default)s)')
 
-    parser.add_argument('--frame-time', dest = 'frameTime',
-            action = 'store', type = float, default = 0.1,
-            help = 'time to delay between frames, less than zero means keyboard agent'
-                + '(default: %(default)s)')
-
     parser.add_argument('--timeout', dest = 'timeout',
             action = 'store', type = int, default = 30,
             help = 'maximum time limit (seconds) an agent can spend computing per game '
@@ -457,14 +438,13 @@ def readCommand(argv):
     logging.debug('Seed value: ' + str(seed))
 
     # Choose a layout.
-    args['layout'] = getLayout(options.layout)
+    args['layout'] = getLayout(options.layout, maxGhosts = options.numGhosts)
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
 
-    # TODO(eriq): There are multiple keyboard agents.
     # Choose a Pacman agent.
     noKeyboard = (options.replay is None and (options.textGraphics or options.nullGraphics))
-    if (noKeyboard and options.pacman == 'WASDKeyboardAgent'):
+    if (noKeyboard and ('KeyboardAgent' in options.pacman)):
         raise ValueError('Keyboard agents require graphics.')
 
     agentOpts = parseAgentArgs(options.agentArgs)
@@ -473,36 +453,38 @@ def readCommand(argv):
         if 'numTraining' not in agentOpts:
             agentOpts['numTraining'] = options.numTraining
 
-    args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
-
     # Don't display training games.
     if 'numTrain' in agentOpts:
         options.numQuiet = int(agentOpts['numTrain'])
         options.numIgnore = int(agentOpts['numTrain'])
 
-    # Choose a ghost agent.
-    args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
+    viewOptions = {
+        'gifFPS': options.gifFPS,
+        'gifPath': options.gif,
+        'skipFrames': options.gifSkipFrames,
+        'spritesPath': options.spritesPath,
+    }
 
     # Choose a display format.
     if options.nullGraphics:
-        import pacai.ui.textDisplay
-        args['display'] = pacai.ui.textDisplay.NullGraphics()
+        args['display'] = PacmanNullView(**viewOptions)
     elif options.textGraphics:
-        import pacai.ui.textDisplay
-        pacai.ui.textDisplay.SLEEP_TIME = options.frameTime
-        args['display'] = pacai.ui.textDisplay.PacmanGraphics()
+        args['display'] = PacmanTextView(**viewOptions)
     else:
-        import pacai.ui.graphicsDisplay
-        args['display'] = pacai.ui.graphicsDisplay.PacmanGraphics(options.zoom,
-                frameTime = options.frameTime,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
-                gif_fps = options.gifFPS)
+        # Defer importing the GUI unless we actually need it.
+        # This allows people to not have tkinter installed.
+        from pacai.ui.pacman.gui import PacmanGUIView
 
-    args['numGames'] = options.numGames
-    args['record'] = options.record
+        args['display'] = PacmanGUIView(fps = options.fps, title = 'Pacman', **viewOptions)
+        agentOpts['keyboard'] = args['display'].getKeyboard()
+
     args['catchExceptions'] = options.catchExceptions
-    args['timeout'] = options.timeout
     args['gameToReplay'] = options.replay
+    args['ghosts'] = [BaseAgent.loadAgent(options.ghost, i + 1) for i in range(options.numGhosts)]
+    args['numGames'] = options.numGames
+    args['pacman'] = BaseAgent.loadAgent(options.pacman, PACMAN_AGENT_INDEX, agentOpts)
+    args['record'] = options.record
+    args['timeout'] = options.timeout
 
     return args
 
@@ -531,24 +513,27 @@ def replayGame(layout, actions, display):
 
 def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraining = 0,
         catchExceptions = False, timeout = 30, **kwargs):
-    import __main__
-    __main__.__dict__['_display'] = display
-
     rules = ClassicGameRules(timeout)
     games = []
 
+    nullView = None
+    if (numTraining > 0):
+        logging.info('Playing %d training games.' % numTraining)
+        nullView = PacmanNullView()
+
     for i in range(numGames):
-        beQuiet = (i < numTraining)
-        if beQuiet:
-            # Suppress output and graphics
-            import pacai.ui.textDisplay
-            gameDisplay = pacai.ui.textDisplay.NullGraphics()
+        isTraining = (i < numTraining)
+
+        if (isTraining):
+            # Suppress graphics for training.
+            gameDisplay = nullView
         else:
             gameDisplay = display
 
         game = rules.newGame(layout, pacman, ghosts, gameDisplay, catchExceptions)
         game.run()
-        if (not beQuiet):
+
+        if (not isTraining):
             games.append(game)
 
         if (record):
@@ -560,7 +545,7 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
             with open(path, 'wb') as file:
                 pickle.dump(components, file)
 
-    if (numGames - numTraining) > 0:
+    if ((numGames - numTraining) > 0):
         scores = [game.state.getScore() for game in games]
         wins = [game.state.isWin() for game in games]
         winRate = wins.count(True) / float(len(wins))
@@ -573,16 +558,8 @@ def runGames(layout, pacman, ghosts, display, numGames, record = None, numTraini
 
 def main(argv):
     """
-    The main function called when pacman.py is run
-    from the command line:
-
-    > python pacman.py
-
-    See the usage string for more details.
-
-    > python pacman.py --help
-
-    argv already has the executable stripped.
+    Entry point for a pacman game.
+    The args are a blind pass of `sys.argv` with the executable stripped.
     """
 
     initLogging()

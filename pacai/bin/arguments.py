@@ -1,6 +1,8 @@
 import argparse
 import textwrap
 
+from pacai.ui import view
+
 def getParser(description, name):
     """
     Loads common arguments between pacman and capture.
@@ -29,17 +31,22 @@ def getParser(description, name):
             action = 'store_true', default = False,
             help = 'turns on exception handling and timeouts during games (default: %(default)s)')
 
+    parser.add_argument('--fps', dest = 'fps',
+            action = 'store', type = float, default = 15,
+            help = 'cap the game to this fps, at zero frames will be animated as fast as possible'
+                + '(default: %(default)s)')
+
     parser.add_argument('--gif', dest = 'gif',
-            action = 'store_true', default = False,
+            action = 'store', type = str, default = None,
             help = 'save the game as a gif to the specified path (default: %(default)s)')
 
     parser.add_argument('--gif-fps', dest = 'gifFPS',
-            action = 'store', type = float, default = 10.0,
+            action = 'store', type = int, default = view.DEFAULT_GIF_FPS,
             help = 'set the fps of the gif (default: %(default)s)')
 
     parser.add_argument('--gif-skip-frames', dest = 'gifSkipFrames',
-            action = 'store', type = int, default = 0,
-            help = 'skip this number of frames between frames of the gif (default: %(default)s)')
+            action = 'store', type = int, default = view.DEFAULT_SKIP_FRAMES,
+            help = 'skip X actual frames between each frame of the gif (default: %(default)s)')
 
     parser.add_argument('--null-graphics', dest = 'nullGraphics',
             action = 'store_true', default = False,
@@ -57,12 +64,12 @@ def getParser(description, name):
             action = 'store', type = str, default = None,
             help = 'load a recorded pickle game file to replay (default: %(default)s)')
 
+    parser.add_argument('--sprites', dest = 'spritesPath',
+            action = 'store', type = str, default = view.DEFAULT_SPRITES,
+            help = 'use the specified spritesheet for graphics (default: %(default)s)')
+
     parser.add_argument('--text-graphics', dest = 'textGraphics',
             action = 'store_true', default = False,
             help = 'display output as text only (default: %(default)s)')
-
-    parser.add_argument('--zoom', dest = 'zoom',
-            action = 'store', type = float, default = 1.0,
-            help = 'zoom the size of the graphics window (default: %(default)s)')
 
     return parser

@@ -16,7 +16,7 @@ class UITest(unittest.TestCase):
             '-w', '0.01',
             'python3',
             '-m', 'pacai.bin.pacman',
-            '--frame-time=0.001',
+            '--fps=1000',
             '-p', 'GreedyAgent',
         ]
 
@@ -32,6 +32,7 @@ class UITest(unittest.TestCase):
             '-w', '0.01',
             'python3',
             '-m', 'pacai.bin.capture',
+            '--fps=1000',
         ]
 
         subprocess.run(args, shell = False, check = True)

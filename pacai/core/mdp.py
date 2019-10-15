@@ -29,14 +29,11 @@ class MarkovDecisionProcess(abc.ABC):
     @abc.abstractmethod
     def getTransitionStatesAndProbs(self, state, action):
         """
-        Returns list of (nextState, prob) pairs
-        representing the states reachable
-        from 'state' by taking 'action' along
-        with their transition probabilities.
+        Returns list of (nextState, prob) pairs representing the states reachable
+        from 'state' by taking 'action' along with their transition probabilities.
 
-        Note that in Q-Learning and reinforcment
-        learning in general, we do not know these
-        probabilities nor do we directly model them.
+        Note that in Q-Learning and reinforcment learning in general,
+        we do not know these probabilities nor do we directly model them.
         """
 
         pass
@@ -58,8 +55,7 @@ class MarkovDecisionProcess(abc.ABC):
         By convention, a terminal state has zero future rewards.
         Sometimes the terminal state(s) may have no possible actions.
         It is also common to think of the terminal state as having
-        a self-loop action 'pass' with zero reward; the formulations
-        are equivalent.
+        a self-loop action 'pass' with zero reward; the formulations are equivalent.
         """
 
         pass

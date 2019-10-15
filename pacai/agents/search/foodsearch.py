@@ -5,10 +5,11 @@ from pacai.student import searchAgents
 
 class AStarFoodSearchAgent(SearchAgent):
     """
-    A SearchAgent for FoodSearchProblem using A* and your foodHeuristic
+    A search agent for `pacai.core.search.food.FoodSearchProblem using A*
+    and `pacai.student.searchAgents.foodHeuristic`.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
         self.searchFunction = lambda prob: search.astar(prob, searchAgents.foodHeuristic)

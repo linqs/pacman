@@ -6,7 +6,7 @@ class GoWestAgent(BaseAgent):
     An agent that goes West until it can't.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def getAction(self, state):

@@ -1,21 +1,21 @@
-"""
-Interfaces for capture agents and agent factories
-"""
-
-import random
 import time
 
-from pacai.agents.base import BaseAgent
+from pacai.agents.random import RandomAgent
 
-class TimeoutAgent(BaseAgent):
+DEFAULT_TIMEOUT_SEC = 2
+
+class TimeoutAgent(RandomAgent):
     """
-    A random agent that takes too much time. Taking
-    too much time results in penalties and random moves.
+    A random agent that takes too much time.
+    Taking too much time results in penalties and random moves.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, timeout = DEFAULT_TIMEOUT_SEC, **kwargs):
         super().__init__(index)
 
+        self._timeout = timeout
+
     def getAction(self, state):
-        time.sleep(2.0)
-        return random.choice(state.getLegalActions(self.index))
+        time.sleep(self._timeout)
+
+        return super().getAction(state)

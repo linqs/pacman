@@ -3,8 +3,6 @@ class Grid:
     A 2-dimensional array of objects backed by a list of lists.
     Data is accessed via grid[x][y] where (x, y) are positions on a Pacman map with x horizontal,
     y vertical and the origin (0, 0) in the bottom left corner.
-
-    The __str__ method constructs an output that is oriented like a pacman board.
     """
 
     def __init__(self, width, height, initialValue = False):

@@ -5,47 +5,28 @@ from pacai.agents.capture.capture import CaptureAgent
 class DummyAgent(CaptureAgent):
     """
     A Dummy agent to serve as an example of the necessary agent structure.
-    You should look at pacai.core.baselineTeam.py for more details about how to
-    create an agent as this is the bare minimum.
+    You should look at `pacai.core.baselineTeam` for more details about how to create an agent.
     """
 
-    def __init__(self, index):
+    def __init__(self, index, **kwargs):
         super().__init__(index)
 
     def registerInitialState(self, gameState):
         """
-        This method handles the initial setup of the
-        agent to populate useful fields (such as what team
-        we're on).
+        This method handles the initial setup of the agent and populates useful fields,
+        such as the team the agent is on and the `pacai.core.distanceCalculator.Distancer`.
 
-        A distanceCalculator instance caches the maze distances
-        between each pair of positions, so your agents can use:
-        self.distancer.getDistance(p1, p2)
-
-        IMPORTANT: This method may run for at most 15 seconds.
+        IMPORTANT: If this method runs for more than 15 seconds, your agent will time out.
         """
 
-        """
-        Make sure you do not delete the following line. If you would like to
-        use Manhattan distances instead of maze distances in order to save
-        on initialization time, please take a look at
-        CaptureAgent.registerInitialState.
-        """
+        super().registerInitialState(gameState)
 
-        CaptureAgent.registerInitialState(self, gameState)
-
-        """
-        Your initialization code goes here, if you need any.
-        """
+        # Your initialization code goes here, if you need any.
 
     def chooseAction(self, gameState):
         """
-        Picks among actions randomly.
+        Randomly pick an action.
         """
+
         actions = gameState.getLegalActions(self.index)
-
-        """
-        You should change this in your own agent.
-        """
-
         return random.choice(actions)

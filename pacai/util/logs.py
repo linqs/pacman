@@ -9,7 +9,7 @@ def initLogging(logging_level = logging.INFO):
 
 def updateLoggingLevel(logging_level):
     """
-    Update the logging level.
+    Updates the logging level.
     """
 
     logger = logging.getLogger()

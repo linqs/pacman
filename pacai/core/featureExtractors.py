@@ -1,14 +1,19 @@
-# Feature extractors for Pacman game states and a private search problem to find
-# the closest food.
+"""
+Feature extractors for game states.
+"""
 
 import abc
 
 from pacai.core.actions import Actions
-from pacai.core.directions import Directions
-from pacai.core.search.problem import SearchProblem
-from pacai.student import search
+from pacai.core.search import search
+from pacai.student.searchAgents import AnyFoodSearchProblem
 
 class FeatureExtractor(abc.ABC):
+    """
+    A class that takes a `pacai.core.gamestate.AbstractGameState` and `pacai.core.actions.Actions`,
+    and returns a dict of features.
+    """
+
     @abc.abstractmethod
     def getFeatures(self, state, action):
         """
@@ -28,11 +33,7 @@ class IdentityExtractor(FeatureExtractor):
 
 class SimpleExtractor(FeatureExtractor):
     """
-    Returns simple features for a basic reflex Pacman:
-        - whether food will be eaten
-        - how far away the next food is
-        - whether a ghost collision is imminent
-        - whether a ghost is one step away
+    Returns simple features for a basic reflex Pacman.
     """
 
     def getFeatures(self, state, action):
@@ -58,67 +59,11 @@ class SimpleExtractor(FeatureExtractor):
         if not features["#-of-ghosts-1-step-away"] and food[next_x][next_y]:
             features["eats-food"] = 1.0
 
-        dist = _closestFood((next_x, next_y), food, walls)
+        prob = AnyFoodSearchProblem(state, start = (next_x, next_y))
+        dist = len(search.bfs(prob))
         if dist is not None:
             # Make the distance a number less than one otherwise the update will diverge wildly.
             features["closest-food"] = float(dist) / (walls.getWidth() * walls.getHeight())
 
         features.divideAll(10.0)
         return features
-
-def _closestFood(pos, food, walls):
-    """
-    closestFood -- this is similar to the function that we have
-    worked on in the search project; here its all in one place
-    """
-
-    x1, y1 = pos
-
-    assert not walls[x1][y1]
-
-    prob = _ClosestFoodSearchProblem(pos, food, walls)
-    return len(search.bfs(prob))
-
-class _ClosestFoodSearchProblem(SearchProblem):
-    """
-    A private search problem associated with finding the closest food
-    from an initial position on the map.
-
-    Search State: a tuple (x,y) representing the current position in the
-    search
-    """
-
-    # Search problem requires the initial position to search from, the food
-    # and walls on the map
-    def __init__(self, initPos, food, walls):
-        self._start = initPos
-        self._foodGrid = food
-        self._walls = walls
-
-    def startingState(self):
-        return self._start
-
-    # Goal state is where the current position is at the same location as food
-    def isGoal(self, state):
-        return self._foodGrid[state[0]][state[1]]
-
-    def successorStates(self, state):
-        successors = []
-        for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x, y = state
-            dx, dy = Actions.directionToVector(direction)
-            nextx, nexty = int(x + dx) + int(y + dy)
-            if not self._walls[nextx][nexty]:
-                successors.append((nextx, nexty))
-        return successors
-
-    def actionsCost(self, actions):
-        x, y = self._start
-        cost = 0
-        for action in actions:
-            dx, dy = Actions.directionToVector(action)
-            x, y = int(x + dx) + int(y + dy)
-            if self._walls[x][y]:
-                return 999999
-            cost += 1
-        return cost

@@ -24,7 +24,7 @@ class Environment(abc.ABC):
         Performs the given action in the current
         environment state and updates the enviornment.
 
-        Returns a (reward, nextState) pair
+        Returns a (reward, nextState) pair.
         """
 
         pass
@@ -32,7 +32,7 @@ class Environment(abc.ABC):
     @abc.abstractmethod
     def reset(self):
         """
-        Resets the current state to the start state
+        Resets the current state to the start state.
         """
 
         pass

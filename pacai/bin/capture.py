@@ -1,48 +1,28 @@
 """
-Capture.py holds the logic for Pacman capture the flag.
-
-    (i) Your interface to the pacman world:
-                    Pacman is a complex environment. You probably don't want to
-                    read through all of the code we wrote to make the game runs
-                    correctly. This section contains the parts of the code
-                    that you will need to understand in order to complete the
-                    project. There is also some code in game.py that you should
-                    understand.
-
-    (ii) The hidden secrets of pacman:
-                    This section contains all of the logic code that the pacman
-                    environment uses to decide who can move where, who dies when
-                    things collide, etc. You shouldn't need to read this section
-                    of code, but you can if you want.
-
-    (iii) Framework to start a game:
-                    The final section contains the code for reading the command
-                    you use to set up the game, then starting up a new game, along with
-                    linking in all the external parts (agent functions, graphics).
-                    Check this section out to see all the options available to you.
-
-To play your first game, type 'python capture.py' from the command line.
-The keys are
-    P1: 'a', 's', 'd', and 'w' to move
-    P2: 'l', ';', ',', and 'p' to move
+Capture is a variant of pacman where two teams face off.
+The goal is to eat more food than your opponent.
+On your side of the map, you are a ghost and can eat pacmen.
+On your opponents side of the map, you are a pacman and can eat food and capsules.
 """
 
-import importlib
 import logging
 import os
 import pickle
 import random
 import sys
-import traceback
 
 from pacai.agents import keyboard
 from pacai.bin.arguments import getParser
-from pacai.core import layout
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 from pacai.core.game import Game
 from pacai.core.gamestate import AbstractGameState
 from pacai.core.grid import Grid
+from pacai.core.layout import Layout
+from pacai.core.layout import getLayout
+from pacai.ui.capture.null import CaptureNullView
+from pacai.ui.capture.text import CaptureTextView
+from pacai.util import reflection
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 from pacai.util.mazeGenerator import generateMaze
@@ -257,6 +237,8 @@ class CaptureGameState(AbstractGameState):
         self._lastAgentMoved = agentIndex
         self._timeleft -= 1
 
+        self._hash = None
+
 class CaptureRules:
     """
     These game rules manage the control flow of a game, deciding when
@@ -271,9 +253,6 @@ class CaptureRules:
                 catchExceptions = catchExceptions)
         game.state = initState
         game.length = length
-
-        if 'drawCenterLine' in dir(display):
-            display.drawCenterLine()
 
         self._totalBlueFood = initState.getBlueFood().count()
         self._totalRedFood = initState.getRedFood().count()
@@ -579,23 +558,24 @@ def readCommand(argv):
     elif options.debug:
         updateLoggingLevel(logging.DEBUG)
 
+    viewOptions = {
+        'gifFPS': options.gifFPS,
+        'gifPath': options.gif,
+        'skipFrames': options.gifSkipFrames,
+        'spritesPath': options.spritesPath,
+    }
+
     # Choose a display format.
     if options.textGraphics:
-        import pacai.ui.textDisplay
-        args['display'] = pacai.ui.textDisplay.PacmanGraphics()
+        args['display'] = CaptureTextView(**viewOptions)
     elif options.nullGraphics:
-        import pacai.ui.textDisplay
-        args['display'] = pacai.ui.textDisplay.NullGraphics()
+        args['display'] = CaptureNullView(**viewOptions)
     else:
-        import pacai.ui.captureGraphicsDisplay
-        # Hack for agents writing to the display.
-        pacai.ui.captureGraphicsDisplay.FRAME_TIME = 0
-        args['display'] = pacai.ui.captureGraphicsDisplay.PacmanGraphics(options.red, options.blue,
-                options.zoom, 0, capture=True,
-                gif = options.gif, gif_skip_frames = options.gifSkipFrames,
-                gif_fps = options.gifFPS)
-        import __main__
-        __main__.__dict__['_display'] = args['display']
+        # Defer importing the GUI unless we actually need it.
+        # This allows people to not have tkinter installed.
+        from pacai.ui.capture.gui import CaptureGUIView
+
+        args['display'] = CaptureGUIView(fps = options.fps, title = 'Capture', **viewOptions)
 
     args['redTeamName'] = options.red
     args['blueTeamName'] = options.blue
@@ -608,10 +588,13 @@ def readCommand(argv):
     logging.debug('Seed value: ' + str(seed))
 
     # Choose a pacman agent.
-    redArgs, blueArgs = parseAgentArgs(options.redArgs), parseAgentArgs(options.blueArgs)
+    redArgs = parseAgentArgs(options.redArgs)
+    blueArgs = parseAgentArgs(options.blueArgs)
+
     if options.numTraining > 0:
         redArgs['numTraining'] = options.numTraining
         blueArgs['numTraining'] = options.numTraining
+
     nokeyboard = options.textGraphics or options.nullGraphics or options.numTraining > 0
     logging.debug('\nRed team %s with %s:' % (options.red, redArgs))
     redAgents = loadAgents(True, options.red, nokeyboard, redArgs)
@@ -621,15 +604,16 @@ def readCommand(argv):
 
     numKeyboardAgents = 0
     for index, val in enumerate([options.keys0, options.keys1, options.keys2, options.keys3]):
-        if not val:
+        if (not val):
             continue
 
-        if numKeyboardAgents == 0:
-            agent = keyboard.WASDKeyboardAgent(index)
-        elif numKeyboardAgents == 1:
-            agent = keyboard.IJKLKeyboardAgent(index)
+        if (numKeyboardAgents == 0):
+            agent = keyboard.WASDKeyboardAgent(index, keyboard = args['display'].getKeyboard())
+        elif (numKeyboardAgents == 1):
+            agent = keyboard.IJKLKeyboardAgent(index, keyboard = args['display'].getKeyboard())
         else:
             raise ValueError('Max of two keyboard agents supported.')
+
         numKeyboardAgents += 1
         args['agents'][index] = agent
 
@@ -639,11 +623,11 @@ def readCommand(argv):
         if (options.layout != 'RANDOM'):
             layoutSeed = int(options.layout[6:])
 
-        args['layout'] = layout.Layout(generateMaze(layoutSeed).split('\n'))
+        args['layout'] = Layout(generateMaze(layoutSeed).split('\n'))
     elif options.layout.lower().find('capture') == -1:
         raise ValueError('You must use a capture layout with capture.py.')
     else:
-        args['layout'] = layout.getLayout(options.layout)
+        args['layout'] = getLayout(options.layout)
 
     if (args['layout'] is None):
         raise ValueError('The layout ' + options.layout + ' cannot be found.')
@@ -657,33 +641,23 @@ def readCommand(argv):
 
     return args
 
-def loadAgents(isRed, agent_module, textgraphics, cmdLineArgs):
-    "Calls agent factories and returns lists of agents"
-    try:
-        module = importlib.import_module(agent_module)
-    except ImportError:
-        logging.error('The team "' + agent_module + '" could not be loaded! ')
-        traceback.print_exc()
-        return [None for i in range(2)]
+def loadAgents(isRed, agentModule, textgraphics, args):
+    """
+    Calls agent factories and returns lists of agents.
+    """
 
-    args = dict()
-    args.update(cmdLineArgs)  # Add command line args with priority
+    createTeamFunctionPath = agentModule + '.createTeam'
+    createTeamFunction = reflection.qualifiedImport(createTeamFunctionPath)
 
-    logging.info('Loading Team:%s', agent_module)
-    logging.info('Arguments:%s', args)
-
-    try:
-        createTeamFunc = getattr(module, 'createTeam')
-    except AttributeError:
-        logging.error('The team "' + agent_module + '" could not be loaded! ')
-        traceback.print_exc()
-        return [None for i in range(2)]
+    logging.info('Loading Team: %s', agentModule)
+    logging.info('Arguments: %s', args)
 
     indexAddend = 0
-    if not isRed:
+    if (not isRed):
         indexAddend = 1
     indices = [2 * i + indexAddend for i in range(2)]
-    return createTeamFunc(indices[0], indices[1], isRed, **args)
+
+    return createTeamFunction(indices[0], indices[1], isRed, **args)
 
 def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
     rules = CaptureRules()
@@ -708,22 +682,24 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
     rules = CaptureRules()
     games = []
 
-    if numTraining > 0:
-        logging.info('Playing %d training games' % numTraining)
+    nullView = None
+    if (numTraining > 0):
+        logging.info('Playing %d training games.' % numTraining)
+        nullView = CaptureNullView()
 
     for i in range(numGames):
-        beQuiet = (i < numTraining)
-        if beQuiet:
-            # Suppress output and graphics
-            import textDisplay
-            gameDisplay = textDisplay.NullGraphics()
+        isTraining = (i < numTraining)
+
+        if (isTraining):
+            # Suppress graphics for training.
+            gameDisplay = nullView
         else:
             gameDisplay = display
 
         g = rules.newGame(layout, agents, gameDisplay, length, catchExceptions)
         g.run()
 
-        if (not beQuiet):
+        if (not isTraining):
             games.append(g)
 
         g.record = None
@@ -765,16 +741,8 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
 
 def main(argv):
     """
-    The main function called when pacman.py is run
-    from the command line:
-
-    > python capture.py
-
-    See the usage string for more details.
-
-    > python capture.py --help
-
-    argv already has the executable stripped.
+    Entry point for a capture game.
+    The args are a blind pass of `sys.argv` with the executable stripped.
     """
 
     initLogging()

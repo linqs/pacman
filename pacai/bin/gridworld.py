@@ -5,20 +5,18 @@ import random
 import sys
 import textwrap
 
+from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.core.environment import Environment
 from pacai.core.mdp import MarkovDecisionProcess
 from pacai.student.qlearningAgents import QLearningAgent
 from pacai.student.valueIterationAgent import ValueIterationAgent
-from pacai.ui import graphicsUtils
+from pacai.ui.gridworld.text import TextGridworldDisplay
+from pacai.ui.gridworld.utils import wait_for_keys
 from pacai.util.counter import Counter
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 
 class Gridworld(MarkovDecisionProcess):
-    """
-    Gridworld
-    """
-
     def __init__(self, grid):
         # layout
         if (isinstance(grid, list)):
@@ -291,7 +289,7 @@ def getUserAction(state, actionFunction):
     action = None
 
     while True:
-        keys = graphicsUtils.wait_for_keys()
+        keys = wait_for_keys()
 
         if ('Up' in keys):
             action = 'north'
@@ -324,7 +322,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
     totalDiscount = 1.0
     environment.reset()
 
-    if 'startEpisode' in dir(agent):
+    if (isinstance(agent, ReinforcementAgent)):
         agent.startEpisode()
 
     logging.info('BEGINNING EPISODE: ' + str(episode) + "\n")
@@ -355,14 +353,14 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
         logString += '\nGot reward: ' + str(reward) + '\n'
         logging.debug(logString)
 
-        # UPDATE LEARNER
-        if ('observeTransition' in dir(agent)):
+        # Update learner.
+        if (isinstance(agent, ReinforcementAgent)):
             agent.observeTransition(state, action, nextState, reward)
 
         returns += reward * totalDiscount
         totalDiscount *= discount
 
-    if 'stopEpisode' in dir(agent):
+    if (isinstance(agent, ReinforcementAgent)):
         agent.stopEpisode()
 
 def parseOptions(argv):
@@ -484,6 +482,11 @@ def parseOptions(argv):
     return options
 
 def main(argv):
+    """
+    Entry point for the gridworld simulation
+    The args are a blind pass of `sys.argv` with the executable stripped.
+    """
+
     initLogging()
 
     opts = parseOptions(argv)
@@ -501,12 +504,11 @@ def main(argv):
     # GET THE DISPLAY ADAPTER
     ###########################
 
-    import pacai.ui.textGridworldDisplay
-    display = pacai.ui.textGridworldDisplay.TextGridworldDisplay(mdp)
+    display = TextGridworldDisplay(mdp)
     if not opts.textGraphics and not opts.nullGraphics:
-        import pacai.ui.graphicsGridworldDisplay
-        display = pacai.ui.graphicsGridworldDisplay.GraphicsGridworldDisplay(mdp,
-                opts.gridSize, opts.speed)
+        from pacai.ui.gridworld.gui import GraphicsGridworldDisplay
+        display = GraphicsGridworldDisplay(mdp, opts.gridSize, opts.speed)
+
     display.start()
 
     ###########################

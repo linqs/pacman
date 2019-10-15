@@ -5,11 +5,15 @@ from pacai.core.directions import Directions
 from pacai.util import reflection
 
 class GreedyAgent(BaseAgent):
-    def __init__(self, index, evalFn = "pacai.core.eval.score"):
+    """
+    An agent that greedily takes the available move with the best score at the time.
+    """
+
+    def __init__(self, index, evalFn = "pacai.core.eval.score", **kwargs):
         super().__init__(index)
 
         self.evaluationFunction = reflection.qualifiedImport(evalFn)
-        assert (self.evaluationFunction is not None)
+        assert(self.evaluationFunction is not None)
 
     def getAction(self, state):
         # Generate candidate actions

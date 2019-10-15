@@ -168,8 +168,7 @@ def make_with_prison(rng, room, depth, gaps=1, vert=True, min_width=1, gapfactor
 
 def make(rng, room, depth, gaps=1, vert=True, min_width=1, gapfactor=0.5):
     """
-    recursively build a maze
-    TODO: randomize number of gaps?
+    Recursively build a maze.
     """
 
     # Extreme base case

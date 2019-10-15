@@ -3,7 +3,6 @@ import random
 from pacai.core.search import search
 from pacai.core.search.problem import SearchProblem
 from pacai.util.logs import initLogging
-# Module Classes
 
 class EightPuzzleState:
     """
@@ -192,10 +191,12 @@ class EightPuzzleSearchProblem(SearchProblem):
         Creates a new EightPuzzleSearchProblem which stores search information.
         """
 
+        super().__init__()
+
         self.puzzle = puzzle
 
     def startingState(self):
-        return puzzle
+        return self.puzzle
 
     def isGoal(self, state):
         return state.isGoal()
@@ -266,8 +267,13 @@ def createRandomEightPuzzle(moves = 100):
         puzzle = puzzle.result(random.sample(puzzle.legalMoves(), 1)[0])
     return puzzle
 
-if __name__ == '__main__':
+def main():
+    """
+    Entry point for the eightpuzzle simulation.
+    """
+
     initLogging()
+
     puzzle = createRandomEightPuzzle(25)
     print('A random puzzle:\n' + str(puzzle))
 
@@ -282,3 +288,6 @@ if __name__ == '__main__':
 
         input('Press return for the next state...')  # wait for key stroke
         i += 1
+
+if __name__ == '__main__':
+    main()

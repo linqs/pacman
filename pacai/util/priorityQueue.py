@@ -1,19 +1,18 @@
-import heapq
+"""
+Priority queue containers.
+"""
 
-"""
-Priority Queue container useful for implementing SearchAgents
-"""
+import heapq
 
 class PriorityQueue(object):
     """
-    Implements a priority queue data structure. Each inserted item
-    has a priority associated with it and the client is usually interested
-    in quick retrieval of the lowest-priority item in the queue. This
-    data structure allows O(1) access to the lowest-priority item.
+    Implements a priority queue data structure.
+    Each inserted item has a priority associated with it,
+    and the user is usually interested in quick retrieval of the lowest-priority item in the queue.
+    This data structure allows O(1) access to the lowest-priority item.
 
-    Note that this PriorityQueue does not allow you to change the priority
-    of an item. However, you may insert the same item multiple times with
-    different priorities.
+    Note that this PriorityQueue does not allow you to change the priority of an item.
+    However, you may insert the same item multiple times with different priorities.
     """
 
     def __init__(self):
@@ -35,10 +34,9 @@ class PriorityQueue(object):
 
 class PriorityQueueWithFunction(PriorityQueue):
     """
-    Implements a priority queue with the same push/pop signature of the
-    Queue and the Stack classes. This is designed for drop-in replacement for
-    those two classes. The caller has to provide a priority function, which
-    extracts each item's priority.
+    Implements a priority queue with the same push/pop signature of the Queue and the Stack classes.
+    This is designed for drop-in replacement for those two classes.
+    The caller has to provide a priority function, which extracts each item's priority.
     """
 
     def __init__(self, priorityFunction):

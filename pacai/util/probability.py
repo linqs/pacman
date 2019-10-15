@@ -1,8 +1,12 @@
+"""
+Various utilities for working with probabilities and distributions.
+"""
+
 import random
 
 def normalize(vectorOrDict):
     """
-    normalize a vector or dict by dividing each value by the sum of all values
+    Normalize a vector or counter by dividing each value by the sum of all values.
     """
 
     if type(vectorOrDict) == dict:

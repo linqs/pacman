@@ -1,5 +1,5 @@
 """
-Stack container useful for implementing SearchAgents
+A stack data structure.
 """
 
 class Stack(object):
@@ -12,21 +12,21 @@ class Stack(object):
 
     def push(self, item):
         """
-        Push 'item' onto the stack
+        Push an item onto the stack.
         """
 
         self.list.append(item)
 
     def pop(self):
         """
-        Pop the most recently pushed item from the stack
+        Pop the most recently pushed item from the stack.
         """
 
         return self.list.pop()
 
     def isEmpty(self):
         """
-        Returns true if the stack is empty
+        Returns True if the stack is empty.
         """
 
         return len(self.list) == 0

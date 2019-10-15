@@ -16,7 +16,7 @@ class ReplayTest(unittest.TestCase):
     def test_pacman(self):
         replayPath = os.path.join(tempfile.gettempdir(), PACMAN_FILENAME)
 
-        pacman.main(['--null-graphics', '--frame-time=0.01', '-p', 'GreedyAgent', '--record', replayPath])
+        pacman.main(['--null-graphics', '--fps=500', '-p', 'GreedyAgent', '--record', replayPath])
 
         self.assertTrue(os.path.isfile(replayPath))
 
@@ -27,7 +27,7 @@ class ReplayTest(unittest.TestCase):
     def test_capture(self):
         replayPath = os.path.join(tempfile.gettempdir(), CAPTURE_FILENAME)
 
-        capture.main(['--null-graphics', '--record', replayPath])
+        capture.main(['--null-graphics', '--fps=1000', '--record', replayPath])
 
         self.assertTrue(os.path.isfile(replayPath))
 
