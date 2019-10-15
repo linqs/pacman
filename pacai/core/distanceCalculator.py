@@ -126,4 +126,3 @@ class Distancer(object):
                 distances[(target, source)] = dist[target]
 
         return distances
-    
