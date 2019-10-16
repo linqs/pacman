@@ -51,7 +51,7 @@ class ReflexCaptureAgent(CaptureAgent):
         features = self.getFeatures(gameState, action)
         weights = self.getWeights(gameState, action)
 
-        return features * weights
+        return sum(features[feature] * weights[feature] for feature in features)
 
     def getFeatures(self, gameState, action):
         """

@@ -1,5 +1,5 @@
 from pacai.agents.ghost.base import GhostAgent
-from pacai.util import counter
+from pacai.util import probability
 
 class RandomGhost(GhostAgent):
     """
@@ -10,8 +10,8 @@ class RandomGhost(GhostAgent):
         super().__init__(index)
 
     def getDistribution(self, state):
-        dist = counter.Counter()
+        dist = {}
         for a in state.getLegalActions(self.index):
             dist[a] = 1.0
-        dist.normalize()
-        return dist
+        normalizedDict = probability.normalize(dist)
+        return normalizedDict

@@ -7,7 +7,6 @@ import abc
 from pacai.core.actions import Actions
 from pacai.core.search import search
 from pacai.student.searchAgents import AnyFoodSearchProblem
-from pacai.util import counter
 
 class FeatureExtractor(abc.ABC):
     """
@@ -27,7 +26,7 @@ class FeatureExtractor(abc.ABC):
 
 class IdentityExtractor(FeatureExtractor):
     def getFeatures(self, state, action):
-        feats = counter.Counter()
+        feats = {}
         feats[(state, action)] = 1.0
 
         return feats
@@ -43,7 +42,7 @@ class SimpleExtractor(FeatureExtractor):
         walls = state.getWalls()
         ghosts = state.getGhostPositions()
 
-        features = counter.Counter()
+        features = {}
 
         features["bias"] = 1.0
 

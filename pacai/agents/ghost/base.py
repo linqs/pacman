@@ -25,7 +25,7 @@ class GhostAgent(BaseAgent):
     @abc.abstractmethod
     def getDistribution(self, state):
         """
-        Returns a `pacai.util.counter.Counter` encoding a distribution over possible actions.
+        Returns a dictionary encoding a distribution over possible actions.
         """
 
         pass
