@@ -13,5 +13,5 @@ class RandomGhost(GhostAgent):
         dist = {}
         for a in state.getLegalActions(self.index):
             dist[a] = 1.0
-        normalizedDict = probability.normalize(dist)
-        return normalizedDict
+        normalizedDist = probability.normalize(dist)
+        return normalizedDist
