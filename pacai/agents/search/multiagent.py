@@ -13,7 +13,7 @@ class MultiAgentSearchAgent(BaseAgent):
         self._treeDepth = int(depth)
 
     def getEvaluationFunction(self):
-        return self.evaluationFunction
+        return self._evaluationFunction
 
     def getTreeDepth(self):
         return self._treeDepth
