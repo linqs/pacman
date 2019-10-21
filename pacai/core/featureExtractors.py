@@ -43,7 +43,6 @@ class SimpleExtractor(FeatureExtractor):
         ghosts = state.getGhostPositions()
 
         features = {}
-
         features["bias"] = 1.0
 
         # Compute the location of pacman after he takes the action.

@@ -42,13 +42,12 @@ class GraphicsGridworldDisplay(object):
 
     def displayNullValues(self, currentState = None, message = ''):
         values = {}
-        # policy = {}
+
         states = self.gridworld.getStates()
         for state in states:
             values[state] = 0.0
-            # policy[state] = agent.getPolicy(state)
+
         drawNullValues(self.gridworld, currentState, '')
-        # drawValues(self.gridworld, values, policy, currentState, message)
         utils.sleep(0.05 / self.speed)
 
     def displayQValues(self, agent, currentState = None, message = 'Agent Q-Values'):

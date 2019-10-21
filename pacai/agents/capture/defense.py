@@ -13,8 +13,8 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
 
     def getFeatures(self, gameState, action):
         features = {}
-        successor = self.getSuccessor(gameState, action)
 
+        successor = self.getSuccessor(gameState, action)
         myState = successor.getAgentState(self.index)
         myPos = myState.getPosition()
 
