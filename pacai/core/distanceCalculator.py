@@ -1,7 +1,6 @@
 import sys
 
 from pacai.core.distance import manhattan
-from pacai.util import priorityQueue
 
 DEFAULT_DISTANCE = 10000
 
@@ -93,7 +92,6 @@ class Distancer(object):
                 node = adjacent.pop(0)
                 if node in closed:
                     continue
-                    
                 closed += [node]
                 x, y = node
 
@@ -112,7 +110,6 @@ class Distancer(object):
                 for other in adjacent:
                     if dist[other] > dist[node] + 1:
                         dist[other] = dist[node] + 1
-                    
             for target in allNodes:
                 distances[(target, source)] = dist[target]
 
