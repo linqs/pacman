@@ -81,23 +81,20 @@ class Distancer(object):
 
         for source in allNodes:
             dist = {}
-            closed = {}
+            closed = []
 
             for node in allNodes:
                 dist[node] = sys.maxsize
 
-            queue = priorityQueue.PriorityQueue()
-            queue.push(source, 0)
+            adjacent = [source]
             dist[source] = 0
 
-            while not queue.isEmpty():
-                node = queue.pop()
+            while len(adjacent) != 0:
+                node = adjacent.pop(0)
                 if node in closed:
                     continue
-
-                closed[node] = True
-                nodeDist = dist[node]
-                adjacent = []
+                    
+                closed += [node]
                 x, y = node
 
                 if not layout.isWall((x, y + 1)):
@@ -113,15 +110,9 @@ class Distancer(object):
                     adjacent.append((x - 1, y))
 
                 for other in adjacent:
-                    if other not in dist:
-                        continue
-
-                    oldDist = dist[other]
-                    newDist = nodeDist + 1
-                    if newDist < oldDist:
-                        dist[other] = newDist
-                        queue.push(other, newDist)
-
+                    if dist[other] > dist[node] + 1:
+                        dist[other] = dist[node] + 1
+                    
             for target in allNodes:
                 distances[(target, source)] = dist[target]
 
