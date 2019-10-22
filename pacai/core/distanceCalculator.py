@@ -50,7 +50,7 @@ class Distancer(object):
                 distance = gridDistance + snap1Distance + snap2Distance
                 if bestDistance > distance:
                     bestDistance = distance
-                    
+
         return bestDistance
 
     def getDistanceOnGrid(self, pos1, pos2):
@@ -68,16 +68,16 @@ class Distancer(object):
             grid1Dx = [(intX, 0)]
         else:
             grid1Dx = [(intX, pos[0] - intX), (intX + 1, intX + 1 - pos[0])]
-            
+
         if math.isclose(pos[1], intY):
             grid1Dy = [(intY, 0)]
         else:
             grid1Dy = [(intY, pos[1] - intY), (intY + 1, intY + 1 - pos[1])]
-            
+
         for x, xDistance in grid1Dx:
             for y, yDistance in grid1Dy:
                 grids.append(((x, y), xDistance + yDistance))
-                
+
         return grids
 
     def computeDistances(self, layout):
