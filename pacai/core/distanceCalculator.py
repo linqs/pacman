@@ -1,3 +1,4 @@
+import math
 import sys
 
 from pacai.core.distance import manhattan
@@ -35,8 +36,8 @@ class Distancer(object):
         if (self._distances is None):
             return manhattan(pos1, pos2)
 
-        if pos1[0] == int(pos1[0]) and pos1[1] == int(pos1[1]):
-            if pos2[0] == int(pos2[0]) and pos2[1] == int(pos2[1]):
+        if math.isclose(pos1[0], int(pos1[0])) and math.isclose(pos1[1], int(pos1[1])):
+            if math.isclose(pos2[0], int(pos2[0])) and math.isclose(pos2[1], int(pos2[1])):
                 return self.getDistanceOnGrid(pos1, pos2)
 
         pos1Grids = self.getGrids2D(pos1)
@@ -49,6 +50,7 @@ class Distancer(object):
                 distance = gridDistance + snap1Distance + snap2Distance
                 if bestDistance > distance:
                     bestDistance = distance
+                    
         return bestDistance
 
     def getDistanceOnGrid(self, pos1, pos2):
@@ -62,15 +64,20 @@ class Distancer(object):
         grids = grid1Dx = grid1Dy = []
         intX = int(pos[0])
         intY = int(pos[1])
-        if pos[0] == intX:
-            grid1Dx = [(pos[0], 0)]
-        grid1Dx = [(intX, pos[0] - intX), (intX + 1, intX + 1 - pos[0])]
-        if pos[1] == intY:
-            grid1Dy = [(pos[1], 0)]
-        grid1Dy = [(intY, pos[1] - intY), (intY + 1, intY + 1 - pos[1])]
+        if math.isclose(pos[0], intX):
+            grid1Dx = [(intX, 0)]
+        else:
+            grid1Dx = [(intX, pos[0] - intX), (intX + 1, intX + 1 - pos[0])]
+            
+        if math.isclose(pos[1], intY):
+            grid1Dy = [(intY, 0)]
+        else:
+            grid1Dy = [(intY, pos[1] - intY), (intY + 1, intY + 1 - pos[1])]
+            
         for x, xDistance in grid1Dx:
             for y, yDistance in grid1Dy:
                 grids.append(((x, y), xDistance + yDistance))
+                
         return grids
 
     def computeDistances(self, layout):
