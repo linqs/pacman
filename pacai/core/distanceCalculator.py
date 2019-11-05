@@ -1,6 +1,3 @@
-import math
-import sys
-
 from pacai.core.distance import manhattan
 
 DEFAULT_DISTANCE = 10000
@@ -36,22 +33,7 @@ class Distancer(object):
         if (self._distances is None):
             return manhattan(pos1, pos2)
 
-        if math.isclose(pos1[0], int(pos1[0])) and math.isclose(pos1[1], int(pos1[1])):
-            if math.isclose(pos2[0], int(pos2[0])) and math.isclose(pos2[1], int(pos2[1])):
-                return self.getDistanceOnGrid(pos1, pos2)
-
-        pos1Grids = self.getGrids2D(pos1)
-        pos2Grids = self.getGrids2D(pos2)
-        bestDistance = DEFAULT_DISTANCE
-
-        for pos1Snap, snap1Distance in pos1Grids:
-            for pos2Snap, snap2Distance in pos2Grids:
-                gridDistance = self.getDistanceOnGrid(pos1Snap, pos2Snap)
-                distance = gridDistance + snap1Distance + snap2Distance
-                if bestDistance > distance:
-                    bestDistance = distance
-
-        return bestDistance
+        return self.getDistanceOnGrid(self.round2D(pos1), self.round2D(pos2))
 
     def getDistanceOnGrid(self, pos1, pos2):
         key = (pos1, pos2)
@@ -60,25 +42,20 @@ class Distancer(object):
 
         raise Exception("Position not in grid: " + str(key))
 
-    def getGrids2D(self, pos):
-        grids = grid1Dx = grid1Dy = []
+    def round2D(self, pos):
         intX = int(pos[0])
         intY = int(pos[1])
-        if math.isclose(pos[0], intX):
-            grid1Dx = [(intX, 0)]
+        deltaX = float(abs(pos[0] - intX))
+        deltaY = float(abs(pos[1] - intY))
+
+        if deltaX >= 0.5 and deltaY >= 0.5:
+            return (intX+1, intY+1)
+        elif deltaX < 0.5 and deltaY >= 0.5:
+            return (intX, intY+1)
+        elif deltaX >= 0.5 and deltaY < 0.5:
+            return (intX + 1, intY)
         else:
-            grid1Dx = [(intX, pos[0] - intX), (intX + 1, intX + 1 - pos[0])]
-
-        if math.isclose(pos[1], intY):
-            grid1Dy = [(intY, 0)]
-        else:
-            grid1Dy = [(intY, pos[1] - intY), (intY + 1, intY + 1 - pos[1])]
-
-        for x, xDistance in grid1Dx:
-            for y, yDistance in grid1Dy:
-                grids.append(((x, y), xDistance + yDistance))
-
-        return grids
+            return (intX, intY)
 
     def computeDistances(self, layout):
 
@@ -90,7 +67,7 @@ class Distancer(object):
             closed = []
 
             for node in allNodes:
-                dist[node] = sys.maxsize
+                dist[node] = DEFAULT_DISTANCE
 
             adjacent = [source]
             dist[source] = 0
@@ -110,7 +87,6 @@ class Distancer(object):
 
                 if not layout.isWall((x + 1, y)):
                     adjacent.append((x + 1, y))
-
                 if not layout.isWall((x - 1, y)):
                     adjacent.append((x - 1, y))
 
@@ -120,4 +96,4 @@ class Distancer(object):
             for target in allNodes:
                 distances[(target, source)] = dist[target]
 
-        return distances
+        return distances       
