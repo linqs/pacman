@@ -49,9 +49,9 @@ class Distancer(object):
         deltaY = float(abs(pos[1] - intY))
 
         if deltaX >= 0.5 and deltaY >= 0.5:
-            return (intX+1, intY+1)
+            return (intX + 1, intY + 1)
         elif deltaX < 0.5 and deltaY >= 0.5:
-            return (intX, intY+1)
+            return (intX, intY + 1)
         elif deltaX >= 0.5 and deltaY < 0.5:
             return (intX + 1, intY)
         else:
@@ -96,4 +96,4 @@ class Distancer(object):
             for target in allNodes:
                 distances[(target, source)] = dist[target]
 
-        return distances       
+        return distances
