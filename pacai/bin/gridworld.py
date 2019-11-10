@@ -169,10 +169,9 @@ class Gridworld(MarkovDecisionProcess):
     def __aggregate(self, statesAndProbs):
         counter = {}
         for state, prob in statesAndProbs:
-            if state in counter:
-                counter[state] += prob
-            else:
-                counter[state] = prob
+            if state not in counter:
+                counter[state] = 0.0
+            counter[state] += prob
 
         newStatesAndProbs = []
         for state, prob in counter.items():

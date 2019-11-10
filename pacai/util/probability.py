@@ -64,8 +64,8 @@ def sample(distribution, values = None):
 
     return values[i]
 
-def sampleFromDict(dict):
-    items = sorted(dict.items())
+def sampleFromDict(dictDistribution):
+    items = sorted(dictDistribution.items())
     return sample([v for k, v in items], [k for k, v in items])
 
 def getProbability(value, distribution, values):
