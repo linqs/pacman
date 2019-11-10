@@ -105,7 +105,7 @@ class PacmanQAgent(QLearningAgent):
         Do not change or remove this method.
         """
 
-        action = super().getAction(self, state)
+        action = super().getAction(state)
         self.doAction(state, action)
 
         return action
@@ -131,7 +131,7 @@ class ApproximateQAgent(PacmanQAgent):
     """
 
     def __init__(self, index,
-            extractor = 'pacai.util.featureExtractors.IdentityExtractor', **kwargs):
+            extractor = 'pacai.core.featureExtractors.IdentityExtractor', **kwargs):
         super().__init__(index, **kwargs)
         self.featExtractor = reflection.qualifiedImport(extractor)
 
