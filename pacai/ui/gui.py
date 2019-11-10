@@ -1,3 +1,4 @@
+import math
 import sys
 import time
 import tkinter
@@ -103,6 +104,35 @@ class AbstractGUIView(AbstractView):
         if (exit):
             sys.exit(0)
 
+    def _adjustFPS(self):
+        """
+        Decide if we need to take some action to adjust the FPS.
+        If we are drawing too slow, we will drop a frame.
+        If we are drawing too fast, we will block and timeout.
+        In the case of a dropped from, this will return true.
+        """
+
+        now = time.time()
+
+        if (math.isclose(0.0, now - self._firstDrawTime)):
+            return True
+
+        # The FPS after accounting for dropped frames.
+        adjustedFPS = self._totalDrawRequests / (now - self._firstDrawTime)
+
+        # To keep the FPS up, we may skip animating frames.
+        if (adjustedFPS < self._fps):
+            self._totalDroppedFrames += 1
+            return True
+
+        if (self._lastDrawTime is not None):
+            timeLeft = self._timePerFrame - (now - self._lastDrawTime)
+            if (timeLeft > 0):
+                # Use Tkinter to block.
+                self._root.after(int(1000 * timeLeft))
+
+        return False
+
     # Override
     def _drawFrame(self, state, frame, forceDraw = False):
         if (self._dead):
@@ -116,25 +146,8 @@ class AbstractGUIView(AbstractView):
             # This is our first frame, we do not have an FPS to stabilize yet.
             forceDraw = True
 
-        # Delay drawing the frame to cap the FPS.
-        # Every iteration of the loop outputs a frame,
-        # so ensure that no single frame is output too quickly.
-        if (not forceDraw):
-            now = time.time()
-
-            # The FPS after accounting for dropped frames.
-            adjustedFPS = self._totalDrawRequests / (now - self._firstDrawTime)
-
-            # To keep the FPS up, we may skip animating frames.
-            if (adjustedFPS < self._fps):
-                self._totalDroppedFrames += 1
-                return
-
-            if (self._lastDrawTime is not None):
-                timeLeft = self._timePerFrame - (now - self._lastDrawTime)
-                if (timeLeft > 0):
-                    # Use Tkinter to block.
-                    self._root.after(int(1000 * timeLeft))
+        if (not forceDraw and self._adjustFPS()):
+            return
 
         image = frame.toImage(self._sprites, self._font)
 
