@@ -1,3 +1,4 @@
+from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
 
 class Distancer(object):
