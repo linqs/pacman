@@ -53,6 +53,8 @@ class Distancer(object):
                 queue += Actions.getLegalNeighbors(previousPosition, layout.walls)
                 oldDist = distances[(previousPosition, startPosition)]
                 for other in queue:
+                    if (other, startPosition) not in distances:
+                        continue
                     if distances[(other, startPosition)] > oldDist + 1:
                         distances[(other, startPosition)] = oldDist + 1
 
