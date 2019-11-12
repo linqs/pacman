@@ -1,4 +1,3 @@
-from pacai.core.actions import getLegalNeighbors
 from pacai.core.distance import manhattan
 
 class Distancer(object):
@@ -30,7 +29,7 @@ class Distancer(object):
         """
         if (self._distances is None):
             return manhattan(pos1, pos2)
-        
+
         key = ((round(pos1[0]), round(pos1[1])), (round(pos2[0]), round(pos2[1])))
         if key in self._distances:
             return self._distances[key]
@@ -41,9 +40,9 @@ class Distancer(object):
         """
         layout.walls.asList(False) returns the positions on a layout that are not walls.
         """
-        positions = layout.walls.asList(False) 
+        positions = layout.walls.asList(False)
         distances = {}
-        
+
         for startPosition in positions:
             queue = [startPosition]
             distances[(startPosition, startPosition)] = 0
