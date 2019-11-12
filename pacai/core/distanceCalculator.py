@@ -54,8 +54,8 @@ class Distancer(object):
                 oldDist = distances[(previousPosition, startPosition)]
                 for other in queue:
                     if (other, startPosition) not in distances:
-                        continue
-                    if distances[(other, startPosition)] > oldDist + 1:
+                        distances[(other, startPosition)] = oldDist + 1
+                    elif distances[(other, startPosition)] > oldDist + 1:
                         distances[(other, startPosition)] = oldDist + 1
 
         return distances
