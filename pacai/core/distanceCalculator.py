@@ -55,11 +55,12 @@ class Distancer(object):
 
             while len(queue) != 0:
                 previousPosition = queue.pop(0)
-                queue += Actions.getLegalNeighbors(previousPosition, layout.walls)
+                adjacent = Actions.getLegalNeighbors(previousPosition, layout.walls)
                 oldDist = distances[(previousPosition, startPosition)]
-                for other in queue:
+                for other in adjacent:
                     if (other, startPosition) not in distances:
                         distances[(other, startPosition)] = oldDist + 1
                         distances[(startPosition, other)] = oldDist + 1
+                        queue.append(other)
 
         return distances
