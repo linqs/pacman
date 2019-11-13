@@ -31,9 +31,14 @@ class Distancer(object):
         if (self._distances is None):
             return manhattan(pos1, pos2)
 
-        key = ((round(pos1[0]), round(pos1[1])), (round(pos2[0]), round(pos2[1])))
+        roundedPos1 = (round(pos1[0]), round(pos1[1]))
+        roundedPos2 = (round(pos2[0]), round(pos2[1]))
+        deltaPos1 = abs(pos1[0] - roundedPos1[0]) + abs(pos1[1] - roundedPos1[1])
+        deltaPos2 = abs(pos2[0] - roundedPos2[0]) + abs(pos2[1] - roundedPos2[1])
+
+        key = (roundedPos1, roundedPos2)
         if key in self._distances:
-            return self._distances[key]
+            return self._distances[key] + deltaPos1 + deltaPos2
 
         raise Exception("Position not in grid: " + str(key))
 
@@ -55,7 +60,6 @@ class Distancer(object):
                 for other in queue:
                     if (other, startPosition) not in distances:
                         distances[(other, startPosition)] = oldDist + 1
-                    elif distances[(other, startPosition)] > oldDist + 1:
-                        distances[(other, startPosition)] = oldDist + 1
+                        distances[(startPosition, other)] = oldDist + 1
 
         return distances
