@@ -12,6 +12,7 @@ import random
 import sys
 
 from pacai.agents import keyboard
+from pacai.agents.capture.dummy import DummyAgent
 from pacai.bin.arguments import getParser
 from pacai.core.actions import Actions
 from pacai.core.distance import manhattan
@@ -660,6 +661,7 @@ def loadAgents(isRed, agentModule, textgraphics, args):
     return createTeamFunction(indices[0], indices[1], isRed, **args)
 
 def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
+    agents = [DummyAgent(index) for index in range(len(agents))]
     rules = CaptureRules()
     game = rules.newGame(layout, agents, display, length, False)
     state = game.state
@@ -706,7 +708,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
         if record:
             components = {
                 'layout': layout,
-                'agents': agents,
+                'agents': [agent.__class__.__name__ for agent in agents],
                 'actions': g.moveHistory,
                 'length': length,
                 'redTeamName': redTeamName,
