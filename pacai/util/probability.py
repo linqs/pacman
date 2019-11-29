@@ -7,8 +7,9 @@ import random
 
 def normalize(listOrDict):
     """
-    Normalize a list or dictionary by dividing each value by the sum of all values, resulting in values to be in range [0, 1].
-    Requirementw for listOrDict argument:
+    Normalize a list or dictionary by dividing each value by the
+    sum of all values, resulting in values to be in range [0, 1].
+    Requirements for listOrDict argument:
     1. Must be non-empty.
     2. For a dict, each value must be >= 0 and the sum must be > 0.
     """
@@ -31,7 +32,7 @@ def normalize(listOrDict):
         return [val / total for val in listOrDict]
 
 def nSample(distribution, values, n):
-    if sum(distribution) != 1:
+    if not math.isclose(sum(distribution), 1):
         distribution = normalize(distribution)
 
     rand = [random.random() for i in range(n)]
