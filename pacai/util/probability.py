@@ -2,30 +2,30 @@
 Various utilities for working with probabilities and distributions.
 """
 
+import math
 import random
 
-def normalize(vectorOrDict):
+def normalize(listOrDict):
     """
     Normalize a vector or dictionary by dividing each value by the sum of all values.
     """
 
-    if type(vectorOrDict) == dict:
-        total = float(sum(vectorOrDict.values()))
-        if total == 0:
-            return vectorOrDict
+    if isinstance(listOrDict, dict):
+        total = float(sum(listOrDict.values()))
+        if math.isclose(total, 0):
+            return listOrDict
 
         normalizedDict = {}
-        for key, value in vectorOrDict.items():
+        for key, value in listOrDict.items():
             normalizedDict[key] = value / total
 
         return normalizedDict
     else:
-        vector = vectorOrDict
-        s = float(sum(vector))
-        if s == 0:
-            return vector
+        total = float(sum(listOrDict))
+        if math.isclose(total, 0):
+            return listOrDict
 
-        return [el / s for el in vector]
+        return [val / total for val in listOrDict]
 
 def nSample(distribution, values, n):
     if sum(distribution) != 1:
@@ -46,7 +46,7 @@ def nSample(distribution, values, n):
     return samples
 
 def sample(distribution, values = None):
-    if type(distribution) == dict:
+    if isinstance(distribution, dict):
         items = sorted(distribution.items())
         distribution = [i[1] for i in items]
         values = [i[0] for i in items]
@@ -54,19 +54,22 @@ def sample(distribution, values = None):
     if sum(distribution) != 1:
         distribution = normalize(distribution)
 
+    if values is None:
+        raise ValueError()
+
+    if len(distribution) != len(values):
+        raise ValueError()
+
     choice = random.random()
     i = 0
-    total = distribution[0]
+    if len(distribution):
+        total = distribution[0]
 
-    while choice > total:
-        i += 1
-        total += distribution[i]
+        while choice > total:
+            i += 1
+            total += distribution[i]
 
     return values[i]
-
-def sampleFromDict(dictDistribution):
-    items = sorted(dictDistribution.items())
-    return sample([v for k, v in items], [k for k, v in items])
 
 def getProbability(value, distribution, values):
     """
@@ -84,18 +87,3 @@ def getProbability(value, distribution, values):
 def flipCoin(p):
     r = random.random()
     return r < p
-
-def chooseFromDistribution(distribution):
-    """
-    Takes either a counter or a list of (prob, key) pairs and samples.
-    """
-
-    if type(distribution) == dict:
-        return sample(distribution)
-
-    r = random.random()
-    base = 0.0
-    for prob, element in distribution:
-        base += prob
-        if r <= base:
-            return element

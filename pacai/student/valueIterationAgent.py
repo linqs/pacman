@@ -36,7 +36,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discountRate = discountRate
         self.iters = iters
-        self.values = {}  # A dictionary which holds the q-values for each state
+        self.values = {}  # A dictionary which holds the q-values for each state.
 
         # Compute the values here.
         raise NotImplementedError()
