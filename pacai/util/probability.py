@@ -7,7 +7,10 @@ import random
 
 def normalize(listOrDict):
     """
-    Normalize a vector or dictionary by dividing each value by the sum of all values.
+    Normalize a list or dictionary by dividing each value by the sum of all values, resulting in values to be in range [0, 1].
+    Requirementw for listOrDict argument:
+    1. Must be non-empty.
+    2. For a dict, each value must be >= 0 and the sum must be > 0.
     """
 
     if isinstance(listOrDict, dict):
@@ -51,23 +54,25 @@ def sample(distribution, values = None):
         distribution = [i[1] for i in items]
         values = [i[0] for i in items]
 
-    if sum(distribution) != 1:
+    if len(distribution) == 0:
+        raise ValueError("Empty distribution")
+
+    if math.isclose(sum(distribution), 1):
         distribution = normalize(distribution)
 
     if values is None:
-        raise ValueError()
+        raise ValueError("Values is None")
 
     if len(distribution) != len(values):
-        raise ValueError()
+        raise ValueError("Size of distribution must be the same as values")
 
     choice = random.random()
     i = 0
-    if len(distribution):
-        total = distribution[0]
+    total = distribution[0]
 
-        while choice > total:
-            i += 1
-            total += distribution[i]
+    while choice > total:
+        i += 1
+        total += distribution[i]
 
     return values[i]
 
