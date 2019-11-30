@@ -56,7 +56,7 @@ def sample(distribution, values = None):
         values = [i[0] for i in items]
 
     if len(distribution) == 0:
-        raise ValueError("Distribution from sample must be non-empty.")
+        raise ValueError("Distribution to sample must be non-empty.")
 
     if math.isclose(sum(distribution), 1):
         distribution = normalize(distribution)
