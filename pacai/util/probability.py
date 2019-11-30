@@ -56,22 +56,22 @@ def sample(distribution, values = None):
         values = [i[0] for i in items]
 
     if len(distribution) == 0:
-        raise ValueError("Empty distribution")
+        raise ValueError("Distribution from sample must be non-empty.")
 
     if math.isclose(sum(distribution), 1):
         distribution = normalize(distribution)
 
     if values is None:
-        raise ValueError("Values is None")
+        raise ValueError("When sampling list, both distribution and values must be initialized.")
 
     if len(distribution) != len(values):
-        raise ValueError("Size of distribution must be the same as values")
+        raise ValueError("When sampling list, distribution and values must be the same size.")
 
     choice = random.random()
     i = 0
     total = distribution[0]
 
-    while choice > total:
+    while choice >= total:
         i += 1
         total += distribution[i]
 
