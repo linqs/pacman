@@ -1,6 +1,5 @@
 from pacai.agents.capture.reflex import ReflexCaptureAgent
 from pacai.core.directions import Directions
-from pacai.util import counter
 
 class DefensiveReflexAgent(ReflexCaptureAgent):
     """
@@ -13,9 +12,9 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
         super().__init__(index)
 
     def getFeatures(self, gameState, action):
-        features = counter.Counter()
-        successor = self.getSuccessor(gameState, action)
+        features = {}
 
+        successor = self.getSuccessor(gameState, action)
         myState = successor.getAgentState(self.index)
         myPos = myState.getPosition()
 

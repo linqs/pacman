@@ -20,12 +20,12 @@ class GhostAgent(BaseAgent):
         if (len(dist) == 0):
             return Directions.STOP
         else:
-            return probability.chooseFromDistribution(dist)
+            return probability.sample(dist)
 
     @abc.abstractmethod
     def getDistribution(self, state):
         """
-        Returns a `pacai.util.counter.Counter` encoding a distribution over possible actions.
+        Returns a dictionary encoding a distribution over possible actions.
         """
 
         pass

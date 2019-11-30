@@ -2,37 +2,37 @@
 Various utilities for working with probabilities and distributions.
 """
 
+import math
 import random
 
-from pacai.util import counter
-
-def normalize(vectorOrCounter):
+def normalize(listOrDict):
     """
-    Normalize a vector or counter by dividing each value by the sum of all values.
+    Normalize a list or dictionary by dividing each value by the
+    sum of all values, resulting in values to be in range [0, 1].
+    Requirements for listOrDict argument:
+    1. Must be non-empty.
+    2. For a dict, each value must be >= 0 and the sum must be > 0.
     """
 
-    normalizedCounter = counter.Counter()
-    if type(vectorOrCounter) == type(normalizedCounter):
-        counterContainer = vectorOrCounter
-        total = float(counterContainer.totalCount())
-        if total == 0:
-            return counterContainer
+    if isinstance(listOrDict, dict):
+        total = float(sum(listOrDict.values()))
+        if math.isclose(total, 0):
+            return listOrDict
 
-        for key in list(counter.keys()):
-            value = counter[key]
-            normalizedCounter[key] = value / total
+        normalizedDict = {}
+        for key, value in listOrDict.items():
+            normalizedDict[key] = value / total
 
-        return normalizedCounter
+        return normalizedDict
     else:
-        vector = vectorOrCounter
-        s = float(sum(vector))
-        if s == 0:
-            return vector
+        total = float(sum(listOrDict))
+        if math.isclose(total, 0):
+            return listOrDict
 
-        return [el / s for el in vector]
+        return [val / total for val in listOrDict]
 
 def nSample(distribution, values, n):
-    if sum(distribution) != 1:
+    if not math.isclose(sum(distribution), 1):
         distribution = normalize(distribution)
 
     rand = [random.random() for i in range(n)]
@@ -50,27 +50,32 @@ def nSample(distribution, values, n):
     return samples
 
 def sample(distribution, values = None):
-    if type(distribution) == counter.Counter:
-        items = sorted(list(distribution.items()))
+    if isinstance(distribution, dict):
+        items = sorted(distribution.items())
         distribution = [i[1] for i in items]
         values = [i[0] for i in items]
 
-    if sum(distribution) != 1:
+    if len(distribution) == 0:
+        raise ValueError("Distribution to sample must be non-empty.")
+
+    if math.isclose(sum(distribution), 1):
         distribution = normalize(distribution)
+
+    if values is None:
+        raise ValueError("When sampling list, both distribution and values must be initialized.")
+
+    if len(distribution) != len(values):
+        raise ValueError("When sampling list, distribution and values must be the same size.")
 
     choice = random.random()
     i = 0
     total = distribution[0]
 
-    while choice > total:
+    while choice >= total:
         i += 1
         total += distribution[i]
 
     return values[i]
-
-def sampleFromCounter(ctr):
-    items = sorted(list(ctr.items()))
-    return sample([v for k, v in items], [k for k, v in items])
 
 def getProbability(value, distribution, values):
     """
@@ -88,18 +93,3 @@ def getProbability(value, distribution, values):
 def flipCoin(p):
     r = random.random()
     return r < p
-
-def chooseFromDistribution(distribution):
-    """
-    Takes either a counter or a list of (prob, key) pairs and samples.
-    """
-
-    if type(distribution) == dict or type(distribution) == counter.Counter:
-        return sample(distribution)
-
-    r = random.random()
-    base = 0.0
-    for prob, element in distribution:
-        base += prob
-        if r <= base:
-            return element
