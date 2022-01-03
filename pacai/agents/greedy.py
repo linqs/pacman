@@ -10,7 +10,7 @@ class GreedyAgent(BaseAgent):
     """
 
     def __init__(self, index, evalFn = "pacai.core.eval.score", **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self.evaluationFunction = reflection.qualifiedImport(evalFn)
         assert(self.evaluationFunction is not None)

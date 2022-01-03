@@ -31,7 +31,7 @@ class ValueIterationAgent(ValueEstimationAgent):
     """
 
     def __init__(self, index, mdp, discountRate = 0.9, iters = 100, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self.mdp = mdp
         self.discountRate = discountRate

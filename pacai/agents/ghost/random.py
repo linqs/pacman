@@ -7,7 +7,7 @@ class RandomGhost(GhostAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
     def getDistribution(self, state):
         dist = {}

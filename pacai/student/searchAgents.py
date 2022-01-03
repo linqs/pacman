@@ -142,7 +142,7 @@ class ClosestDotSearchAgent(SearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
     def registerInitialState(self, state):
         self._actions = []
@@ -220,4 +220,4 @@ class ApproximateSearchAgent(BaseAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)

@@ -7,7 +7,7 @@ class MultiAgentSearchAgent(BaseAgent):
     """
 
     def __init__(self, index, evalFn = 'pacai.core.eval.score', depth = 2, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self._evaluationFunction = reflection.qualifiedImport(evalFn)
         self._treeDepth = int(depth)

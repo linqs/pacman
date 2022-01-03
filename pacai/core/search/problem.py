@@ -26,9 +26,9 @@ class SearchProblem(abc.ABC):
         # The number of search nodes we expended.
         self._numExpanded = 0
 
-        # Keep track of the states we have visited.
-        # Children are not required to use these,
-        # but doing so will allow the GUI to highlight the visited locations.
+        # Keep track of the coordinates we have visited.
+        # Students are not required to use these,
+        # but doing so will allow the GUI to highlight the visited coordinates.
         self._visitedLocations = set()
         self._visitHistory = []
 

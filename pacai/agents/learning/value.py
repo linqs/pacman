@@ -22,7 +22,7 @@ class ValueEstimationAgent(BaseAgent):
             numTraining: The number of training episodes.
         """
 
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)

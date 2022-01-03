@@ -8,7 +8,7 @@ class LeftTurnAgent(BaseAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
     def getAction(self, state):
         legal = state.getLegalPacmanActions()

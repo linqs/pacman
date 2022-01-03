@@ -8,7 +8,7 @@ class DirectionalGhost(GhostAgent):
     """
 
     def __init__(self, index, prob_attack = 0.8, prob_scaredFlee = 0.8, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self.prob_attack = prob_attack
         self.prob_scaredFlee = prob_scaredFlee

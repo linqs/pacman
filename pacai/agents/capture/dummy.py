@@ -9,7 +9,7 @@ class DummyAgent(CaptureAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
     def registerInitialState(self, gameState):
         """

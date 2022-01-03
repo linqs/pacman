@@ -11,7 +11,7 @@ class BaseKeyboardAgent(BaseAgent):
         directionalKeys is a dict of direction to keys for that direction.
         """
 
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self._keyboard = keyboard
         self._lastMove = Directions.STOP
@@ -75,8 +75,8 @@ class WASDKeyboardAgent(BaseKeyboardAgent):
         Directions.EAST: ['d', 'Right'],
     }
 
-    def __init__(self, index = 0, keyboard = None):
-        super().__init__(index, keyboard, WASDKeyboardAgent.KEYS)
+    def __init__(self, index = 0, keyboard = None, **kwargs):
+        super().__init__(index, keyboard, WASDKeyboardAgent.KEYS, **kwargs)
 
 class IJKLKeyboardAgent(BaseKeyboardAgent):
     """
@@ -90,5 +90,5 @@ class IJKLKeyboardAgent(BaseKeyboardAgent):
         Directions.EAST: ['l'],
     }
 
-    def __init__(self, index = 0, keyboard = None):
-        super().__init__(index, keyboard, IJKLKeyboardAgent.KEYS)
+    def __init__(self, index = 0, keyboard = None, **kwargs):
+        super().__init__(index, keyboard, IJKLKeyboardAgent.KEYS, **kwargs)
