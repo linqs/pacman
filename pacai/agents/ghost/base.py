@@ -11,8 +11,8 @@ class GhostAgent(BaseAgent):
     which is then sampled from to get the next action.
     """
 
-    def __init__(self, index):
-        super().__init__(index)
+    def __init__(self, index, **kwargs):
+        super().__init__(index, **kwargs)
 
     def getAction(self, state):
         dist = self.getDistribution(state)

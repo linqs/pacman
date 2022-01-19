@@ -21,8 +21,9 @@ class BaseAgent(abc.ABC):
     since agents are typically created reflexively.
     """
 
-    def __init__(self, index = 0):
+    def __init__(self, index = 0, **kwargs):
         self.index = index
+        self.kwargs = kwargs
 
     @abc.abstractmethod
     def getAction(self, state):

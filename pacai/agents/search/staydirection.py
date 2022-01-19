@@ -11,7 +11,7 @@ class StayEastSearchAgent(SearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self.searchFunction = search.ucs
         costFn = lambda pos: 0.5 ** pos[0]
@@ -26,7 +26,7 @@ class StayWestSearchAgent(SearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self.searchFunction = search.ucs
         costFn = lambda pos: 2 ** pos[0]

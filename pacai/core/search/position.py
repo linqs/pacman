@@ -44,7 +44,10 @@ class PositionSearchProblem(SearchProblem):
         # Register the locations we have visited.
         # This allows the GUI to highlight them.
         self._visitedLocations.add(state)
-        self._visitHistory.append(state)
+        # Note: visit history requires coordinates not states. In this situation
+        # they are equivalent.
+        coordinates = state
+        self._visitHistory.append(coordinates)
 
         return True
 
@@ -70,7 +73,10 @@ class PositionSearchProblem(SearchProblem):
         self._numExpanded += 1
         if (state not in self._visitedLocations):
             self._visitedLocations.add(state)
-            self._visitHistory.append(state)
+            # Note: visit history requires coordinates not states. In this situation
+            # they are equivalent.
+            coordinates = state
+            self._visitHistory.append(coordinates)
 
         return successors
 

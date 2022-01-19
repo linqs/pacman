@@ -20,7 +20,7 @@ class SearchAgent(BaseAgent):
             prob = 'pacai.core.search.position.PositionSearchProblem',
             heuristic = 'pacai.core.search.heuristic.null',
             **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         # Get the search problem type from the name.
         self.searchType = reflection.qualifiedImport(prob)

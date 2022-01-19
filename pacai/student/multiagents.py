@@ -14,7 +14,7 @@ class ReflexAgent(BaseAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
     def getAction(self, gameState):
         """
@@ -88,7 +88,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
@@ -103,7 +103,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
@@ -120,7 +120,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -147,4 +147,4 @@ class ContestAgent(MultiAgentSearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)

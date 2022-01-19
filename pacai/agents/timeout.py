@@ -11,7 +11,7 @@ class TimeoutAgent(RandomAgent):
     """
 
     def __init__(self, index, timeout = DEFAULT_TIMEOUT_SEC, **kwargs):
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         self._timeout = timeout
 

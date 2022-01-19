@@ -24,7 +24,7 @@ class ReinforcementAgent(ValueEstimationAgent):
             gamma: The discount factor.
             numTraining: The number of training episodes.
         """
-        super().__init__(index)
+        super().__init__(index, **kwargs)
 
         if (actionFn is None):
             actionFn = lambda state: state.getLegalActions()

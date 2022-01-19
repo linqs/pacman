@@ -13,8 +13,8 @@ class CaptureAgent(BaseAgent):
     and implement `CaptureAgent.chooseAction`.
     """
 
-    def __init__(self, index, timeForComputing = 0.1):
-        super().__init__(index)
+    def __init__(self, index, timeForComputing = 0.1, **kwargs):
+        super().__init__(index, **kwargs)
 
         # Whether or not you're on the red team
         self.red = None
