@@ -14,6 +14,9 @@ MAX_FPS = 1000
 TK_BASE_NAME = 'pacai'
 DEATH_SLEEP_TIME = 0.5
 
+MIN_WINDOW_HEIGHT = 100
+MIN_WINDOW_WIDTH = 100
+
 class AbstractGUIView(AbstractView):
     """
     Most of the functionality necessary to draw graphics in a window.
@@ -42,6 +45,7 @@ class AbstractGUIView(AbstractView):
 
         self._root = tkinter.Tk(baseName = TK_BASE_NAME)
         self._root.protocol('WM_DELETE_WINDOW', self._windowClosed)
+        self._root.minsize(width = MIN_WINDOW_WIDTH, height = MIN_WINDOW_HEIGHT)
         self._root.resizable(True, True)
         self._root.title(title)
 
@@ -74,8 +78,8 @@ class AbstractGUIView(AbstractView):
         super().initialize(state)
 
         # Height is +1 for the score.
-        self._height = (state.getInitialLayout().getHeight() + 1) * spritesheet.SQUARE_SIZE
-        self._width = state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE
+        self._height = max(MIN_WINDOW_HEIGHT, (state.getInitialLayout().getHeight() + 1) * spritesheet.SQUARE_SIZE)
+        self._width = max(MIN_WINDOW_WIDTH, state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE)
 
         if (self._canvas is None):
             self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width,
@@ -109,7 +113,7 @@ class AbstractGUIView(AbstractView):
         Decide if we need to take some action to adjust the FPS.
         If we are drawing too slow, we will drop a frame.
         If we are drawing too fast, we will block and timeout.
-        In the case of a dropped from, this will return true.
+        In the case of a dropped frame, this will return true.
         """
 
         now = time.time()
@@ -155,7 +159,7 @@ class AbstractGUIView(AbstractView):
         if (self._height != frame.getImageHeight() or self._width != frame.getImageWidth()):
             image = image.resize((self._width, self._height), resample = Image.LANCZOS)
 
-        # Convert the image into a ik image.
+        # Convert the image into a tk image.
         image = ImageTk.PhotoImage(image)
         self._canvas.itemconfig(self._imageArea, image = image)
 
@@ -168,8 +172,13 @@ class AbstractGUIView(AbstractView):
         if (self._width == event.width and self._height == event.height):
             return
 
-        self._width = event.width
-        self._height = event.height
+        # Ignore resize requests that are for a single pixel.
+        # (These requests are sometimes generated from OSX.)
+        if (event.width == 1 and event.height == 1):
+            return
+
+        self._width = max(MIN_WINDOW_WIDTH, event.width)
+        self._height = max(MIN_WINDOW_HEIGHT, event.height)
 
         self._canvas.config(width = self._width, height = self._height)
         self._canvas.pack(fill = 'both', expand = True)
