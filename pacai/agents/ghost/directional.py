@@ -1,5 +1,6 @@
 from pacai.agents.ghost.base import GhostAgent
 from pacai.core.actions import Actions
+from pacai.util import probability
 from pacai.core import distance
 
 class DirectionalGhost(GhostAgent):
@@ -47,7 +48,10 @@ class DirectionalGhost(GhostAgent):
             dist[a] = float(bestProb) / len(bestActions)
 
         for a in legalActions:
-            dist[a] += float(1 - bestProb) / len(legalActions)
+            try:
+                dist[a] += float(1 - bestProb) / len(legalActions)
+            except KeyError:
+                dist[a] = float(1 - bestProb) / len(legalActions)
 
-        dist.normalize()
+        probability.normalize(dist)
         return dist
