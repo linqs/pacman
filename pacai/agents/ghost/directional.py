@@ -49,7 +49,7 @@ class DirectionalGhost(GhostAgent):
 
         for a in legalActions:
             if (key not in dict): 
-                dict[key] = 1 
+                dict[key] = 0
             dict[key] += float(1 - bestProb) / len(legalActions)
                 
         probability.normalize(dist)
