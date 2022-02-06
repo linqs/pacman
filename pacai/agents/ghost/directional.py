@@ -48,11 +48,9 @@ class DirectionalGhost(GhostAgent):
             dist[a] = float(bestProb) / len(bestActions)
 
         for a in legalActions:
-            temp_dist = float(1 - bestProb) / len(legalActions)
-            if not a in dist:
-                dist[a] = temp_dist
-            else:
-                dist[a] += temp_dist
+            if (key not in dict): 
+                dict[key] = 1 
+            dict[key] += float(1 - bestProb) / len(legalActions)
                 
         probability.normalize(dist)
         return dist
