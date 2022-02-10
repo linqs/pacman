@@ -154,8 +154,12 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
             valStrings = {}
 
             for action in actions:
-                v = qValues[(state, action)]
+                v = qValues.get((state, action), 0.0)
+
+                if (action not in q):
+                    q[action] = 0.0
                 q[action] += v
+
                 valStrings[action] = '%.2f' % v
 
             if gridType == '#':
