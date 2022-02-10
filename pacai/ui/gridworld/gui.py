@@ -154,9 +154,10 @@ def drawQValues(gridworld, qValues, currentState = None, message = 'State-Action
             valStrings = {}
 
             for action in actions:
-                v = qValues[(state, action)]
-                q[action] += v
-                valStrings[action] = '%.2f' % v
+                if (state, action) in qValues:
+                    v = qValues[(state, action)]
+                    q[action] = v
+                    valStrings[action] = '%.2f' % v
 
             if gridType == '#':
                 drawSquare(x, y, 0, 0, 0, None, None, True, False, isCurrent)
