@@ -78,8 +78,12 @@ class AbstractGUIView(AbstractView):
         super().initialize(state)
 
         # Height is +1 for the score.
-        self._height = max(MIN_WINDOW_HEIGHT, (state.getInitialLayout().getHeight() + 1) * spritesheet.SQUARE_SIZE)
-        self._width = max(MIN_WINDOW_WIDTH, state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE)
+        self._height = max(
+            MIN_WINDOW_HEIGHT,
+            (state.getInitialLayout().getHeight() + 1) * spritesheet.SQUARE_SIZE)
+        self._width = max(
+            MIN_WINDOW_WIDTH,
+            state.getInitialLayout().getWidth() * spritesheet.SQUARE_SIZE)
 
         if (self._canvas is None):
             self._canvas = tkinter.Canvas(self._root, height = self._height, width = self._width,
