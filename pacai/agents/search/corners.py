@@ -9,7 +9,7 @@ class AStarCornersAgent(SearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index, **kwargs)
-
-        self.searchFunction = lambda prob: search.astar(prob, searchAgents.cornersHeuristic)
-        self.searchType = searchAgents.CornersProblem
+        super().__init__(index,
+                         fn = lambda prob: search.astar(prob, searchAgents.cornersHeuristic),
+                         prob = searchAgents.CornersProblem,
+                         **kwargs)
