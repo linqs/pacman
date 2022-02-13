@@ -1,8 +1,14 @@
 import logging
 import time
+from typing import Callable, Union
 
 from pacai.agents.base import BaseAgent
 from pacai.core.directions import Directions
+from pacai.core.gamestate import AbstractGameState
+from pacai.core.search.heuristic import null as nullHeuristic
+from pacai.core.search.position import PositionSearchProblem
+from pacai.core.search.problem import SearchProblem
+from pacai.student.search import depthFirstSearch
 from pacai.util import reflection
 
 class SearchAgent(BaseAgent):
@@ -16,18 +22,27 @@ class SearchAgent(BaseAgent):
     """
 
     def __init__(self, index,
-            fn = 'pacai.student.search.depthFirstSearch',
-            prob = 'pacai.core.search.position.PositionSearchProblem',
-            heuristic = 'pacai.core.search.heuristic.null',
+            fn: Union[str, Callable[[SearchProblem], any]] = depthFirstSearch,
+            prob: Union[str, Callable[[AbstractGameState], SearchProblem]] = PositionSearchProblem,
+            heuristic: Union[str, Callable] = nullHeuristic,
             **kwargs):
         super().__init__(index, **kwargs)
 
-        # Get the search problem type from the name.
-        self.searchType = reflection.qualifiedImport(prob)
-        logging.info('[SearchAgent] using problem type %s.' % (prob))
+        if isinstance(prob, str):
+            # Get the search problem type from the name.
+            self.searchType = reflection.qualifiedImport(prob)
+        else:
+            # Use provided problem or problem factory.
+            self.searchType = prob
+        logging.info('[SearchAgent] using problem type %s.' % (self.searchType))
 
-        # Get the search function from the name and heuristic.
-        self.searchFunction = self._fetchSearchFunction(fn, heuristic)
+        if isinstance(fn, str):
+            # Get the search function from the name and heuristic.
+            self.searchFunction = self._fetchSearchFunction(fn, heuristic)
+        else:
+            # Use provided search function and ignore heuristic.
+            self.searchFunction = fn
+        logging.info('[SearchAgent] using function %s.' % (self.searchFunction))
 
         # The actions the search produced.
         self._actions = []
@@ -76,7 +91,7 @@ class SearchAgent(BaseAgent):
 
         return action
 
-    def _fetchSearchFunction(self, functionName, heuristicName):
+    def _fetchSearchFunction(self, functionName: str, heuristic: Union[str, Callable]):
         """
         Get the specified search function by name.
         If that function also takes a heurisitc (i.e. has a parameter called "heuristic"),
@@ -91,10 +106,11 @@ class SearchAgent(BaseAgent):
             logging.info('[SearchAgent] using function %s.' % (functionName))
             return function
 
-        # Fetch the heuristic.
-        heuristic = reflection.qualifiedImport(heuristicName)
+        if isinstance(heuristic, str):
+            # Fetch the heuristic.
+            heuristic = reflection.qualifiedImport(heuristic)
         logging.info('[SearchAgent] using function %s and heuristic %s.' %
-                (functionName, heuristicName))
+                (functionName, heuristic))
 
         # Bind the heuristic.
         return lambda x: function(x, heuristic = heuristic)

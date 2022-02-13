@@ -10,7 +10,7 @@ class AStarFoodSearchAgent(SearchAgent):
     """
 
     def __init__(self, index, **kwargs):
-        super().__init__(index, **kwargs)
-
-        self.searchFunction = lambda prob: search.astar(prob, searchAgents.foodHeuristic)
-        self.searchType = FoodSearchProblem
+        super().__init__(index,
+                         fn = lambda prob: search.astar(prob, searchAgents.foodHeuristic),
+                         prob = FoodSearchProblem,
+                         **kwargs)
