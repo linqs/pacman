@@ -1,0 +1,77 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  style-lint:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+
+      - name: Cache Python Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Python Dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+      - name: Run Style/Lint
+        run: bash run_style.sh
+
+  version-matrix:
+
+    needs: [style-lint]
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: ['ubuntu-18.04', 'ubuntu-20.04', 'macos-10.15', 'macos-11', 'windows-2019', 'windows-2022']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        exclude:
+        - os: 'windows-2019'
+          python-version: '3.6'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache Python Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-${{matrix.os}}-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Python Dependencies
+        run: |
+          pip3 install -r requirements.txt
+
+        # Use `python` instead of `python3` because Windows may not have the later.
+      - name: Run Tests
+        run: |
+            python --version
+            python run_tests.py
