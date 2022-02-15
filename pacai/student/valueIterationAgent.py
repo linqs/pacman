@@ -46,7 +46,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         Return the value of the state (computed in __init__).
         """
 
-        return self.values[state]
+        return self.values.get(state, 0.0)
 
     def getAction(self, state):
         """
