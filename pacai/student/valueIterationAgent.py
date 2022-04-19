@@ -1,5 +1,5 @@
 from pacai.agents.learning.value import ValueEstimationAgent
-
+from collections import Counter
 class ValueIterationAgent(ValueEstimationAgent):
     """
     A value iteration agent.
@@ -36,17 +36,48 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.mdp = mdp
         self.discountRate = discountRate
         self.iters = iters
-        self.values = {}  # A dictionary which holds the q-values for each state.
-
+        states = mdp.getStates()
+        self.values = Counter()  # A dictionary which holds the q-values for each state.
         # Compute the values here.
-        raise NotImplementedError()
+        for i in range(self.iters):
+            # for each iteration (iters being the iterations passed into the function)
+            temp = Counter()  # empty dictionary for updated q values
+            for state in states:  # for each state
+                actions = self.mdp.getPossibleActions(state)
+                maxq = float("-inf")
+                for action in actions:
+                    q = self.getQValue(state, action)
+                    if q > maxq:  # find the best action based on max q value
+                        maxq = q
+                        temp[state] = q  # update the q value in temp
+            self.values = temp  # replace values with new updated values
+
+    def getQValue(self, state, action):
+        q = 0
+        for transition in self.mdp.getTransitionStatesAndProbs(state, action):  # for ech transition
+            reward = self.mdp.getReward(state, action, transition[0])  # R(s, a, s')
+            q += transition[1] * (reward + self.discountRate * self.getValue(transition[0]))
+            # sum T(s, a, s')  * [R(s, a, s') + gamma        * Vstar(s')]
+            # transition[0] is the state, transition[1] is the probability
+        return q
+
+    def getPolicy(self, state):
+        actions = self.mdp.getPossibleActions(state)
+        maxq = float("-inf")
+        maxAction = None
+        for action in actions:  # for each action compute its q
+            q = self.getQValue(state, action)
+            if q > maxq:  # save the q value as maxq if it is the current biggest
+                maxq = q
+                maxAction = action  # save the action to return
+        return maxAction
 
     def getValue(self, state):
         """
         Return the value of the state (computed in __init__).
         """
 
-        return self.values.get(state, 0.0)
+        return self.values[state]
 
     def getAction(self, state):
         """
