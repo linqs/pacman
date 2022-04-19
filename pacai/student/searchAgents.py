@@ -6,13 +6,14 @@ Good luck and happy searching!
 """
 
 import logging
-
+import pacai.student.search as search
 from pacai.core.actions import Actions
-from pacai.core.search import heuristic
+# from pacai.core.search import heuristic
 from pacai.core.search.position import PositionSearchProblem
 from pacai.core.search.problem import SearchProblem
 from pacai.agents.base import BaseAgent
 from pacai.agents.search.base import SearchAgent
+from pacai.core.directions import Directions
 
 class CornersProblem(SearchProblem):
     """
@@ -62,9 +63,8 @@ class CornersProblem(SearchProblem):
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 logging.warning('Warning: no food in corner ' + str(corner))
-
+        self._numExpanded = 0
         # *** Your Code Here ***
-        raise NotImplementedError()
 
     def actionsCost(self, actions):
         """
@@ -85,6 +85,61 @@ class CornersProblem(SearchProblem):
 
         return len(actions)
 
+    def getExpandedCount(self):
+        return self._numExpanded
+
+    def getVisitHistory(self):
+        return self._visitHistory
+
+    def isGoal(self, state):
+        """
+        Answers the question:
+        Is this state a goal?
+
+        Returns True if and only if the state is a valid goal state.
+        """
+        return len(state[1]) == 4
+        # if 4 corners in the state then we have reached all corners, only unique corners added
+
+    def startingState(self):
+        """
+        Answers the question:
+        Where should the search start?
+
+        Returns the starting state for the search problem.
+        """
+        return ((self.startingPosition), ())  # state[1] is the empty tuple of the corners visited
+        # search starts at the starting position, also need to know where corners are
+
+    def successorStates(self, state):
+        """
+        Answers the question:
+        What moves are possible from this state?
+
+        Returns a list of tuples with three values:
+        (successor state, action, cost of taking the action).
+        """
+        self._numExpanded += 1
+        successors = []
+        for action in Directions.CARDINAL:
+            if type(state[0]) == tuple:
+                x, y = state[0]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if (not hitsWall):
+                if type(state[1]) == tuple:  # had to add this to get around a type error
+                    visited = list(state[1])  # saving previous states corners visited
+                    next_state = (nextx, nexty)  # changing to next state
+                    for corner in self.corners:  # for each corner
+                        if next_state == corner and next_state not in visited:
+                            # if state is a corner and we havent visited this corner
+                            visited.append(corner)  # store the visted corner
+                    cost = self.actionsCost([action])
+                    successors.append(((next_state, tuple(visited)), action, cost))
+                    # create the successor and append to the array we are gonna return
+        return successors
+
 def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
@@ -100,7 +155,21 @@ def cornersHeuristic(state, problem):
     # walls = problem.walls  # These are the walls of the maze, as a Grid.
 
     # *** Your Code Here ***
-    return heuristic.null(state, problem)  # Default to trivial solution
+    x, y = tuple(state[0])
+    man_distances = []
+    unvisited = []
+    heuristic = 0
+    for corner in problem.corners:  # get all unvisited corners
+        if corner not in state[1]:
+            unvisited.append(corner)
+    while len(unvisited) > 0:  # while we haven't visited all the corners
+        for corner in unvisited:  # find all the manhattan distances
+            man_distances.append((abs(corner[0] - x) + abs(corner[1] - y)))  # manhattan distance
+        i = man_distances.index(min(man_distances))  # index of the closest manhattan distance
+        heuristic += man_distances[i]  # add to the total distance to visit every corner
+        x, y = unvisited.pop(i)  # corner is now visited
+        man_distances.clear()  # start over
+    return heuristic
 
 def foodHeuristic(state, problem):
     """
@@ -130,11 +199,17 @@ def foodHeuristic(state, problem):
     ```
     Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount'].
     """
-
     position, foodGrid = state
+    if type(position) == tuple:  # added to prevent error
+        x, y = tuple(position)
+        distances = []
+        for pellet in foodGrid.asList():  # for each piece of food
+            distances.append((abs(pellet[0] - x) + abs(pellet[1] - y)))  # manhattan distance
+        if len(distances) != 0:
+            return (min(distances) + max(distances)) / 2
+            # this is the average distance you are between the closest and farthest piece
+    return 0
 
-    # *** Your Code Here ***
-    return heuristic.null(state, problem)  # Default to the null heuristic.
 
 class ClosestDotSearchAgent(SearchAgent):
     """
@@ -173,10 +248,10 @@ class ClosestDotSearchAgent(SearchAgent):
         # startPosition = gameState.getPacmanPosition()
         # food = gameState.getFood()
         # walls = gameState.getWalls()
-        # problem = AnyFoodSearchProblem(gameState)
+        problem = AnyFoodSearchProblem(gameState)
 
         # *** Your Code Here ***
-        raise NotImplementedError()
+        return search.aStarSearch(problem, foodHeuristic)  # using a star so we can use heuristic
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -204,6 +279,74 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 
         # Store the food for later reference.
         self.food = gameState.getFood()
+
+    def actionsCost(self, actions):
+        """
+        Returns the cost of a particular sequence of actions.
+        If those actions include an illegal move, return 999999.
+        This is implemented for you.
+        """
+
+        if (actions is None):
+            return 999999
+
+        x, y = self.startingPosition
+        for action in actions:
+            dx, dy = Actions.directionToVector(action)
+            x, y = int(x + dx), int(y + dy)
+            if self.walls[x][y]:
+                return 999999
+
+        return len(actions)
+
+    def getExpandedCount(self):
+        return self._numExpanded
+
+    def getVisitHistory(self):
+        return self._visitHistory
+
+    def isGoal(self, state):
+        """
+        Answers the question:
+        Is this state a goal?
+
+        Returns True if and only if the state is a valid goal state.
+        """
+        if state in self.food.asList():  # if our state is in the food list then it is food
+            return True
+        return False
+
+    def startingState(self):
+        return self.startState
+
+    def successorStates(self, state):  # copied from position.py
+        """
+        Returns successor states, the actions they require, and a constant cost of 1.
+        """
+
+        successors = []
+
+        for action in Directions.CARDINAL:
+            x, y = state
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+
+            if (not self.walls[nextx][nexty]):
+                nextState = (nextx, nexty)
+                cost = self.costFn(nextState)
+
+                successors.append((nextState, action, cost))
+
+        # Bookkeeping for display purposes (the highlight in the GUI).
+        self._numExpanded += 1
+        if (state not in self._visitedLocations):
+            self._visitedLocations.add(state)
+            # Note: visit history requires coordinates not states. In this situation
+            # they are equivalent.
+            coordinates = state
+            self._visitHistory.append(coordinates)
+
+        return successors
 
 class ApproximateSearchAgent(BaseAgent):
     """
