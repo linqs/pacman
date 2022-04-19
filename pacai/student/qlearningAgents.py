@@ -1,5 +1,7 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.util import reflection
+from collections import Counter
+import random
 
 class QLearningAgent(ReinforcementAgent):
     """
@@ -16,7 +18,7 @@ class QLearningAgent(ReinforcementAgent):
     `pacai.agents.learning.reinforcement.ReinforcementAgent.getEpsilon`:
     Get the exploration probability.
 
-    `pacai.agents.learning.reinforcement.ReinforcementAgent.getLegalActions`:
+    `pacai.agents.learning.reinforcement.ReinforcementAgent.self.getLegalActions`:
     Get the legal actions for a reinforcement agent.
 
     `pacai.util.probability.flipCoin`:
@@ -45,18 +47,23 @@ class QLearningAgent(ReinforcementAgent):
     def __init__(self, index, **kwargs):
         super().__init__(index, **kwargs)
 
+        self.values = Counter()
         # You can initialize Q-values here.
 
     def getQValue(self, state, action):
+        # print("getqvalue called")
         """
         Get the Q-Value for a `pacai.core.gamestate.AbstractGameState`
         and `pacai.core.directions.Directions`.
         Should return 0.0 if the (state, action) pair has never been seen.
         """
-
-        return 0.0
+        if (state, action) not in self.values:
+            self.values[(state, action)] = 0.0
+        return self.values[(state, action)]
+        # return the q value and 0 if there isnt a q value for that state action pair yet
 
     def getValue(self, state):
+        # print("getvalue called")
         """
         Return the value of the best action in a state.
         I.E., the value of the action that solves: `max_action Q(state, action)`.
@@ -68,10 +75,19 @@ class QLearningAgent(ReinforcementAgent):
         which returns the actual best action.
         Whereas this method returns the value of the best action.
         """
-
-        return 0.0
+        maxq = float("-inf")
+        q = 0
+        if len(self.getLegalActions(state)) == 0:  # if there are no actions return 0
+            return 0.0
+        for action in self.getLegalActions(state):
+            # find the best q value from all the possible actions
+            q = self.getQValue(state, action)
+            if q > maxq:  # if q is better than the max make q the max
+                maxq = q
+        return maxq
 
     def getPolicy(self, state):
+        # print("getpolicy called")
         """
         Return the best action in a state.
         I.E., the action that solves: `max_action Q(state, action)`.
@@ -83,8 +99,36 @@ class QLearningAgent(ReinforcementAgent):
         which returns the value of the best action.
         Whereas this method returns the best action itself.
         """
+        maxAction = None
+        actions = self.getLegalActions(state)
+        qvals = []
+        maxActions = []
+        for action in actions:
+            qvals.append(self.getQValue(state, action))
+        i = 0
+        for q in qvals:
+            # need to randomize the action taken if there is a tie
+            # for the best action so it doesnt get stuck and do the same thing over and over
+            if q == max(qvals):  # find all the actions that are tied for the max q value
+                maxActions.append(actions[i])
+                maxAction = actions[i]
+            i += 1
+        if len(maxActions) - 1 >= 0:  # return a random action that tied for best q value
+            return maxActions[random.randint(0, len(maxActions) - 1)]
+        else:
+            return maxAction  # if there were no legal actions return none
 
-        return None
+    def getAction(self, state):
+        if random.randint(1, 100) <= 100 * self.getEpsilon():  # return a random action
+            return random.choice(self.getLegalActions(state))
+        else:
+            return self.getPolicy(state)  # return the optimal policy
+
+    def update(self, state, action, nextState, reward):
+        self.values[(state, action)] = (
+            1 - self.getAlpha()) * self.getQValue(state, action) + self.getAlpha() * (
+            reward + self.getDiscountRate() * self.getValue(nextState))
+        # (1 - alpha) * Q(s, a) + alpha[R(s, a, s') + max_a'(Q(s', a'))] (getValue computes max Q)
 
 class PacmanQAgent(QLearningAgent):
     """
@@ -133,9 +177,28 @@ class ApproximateQAgent(PacmanQAgent):
     def __init__(self, index,
             extractor = 'pacai.core.featureExtractors.IdentityExtractor', **kwargs):
         super().__init__(index, **kwargs)
-        self.featExtractor = reflection.qualifiedImport(extractor)
-
+        self.featExtractor = reflection.qualifiedImport(extractor)()
+        self.weights = Counter()
         # You might want to initialize weights here.
+
+    def getQValue(self, state, action):
+        q = 0
+        for feature in self.featExtractor.getFeatures(state, action):
+            # dot product of w and featureVector
+            q += self.weights[feature] * self.featExtractor.getFeatures(state, action)[feature]
+        return q
+
+    def update(self, state, action, nextState, reward):
+        correction = (
+            reward + self.getDiscountRate() * self.getValue(nextState)) - self.getQValue(
+            state, action)
+        # (R(s,a) + gammaV(s')) - Q(s,a)
+        newWeight = self.getAlpha() * correction  # alpha * correction
+        features = self.featExtractor.getFeatures(state, action)
+        # have to set it as a variable to avoid weird error
+        for feature in features:
+            self.weights[feature] = self.weights[feature] + newWeight * features[feature]
+            # w_i = w_i + newWeight * f_i(s,a)
 
     def final(self, state):
         """
@@ -149,4 +212,4 @@ class ApproximateQAgent(PacmanQAgent):
         if self.episodesSoFar == self.numTraining:
             # You might want to print your weights here for debugging.
             # *** Your Code Here ***
-            raise NotImplementedError()
+            pass
