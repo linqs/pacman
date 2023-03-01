@@ -15,7 +15,7 @@ def question2():
     """
 
     answerDiscount = 0.9
-    answerNoise = 0.2
+    answerNoise = 0.01
 
     return answerDiscount, answerNoise
 
@@ -24,9 +24,9 @@ def question3a():
     [Enter a description of what you did here.]
     """
 
-    answerDiscount = 0.9
-    answerNoise = 0.2
-    answerLivingReward = 0.0
+    answerDiscount = 0.5
+    answerNoise = 0.05
+    answerLivingReward = -2
 
     return answerDiscount, answerNoise, answerLivingReward
 
@@ -35,9 +35,9 @@ def question3b():
     [Enter a description of what you did here.]
     """
 
-    answerDiscount = 0.9
-    answerNoise = 0.2
-    answerLivingReward = 0.0
+    answerDiscount = 0.4
+    answerNoise = 0.3
+    answerLivingReward = -2
 
     return answerDiscount, answerNoise, answerLivingReward
 
@@ -46,9 +46,9 @@ def question3c():
     [Enter a description of what you did here.]
     """
 
-    answerDiscount = 0.9
-    answerNoise = 0.2
-    answerLivingReward = 0.0
+    answerDiscount = 0.99
+    answerNoise = 0.05
+    answerLivingReward = -1.0
 
     return answerDiscount, answerNoise, answerLivingReward
 
@@ -57,9 +57,9 @@ def question3d():
     [Enter a description of what you did here.]
     """
 
-    answerDiscount = 0.9
-    answerNoise = 0.2
-    answerLivingReward = 0.0
+    answerDiscount = 0.99
+    answerNoise = 0.4
+    answerLivingReward = -1
 
     return answerDiscount, answerNoise, answerLivingReward
 
@@ -68,9 +68,9 @@ def question3e():
     [Enter a description of what you did here.]
     """
 
-    answerDiscount = 0.9
-    answerNoise = 0.2
-    answerLivingReward = 0.0
+    answerDiscount = 0.99
+    answerNoise = 0.1
+    answerLivingReward = 15.0
 
     return answerDiscount, answerNoise, answerLivingReward
 

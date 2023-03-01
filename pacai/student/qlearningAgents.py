@@ -1,5 +1,7 @@
 from pacai.agents.learning.reinforcement import ReinforcementAgent
 from pacai.util import reflection
+from pacai.util.probability import flipCoin
+import random
 
 class QLearningAgent(ReinforcementAgent):
     """
@@ -46,6 +48,32 @@ class QLearningAgent(ReinforcementAgent):
         super().__init__(index, **kwargs)
 
         # You can initialize Q-values here.
+        # qValues = {} : {state -> action} -> int
+        self.qValues = {}
+
+    def update(self, state, action, nextState, reward):
+        if state not in self.qValues:
+            self.qValues[state] = {}
+        if action not in self.qValues[state]:
+            self.qValues[state][action] = 0.0
+
+        # newQValue = oldValue + alpha *((reward + (discount * futureQValue)) - oldValue)
+        #           = (1 - a)qold + a(r + y * qnew)
+        q_old = self.qValues[state][action]
+        alpha = self.getAlpha()
+        y = self.getDiscountRate()
+        q_next = self.getValue(nextState)
+
+        self.qValues[state][action] = q_old + alpha * (reward + y * q_next - q_old)
+
+    def getAction(self, state):
+        legalActions = self.getLegalActions(state)
+        if not legalActions:
+            return 0.0
+        if(flipCoin(self.getEpsilon())):
+            return random.choice(legalActions)
+        else:
+            return self.getPolicy(state)
 
     def getQValue(self, state, action):
         """
@@ -53,8 +81,11 @@ class QLearningAgent(ReinforcementAgent):
         and `pacai.core.directions.Directions`.
         Should return 0.0 if the (state, action) pair has never been seen.
         """
+        if(state not in self.qValues
+           or action not in self.qValues[state]):
+            return 0.0
 
-        return 0.0
+        return self.qValues[state][action]
 
     def getValue(self, state):
         """
@@ -68,8 +99,12 @@ class QLearningAgent(ReinforcementAgent):
         which returns the actual best action.
         Whereas this method returns the value of the best action.
         """
+        legalActions = self.getLegalActions(state)
+        if not legalActions:
+            return 0.0
 
-        return 0.0
+        return max([self.getQValue(state, action) for action in legalActions])
+
 
     def getPolicy(self, state):
         """
@@ -83,8 +118,12 @@ class QLearningAgent(ReinforcementAgent):
         which returns the value of the best action.
         Whereas this method returns the best action itself.
         """
+        legalActions = self.getLegalActions(state)
+        if not legalActions:
+            return 0.0
 
-        return None
+        vaList = [(self.getQValue(state, action), action) for action in legalActions]
+        return max(vaList, key=lambda x: x[0])[1]
 
 class PacmanQAgent(QLearningAgent):
     """
