@@ -105,7 +105,6 @@ class QLearningAgent(ReinforcementAgent):
 
         return max([self.getQValue(state, action) for action in legalActions])
 
-
     def getPolicy(self, state):
         """
         Return the best action in a state.
@@ -175,6 +174,26 @@ class ApproximateQAgent(PacmanQAgent):
         self.featExtractor = reflection.qualifiedImport(extractor)
 
         # You might want to initialize weights here.
+        self.weights = {}
+
+    def getQValue(self, state, action):
+        res = 0
+        for sa, v in self.featExtractor.getFeatures(self.featExtractor, state, action).items():
+            if sa not in self.weights:
+                self.weights[sa] = 0
+            res += self.weights[sa] * v
+        return res
+
+    def update(self, state, action, nextState, reward):
+        # newQValue = oldValue + alpha *((reward + (discount * futureQValue)) - oldValue)
+        #           = (1 - a)qold + a(r + y * qnew)
+        alpha = self.getAlpha()
+        y = self.getDiscountRate()
+        correction = reward + y * self.getValue(nextState) - self.getQValue(state, action)
+        for sa, v in self.featExtractor.getFeatures(self.featExtractor, state, action).items():
+            if sa not in self.weights:
+                self.weights[sa] = 0
+            self.weights[sa] += alpha * correction * v
 
     def final(self, state):
         """
@@ -188,4 +207,5 @@ class ApproximateQAgent(PacmanQAgent):
         if self.episodesSoFar == self.numTraining:
             # You might want to print your weights here for debugging.
             # *** Your Code Here ***
-            raise NotImplementedError()
+            print(self.weights.values())
+            return
