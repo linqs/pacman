@@ -11,12 +11,13 @@ class DefensiveReflexAgent(ReflexCaptureAgent):
     def __init__(self, index, **kwargs):
         super().__init__(index)
 
+
     def getFeatures(self, gameState, action):
         features = {}
-
         successor = self.getSuccessor(gameState, action)
         myState = successor.getAgentState(self.index)
         myPos = myState.getPosition()
+
 
         # Computes whether we're on defense (1) or offense (0).
         features['onDefense'] = 1
