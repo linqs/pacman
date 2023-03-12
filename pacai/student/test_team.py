@@ -3,6 +3,7 @@ import random
 import time
 from pacai.core.directions import Directions
 from pacai.agents.capture.capture import CaptureAgent
+from pacai.agents.capture.dummy import DummyAgent
 from pacai.util import util
 
 def createTeam(firstIndex, secondIndex, isRed):
@@ -13,8 +14,8 @@ def createTeam(firstIndex, secondIndex, isRed):
     and will be False if the blue team is being created.
     """
 
-    firstAgent = PacmanSlashBurstDefensive(firstIndex)
-    secondAgent = PacmanSlashBurstOffensive(secondIndex)
+    firstAgent = DummyAgent(firstIndex)
+    secondAgent = DummyAgent(secondIndex)
 
     return [
         firstAgent,
@@ -181,6 +182,7 @@ class PacmanSlashBurstOffensive(PacmanSlashBurst):
                 features['reverse'] = 1
         else:
             self.in_defense = False
+            features['num_free'] = len(successor.getLegalActions(self.index))
             features['successorScore'] = self.getScore(successor)
             # Compute distance to the nearest food.
             foodList = self.getFood(successor).asList()
@@ -244,10 +246,11 @@ class PacmanSlashBurstOffensive(PacmanSlashBurst):
         else:
             return {
                 'successorScore': 100,
-                'distanceToFood': 1,
-                'ghostDistance': self.immune * 5,
+                'distanceToFood': 2,
+                'ghostDistance': self.immune * 10,
                 'capsuleDistance': 5,
                 'stop': -100,
                 'reverse': -30,
-                "isPacman": 5
+                "isPacman": 5,
+                "num_free": 0.1
             }
