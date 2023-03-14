@@ -14,8 +14,8 @@ def createTeam(firstIndex, secondIndex, isRed):
     and will be False if the blue team is being created.
     """
 
-    firstAgent = DummyAgent(firstIndex)
-    secondAgent = DummyAgent(secondIndex)
+    firstAgent = PacmanSlashBurstOffensiveUpper(firstIndex)
+    secondAgent = PacmanSlashBurstOffensiveLower(secondIndex)
 
     return [
         firstAgent,
@@ -73,6 +73,7 @@ class PacmanSlashBurstDefensive(PacmanSlashBurst):
         super().__init__(index, **kwargs)
         self.inScary = 0
         self.to_approach = 1
+        self.invaders = set()
 
     def getFeatures(self, gameState, action):
         features = {}
@@ -85,26 +86,46 @@ class PacmanSlashBurstDefensive(PacmanSlashBurst):
             self.inScary = 1
         else:
             self.inScary = -1
+
+        enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
         # Computes whether we're on defense (1) or offense (0).
+        ghosts = [a for a in enemies if a.isGhost() and a.getPosition() is not None]
+        closest_ghost = 999
+        if(len(ghosts) > 0):
+            closest_ghost = min([self.getMazeDistance(myPos, a.getPosition()) for a in ghosts])
         features['onDefense'] = 1
-        if (myState.isPacman()):
+        if (myState.isPacman() and closest_ghost <= 999):
             features['onDefense'] = 0
 
         # Computes distance to invaders we can see.
-        enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-        invaders = [a for a in enemies if a.isPacman() and a.getPosition() is not None]
-        features['numInvaders'] = len(invaders)
+        cur_invaders = [a for a in enemies if a.isPacman() and a.getPosition() is not None]
+        features['numInvaders'] = len(cur_invaders)
         self.to_approach = 1
 
-        if (len(invaders) > 0):
-            dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
-            features['invaderDistance'] = 1 / (min(dists) + 0.05)
+        if (len(cur_invaders) > 0):
+            for invader in cur_invaders:
+                agents = successor.getAgentStates()
+                for i in range(len(agents)):
+                    if invader == agents[i]:
+                        self.invaders.add(i)
+                        break
+
+            dists = [self.getMazeDistance(myPos, a.getPosition()) for a in cur_invaders]
+            features['invaderDistance'] = min(dists)
+
             if(self.inScary == 1 and min(dists) <= 3):
                 self.to_approach = -1
         else:
-            ghosts = [a for a in enemies if a.getPosition() is not None]
-            dists = [self.getMazeDistance(myPos, a.getPosition()) for a in ghosts]
-            features['invaderDistance'] = 1 / (min(dists) + 0.05)
+            if(len(self.invaders) == 0):
+                ghosts = [a for a in enemies if a.getPosition() is not None]
+                dists = [self.getMazeDistance(myPos, a.getPosition()) for a in ghosts]
+                features['invaderDistance'] = min(dists)
+
+            else:
+                ghosts = [successor.getAgentState(a) for a in self.invaders if successor.getAgentState(a).getPosition() is not None]
+                dists = [self.getMazeDistance(myPos, a.getPosition()) for a in ghosts]
+                features['invaderDistance'] = min(dists)
+
 
         if (action == Directions.STOP):
             features['stop'] = 1
@@ -117,9 +138,9 @@ class PacmanSlashBurstDefensive(PacmanSlashBurst):
 
     def getWeights(self, gameState, action):
         return {
-            'numInvaders': -1000,
-            'onDefense': 100,
-            'invaderDistance': self.to_approach * 10,
+            'numInvaders': -99999,
+            'onDefense': 1000,
+            'invaderDistance': self.to_approach * -20,
             'stop': -100,
             'reverse': -2
         }
@@ -182,7 +203,6 @@ class PacmanSlashBurstOffensive(PacmanSlashBurst):
                 features['reverse'] = 1
         else:
             self.in_defense = False
-            features['num_free'] = len(successor.getLegalActions(self.index))
             features['successorScore'] = self.getScore(successor)
             # Compute distance to the nearest food.
             foodList = self.getFood(successor).asList()
@@ -231,7 +251,8 @@ class PacmanSlashBurstOffensive(PacmanSlashBurst):
                     features['reverse'] = 0.2
             else:
                 features['reverse'] = 0
-
+        #
+            features['upper'] = 1 if myPos[1] > successor.getFood().getHeight() else 0
         return features
 
     def getWeights(self, gameState, action):
@@ -246,11 +267,74 @@ class PacmanSlashBurstOffensive(PacmanSlashBurst):
         else:
             return {
                 'successorScore': 100,
-                'distanceToFood': 2,
-                'ghostDistance': self.immune * 10,
+                'distanceToFood': 10,
+                'ghostDistance': self.immune * 30,
                 'capsuleDistance': 5,
                 'stop': -100,
                 'reverse': -30,
                 "isPacman": 5,
-                "num_free": 0.1
+                "upper": 0
+            }
+
+#============================================================================================
+class PacmanSlashBurstOffensiveUpper(PacmanSlashBurstOffensive):
+    """
+    A reflex agent that seeks food.
+    This agent will give you an idea of what an offensive agent might look like,
+    but it is by no means the best or only way to build an offensive agent.
+    """
+
+    def __init__(self, index, **kwargs):
+        super().__init__(index)
+
+    def getWeights(self, gameState, action):
+        if self.in_defense is True:
+            return {
+                'numInvaders': -1000,
+                'onDefense': 100,
+                'invaderDistance': self.inScary * 10,
+                'stop': -100,
+                'reverse': -2
+            }
+        else:
+            return {
+                'successorScore': 100,
+                'distanceToFood': 10,
+                'ghostDistance': self.immune * 30,
+                'capsuleDistance': 5,
+                'stop': -100,
+                'reverse': -30,
+                "isPacman": 5,
+                "upper": 11
+            }
+
+class PacmanSlashBurstOffensiveLower(PacmanSlashBurstOffensive):
+    """
+    A reflex agent that seeks food.
+    This agent will give you an idea of what an offensive agent might look like,
+    but it is by no means the best or only way to build an offensive agent.
+    """
+
+    def __init__(self, index, **kwargs):
+        super().__init__(index)
+
+    def getWeights(self, gameState, action):
+        if self.in_defense is True:
+            return {
+                'numInvaders': -1000,
+                'onDefense': 100,
+                'invaderDistance': self.inScary * 10,
+                'stop': -100,
+                'reverse': -2
+            }
+        else:
+            return {
+                'successorScore': 100,
+                'distanceToFood': 10,
+                'ghostDistance': self.immune * 30,
+                'capsuleDistance': 5,
+                'stop': -100,
+                'reverse': -30,
+                "isPacman": 5,
+                "upper": -11
             }
