@@ -118,7 +118,7 @@ class PacmanSlashBurstDefensive(PacmanSlashBurst):
 
             dists = [self.getMazeDistance(myPos, a.getPosition()) for a in cur_invaders]
             features['invaderDistance'] = min(dists)
-            #print(features['invaderDistance'])
+
             if(self.inScary == 1 and min(dists) <= 3):
                 self.to_approach = -1
         else:
@@ -129,14 +129,13 @@ class PacmanSlashBurstDefensive(PacmanSlashBurst):
 
             # only one invader
             else:
-                ghosts = [successor.getAgentState(a) for a in self.invaders if successor.getAgentState(a).getPosition() is not None]
+                ghosts = [successor.getAgentState(a) for a in self.invaders
+                          if successor.getAgentState(a).getPosition() is not None]
                 dists = [self.getMazeDistance(myPos, a.getPosition()) for a in ghosts]
                 features['invaderDistance'] = min(dists)
 
-
         if (action == Directions.STOP):
             features['stop'] = 1
-
 
         return features
 
@@ -280,7 +279,7 @@ class PacmanSlashBurstOffensive(PacmanSlashBurst):
                 "upper": 0
             }
 
-#============================================================================================
+# ===================================================================
 class PacmanSlashBurstOffensiveUpper(PacmanSlashBurstOffensive):
     """
     A reflex agent that seeks food.
