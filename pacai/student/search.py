@@ -5,10 +5,8 @@ In this file, you will implement generic search algorithms which are called by P
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first [p 85].
-
     Your search algorithm needs to return a list of actions that reaches the goal.
     Make sure to implement a graph search algorithm [Fig. 3.7].
-
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
     ```
@@ -17,8 +15,38 @@ def depthFirstSearch(problem):
     print("Start's successors: %s" % (problem.successorStates(problem.startingState())))
     ```
     """
+    # Set up an empty stack to keep track of the nodes to visit
+    stack = util.Stack()
 
-    # *** Your Code Here ***
+    # Set up an empty set to keep track of visited nodes
+    visited = set()
+
+    # Add the starting node to the stack
+    stack.push((problem.getStartState(), []))
+
+    # While there are nodes to visit
+    while not stack.isEmpty():
+
+        # Pop the next node from the stack
+        node, actions = stack.pop()
+
+        # If the node is the goal state, return the actions to reach it
+        if problem.isGoalState(node):
+            return actions
+
+        # If the node has not been visited yet
+        if node not in visited:
+
+            # Add the node to the set of visited nodes
+            visited.add(node)
+
+            # Get the successors of the node and push them onto the stack
+            for next_node, action, cost in problem.getSuccessors(node):
+                stack.push((next_node, actions + [action]))
+
+    # If there are no more nodes to visit and the goal has not been found, return failure
+    return []
+
     raise NotImplementedError()
 
 def breadthFirstSearch(problem):
