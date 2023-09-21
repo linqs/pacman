@@ -6,17 +6,6 @@ trap exit SIGINT
 
 exitStatus=0
 
-# Check style.
-echo "Checking style ..."
-
-"${THIS_DIR}/../run_style.sh"
-if [[ $? -eq 0 ]]; then
-    echo "Style passed!"
-else
-    echo "Style failed. :("
-    exitStatus=1
-fi
-
 # Run tests.
 echo "Running tests ..."
 

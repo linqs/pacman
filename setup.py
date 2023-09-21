@@ -7,7 +7,7 @@ def get_description():
 def main():
     setuptools.setup(
         name = 'pacai',
-        version = '1.1.0',
+        version = '1.2.0',
         url = 'https://github.com/linqs/pacman',
 
         keywords = [
@@ -30,7 +30,7 @@ def main():
             'imageio==2.5.0',
         ],
 
-        python_requires = '>=3.5',
+        python_requires = '>=3.7',
 
         classifiers = [
             'Intended Audience :: Science/Research',

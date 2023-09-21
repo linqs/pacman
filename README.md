@@ -5,7 +5,7 @@ A modified version of the Pacman educational project from the [Berkeley AI Lab](
 Some improvements from the original project:
  - Upgraded to Python 3.
  - Organized into packages.
- - Brought up to a common style with a style checker.
+ - Brought up to a common style.
  - Added logging.
  - Added tests.
  - Fixed several bugs.
@@ -32,10 +32,6 @@ You can invoke them from this repository's root directory (where this file is lo
 ```
 python3 -m pacai.bin.pacman
 ```
-
-**Q:** How can I run the style checker?  
-**A:** The easiest way to run the style checker is to execute the `run_style.sh` script in the root of this repository.
-If a `0` comes up, then you are good!
 
 **Q:** What's with the `student` package?  
 **A:** The `student` package is for the files that students will edit to complete assignments.
