@@ -11,7 +11,6 @@ from pacai.core.mdp import MarkovDecisionProcess
 from pacai.student.qlearningAgents import QLearningAgent
 from pacai.student.valueIterationAgent import ValueIterationAgent
 from pacai.ui.gridworld.text import TextGridworldDisplay
-from pacai.ui.gridworld.utils import wait_for_keys
 from pacai.util.logs import initLogging
 from pacai.util.logs import updateLoggingLevel
 
@@ -286,6 +285,9 @@ def getUserAction(state, actionFunction):
 
     Used for debugging and lecture demos.
     """
+
+    # Delay import so that tkinter won't be imported unless necessary.
+    from pacai.ui.gridworld.utils import wait_for_keys
 
     action = None
 
