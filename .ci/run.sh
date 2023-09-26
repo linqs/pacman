@@ -1,20 +1,28 @@
 #!/bin/bash
 
 readonly THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+readonly BASE_DIR="${THIS_DIR}/.."
 
-trap exit SIGINT
+function main() {
+    if [[ $# -ne 0 ]]; then
+        echo "USAGE: $0"
+        exit 1
+    fi
 
-exitStatus=0
+    trap exit SIGINT
 
-# Run tests.
-echo "Running tests ..."
+    local error_count=0
 
-"${THIS_DIR}/../run_tests.py"
-if [[ $? -eq 0 ]]; then
-    echo "Tests passed!"
-else
-    echo "Tests failed. :("
-    exitStatus=1
-fi
+    python "${BASE_DIR}/run_tests.py"
+    ((error_count += $?))
 
-exit ${exitStatus}
+    if [[ ${error_count} -gt 0 ]] ; then
+        echo "Found ${error_count} issues."
+    else
+        echo "No issues found."
+    fi
+
+    return ${error_count}
+}
+
+[[ "${BASH_SOURCE[0]}" == "${0}" ]] && main "$@"
