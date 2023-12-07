@@ -127,4 +127,4 @@ class AgentState:
             scaredString = '!'
 
         return "%s%s: Position: %s, Direction: %s" % (typeString, scaredString,
-                str(self._position), str(self.direction))
+                str(self._position), str(self._direction))
