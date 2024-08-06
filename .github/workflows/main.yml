@@ -48,6 +48,7 @@ jobs:
         run: ./run_tests.py
 
       - name: Generate Documentation
+        if: runner.os == 'Linux'
         shell: bash
         run: ./gen_docs.sh
 
