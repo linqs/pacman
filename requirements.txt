@@ -1,8 +1,7 @@
 Pillow>=8.3.2
 
-setuptools
-build
-twine
 packaging>=21.3
 pdoc3>=0.7.0
+setuptools
+twine
 vermin
