@@ -56,6 +56,15 @@ jobs:
     needs: [main]
     if: ${{ github.event_name == 'push' && github.repository_owner == 'linqs' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) }}
 
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     # We will only run on one config, but using the matrix allows us to use the exact same steps.
     strategy:
       matrix:
@@ -82,3 +91,19 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: pip3 install -U -r requirements.txt
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build Site
+        shell: bash
+        run: ./.ci/build_site.sh
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '._site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
