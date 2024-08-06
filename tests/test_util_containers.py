@@ -16,7 +16,7 @@ class UtilContainersTest(unittest.TestCase):
         for val in val_list:
             testQueue.push(val)
         self.assertFalse(testQueue.isEmpty())
-        self.assertEquals(len(val_list), len(testQueue))
+        self.assertEqual(len(val_list), len(testQueue))
 
         # Test Queue for FIFO functionality.
         for val in val_list:
@@ -30,7 +30,7 @@ class UtilContainersTest(unittest.TestCase):
         for val in val_list:
             testStack.push(val)
         self.assertFalse(testStack.isEmpty())
-        self.assertEquals(len(val_list), len(testStack))
+        self.assertEqual(len(val_list), len(testStack))
 
         # Test Stack for LIFO functionality.
         for val in reversed(val_list):
@@ -46,7 +46,7 @@ class UtilContainersTest(unittest.TestCase):
         for val, pri in val_list:
             testPriorityQueue.push(val, pri)
         self.assertFalse(testPriorityQueue.isEmpty())
-        self.assertEquals(len(val_list), len(testPriorityQueue))
+        self.assertEqual(len(val_list), len(testPriorityQueue))
 
         # Test Min Queue for priority functionality.
         for val, pri in reversed(val_list):
