@@ -1,4 +1,4 @@
-## Pacman
+# Pacman
 
 A modified version of the Pacman educational project from the [Berkeley AI Lab](http://ai.berkeley.edu/project_overview.html).
 
@@ -13,7 +13,7 @@ Some improvements from the original project:
  - Replaced the graphics systems.
  - Added the ability to generate gifs from any pacman or capture game.
 
-### FAQ
+## FAQ
 
 **Q:** What version of Python does this project support?  
 **A:** Python >= 3.8.
@@ -44,7 +44,16 @@ This makes it clear to the student what files they are allowed to change.
 Directions for that can be found [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
 For anyone else, you can just [fork it](https://help.github.com/en/articles/fork-a-repo) as you normally would.
 
-### Acknowledgements
+## Pulling Changes from This Repo Into Your Fork
+
+Occasionally, you may need to pull changes/fixes from this repository.
+Doing so is super easy.
+Just go to your default branch and do a `git pull` command with this repository as an argument:
+```
+git pull https://github.com/linqs/pacman.git
+```
+
+## Acknowledgements
 
 This project has been built up from the work of many people.
 Here are just a few that we know about:
