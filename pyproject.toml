@@ -9,7 +9,7 @@ requires = [
 ]
 
 [project]
-name = "pacai"
+name = "linqs-pacai"
 version = "1.3.0"
 description = "A modified version of the Pacman educational project from the Berkley AI Lab."
 readme = "README.md"
