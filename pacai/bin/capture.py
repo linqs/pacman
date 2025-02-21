@@ -38,6 +38,25 @@ MIN_FOOD = 2
 
 SCARED_TIME = 40
 
+# The number of moves shared between all agents.
+DEFAULT_MAX_MOVES = 1200
+
+# Total time allowed for an agent,
+# move limits generally stop this from happening.
+DEFAULT_MAX_TOTAL_AGENT_TIME_SECS = 900
+
+# Time allowed for registerInitialState().
+DEFAULT_MAX_STARTUP_TIME_SECS = 15
+
+# Some number of warnings will cause a forfeit.
+DEFAULT_MOVE_WARNING_TIME_SECS = 1
+
+# Any violation of this is an instant forfeit.
+DEFAULT_MOVE_TIMEOUT_TIME_SECS = 3
+
+# Next violation causes a forfeit.
+DEFAULT_MAX_MOVE_WARNINGS = 2
+
 class CaptureGameState(AbstractGameState):
     """
     A game state specific to capture.
@@ -246,7 +265,13 @@ class CaptureRules:
     and how the game starts and ends.
     """
 
-    def newGame(self, layout, agents, display, length, catchExceptions):
+    def newGame(self, layout, agents, display, length, catchExceptions,
+            maxTotalAgentTimeSecs = DEFAULT_MAX_TOTAL_AGENT_TIME_SECS,
+            maxStartupTimeSecs = DEFAULT_MAX_STARTUP_TIME_SECS,
+            moveWarningTimeSecs = DEFAULT_MOVE_WARNING_TIME_SECS,
+            moveTimeoutTimeSecs = DEFAULT_MOVE_TIMEOUT_TIME_SECS,
+            maxMoveWarnings = DEFAULT_MAX_MOVE_WARNINGS,
+            **kwargs):
         initState = CaptureGameState(layout, length)
         starter = random.randint(0, 1)
         logging.info('%s team starts' % ['Red', 'Blue'][starter])
@@ -257,6 +282,12 @@ class CaptureRules:
 
         self._totalBlueFood = initState.getBlueFood().count()
         self._totalRedFood = initState.getRedFood().count()
+
+        self._maxTotalAgentTimeSecs = maxTotalAgentTimeSecs
+        self._maxStartupTimeSecs = maxStartupTimeSecs
+        self._moveWarningTimeSecs = moveWarningTimeSecs
+        self._moveTimeoutTimeSecs = moveTimeoutTimeSecs
+        self._maxMoveWarnings = maxMoveWarnings
 
         return game
 
@@ -313,20 +344,20 @@ class CaptureRules:
             logging.error("Blue agent crashed.")
             game.state.setScore(1)
 
-    def getMaxTotalTime(self, agentIndex):
-        return 900  # Move limits should prevent this from ever happening
+    def getMaxTotalAgentTime(self, agentIndex):
+        return self._maxTotalAgentTimeSecs
 
     def getMaxStartupTime(self, agentIndex):
-        return 15  # 15 seconds for registerInitialState
+        return self._maxStartupTimeSecs
 
     def getMoveWarningTime(self, agentIndex):
-        return 1  # One second per move
+        return self._moveWarningTimeSecs
 
     def getMoveTimeout(self, agentIndex):
-        return 3  # Three seconds results in instant forfeit
+        return self._moveTimeoutTimeSecs
 
     def getMaxTimeWarnings(self, agentIndex):
-        return 2  # Third violation loses the game
+        return self._maxMoveWarnings
 
 class AgentRules:
     """
@@ -536,13 +567,33 @@ def readCommand(argv):
             help = 'make agent 3 (second blue player) a keyboard agent (default: %(default)s)')
 
     parser.add_argument('--max-moves', dest = 'maxMoves',
-            action = 'store', type = int, default = 1200,
-            help = 'set maximum number of moves in a game (default: %(default)s)')
+            action = 'store', type = int, default = DEFAULT_MAX_MOVES,
+            help = 'set maximum number of moves between all agents in a game (default: %(default)s)')
 
     parser.add_argument('--red-args', dest = 'redArgs',
             action = 'store', type = str, default = None,
             help = 'comma separated arguments to be passed to red team (e.g. \'opt1=val1,opt2\') '
                 + '(default: %(default)s)')
+
+    parser.add_argument('--max-total-agent-time', dest = 'maxTotalAgentTimeSecs',
+            action = 'store', type = float, default = DEFAULT_MAX_TOTAL_AGENT_TIME_SECS,
+            help = 'set maximum number of seconds a game can run (default: %(default)s)')
+
+    parser.add_argument('--max-startup-time', dest = 'maxStartupTimeSecs',
+            action = 'store', type = float, default = DEFAULT_MAX_STARTUP_TIME_SECS,
+            help = 'set maximum number of seconds allowed for registerInitialState() (default: %(default)s)')
+
+    parser.add_argument('--move-warning-time', dest = 'moveWarningTimeSecs',
+            action = 'store', type = float, default = DEFAULT_MOVE_WARNING_TIME_SECS,
+            help = 'set maximum number of seconds an agent can take on a move before a warning is issued (default: %(default)s)')
+
+    parser.add_argument('--move-timeout-time', dest = 'moveTimeoutTimeSecs',
+            action = 'store', type = float, default = DEFAULT_MOVE_TIMEOUT_TIME_SECS,
+            help = 'set maximum number of seconds an agent can take on a move before forfeiting (default: %(default)s)')
+
+    parser.add_argument('--max-move-warnings', dest = 'maxMoveWarnings',
+            action = 'store', type = int, default = DEFAULT_MAX_MOVE_WARNINGS,
+            help = 'set maximum number of warnings issued to an agent before that agent is disqualified (default: %(default)s)')
 
     options, otherjunk = parser.parse_known_args(argv)
     args = dict()
@@ -639,6 +690,11 @@ def readCommand(argv):
     args['record'] = options.record
     args['catchExceptions'] = options.catchExceptions
     args['replay'] = options.replay
+    args['maxTotalAgentTimeSecs'] = options.maxTotalAgentTimeSecs
+    args['maxStartupTimeSecs'] = options.maxStartupTimeSecs
+    args['moveWarningTimeSecs'] = options.moveWarningTimeSecs
+    args['moveTimeoutTimeSecs'] = options.moveTimeoutTimeSecs
+    args['maxMoveWarnings'] = options.maxMoveWarnings
 
     return args
 
@@ -660,10 +716,10 @@ def loadAgents(isRed, agentModule, textgraphics, args):
 
     return createTeamFunction(indices[0], indices[1], isRed, **args)
 
-def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName):
+def replayGame(layout, agents, actions, display, length, redTeamName, blueTeamName, **kwargs):
     agents = [DummyAgent(index) for index in range(len(agents))]
     rules = CaptureRules()
-    game = rules.newGame(layout, agents, display, length, False)
+    game = rules.newGame(layout, agents, display, length, False, **kwargs)
     state = game.state
     display.redTeam = redTeamName
     display.blueTeam = blueTeamName
@@ -698,7 +754,7 @@ def runGames(layout, agents, display, length, numGames, record, numTraining,
         else:
             gameDisplay = display
 
-        g = rules.newGame(layout, agents, gameDisplay, length, catchExceptions)
+        g = rules.newGame(layout, agents, gameDisplay, length, catchExceptions, **kwargs)
         g.run()
 
         if (not isTraining):

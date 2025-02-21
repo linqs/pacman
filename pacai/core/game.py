@@ -141,7 +141,7 @@ class Game:
                 return True
 
         # Check if the agent has used too much time overall.
-        maxTotalTime = self.rules.getMaxTotalTime(agentIndex)
+        maxTotalTime = self.rules.getMaxTotalAgentTime(agentIndex)
         if (self.totalAgentTimes[agentIndex] > maxTotalTime):
             logging.warning('Agent %d ran out of time! (time: %1.2f)' %
                     (agentIndex, self.totalAgentTimes[agentIndex]))
@@ -164,7 +164,7 @@ class Game:
                 self._agentCrash(agentIndex)
                 return False
 
-            maxStartupTime = int(self.rules.getMaxStartupTime(agentIndex))
+            maxStartupTime = float(self.rules.getMaxStartupTime(agentIndex))
             startTime = time.time()
 
             try:

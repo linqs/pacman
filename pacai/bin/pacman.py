@@ -187,7 +187,7 @@ class ClassicGameRules(object):
         else:
             logging.error('A ghost crashed')
 
-    def getMaxTotalTime(self, agentIndex):
+    def getMaxTotalAgentTime(self, agentIndex):
         return self.timeout
 
     def getMaxStartupTime(self, agentIndex):

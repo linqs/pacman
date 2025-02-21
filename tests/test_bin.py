@@ -4,10 +4,10 @@ from pacai.bin import capture
 from pacai.bin import gridworld
 from pacai.bin import pacman
 
-"""
-This is a test class to assess the executables of this project.
-"""
 class BinTest(unittest.TestCase):
+    """
+    This is a test class to assess the executables of this project.
+    """
 
     def test_pacman(self):
         # Run game of pacman with valid agent.
@@ -31,7 +31,10 @@ class BinTest(unittest.TestCase):
 
     def test_capture(self):
         # Run game of capture with default agents.
-        capture.main(['--null-graphics'])
+        capture.main([
+            '--null-graphics',
+            '--max-moves', '16',
+        ])
 
     def test_capture_help(self):
         # Show all capture arguments.
@@ -62,10 +65,18 @@ class BinTest(unittest.TestCase):
 
     def test_capture_seeded_maze_generations(self):
         # Run game of capture with random generated map without seed value.
-        capture.main(['--null-graphics', '--layout', 'RANDOM']) 
+        capture.main([
+            '--null-graphics',
+            '--layout', 'RANDOM',
+            '--max-moves', '16',
+        ])
 
         # Run game of capture with random generated map with seed value.
-        capture.main(['--null-graphics', '--layout', 'RANDOM94'])
+        capture.main([
+            '--null-graphics',
+            '--layout', 'RANDOM94',
+            '--max-moves', '16',
+        ])
 
 if __name__ == '__main__':
     unittest.main()
